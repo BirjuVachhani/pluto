@@ -109,7 +109,7 @@ class _SettingsPanelState extends State<SettingsPanel>
                               ],
                             ),
                           ),
-                          const Divider(height: 1),
+                          const Divider(height: 1, thickness: 1),
                           const SizedBox(height: 16),
                           TabBar(
                             controller: tabController,
@@ -120,17 +120,20 @@ class _SettingsPanelState extends State<SettingsPanel>
                               Tab(text: 'Widget'),
                               Tab(text: 'About'),
                             ],
-                            onTap: (index) => setState(() => currentTabIndex = index),
+                            onTap: (index) =>
+                                setState(() => currentTabIndex = index),
                           ),
                           Flexible(
                             child: SingleChildScrollView(
                               physics: const BouncingScrollPhysics(),
-                              padding: const EdgeInsets.fromLTRB(32, 16, 32, 32),
+                              padding:
+                                  const EdgeInsets.fromLTRB(32, 16, 32, 32),
                               child: Builder(builder: (context) {
                                 if (currentTabIndex == 0) {
                                   return const BackgroundSettings();
                                 }
-                                if (currentTabIndex == 1) return const WidgetSettings();
+                                if (currentTabIndex == 1)
+                                  return const WidgetSettings();
                                 if (currentTabIndex == 2) return const About();
 
                                 return const SizedBox.shrink();
@@ -152,7 +155,6 @@ class _SettingsPanelState extends State<SettingsPanel>
 }
 
 class _BackgroundDismissible extends StatelessWidget {
-
   const _BackgroundDismissible({super.key});
 
   @override
