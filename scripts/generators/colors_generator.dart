@@ -78,10 +78,10 @@ String parseVariableName(String name) {
   final digitsRegex = RegExp(r'^[0-9]+');
   if (words.first.startsWith(digitsRegex)) {
     final prefix = digitsRegex.stringMatch(words.first)!;
-    if(prefix == words.first) {
+    if (prefix == words.first) {
       // a complete word with only numbers
       words.removeAt(0);
-    }else {
+    } else {
       words.first = words.first.replaceFirst(digitsRegex, '');
     }
     words.add(prefix);

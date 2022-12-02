@@ -18,7 +18,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Minima',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.light(),
+      theme: ThemeData(
+        brightness: Brightness.light,
+        // fontFamily: FontFamilies.product,
+      ),
       home: const HomeWrapper(),
     );
   }

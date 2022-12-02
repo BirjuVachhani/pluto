@@ -1,10 +1,5 @@
 import 'package:flutter/cupertino.dart';
 
-abstract class HomeModelBase with ChangeNotifier {
+abstract class HomeModelBase with ChangeNotifier {}
 
-}
-
-class HomeModel extends HomeModelBase {
-
-
-}
+class HomeModel extends HomeModelBase {}

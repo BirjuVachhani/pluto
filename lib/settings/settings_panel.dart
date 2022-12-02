@@ -127,7 +127,7 @@ class _SettingsPanelState extends State<SettingsPanel>
                             child: SingleChildScrollView(
                               physics: const BouncingScrollPhysics(),
                               padding:
-                                  const EdgeInsets.fromLTRB(32, 16, 32, 32),
+                                  const EdgeInsets.fromLTRB(32, 16, 32, 16),
                               child: Builder(builder: (context) {
                                 if (currentTabIndex == 0) {
                                   return const BackgroundSettings();
@@ -156,7 +156,7 @@ class _SettingsPanelState extends State<SettingsPanel>
 }
 
 class _BackgroundDismissible extends StatelessWidget {
-  const _BackgroundDismissible({super.key});
+  const _BackgroundDismissible();
 
   @override
   Widget build(BuildContext context) {

@@ -27,6 +27,8 @@ abstract class BackgroundModelBase with ChangeNotifier {
   void setGradient(ColorGradient gradient);
 
   void setTint(double tint);
+
+  Color getForegroundColor();
 }
 
 class BackgroundModel extends BackgroundModelBase {
@@ -81,6 +83,13 @@ class BackgroundModel extends BackgroundModelBase {
     this.tint = tint;
     storage.setDouble(StorageKeys.tint, tint);
     notifyListeners();
+  }
+
+  @override
+  Color getForegroundColor() {
+    if (mode.isImage) return Colors.white;
+    if (mode.isColor) color.foreground;
+    return gradient.foreground;
   }
 }
 
