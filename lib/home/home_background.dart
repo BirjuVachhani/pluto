@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../model/color_gradient.dart';
 import '../model/flat_color.dart';
 import '../resources/color_gradients.dart';
+import '../resources/colors.dart';
 import '../resources/flat_colors.dart';
 import '../resources/storage_keys.dart';
 import '../utils/enums.dart';
@@ -95,6 +96,9 @@ class HomeBackground extends StatelessWidget {
         decoration: BoxDecoration(
           gradient: getBackground(model),
         ),
+        foregroundDecoration: BoxDecoration(
+          color: AppColors.tint.withOpacity(model.tint / 100),
+        ),
       );
     });
   }
@@ -105,15 +109,12 @@ class HomeBackground extends StatelessWidget {
   }
 
   LinearGradient? getBackground(BackgroundModelBase model) {
-    if(model.mode.isImage) return null;
+    if (model.mode.isImage) return null;
     final gradient = model.gradient;
 
     final colors = model.mode.isGradient
         ? gradient.colors
-        : [
-            model.color.background,
-            model.color.background,
-          ];
+        : [model.color.background, model.color.background];
 
     return LinearGradient(
       colors: colors,

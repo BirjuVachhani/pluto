@@ -60,3 +60,8 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+scripts:
+  build: flutter build web --release --web-renderer html --csp
+  generate_colors: dart scripts/generators/colors_generator.dart scripts/generators/colors.json lib/resources/flat_colors.dart
+  generate_gradients: dart scripts/generators/gradients_generator.dart scripts/generators/colors.json lib/resources/color_gradients.dart

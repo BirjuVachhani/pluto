@@ -47,11 +47,24 @@ class BackgroundSettings extends StatelessWidget {
               onSelected: (gradient) => model.setGradient(gradient),
             ),
           const SizedBox(height: 16),
-          Slider(
-            value: model.tint,
-            min: 0,
-            max: 100,
-            onChanged: (value) => model.setTint(value.roundToDouble()),
+          const Text('Tint'),
+          const SizedBox(height: 12),
+          SliderTheme(
+            data: const SliderThemeData(
+              thumbShape: RectangleThumbShape(),
+              overlayColor: Colors.red,
+              thumbColor: Colors.red,
+              overlayShape: RectangleThumbShape(),
+              trackHeight: 2,
+            ),
+            child: Slider(
+              value: model.tint,
+              min: 0,
+              max: 100,
+              activeColor: Colors.black,
+              inactiveColor: Colors.black.withOpacity(0.1),
+              onChanged: (value) => model.setTint(value.roundToDouble()),
+            ),
           ),
           const SizedBox(height: 32),
         ],
@@ -104,5 +117,38 @@ class CustomDropdown<T> extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+class RectangleThumbShape extends SliderComponentShape {
+  final double width;
+  final double height;
+
+  const RectangleThumbShape({this.width = 10, this.height = 22});
+
+  @override
+  Size getPreferredSize(bool isEnabled, bool isDiscrete) => Size(width, height);
+
+  @override
+  void paint(
+    PaintingContext context,
+    Offset center, {
+    required Animation<double> activationAnimation,
+    required Animation<double> enableAnimation,
+    required bool isDiscrete,
+    required TextPainter labelPainter,
+    required RenderBox parentBox,
+    required SliderThemeData sliderTheme,
+    required TextDirection textDirection,
+    required double value,
+    required double textScaleFactor,
+    required Size sizeWithOverflow,
+  }) {
+    assert(sliderTheme.thumbColor != null);
+
+    final Canvas canvas = context.canvas;
+    final topLeft = center.translate(-width / 2, -height / 2);
+    canvas.drawRect(topLeft & Size(width, height),
+        Paint()..color = sliderTheme.thumbColor!);
   }
 }

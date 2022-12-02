@@ -64,7 +64,7 @@ class _SettingsPanelState extends State<SettingsPanel>
               children: [
                 Flexible(
                   child: Container(
-                    width: 400,
+                    width: 350,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(12),
@@ -86,7 +86,7 @@ class _SettingsPanelState extends State<SettingsPanel>
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.fromLTRB(32, 16, 16, 16),
+                            padding: const EdgeInsets.fromLTRB(32, 12, 12, 12),
                             child: Row(
                               children: [
                                 const Expanded(
@@ -132,8 +132,9 @@ class _SettingsPanelState extends State<SettingsPanel>
                                 if (currentTabIndex == 0) {
                                   return const BackgroundSettings();
                                 }
-                                if (currentTabIndex == 1)
+                                if (currentTabIndex == 1) {
                                   return const WidgetSettings();
+                                }
                                 if (currentTabIndex == 2) return const About();
 
                                 return const SizedBox.shrink();
