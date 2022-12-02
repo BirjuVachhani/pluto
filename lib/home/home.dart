@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../settings/settings_panel.dart';
+import '../ui/gesture_detector_with_cursor.dart';
 import 'home_background.dart';
 import 'home_model.dart';
 import 'home_widget.dart';
@@ -89,40 +90,25 @@ class _SettingsButtonState extends State<SettingsButton>
   Widget build(BuildContext context) {
     final color = context.read<BackgroundModelBase>().getForegroundColor();
     return GestureDetector(
-      onTap: () => context.read<SettingsPanelModelBase>().show(),
-      child: MouseRegion(
+      child: GestureDetectorWithCursor(
+        onTap: () => context.read<SettingsPanelModelBase>().show(),
         onEnter: (_) => controller.forward(),
         onExit: (_) => controller.reverse(),
-        child: Tooltip(
-          message: 'Settings',
-          waitDuration: const Duration(milliseconds: 300),
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-          verticalOffset: 18,
-          textStyle: const TextStyle(
-            fontSize: 12,
-            color: Colors.white,
+        tooltip: 'Settings',
+        child: AnimatedBuilder(
+          animation: CurvedAnimation(
+            parent: controller,
+            curve: Curves.fastOutSlowIn,
           ),
-          decoration: ShapeDecoration(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(4),
-            ),
-            color: Colors.black,
-          ),
-          child: AnimatedBuilder(
-            animation: CurvedAnimation(
-              parent: controller,
-              curve: Curves.fastOutSlowIn,
-            ),
-            builder: (context, child) {
-              return Transform.rotate(
-                angle: controller.value * pi / pi,
-                child: Icon(
-                  Icons.settings,
-                  color: color.withOpacity(max(0.2, controller.value)),
-                ),
-              );
-            },
-          ),
+          builder: (context, child) {
+            return Transform.rotate(
+              angle: controller.value * pi / pi,
+              child: Icon(
+                Icons.settings,
+                color: color.withOpacity(max(0.2, controller.value)),
+              ),
+            );
+          },
         ),
       ),
     );

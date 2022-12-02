@@ -27,6 +27,10 @@ abstract class StorageManager {
   Future<bool> setEnum<T extends Enum>(String key, T value) {
     return setString(key, value.name);
   }
+
+  Future<bool> getBoolean(String key);
+
+  Future<bool> setBoolean(String key, bool value);
 }
 
 class SharedPreferencesStorageManager extends StorageManager {
@@ -66,4 +70,10 @@ class SharedPreferencesStorageManager extends StorageManager {
   @override
   Future<bool> setString(String key, String value) =>
       prefs.setString(key, value);
+
+  @override
+  Future<bool> getBoolean(String key) async => prefs.getBool(key) ?? false;
+
+  @override
+  Future<bool> setBoolean(String key, bool value) => prefs.setBool(key, value);
 }

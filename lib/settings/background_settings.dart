@@ -7,6 +7,7 @@ import '../model/color_gradient.dart';
 import '../model/flat_color.dart';
 import '../resources/color_gradients.dart';
 import '../resources/flat_colors.dart';
+import '../ui/gesture_detector_with_cursor.dart';
 import '../utils/enums.dart';
 import '../utils/extensions.dart';
 
@@ -133,7 +134,19 @@ class BackgroundSettings extends StatelessWidget {
               onChanged: (value) => model.setTint(value.roundToDouble()),
             ),
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 40),
+          GestureDetectorWithCursor(
+            onTap: () => model.setTexture(!model.texture),
+            tooltip: 'Texture',
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Icon(
+                Icons.lens_blur_rounded,
+                color: model.texture ? Colors.black : Colors.grey.shade400,
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
         ],
       );
     });
@@ -272,7 +285,7 @@ class ColorsGridView extends StatelessWidget {
                   child: Container(
                     alignment: Alignment.center,
                     decoration: ShapeDecoration(
-                      shape: CircleBorder(
+                      shape: const CircleBorder(
                         side: BorderSide(
                           color: Colors.black,
                           // width: 0.5,

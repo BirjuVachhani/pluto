@@ -7,4 +7,5 @@ class StorageKeys {
   static const String backgroundColor = 'background_color';
   static const String backgroundGradient = 'background_gradient';
   static const String tint = 'tint';
+  static const String texture = 'texture';
 }

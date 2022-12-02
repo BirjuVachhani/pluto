@@ -8,6 +8,7 @@ import '../resources/color_gradients.dart';
 import '../resources/colors.dart';
 import '../resources/flat_colors.dart';
 import '../resources/storage_keys.dart';
+import '../ui/texture_painter.dart';
 import '../utils/enums.dart';
 import '../utils/storage_manager.dart';
 import '../utils/utils.dart';
@@ -17,6 +18,7 @@ abstract class BackgroundModelBase with ChangeNotifier {
   FlatColor color = FlatColors.colors.values.first;
   ColorGradient gradient = ColorGradients.gradients.values.first;
   double tint = 0;
+  bool texture = false;
 
   void init();
 
@@ -29,6 +31,8 @@ abstract class BackgroundModelBase with ChangeNotifier {
   void setTint(double tint);
 
   Color getForegroundColor();
+
+  void setTexture(bool texture);
 }
 
 class BackgroundModel extends BackgroundModelBase {
@@ -53,6 +57,7 @@ class BackgroundModel extends BackgroundModelBase {
         ColorGradients.gradients.values.first;
 
     tint = await storage.getDouble(StorageKeys.tint) ?? 0;
+    texture = await storage.getBoolean(StorageKeys.texture);
 
     notifyListeners();
   }
@@ -86,6 +91,13 @@ class BackgroundModel extends BackgroundModelBase {
   }
 
   @override
+  void setTexture(bool texture) {
+    this.texture = texture;
+    storage.setBoolean(StorageKeys.texture, texture);
+    notifyListeners();
+  }
+
+  @override
   Color getForegroundColor() {
     if (mode.isImage) return Colors.white;
     if (mode.isColor) color.foreground;
@@ -98,18 +110,28 @@ class HomeBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<BackgroundModelBase>(builder: (context, model, child) {
-      return AnimatedContainer(
-        duration: const Duration(milliseconds: 500),
-        curve: Curves.easeOut,
-        decoration: BoxDecoration(
-          gradient: getBackground(model),
-        ),
-        foregroundDecoration: BoxDecoration(
-          color: AppColors.tint.withOpacity(model.tint / 100),
-        ),
-      );
-    });
+    return Consumer<BackgroundModelBase>(
+      builder: (context, model, child) {
+        return AnimatedContainer(
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeOut,
+          decoration: BoxDecoration(
+            gradient: getBackground(model),
+          ),
+          foregroundDecoration: BoxDecoration(
+            color: AppColors.tint.withOpacity(model.tint / 100),
+          ),
+          child: model.texture
+              ? CustomPaint(
+                  painter: TexturePainter(
+                    color: model.getForegroundColor().withOpacity(0.4),
+                  ),
+                  child: child,
+                )
+              : child,
+        );
+      },
+    );
   }
 
   Color? getBackgroundColor(BackgroundModelBase model) {
