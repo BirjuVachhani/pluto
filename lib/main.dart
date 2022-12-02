@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
 import 'home/home.dart';
+import 'resources/colors.dart';
 import 'utils/storage_manager.dart';
 
 void main() async {
@@ -19,9 +20,18 @@ class MyApp extends StatelessWidget {
       title: 'Minima',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        brightness: Brightness.light,
-        // fontFamily: FontFamilies.product,
-      ),
+          brightness: Brightness.light,
+          dividerColor: AppColors.borderColor,
+          textTheme: const TextTheme(
+            bodyText1: TextStyle(
+              fontWeight: FontWeight.w200,
+            ),
+            bodyText2: TextStyle(
+              fontWeight: FontWeight.w200,
+            ),
+          )
+          // fontFamily: FontFamilies.product,
+          ),
       home: const HomeWrapper(),
     );
   }

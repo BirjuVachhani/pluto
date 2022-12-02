@@ -1,7 +1,11 @@
 enum BackgroundMode {
-  flat,
-  gradient,
-  image;
+  flat('Flat'),
+  gradient('Gradient'),
+  image('Image');
+
+  const BackgroundMode(this.label);
+
+  final String label;
 
   bool get isColor => this == BackgroundMode.flat;
 

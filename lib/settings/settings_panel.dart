@@ -64,7 +64,7 @@ class _SettingsPanelState extends State<SettingsPanel>
               children: [
                 Flexible(
                   child: Container(
-                    width: 350,
+                    width: 360,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(12),
@@ -89,12 +89,11 @@ class _SettingsPanelState extends State<SettingsPanel>
                             padding: const EdgeInsets.fromLTRB(32, 12, 12, 12),
                             child: Row(
                               children: [
-                                const Expanded(
+                                Expanded(
                                   child: Text(
                                     'Settings',
-                                    style: TextStyle(
-                                      fontSize: 24,
-                                    ),
+                                    style:
+                                        Theme.of(context).textTheme.headline5,
                                   ),
                                 ),
                                 Material(
@@ -111,23 +110,64 @@ class _SettingsPanelState extends State<SettingsPanel>
                           ),
                           const Divider(height: 1, thickness: 1),
                           const SizedBox(height: 16),
-                          TabBar(
-                            controller: tabController,
-                            unselectedLabelColor: Colors.black,
-                            labelColor: Colors.black,
-                            tabs: const [
-                              Tab(text: 'Background'),
-                              Tab(text: 'Widget'),
-                              Tab(text: 'About'),
+                          Stack(
+                            children: [
+                              const Positioned(
+                                left: 0,
+                                right: 0,
+                                bottom: 0.5,
+                                child: Divider(height: 1, thickness: 1),
+                              ),
+                              SizedBox(
+                                width: 360,
+                                child: TabBar(
+                                  controller: tabController,
+                                  unselectedLabelColor: Colors.black,
+                                  labelColor: Colors.black,
+                                  isScrollable: true,
+                                  labelStyle: const TextStyle(
+                                    fontWeight: FontWeight.w300,
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 32),
+                                  labelPadding: const EdgeInsets.symmetric(
+                                      horizontal: 20),
+                                  indicator: BoxDecoration(
+                                    border: Border(
+                                      top: BorderSide(
+                                        color: Theme.of(context).dividerColor,
+                                        width: 1,
+                                      ),
+                                      left: BorderSide(
+                                        color: Theme.of(context).dividerColor,
+                                        width: 1,
+                                      ),
+                                      right: BorderSide(
+                                        color: Theme.of(context).dividerColor,
+                                        width: 1,
+                                      ),
+                                      bottom: const BorderSide(
+                                        color: Colors.white,
+                                        width: 2,
+                                      ),
+                                    ),
+                                  ),
+                                  tabs: const [
+                                    Tab(text: 'Background'),
+                                    Tab(text: 'Widget'),
+                                    Tab(text: 'About'),
+                                  ],
+                                  onTap: (index) =>
+                                      setState(() => currentTabIndex = index),
+                                ),
+                              ),
                             ],
-                            onTap: (index) =>
-                                setState(() => currentTabIndex = index),
                           ),
                           Flexible(
                             child: SingleChildScrollView(
                               physics: const BouncingScrollPhysics(),
                               padding:
-                                  const EdgeInsets.fromLTRB(32, 16, 32, 16),
+                                  const EdgeInsets.fromLTRB(32, 24, 32, 16),
                               child: Builder(builder: (context) {
                                 if (currentTabIndex == 0) {
                                   return const BackgroundSettings();
