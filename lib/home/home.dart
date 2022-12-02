@@ -88,30 +88,33 @@ class _SettingsButtonState extends State<SettingsButton>
 
   @override
   Widget build(BuildContext context) {
-    final color = context.read<BackgroundModelBase>().getForegroundColor();
-    return GestureDetector(
-      child: GestureDetectorWithCursor(
-        onTap: () => context.read<SettingsPanelModelBase>().show(),
-        onEnter: (_) => controller.forward(),
-        onExit: (_) => controller.reverse(),
-        tooltip: 'Settings',
-        child: AnimatedBuilder(
-          animation: CurvedAnimation(
-            parent: controller,
-            curve: Curves.fastOutSlowIn,
+    return Consumer<BackgroundModelBase>(builder: (context, model, child) {
+      return GestureDetector(
+        child: GestureDetectorWithCursor(
+          onTap: () => context.read<SettingsPanelModelBase>().show(),
+          onEnter: (_) => controller.forward(),
+          onExit: (_) => controller.reverse(),
+          tooltip: 'Settings',
+          child: AnimatedBuilder(
+            animation: CurvedAnimation(
+              parent: controller,
+              curve: Curves.fastOutSlowIn,
+            ),
+            builder: (context, child) {
+              return Transform.rotate(
+                angle: controller.value * pi / pi,
+                child: Icon(
+                  Icons.settings,
+                  color: model
+                      .getForegroundColor()
+                      .withOpacity(max(0.2, controller.value)),
+                ),
+              );
+            },
           ),
-          builder: (context, child) {
-            return Transform.rotate(
-              angle: controller.value * pi / pi,
-              child: Icon(
-                Icons.settings,
-                color: color.withOpacity(max(0.2, controller.value)),
-              ),
-            );
-          },
         ),
-      ),
-    );
+      );
+    });
   }
 
   @override

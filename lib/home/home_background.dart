@@ -14,7 +14,7 @@ import '../utils/storage_manager.dart';
 import '../utils/utils.dart';
 
 abstract class BackgroundModelBase with ChangeNotifier {
-  BackgroundMode mode = BackgroundMode.flat;
+  BackgroundMode mode = BackgroundMode.color;
   FlatColor color = FlatColors.colors.values.first;
   ColorGradient gradient = ColorGradients.gradients.values.first;
   double tint = 0;
@@ -46,7 +46,7 @@ class BackgroundModel extends BackgroundModelBase {
   void init() async {
     mode = await storage.getEnum<BackgroundMode>(
             StorageKeys.backgroundMode, BackgroundMode.values) ??
-        BackgroundMode.flat;
+        BackgroundMode.color;
 
     color = findColorByName(
             await storage.getString(StorageKeys.backgroundColor) ?? '') ??
@@ -99,9 +99,9 @@ class BackgroundModel extends BackgroundModelBase {
 
   @override
   Color getForegroundColor() {
-    if (mode.isImage) return Colors.white;
-    if (mode.isColor) color.foreground;
-    return gradient.foreground;
+    if (mode.isColor) return color.foreground;
+    if (mode.isGradient) return gradient.foreground;
+    return Colors.white;
   }
 }
 

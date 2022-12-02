@@ -1,5 +1,5 @@
 enum BackgroundMode {
-  flat('Flat'),
+  color('Color'),
   gradient('Gradient'),
   image('Image');
 
@@ -7,7 +7,7 @@ enum BackgroundMode {
 
   final String label;
 
-  bool get isColor => this == BackgroundMode.flat;
+  bool get isColor => this == BackgroundMode.color;
 
   bool get isGradient => this == BackgroundMode.gradient;
 

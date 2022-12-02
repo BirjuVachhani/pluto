@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../resources/fonts.dart';
 import 'home_background.dart';
+import 'widgets/analogue_clock.dart';
+import 'widgets/digital_clock.dart';
 
 class HomeWidget extends StatelessWidget {
   const HomeWidget({super.key});
@@ -10,20 +13,29 @@ class HomeWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<BackgroundModelBase>(
       builder: (context, model, child) {
-        return Text(
-          'Hello!',
+        return DigitalClock(
+          // padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+          // decoration: ShapeDecoration(
+          //   shape: RoundedRectangleBorder(
+          //     borderRadius: BorderRadius.circular(0),
+          //     side: BorderSide(
+          //       color: model.getForegroundColor(),
+          //       width: 10,
+          //     )
+          //   ),
+          // ),
           style: TextStyle(
-            fontSize: 56,
-            color: getColor(model),
+            color: model.getForegroundColor(),
+            fontSize: 100,
+            height: 1.2,
+            fontFamily: FontFamilies.product,
           ),
+        );
+        return AnalogueClock(
+          radius: 124,
+          color: model.getForegroundColor(),
         );
       },
     );
-  }
-
-  Color? getColor(BackgroundModelBase model) {
-    if (model.mode.isColor) return model.color?.foreground;
-    if (model.mode.isGradient) return model.gradient?.foreground;
-    return Colors.black;
   }
 }
