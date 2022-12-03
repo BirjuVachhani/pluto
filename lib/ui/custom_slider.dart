@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 class CustomSlider extends StatelessWidget {
@@ -60,12 +58,7 @@ class CustomSlider extends StatelessWidget {
                   child: Text(
                     valueLabel!,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      height: 1.2,
-                      fontFeatures: [
-                        FontFeature.tabularFigures(),
-                      ],
-                    ),
+                    style: const TextStyle(height: 1.2),
                   ),
                 ),
               ),

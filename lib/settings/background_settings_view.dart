@@ -42,7 +42,10 @@ class BackgroundSettingsView extends StatelessWidget {
                 for (final mode in BackgroundMode.values)
                   mode: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: Text(mode.label),
+                    child: Text(
+                      mode.label,
+                      style: const TextStyle(fontWeight: FontWeight.w400),
+                    ),
                   ),
               },
             ),
