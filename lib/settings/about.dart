@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+
+import '../utils/storage_manager.dart';
 
 class About extends StatelessWidget {
   const About({super.key});
@@ -43,6 +46,14 @@ class About extends StatelessWidget {
                 ),
               ),
             ],
+          ),
+          const SizedBox(height: 24),
+          IconButton(
+            tooltip: 'Reset Settings',
+            onPressed: () {
+              GetIt.instance.get<StorageManager>().clear();
+            },
+            icon: const Icon(Icons.refresh_rounded),
           ),
           const SizedBox(height: 48),
           const Text(
