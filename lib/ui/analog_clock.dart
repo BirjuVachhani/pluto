@@ -1,9 +1,72 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+
+class AnalogClock extends StatefulWidget {
+  final double radius;
+  final Color? color;
+  final bool showSecondsHand;
+  final Color? secondHandColor;
+
+  const AnalogClock({
+    super.key,
+    required this.radius,
+    this.color,
+    this.showSecondsHand = true,
+    this.secondHandColor,
+  });
+
+  @override
+  State<AnalogClock> createState() => _AnalogClockState();
+}
+
+class _AnalogClockState extends State<AnalogClock>
+    with SingleTickerProviderStateMixin {
+  late Ticker _ticker;
+  late DateTime _initialTime;
+  late DateTime _now;
+
+  @override
+  void initState() {
+    super.initState();
+    _initialTime = _now = DateTime.now();
+    _ticker = createTicker((elapsed) {
+      final newTime = _initialTime.add(elapsed);
+      // rebuild only if seconds changes instead of every frame
+      if (_now.second != newTime.second && widget.showSecondsHand) {
+        setState(() => _now = newTime);
+      } else if (_now.minute != newTime.minute) {
+        setState(() => _now = newTime);
+      }
+    });
+    _ticker.start();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox.square(
+      dimension: widget.radius * 2,
+      child: CustomPaint(
+        painter: AnalogClockPainter(
+          time: _now,
+          color: widget.color,
+          secondHandColor: widget.secondHandColor,
+          showSecondHand: widget.showSecondsHand,
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _ticker.dispose();
+    super.dispose();
+  }
+}
 
 /// If [color] is provided then it will be used to paint everything.
-class AnalogueClockPainter extends CustomPainter {
+class AnalogClockPainter extends CustomPainter {
   final DateTime time;
   final Color? dialColor;
   final Color? hourHandColor;
@@ -21,7 +84,7 @@ class AnalogueClockPainter extends CustomPainter {
   static const double angleOfAMinute = 2 * pi / 60; // in radians.
   static const double angleOfAnHour = 2 * pi / 12; // in radians.
 
-  AnalogueClockPainter({
+  AnalogClockPainter({
     required this.time,
     this.color,
     this.dialColor,
@@ -121,7 +184,7 @@ class AnalogueClockPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant AnalogueClockPainter oldDelegate) =>
+  bool shouldRepaint(covariant AnalogClockPainter oldDelegate) =>
       oldDelegate.time != time ||
       oldDelegate.color != color ||
       oldDelegate.dialColor != dialColor ||

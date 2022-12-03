@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:intl/intl.dart';
 
 class DigitalClock extends StatefulWidget {
-  final String separator;
   final TextStyle? style;
   final Decoration? decoration;
   final EdgeInsets? padding;
+  final String format;
 
   const DigitalClock({
     super.key,
-    this.separator = ':',
     this.style,
     this.decoration,
     this.padding,
+    this.format = 'hh:mm',
   });
 
   @override
@@ -41,12 +42,12 @@ class _DigitalClockState extends State<DigitalClock>
 
   @override
   Widget build(BuildContext context) {
-    return DigitalClockRenderer(
+    return _DigitalClockRenderer(
       time: _now,
       style: widget.style,
-      separator: widget.separator,
       decoration: widget.decoration,
       padding: widget.padding,
+      format: widget.format,
     );
   }
 
@@ -57,30 +58,30 @@ class _DigitalClockState extends State<DigitalClock>
   }
 }
 
-class DigitalClockRenderer extends StatelessWidget {
+class _DigitalClockRenderer extends StatelessWidget {
   final DateTime time;
   final TextStyle? style;
-  final String separator;
   final Decoration? decoration;
   final EdgeInsets? padding;
+  final String format;
 
-  const DigitalClockRenderer({
-    super.key,
+  const _DigitalClockRenderer({
     required this.time,
-    this.separator = ':',
     this.style,
     this.decoration,
     this.padding,
+    this.format = 'hh:mm',
   });
 
   @override
   Widget build(BuildContext context) {
+    final timeString = DateFormat(format).format(time);
     return DecoratedBox(
       decoration: decoration ?? const BoxDecoration(),
       child: Padding(
         padding: padding ?? EdgeInsets.zero,
         child: Text(
-          '${time.hour.toString().padLeft(2, '0')}$separator${time.minute.toString().padLeft(2, '0')}',
+          timeString,
           textAlign: TextAlign.center,
           style: style,
         ),

@@ -2,25 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
+import '../model/background_settings.dart';
 import '../model/color_gradient.dart';
 import '../model/flat_color.dart';
-import '../resources/color_gradients.dart';
 import '../resources/colors.dart';
-import '../resources/flat_colors.dart';
 import '../resources/storage_keys.dart';
 import '../ui/texture_painter.dart';
-import '../utils/enums.dart';
 import '../utils/storage_manager.dart';
 import '../utils/utils.dart';
 
-abstract class BackgroundModelBase with ChangeNotifier {
-  BackgroundMode mode = BackgroundMode.color;
-  FlatColor color = FlatColors.colors.values.first;
-  ColorGradient gradient = ColorGradients.gradients.values.first;
-  double tint = 0;
-  bool texture = false;
+abstract class BackgroundModelBase
+    with ChangeNotifier, LazyInitializationMixin {
+  late BackgroundSettings settings;
 
-  void init();
+  BackgroundMode get mode => settings.mode;
+
+  FlatColor get color => settings.color;
+
+  ColorGradient get gradient => settings.gradient;
+
+  double get tint => settings.tint;
+
+  bool get texture => settings.texture;
+
+  bool get invert => settings.invert;
 
   void setMode(BackgroundMode mode);
 
@@ -30,70 +35,59 @@ abstract class BackgroundModelBase with ChangeNotifier {
 
   void setTint(double tint);
 
-  Color getForegroundColor();
-
   void setTexture(bool texture);
+
+  Color getForegroundColor();
 }
 
 class BackgroundModel extends BackgroundModelBase {
   late final StorageManager storage = GetIt.instance.get<StorageManager>();
 
-  BackgroundModel() {
-    init();
-  }
-
   @override
-  void init() async {
-    mode = await storage.getEnum<BackgroundMode>(
-            StorageKeys.backgroundMode, BackgroundMode.values) ??
-        BackgroundMode.color;
+  Future<void> init() async {
+    final data = await storage.getJson(StorageKeys.backgroundSettings);
+    settings =
+        data != null ? BackgroundSettings.fromJson(data) : BackgroundSettings();
 
-    color = findColorByName(
-            await storage.getString(StorageKeys.backgroundColor) ?? '') ??
-        FlatColors.colors.values.first;
-
-    gradient = findGradientByName(
-            await storage.getString(StorageKeys.backgroundGradient) ?? '') ??
-        ColorGradients.gradients.values.first;
-
-    tint = await storage.getDouble(StorageKeys.tint) ?? 0;
-    texture = await storage.getBoolean(StorageKeys.texture);
-
+    initialized = true;
     notifyListeners();
   }
 
+  Future<bool> save() =>
+      storage.setJson(StorageKeys.backgroundSettings, settings.toJson());
+
   @override
   void setMode(BackgroundMode mode) {
-    this.mode = mode;
-    storage.setEnum(StorageKeys.backgroundMode, mode);
+    settings = settings.copyWith(mode: mode);
+    save();
     notifyListeners();
   }
 
   @override
   void setColor(FlatColor color) {
-    this.color = color;
-    storage.setString(StorageKeys.backgroundColor, color.name);
+    settings = settings.copyWith(color: color);
+    save();
     notifyListeners();
   }
 
   @override
   void setGradient(ColorGradient gradient) {
-    this.gradient = gradient;
-    storage.setString(StorageKeys.backgroundGradient, gradient.name);
+    settings = settings.copyWith(gradient: gradient);
+    save();
     notifyListeners();
   }
 
   @override
   void setTint(double tint) {
-    this.tint = tint;
-    storage.setDouble(StorageKeys.tint, tint);
+    settings = settings.copyWith(tint: tint);
+    save();
     notifyListeners();
   }
 
   @override
   void setTexture(bool texture) {
-    this.texture = texture;
-    storage.setBoolean(StorageKeys.texture, texture);
+    settings = settings.copyWith(texture: texture);
+    save();
     notifyListeners();
   }
 
@@ -112,6 +106,7 @@ class HomeBackground extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<BackgroundModelBase>(
       builder: (context, model, child) {
+        if (!model.initialized) return const SizedBox.shrink();
         return AnimatedContainer(
           duration: const Duration(milliseconds: 500),
           curve: Curves.easeOut,

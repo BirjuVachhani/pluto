@@ -31,6 +31,11 @@ abstract class StorageManager {
   Future<bool> getBoolean(String key);
 
   Future<bool> setBoolean(String key, bool value);
+
+  Future<T?> getSerializableObject<T>(
+      String key, T Function(Map<String, dynamic> json) fromJson);
+
+  Future<void> clear();
 }
 
 class SharedPreferencesStorageManager extends StorageManager {
@@ -76,4 +81,13 @@ class SharedPreferencesStorageManager extends StorageManager {
 
   @override
   Future<bool> setBoolean(String key, bool value) => prefs.setBool(key, value);
+
+  @override
+  Future<T?> getSerializableObject<T>(
+      String key, T Function(Map<String, dynamic> json) fromJson) async {
+    return getJson(key).then((value) => value != null ? fromJson(value) : null);
+  }
+
+  @override
+  Future<void> clear() => prefs.clear();
 }

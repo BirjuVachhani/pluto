@@ -1,12 +1,10 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../settings/settings_panel.dart';
-import '../ui/gesture_detector_with_cursor.dart';
+import '../utils/utils.dart';
+import 'bottom_bar.dart';
 import 'home_background.dart';
-import 'home_model.dart';
 import 'home_widget.dart';
 
 class HomeWrapper extends StatelessWidget {
@@ -17,17 +15,46 @@ class HomeWrapper extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<HomeModelBase>(
-          create: (context) => HomeModel(),
-        ),
-        ChangeNotifierProvider<SettingsPanelModelBase>(
-          create: (context) => SettingsPanelModel(),
+          create: (context) => HomeModel()..init(),
         ),
         ChangeNotifierProvider<BackgroundModelBase>(
           create: (context) => BackgroundModel()..init(),
         ),
+        ChangeNotifierProvider<WidgetModelBase>(
+          create: (context) => WidgetModel()..init(),
+        ),
       ],
       child: const Home(),
     );
+  }
+}
+
+abstract class HomeModelBase with ChangeNotifier, LazyInitializationMixin {
+  bool isPanelVisible = false;
+
+  void showPanel();
+
+  void hidePanel();
+}
+
+class HomeModel extends HomeModelBase {
+  @override
+  Future<void> init() async {
+    // Initialize stuff
+    initialized = true;
+    notifyListeners();
+  }
+
+  @override
+  void showPanel() {
+    isPanelVisible = true;
+    notifyListeners();
+  }
+
+  @override
+  void hidePanel() {
+    isPanelVisible = false;
+    notifyListeners();
   }
 }
 
@@ -42,84 +69,18 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          const Positioned.fill(child: HomeBackground()),
-          const Align(
-            alignment: Alignment.center,
-            child: HomeWidget(),
-          ),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: Container(
-              height: 48,
-              alignment: Alignment.center,
-              child: const SettingsButton(),
-            ),
-          ),
-          const SettingsPanel(),
-        ],
+      body: SizedBox.expand(
+        child: Stack(
+          fit: StackFit.expand,
+          alignment: Alignment.center,
+          children: const [
+            Positioned.fill(child: HomeBackground()),
+            Positioned.fill(child: HomeWidget()),
+            Align(alignment: Alignment.bottomCenter, child: BottomBar()),
+            SettingsPanel(),
+          ],
+        ),
       ),
     );
-  }
-}
-
-class SettingsButton extends StatefulWidget {
-  const SettingsButton({super.key});
-
-  @override
-  State<SettingsButton> createState() => _SettingsButtonState();
-}
-
-class _SettingsButtonState extends State<SettingsButton>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController controller;
-
-  @override
-  void initState() {
-    super.initState();
-    controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 200),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<BackgroundModelBase>(builder: (context, model, child) {
-      return GestureDetector(
-        child: GestureDetectorWithCursor(
-          onTap: () => context.read<SettingsPanelModelBase>().show(),
-          onEnter: (_) => controller.forward(),
-          onExit: (_) => controller.reverse(),
-          tooltip: 'Settings',
-          child: AnimatedBuilder(
-            animation: CurvedAnimation(
-              parent: controller,
-              curve: Curves.fastOutSlowIn,
-            ),
-            builder: (context, child) {
-              return Transform.rotate(
-                angle: controller.value * pi / pi,
-                child: Icon(
-                  Icons.settings,
-                  color: model
-                      .getForegroundColor()
-                      .withOpacity(max(0.2, controller.value)),
-                ),
-              );
-            },
-          ),
-        ),
-      );
-    });
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
   }
 }

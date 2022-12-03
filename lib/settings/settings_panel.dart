@@ -1,31 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../home/home.dart';
 import 'about.dart';
-import 'background_settings.dart';
+import 'background_settings_view.dart';
 import 'widget_settings.dart';
-
-abstract class SettingsPanelModelBase with ChangeNotifier {
-  bool visible = false;
-
-  void show();
-
-  void hide();
-}
-
-class SettingsPanelModel extends SettingsPanelModelBase {
-  @override
-  void show() {
-    visible = true;
-    notifyListeners();
-  }
-
-  @override
-  void hide() {
-    visible = false;
-    notifyListeners();
-  }
-}
 
 class SettingsPanel extends StatefulWidget {
   const SettingsPanel({super.key});
@@ -48,8 +27,10 @@ class _SettingsPanelState extends State<SettingsPanel>
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<SettingsPanelModelBase>(builder: (context, model, child) {
-      if (!model.visible) return const SizedBox.shrink();
+    return Consumer<HomeModelBase>(builder: (context, model, child) {
+      if (!model.initialized || !model.isPanelVisible) {
+        return const SizedBox.shrink();
+      }
       return Stack(
         fit: StackFit.expand,
         children: [
@@ -99,7 +80,7 @@ class _SettingsPanelState extends State<SettingsPanel>
                                 Material(
                                   type: MaterialType.transparency,
                                   child: IconButton(
-                                    onPressed: () => model.hide(),
+                                    onPressed: () => model.hidePanel(),
                                     splashRadius: 16,
                                     iconSize: 18,
                                     icon: const Icon(Icons.close),
@@ -170,7 +151,7 @@ class _SettingsPanelState extends State<SettingsPanel>
                                   const EdgeInsets.fromLTRB(32, 24, 32, 16),
                               child: Builder(builder: (context) {
                                 if (currentTabIndex == 0) {
-                                  return const BackgroundSettings();
+                                  return const BackgroundSettingsView();
                                 }
                                 if (currentTabIndex == 1) {
                                   return const WidgetSettings();
@@ -200,10 +181,10 @@ class _BackgroundDismissible extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.read<SettingsPanelModelBase>();
+    final model = context.read<HomeModelBase>();
     return Positioned.fill(
       child: GestureDetector(
-        onTap: () => model.hide(),
+        onTap: () => model.hidePanel(),
         child: Container(
           color: Colors.transparent,
         ),

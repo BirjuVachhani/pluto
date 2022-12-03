@@ -3,20 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../home/home_background.dart';
+import '../model/background_settings.dart';
 import '../model/color_gradient.dart';
 import '../model/flat_color.dart';
 import '../resources/color_gradients.dart';
 import '../resources/flat_colors.dart';
+import '../ui/custom_dropdown.dart';
+import '../ui/custom_slider.dart';
 import '../ui/gesture_detector_with_cursor.dart';
-import '../utils/enums.dart';
 import '../utils/extensions.dart';
 
-class BackgroundSettings extends StatelessWidget {
-  const BackgroundSettings({super.key});
+class BackgroundSettingsView extends StatelessWidget {
+  const BackgroundSettingsView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Consumer<BackgroundModelBase>(builder: (context, model, child) {
+      if (!model.initialized) return const SizedBox(height: 200);
       return Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -115,24 +118,13 @@ class BackgroundSettings extends StatelessWidget {
             // ),
           ],
           const SizedBox(height: 16),
-          const Text('Tint'),
-          const SizedBox(height: 12),
-          SliderTheme(
-            data: const SliderThemeData(
-              thumbShape: RectangleThumbShape(),
-              overlayColor: Colors.red,
-              thumbColor: Colors.red,
-              overlayShape: RectangleThumbShape(),
-              trackHeight: 2,
-            ),
-            child: Slider(
-              value: model.tint,
-              min: 0,
-              max: 100,
-              activeColor: Colors.black,
-              inactiveColor: Colors.black.withOpacity(0.1),
-              onChanged: (value) => model.setTint(value.roundToDouble()),
-            ),
+          CustomSlider(
+            label: 'Tint',
+            value: model.tint,
+            min: 0,
+            max: 100,
+            valueLabel: '${model.tint.floor().toString()} %',
+            onChanged: (value) => model.setTint(value),
           ),
           const SizedBox(height: 40),
           GestureDetectorWithCursor(
@@ -150,102 +142,6 @@ class BackgroundSettings extends StatelessWidget {
         ],
       );
     });
-  }
-}
-
-class CustomDropdown<T> extends StatelessWidget {
-  final List<T> items;
-  final ValueChanged<T> onSelected;
-  final String? label;
-  final Widget Function(BuildContext context, T item)? itemBuilder;
-  final T? value;
-  final bool isExpanded;
-
-  const CustomDropdown({
-    super.key,
-    required this.items,
-    required this.onSelected,
-    this.value,
-    this.label,
-    this.itemBuilder,
-    this.isExpanded = true,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        if (label != null) Text(label!),
-        if (label != null) const SizedBox(height: 10),
-        Container(
-          color: Colors.grey.withOpacity(0.1),
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: DropdownButton<T>(
-            value: value,
-            isExpanded: isExpanded,
-            style: Theme.of(context)
-                .textTheme
-                .bodyText1!
-                .copyWith(fontWeight: FontWeight.w400, height: 1),
-            underline: const SizedBox.shrink(),
-            // dropdownColor: Colors.red,
-            menuMaxHeight: 700,
-            icon: const Icon(
-              Icons.keyboard_arrow_down_rounded,
-              size: 18,
-            ),
-            items: items
-                .map((item) => DropdownMenuItem<T>(
-                      value: item,
-                      alignment: Alignment.centerLeft,
-                      child: itemBuilder?.call(context, item) ??
-                          Text(item.toString()),
-                    ))
-                .toList(),
-            onChanged: (mode) {
-              if (mode == null) return;
-              onSelected(mode);
-            },
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class RectangleThumbShape extends SliderComponentShape {
-  final double width;
-  final double height;
-
-  const RectangleThumbShape({this.width = 10, this.height = 22});
-
-  @override
-  Size getPreferredSize(bool isEnabled, bool isDiscrete) => Size(width, height);
-
-  @override
-  void paint(
-    PaintingContext context,
-    Offset center, {
-    required Animation<double> activationAnimation,
-    required Animation<double> enableAnimation,
-    required bool isDiscrete,
-    required TextPainter labelPainter,
-    required RenderBox parentBox,
-    required SliderThemeData sliderTheme,
-    required TextDirection textDirection,
-    required double value,
-    required double textScaleFactor,
-    required Size sizeWithOverflow,
-  }) {
-    assert(sliderTheme.thumbColor != null);
-
-    final Canvas canvas = context.canvas;
-    final topLeft = center.translate(-width / 2, -height / 2);
-    canvas.drawRect(topLeft & Size(width, height),
-        Paint()..color = sliderTheme.thumbColor!);
   }
 }
 
