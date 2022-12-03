@@ -6,8 +6,10 @@ import '../home/home_background.dart';
 import '../model/background_settings.dart';
 import '../model/color_gradient.dart';
 import '../model/flat_color.dart';
+import '../model/unsplash_collection.dart';
 import '../resources/color_gradients.dart';
 import '../resources/flat_colors.dart';
+import '../resources/unsplash_sources.dart';
 import '../ui/custom_dropdown.dart';
 import '../ui/custom_slider.dart';
 import '../ui/gesture_detector_with_cursor.dart';
@@ -120,6 +122,7 @@ class BackgroundSettingsView extends StatelessWidget {
             //   onSelected: (gradient) => model.setGradient(gradient),
             // ),
           ],
+          if (model.mode.isImage) const ImageSettings(),
           const SizedBox(height: 16),
           CustomSlider(
             label: 'Tint',
@@ -258,5 +261,63 @@ class GradientsGridView extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+class ImageSettings extends StatelessWidget {
+  const ImageSettings({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<BackgroundModelBase>(builder: (context, model, child) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const SizedBox(height: 16),
+          Builder(builder: (context) {
+            switch (model.imageSource) {
+              case ImageSource.unsplash:
+                return const UnsplashSourceSettings();
+              case ImageSource.local:
+                return const SizedBox.shrink();
+            }
+          }),
+          const SizedBox(height: 16),
+          CustomDropdown<ImageRefreshRate>(
+            value: model.imageRefreshRate,
+            label: 'Auto Refresh Background',
+            isExpanded: true,
+            items: ImageRefreshRate.values,
+            itemBuilder: (context, item) => Expanded(child: Text(item.name)),
+            onSelected: (value) => model.setImageRefreshRate(value),
+          ),
+        ],
+      );
+    });
+  }
+}
+
+class UnsplashSourceSettings extends StatelessWidget {
+  const UnsplashSourceSettings({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<BackgroundModelBase>(builder: (context, model, child) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          CustomDropdown<UnsplashSource>(
+            value: model.unsplashSource,
+            label: 'Background Collection',
+            isExpanded: true,
+            items: UnsplashSources.sources,
+            itemBuilder: (context, item) => Expanded(child: Text(item.name)),
+            onSelected: (value) => model.setUnsplashSource(value),
+          ),
+        ],
+      );
+    });
   }
 }

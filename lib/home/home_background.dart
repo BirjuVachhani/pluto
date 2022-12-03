@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../model/background_settings.dart';
 import '../model/color_gradient.dart';
 import '../model/flat_color.dart';
+import '../model/unsplash_collection.dart';
 import '../resources/colors.dart';
 import '../resources/storage_keys.dart';
 import '../ui/texture_painter.dart';
@@ -27,6 +28,12 @@ abstract class BackgroundModelBase
 
   bool get invert => settings.invert;
 
+  ImageSource get imageSource => settings.source;
+
+  UnsplashSource get unsplashSource => settings.unsplashSource;
+
+  ImageRefreshRate get imageRefreshRate => settings.imageRefreshRate;
+
   void setMode(BackgroundMode mode);
 
   void setColor(FlatColor color);
@@ -36,6 +43,14 @@ abstract class BackgroundModelBase
   void setTint(double tint);
 
   void setTexture(bool texture);
+
+  void setInvert(bool invert);
+
+  void setImageSource(ImageSource source);
+
+  void setUnsplashSource(UnsplashSource source);
+
+  void setImageRefreshRate(ImageRefreshRate rate);
 
   Color getForegroundColor();
 }
@@ -58,7 +73,9 @@ class BackgroundModel extends BackgroundModelBase {
 
   @override
   void setMode(BackgroundMode mode) {
-    settings = settings.copyWith(mode: mode);
+    // Auto set some tint when image mode is selected.
+    final tint = mode.isImage ? 17.0 : settings.tint;
+    settings = settings.copyWith(mode: mode, tint: tint);
     save();
     notifyListeners();
   }
@@ -87,6 +104,34 @@ class BackgroundModel extends BackgroundModelBase {
   @override
   void setTexture(bool texture) {
     settings = settings.copyWith(texture: texture);
+    save();
+    notifyListeners();
+  }
+
+  @override
+  void setInvert(bool invert) {
+    settings = settings.copyWith(invert: invert);
+    save();
+    notifyListeners();
+  }
+
+  @override
+  void setImageSource(ImageSource source) {
+    settings = settings.copyWith(source: source);
+    save();
+    notifyListeners();
+  }
+
+  @override
+  void setUnsplashSource(UnsplashSource source) {
+    settings = settings.copyWith(unsplashSource: source);
+    save();
+    notifyListeners();
+  }
+
+  @override
+  void setImageRefreshRate(ImageRefreshRate rate) {
+    settings = settings.copyWith(imageRefreshRate: rate);
     save();
     notifyListeners();
   }

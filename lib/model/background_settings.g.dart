@@ -19,6 +19,15 @@ BackgroundSettings _$BackgroundSettingsFromJson(Map<String, dynamic> json) =>
       tint: (json['tint'] as num?)?.toDouble() ?? 0,
       texture: json['texture'] as bool? ?? false,
       invert: json['invert'] as bool? ?? false,
+      source: $enumDecodeNullable(_$ImageSourceEnumMap, json['source']) ??
+          ImageSource.unsplash,
+      unsplashSource: json['unsplashSource'] == null
+          ? UnsplashSources.random
+          : UnsplashSource.fromJson(
+              json['unsplashSource'] as Map<String, dynamic>),
+      imageRefreshRate: $enumDecodeNullable(
+              _$ImageRefreshRateEnumMap, json['imageRefreshRate']) ??
+          ImageRefreshRate.never,
     );
 
 Map<String, dynamic> _$BackgroundSettingsToJson(BackgroundSettings instance) =>
@@ -29,10 +38,30 @@ Map<String, dynamic> _$BackgroundSettingsToJson(BackgroundSettings instance) =>
       'tint': instance.tint,
       'texture': instance.texture,
       'invert': instance.invert,
+      'source': _$ImageSourceEnumMap[instance.source]!,
+      'unsplashSource': instance.unsplashSource,
+      'imageRefreshRate': _$ImageRefreshRateEnumMap[instance.imageRefreshRate]!,
     };
 
 const _$BackgroundModeEnumMap = {
   BackgroundMode.color: 'color',
   BackgroundMode.gradient: 'gradient',
   BackgroundMode.image: 'image',
+};
+
+const _$ImageSourceEnumMap = {
+  ImageSource.unsplash: 'unsplash',
+  ImageSource.local: 'local',
+};
+
+const _$ImageRefreshRateEnumMap = {
+  ImageRefreshRate.never: 'never',
+  ImageRefreshRate.newTab: 'newTab',
+  ImageRefreshRate.minute: 'minute',
+  ImageRefreshRate.fiveMinute: 'fiveMinute',
+  ImageRefreshRate.fifteenMinute: 'fifteenMinute',
+  ImageRefreshRate.thirtyMinute: 'thirtyMinute',
+  ImageRefreshRate.hour: 'hour',
+  ImageRefreshRate.daily: 'daily',
+  ImageRefreshRate.weekly: 'weekly',
 };
