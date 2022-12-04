@@ -20,7 +20,9 @@ class MyApp extends StatelessWidget {
       title: 'Minima',
       debugShowCheckedModeBanner: false,
       theme: buildTheme(context),
-      home: const HomeWrapper(),
+      home: const HomeWrapper(
+        key: ValueKey('HomeWrapper'),
+      ),
     );
   }
 }

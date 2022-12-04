@@ -134,24 +134,39 @@ class _ImageBackgroundViewState extends State<ImageBackgroundView> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox.expand(
-      child: AnimatedCrossFade(
-        key: const ValueKey('Background Image'),
-        crossFadeState: crossFadeState,
-        reverseDuration: const Duration(milliseconds: 500),
-        duration: const Duration(milliseconds: 500),
-        firstChild: ImageChild(
-          key: const ValueKey('imageBytes1'),
-          imageBytes: imageBytes1,
-          showLoadingBackground: widget.showLoadingBackground,
-          showing: crossFadeState == CrossFadeState.showFirst,
-        ),
-        secondChild: ImageChild(
-          key: const ValueKey('imageBytes2'),
-          imageBytes: imageBytes2,
-          showLoadingBackground: widget.showLoadingBackground,
-          showing: crossFadeState == CrossFadeState.showSecond,
-        ),
+    return AnimatedCrossFade(
+      key: const ValueKey('Background Image'),
+      crossFadeState: crossFadeState,
+      reverseDuration: const Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 500),
+      layoutBuilder: (topChild, topChildKey, bottomChild, bottomChildKey) {
+        return SizedBox(
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              Positioned(
+                key: bottomChildKey,
+                child: bottomChild,
+              ),
+              Positioned(
+                key: topChildKey,
+                child: topChild,
+              ),
+            ],
+          ),
+        );
+      },
+      firstChild: ImageChild(
+        key: const ValueKey('imageBytes1'),
+        imageBytes: imageBytes1,
+        showLoadingBackground: widget.showLoadingBackground,
+        showing: crossFadeState == CrossFadeState.showFirst,
+      ),
+      secondChild: ImageChild(
+        key: const ValueKey('imageBytes2'),
+        imageBytes: imageBytes2,
+        showLoadingBackground: widget.showLoadingBackground,
+        showing: crossFadeState == CrossFadeState.showSecond,
       ),
     );
   }

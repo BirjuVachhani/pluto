@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -19,13 +21,13 @@ class HomeWrapper extends StatelessWidget {
           create: (context) => HomeModel()..init(),
         ),
         ChangeNotifierProvider<BackgroundModelBase>(
-          create: (context) => BackgroundModel()..init(),
+          create: (context) => BackgroundModel(),
         ),
         ChangeNotifierProvider<WidgetModelBase>(
           create: (context) => WidgetModel()..init(),
         ),
       ],
-      child: const Home(),
+      child: const Home(key: ValueKey('Home')),
     );
   }
 }
@@ -67,6 +69,21 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  late final BackgroundModelBase model = context.read<BackgroundModelBase>();
+
+  late Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    model.initializationFuture.then((_) {
+      // Start the timer for auto background refresh if required.
+      if (!model.imageRefreshRate.requiresTimer) return;
+      _timer = Timer.periodic(
+          const Duration(seconds: 1), (timer) => model.onTimerCallback());
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,5 +100,11 @@ class _HomeState extends State<Home> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 }

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:typed_data';
 
@@ -32,6 +33,8 @@ abstract class BackgroundModelBase
   /// In memory copy of the cached images.
   Uint8List? image1;
   Uint8List? image2;
+
+  late Future initializationFuture;
 
   BackgroundMode get mode => settings.mode;
 
@@ -76,6 +79,8 @@ abstract class BackgroundModelBase
   Future<void> changeBackground({bool updateAll = false});
 
   Uint8List? getImage();
+
+  void onTimerCallback();
 }
 
 class BackgroundModel extends BackgroundModelBase {
@@ -84,6 +89,10 @@ class BackgroundModel extends BackgroundModelBase {
 
   /// Latest background change time.
   late DateTime backgroundLastUpdated;
+
+  BackgroundModel() {
+    initializationFuture = init();
+  }
 
   @override
   Future<void> init() async {
@@ -143,7 +152,7 @@ class BackgroundModel extends BackgroundModelBase {
       // an image cached when the user opens a new tab again.
       // Fetch new images
       log('fetch new images for new tab type');
-      _refetchAndSetImageForNewTab();
+      _refetchAndCacheOtherImage();
       // toggle the index and save it.
       settings = settings.copyWith(imageIndex: imageIndex == 0 ? 1 : 0);
       _save();
@@ -153,9 +162,10 @@ class BackgroundModel extends BackgroundModelBase {
     notifyListeners();
   }
 
-  /// Responsible for fetching and setting the image for the next tab.
-  Future<void> _refetchAndSetImageForNewTab() async {
-    log('refetchAndSetImageHidden');
+  /// Responsible for fetching and caching the image other than the current
+  /// image.
+  Future<void> _refetchAndCacheOtherImage() async {
+    log('refetchAndCacheOtherImage');
     _loadUnsplashImage().then((value) {
       if (value == null) return;
       // We only update the image that is not currently being used so it can
@@ -177,7 +187,8 @@ class BackgroundModel extends BackgroundModelBase {
 
     final nextUpdateTime = backgroundLastUpdated.add(imageRefreshRate.duration);
 
-    log('Next Background change at $nextUpdateTime');
+    // ignore: avoid_print
+    print('Next Background change at $nextUpdateTime');
   }
 
   /// Fetches a new image from unsplash and sets it as the current image.
@@ -194,7 +205,7 @@ class BackgroundModel extends BackgroundModelBase {
       backgroundLastUpdated = DateTime.now();
       // save updated time to storage
       storage.setInt(StorageKeys.backgroundLastUpdated,
-          backgroundLastUpdated.microsecondsSinceEpoch);
+          backgroundLastUpdated.millisecondsSinceEpoch);
 
       // Log next background change time.
       _logNextBackgroundChange();
@@ -363,5 +374,42 @@ class BackgroundModel extends BackgroundModelBase {
   /// Constructs an image URL of Unsplash based on the current settings.
   String _getUnsplashImageURL() {
     return 'https://source.unsplash.com${unsplashSource.getPath()}/${windowSize.width.toInt()}x${windowSize.height.toInt()}';
+  }
+
+  /// Refreshes the background image on timer callback.
+  @override
+  void onTimerCallback() async {
+    if (!imageRefreshRate.requiresTimer) return;
+
+    // log('Auto Background refresh has been triggered');
+    // Exit if it is not time to change the background based on the user
+    // settings.
+    if (backgroundLastUpdated
+            .add(imageRefreshRate.duration)
+            .isAfter(DateTime.now()) ||
+        isLoadingImage) {
+      // Enable this to see the remaining time in console.
+
+      // final remainingTime = backgroundLastUpdated
+      //     .add(imageRefreshRate.duration)
+      //     .difference(DateTime.now());
+      // log('Next background update in ${remainingTime.inSeconds} seconds');
+      return;
+    }
+
+    backgroundLastUpdated = DateTime.now();
+
+    // Update the background image.
+    storage.setInt(StorageKeys.backgroundLastUpdated,
+        backgroundLastUpdated.millisecondsSinceEpoch);
+
+    // Toggle the image index.
+    settings = settings.copyWith(imageIndex: imageIndex == 0 ? 1 : 0);
+    _save();
+
+    // Log next background change time.
+    _logNextBackgroundChange();
+
+    await _refetchAndCacheOtherImage();
   }
 }
