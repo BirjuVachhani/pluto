@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../settings/settings_panel.dart';
 import '../utils/utils.dart';
+import 'background_model.dart';
 import 'bottom_bar.dart';
 import 'home_background.dart';
 import 'home_widget.dart';

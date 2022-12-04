@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../home/home_background.dart';
+import '../home/background_model.dart';
 import '../model/background_settings.dart';
 import '../model/color_gradient.dart';
 import '../model/flat_color.dart';
@@ -158,6 +158,20 @@ class BackgroundSettingsView extends StatelessWidget {
                     child: Icon(
                       Icons.brightness_medium_rounded,
                       color: model.invert ? Colors.black : Colors.grey.shade400,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                GestureDetectorWithCursor(
+                  onTap: !model.isLoadingImage ? model.changeBackground : null,
+                  tooltip: 'Change Background',
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: ImageIcon(
+                      AssetImage(model.isLoadingImage
+                          ? 'assets/images/ic_hourglass.png'
+                          : 'assets/images/ic_fan.png'),
+                      color: Colors.black,
                     ),
                   ),
                 ),

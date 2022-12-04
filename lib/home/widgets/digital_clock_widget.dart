@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../model/widget_settings.dart';
 import '../../ui/digital_clock.dart';
 import '../../utils/extensions.dart';
-import '../home_background.dart';
+import '../background_model.dart';
 import '../home_widget.dart';
 
 class DigitalClockWidget extends StatelessWidget {

@@ -1,178 +1,67 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
-import '../model/background_settings.dart';
-import '../model/color_gradient.dart';
-import '../model/flat_color.dart';
-import '../model/unsplash_collection.dart';
 import '../resources/colors.dart';
-import '../resources/storage_keys.dart';
 import '../ui/texture_painter.dart';
-import '../utils/storage_manager.dart';
 import '../utils/utils.dart';
+import 'background_model.dart';
 
-abstract class BackgroundModelBase
-    with ChangeNotifier, LazyInitializationMixin {
-  late BackgroundSettings settings;
-
-  BackgroundMode get mode => settings.mode;
-
-  FlatColor get color => settings.color;
-
-  ColorGradient get gradient => settings.gradient;
-
-  double get tint => settings.tint;
-
-  bool get texture => settings.texture;
-
-  bool get invert => settings.invert;
-
-  ImageSource get imageSource => settings.source;
-
-  UnsplashSource get unsplashSource => settings.unsplashSource;
-
-  ImageRefreshRate get imageRefreshRate => settings.imageRefreshRate;
-
-  void setMode(BackgroundMode mode);
-
-  void setColor(FlatColor color);
-
-  void setGradient(ColorGradient gradient);
-
-  void setTint(double tint);
-
-  void setTexture(bool texture);
-
-  void setInvert(bool invert);
-
-  void setImageSource(ImageSource source);
-
-  void setUnsplashSource(UnsplashSource source);
-
-  void setImageRefreshRate(ImageRefreshRate rate);
-
-  Color getForegroundColor();
-}
-
-class BackgroundModel extends BackgroundModelBase {
-  late final LocalStorageManager storage =
-      GetIt.instance.get<LocalStorageManager>();
-
-  @override
-  Future<void> init() async {
-    final data = await storage.getJson(StorageKeys.backgroundSettings);
-    settings =
-        data != null ? BackgroundSettings.fromJson(data) : BackgroundSettings();
-
-    initialized = true;
-    notifyListeners();
-  }
-
-  Future<bool> save() =>
-      storage.setJson(StorageKeys.backgroundSettings, settings.toJson());
-
-  @override
-  void setMode(BackgroundMode mode) {
-    // Auto set some tint when image mode is selected.
-    final tint = mode.isImage ? 17.0 : settings.tint;
-    settings = settings.copyWith(mode: mode, tint: tint);
-    save();
-    notifyListeners();
-  }
-
-  @override
-  void setColor(FlatColor color) {
-    settings = settings.copyWith(color: color);
-    save();
-    notifyListeners();
-  }
-
-  @override
-  void setGradient(ColorGradient gradient) {
-    settings = settings.copyWith(gradient: gradient);
-    save();
-    notifyListeners();
-  }
-
-  @override
-  void setTint(double tint) {
-    settings = settings.copyWith(tint: tint);
-    save();
-    notifyListeners();
-  }
-
-  @override
-  void setTexture(bool texture) {
-    settings = settings.copyWith(texture: texture);
-    save();
-    notifyListeners();
-  }
-
-  @override
-  void setInvert(bool invert) {
-    settings = settings.copyWith(invert: invert);
-    save();
-    notifyListeners();
-  }
-
-  @override
-  void setImageSource(ImageSource source) {
-    settings = settings.copyWith(source: source);
-    save();
-    notifyListeners();
-  }
-
-  @override
-  void setUnsplashSource(UnsplashSource source) {
-    settings = settings.copyWith(unsplashSource: source);
-    save();
-    notifyListeners();
-  }
-
-  @override
-  void setImageRefreshRate(ImageRefreshRate rate) {
-    settings = settings.copyWith(imageRefreshRate: rate);
-    save();
-    notifyListeners();
-  }
-
-  @override
-  Color getForegroundColor() {
-    if (mode.isColor) return color.foreground;
-    if (mode.isGradient) return gradient.foreground;
-    if (invert) return Colors.black;
-    return Colors.white;
-  }
-}
-
-class HomeBackground extends StatelessWidget {
+class HomeBackground extends StatefulWidget {
   const HomeBackground({super.key});
+
+  @override
+  State<HomeBackground> createState() => _HomeBackgroundState();
+}
+
+class _HomeBackgroundState extends State<HomeBackground> {
+  late final BackgroundModelBase model = context.read<BackgroundModelBase>();
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    model.windowSize = MediaQuery.of(context).size;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<BackgroundModelBase>(
       builder: (context, model, child) {
         if (!model.initialized) return const SizedBox.shrink();
+
+        final imageBytes = model.getImage();
+
         return AnimatedContainer(
           duration: const Duration(milliseconds: 500),
           curve: Curves.easeOut,
           decoration: BoxDecoration(
             gradient: getBackground(model),
-            image: getImage(model),
           ),
           foregroundDecoration: BoxDecoration(
             color: (model.invert ? Colors.white : AppColors.tint)
                 .withOpacity(model.tint / 100),
           ),
-          child: model.texture
-              ? CustomPaint(
-                  painter: TexturePainter(
-                    color: model.getForegroundColor().withOpacity(0.4),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              if (model.mode.isImage && imageBytes != null)
+                Positioned.fill(
+                  child: ImageBackgroundView(
+                    imageBytes: imageBytes,
+                    showLoadingBackground: model.showLoadingBackground,
                   ),
-                  child: child,
-                )
-              : child,
+                ),
+              if (model.texture)
+                Positioned.fill(
+                  child: CustomPaint(
+                    painter: TexturePainter(
+                      color: model.getForegroundColor().withOpacity(0.4),
+                    ),
+                  ),
+                ),
+            ],
+          ),
         );
       },
     );
@@ -198,13 +87,140 @@ class HomeBackground extends StatelessWidget {
       stops: model.mode.isGradient ? gradient.stops : null,
     );
   }
+}
 
-  DecorationImage? getImage(BackgroundModelBase model) {
-    if (!model.mode.isImage) return null;
-    return DecorationImage(
-      image: NetworkImage(
-          'https://source.unsplash.com${model.unsplashSource.getPath()}'),
-      fit: BoxFit.cover,
+class ImageBackgroundView extends StatefulWidget {
+  final Uint8List imageBytes;
+  final bool showLoadingBackground;
+
+  const ImageBackgroundView({
+    super.key,
+    required this.imageBytes,
+    this.showLoadingBackground = false,
+  });
+
+  @override
+  State<ImageBackgroundView> createState() => _ImageBackgroundViewState();
+}
+
+class _ImageBackgroundViewState extends State<ImageBackgroundView> {
+  late Uint8List imageBytes1;
+  late Uint8List imageBytes2;
+
+  CrossFadeState crossFadeState = CrossFadeState.showFirst;
+
+  @override
+  void initState() {
+    super.initState();
+    imageBytes1 = imageBytes2 = widget.imageBytes;
+  }
+
+  @override
+  void didUpdateWidget(covariant ImageBackgroundView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final currentBytes =
+        crossFadeState == CrossFadeState.showFirst ? imageBytes1 : imageBytes2;
+    if (currentBytes != widget.imageBytes) {
+      if (crossFadeState == CrossFadeState.showFirst) {
+        imageBytes2 = widget.imageBytes;
+      } else {
+        imageBytes1 = widget.imageBytes;
+      }
+      crossFadeState = crossFadeState == CrossFadeState.showFirst
+          ? CrossFadeState.showSecond
+          : CrossFadeState.showFirst;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox.expand(
+      child: AnimatedCrossFade(
+        key: const ValueKey('Background Image'),
+        crossFadeState: crossFadeState,
+        reverseDuration: const Duration(milliseconds: 500),
+        duration: const Duration(milliseconds: 500),
+        firstChild: ImageChild(
+          key: const ValueKey('imageBytes1'),
+          imageBytes: imageBytes1,
+          showLoadingBackground: widget.showLoadingBackground,
+          showing: crossFadeState == CrossFadeState.showFirst,
+        ),
+        secondChild: ImageChild(
+          key: const ValueKey('imageBytes2'),
+          imageBytes: imageBytes2,
+          showLoadingBackground: widget.showLoadingBackground,
+          showing: crossFadeState == CrossFadeState.showSecond,
+        ),
+      ),
+    );
+  }
+}
+
+class ImageChild extends StatefulWidget {
+  final Uint8List imageBytes;
+  final bool showLoadingBackground;
+  final bool showing;
+
+  const ImageChild({
+    super.key,
+    required this.imageBytes,
+    this.showLoadingBackground = false,
+    required this.showing,
+  });
+
+  @override
+  State<ImageChild> createState() => _ImageChildState();
+}
+
+class _ImageChildState extends State<ImageChild> {
+  bool showGreyScale = false;
+
+  @override
+  void initState() {
+    super.initState();
+    showGreyScale = widget.showLoadingBackground && widget.showing;
+  }
+
+  @override
+  void didUpdateWidget(covariant ImageChild oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.imageBytes != widget.imageBytes) {
+      showGreyScale = widget.showLoadingBackground && widget.showing;
+    }
+    if (oldWidget.showLoadingBackground && !widget.showLoadingBackground) {
+      Future.delayed(const Duration(milliseconds: 500), () {
+        showGreyScale = false;
+        if (mounted) setState(() {});
+      });
+    }
+    if (widget.showLoadingBackground && widget.showing) showGreyScale = true;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        Positioned.fill(
+          child: ColorFiltered(
+              colorFilter: greyscale(),
+              child: Image.memory(
+                widget.imageBytes,
+                fit: BoxFit.cover,
+              )),
+        ),
+        Positioned.fill(
+          child: AnimatedOpacity(
+            duration: const Duration(milliseconds: 500),
+            opacity: showGreyScale && widget.showing ? 0 : 1,
+            child: Image.memory(
+              widget.imageBytes,
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

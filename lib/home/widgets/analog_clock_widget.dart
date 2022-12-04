@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../ui/analog_clock.dart';
-import '../home_background.dart';
+import '../background_model.dart';
 import '../home_widget.dart';
 
 class AnalogClockWidget extends StatelessWidget {

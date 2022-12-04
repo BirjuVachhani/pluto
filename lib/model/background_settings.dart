@@ -46,7 +46,7 @@ enum ImageRefreshRate {
   final Duration duration;
 
   bool get requiresTimer =>
-      this == ImageRefreshRate.never || this == ImageRefreshRate.newTab;
+      this != ImageRefreshRate.never && this != ImageRefreshRate.newTab;
 
   bool get isShort {
     switch (this) {
@@ -80,6 +80,7 @@ class BackgroundSettings with EquatableMixin {
   final ImageSource source;
   final UnsplashSource unsplashSource;
   final ImageRefreshRate imageRefreshRate;
+  final int imageIndex;
 
   BackgroundSettings({
     this.mode = BackgroundMode.color,
@@ -91,6 +92,7 @@ class BackgroundSettings with EquatableMixin {
     this.source = ImageSource.unsplash,
     this.unsplashSource = UnsplashSources.random,
     this.imageRefreshRate = ImageRefreshRate.never,
+    this.imageIndex = 0,
   });
 
   @override
@@ -104,6 +106,7 @@ class BackgroundSettings with EquatableMixin {
         source,
         unsplashSource,
         imageRefreshRate,
+        imageIndex,
       ];
 
   BackgroundSettings copyWith({
@@ -116,6 +119,7 @@ class BackgroundSettings with EquatableMixin {
     ImageSource? source,
     UnsplashSource? unsplashSource,
     ImageRefreshRate? imageRefreshRate,
+    int? imageIndex,
   }) {
     return BackgroundSettings(
       mode: mode ?? this.mode,
@@ -127,6 +131,7 @@ class BackgroundSettings with EquatableMixin {
       source: source ?? this.source,
       unsplashSource: unsplashSource ?? this.unsplashSource,
       imageRefreshRate: imageRefreshRate ?? this.imageRefreshRate,
+      imageIndex: imageIndex ?? this.imageIndex,
     );
   }
 

@@ -5,6 +5,8 @@ import 'package:collection/collection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class LocalStorageManager {
+  Future<bool> containsKey(String key);
+
   Future<Map<String, dynamic>?> getJson(String key);
 
   Future<bool> setJson(String key, Map<String, dynamic> value);
@@ -18,6 +20,10 @@ abstract class LocalStorageManager {
   Future<double?> getDouble(String key);
 
   Future<bool> setDouble(String key, double value);
+
+  Future<int?> getInt(String key);
+
+  Future<bool> setInt(String key, int value);
 
   Future<T?> getEnum<T extends Enum>(String key, List<T> values) async {
     return getString(key).then((value) {
@@ -106,4 +112,13 @@ class SharedPreferencesStorageManager extends LocalStorageManager {
   @override
   Future<bool> setBase64(String key, Uint8List value) =>
       prefs.setString(key, base64.encode(value));
+
+  @override
+  Future<int?> getInt(String key) async => prefs.getInt(key);
+
+  @override
+  Future<bool> setInt(String key, int value) => prefs.setInt(key, value);
+
+  @override
+  Future<bool> containsKey(String key) => Future.value(prefs.containsKey(key));
 }
