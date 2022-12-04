@@ -141,6 +141,7 @@ class BackgroundModel extends BackgroundModelBase {
   Color getForegroundColor() {
     if (mode.isColor) return color.foreground;
     if (mode.isGradient) return gradient.foreground;
+    if (invert) return Colors.black;
     return Colors.white;
   }
 }
@@ -161,7 +162,8 @@ class HomeBackground extends StatelessWidget {
             image: getImage(model),
           ),
           foregroundDecoration: BoxDecoration(
-            color: AppColors.tint.withOpacity(model.tint / 100),
+            color: (model.invert ? Colors.white : AppColors.tint)
+                .withOpacity(model.tint / 100),
           ),
           child: model.texture
               ? CustomPaint(
@@ -200,7 +202,8 @@ class HomeBackground extends StatelessWidget {
   DecorationImage? getImage(BackgroundModelBase model) {
     if (!model.mode.isImage) return null;
     return DecorationImage(
-      image: NetworkImage('https://source.unsplash.com/random'),
+      image: NetworkImage(
+          'https://source.unsplash.com${model.unsplashSource.getPath()}'),
       fit: BoxFit.cover,
     );
   }

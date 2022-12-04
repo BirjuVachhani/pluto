@@ -133,16 +133,36 @@ class BackgroundSettingsView extends StatelessWidget {
             onChanged: (value) => model.setTint(value),
           ),
           const SizedBox(height: 40),
-          GestureDetectorWithCursor(
-            onTap: () => model.setTexture(!model.texture),
-            tooltip: 'Texture',
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Icon(
-                Icons.lens_blur_rounded,
-                color: model.texture ? Colors.black : Colors.grey.shade400,
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              GestureDetectorWithCursor(
+                onTap: () => model.setTexture(!model.texture),
+                tooltip: 'Texture',
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Icon(
+                    Icons.lens_blur_rounded,
+                    color: model.texture ? Colors.black : Colors.grey.shade400,
+                  ),
+                ),
               ),
-            ),
+              if (model.mode.isImage) ...[
+                const SizedBox(width: 16),
+                GestureDetectorWithCursor(
+                  onTap: () => model.setInvert(!model.invert),
+                  tooltip: 'Invert',
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Icon(
+                      Icons.brightness_medium_rounded,
+                      color: model.invert ? Colors.black : Colors.grey.shade400,
+                    ),
+                  ),
+                ),
+              ],
+            ],
           ),
           const SizedBox(height: 16),
         ],
