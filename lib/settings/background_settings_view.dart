@@ -323,7 +323,7 @@ class ImageSettings extends StatelessWidget {
             label: 'Auto Refresh Background',
             isExpanded: true,
             items: ImageRefreshRate.values,
-            itemBuilder: (context, item) => Text(item.name),
+            itemBuilder: (context, item) => Text(item.label),
             onSelected: (value) => model.setImageRefreshRate(value),
           ),
         ],
