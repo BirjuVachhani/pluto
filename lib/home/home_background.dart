@@ -56,7 +56,8 @@ abstract class BackgroundModelBase
 }
 
 class BackgroundModel extends BackgroundModelBase {
-  late final StorageManager storage = GetIt.instance.get<StorageManager>();
+  late final LocalStorageManager storage =
+      GetIt.instance.get<LocalStorageManager>();
 
   @override
   Future<void> init() async {
@@ -157,6 +158,7 @@ class HomeBackground extends StatelessWidget {
           curve: Curves.easeOut,
           decoration: BoxDecoration(
             gradient: getBackground(model),
+            image: getImage(model),
           ),
           foregroundDecoration: BoxDecoration(
             color: AppColors.tint.withOpacity(model.tint / 100),
@@ -192,6 +194,14 @@ class HomeBackground extends StatelessWidget {
       begin: gradient.begin,
       end: gradient.end,
       stops: model.mode.isGradient ? gradient.stops : null,
+    );
+  }
+
+  DecorationImage? getImage(BackgroundModelBase model) {
+    if (!model.mode.isImage) return null;
+    return DecorationImage(
+      image: NetworkImage('https://source.unsplash.com/random'),
+      fit: BoxFit.cover,
     );
   }
 }

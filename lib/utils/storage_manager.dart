@@ -1,9 +1,10 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-abstract class StorageManager {
+abstract class LocalStorageManager {
   Future<Map<String, dynamic>?> getJson(String key);
 
   Future<bool> setJson(String key, Map<String, dynamic> value);
@@ -35,10 +36,14 @@ abstract class StorageManager {
   Future<T?> getSerializableObject<T>(
       String key, T Function(Map<String, dynamic> json) fromJson);
 
+  Future<Uint8List?> getBase64(String key);
+
+  Future<bool> setBase64(String key, Uint8List value);
+
   Future<void> clear();
 }
 
-class SharedPreferencesStorageManager extends StorageManager {
+class SharedPreferencesStorageManager extends LocalStorageManager {
   SharedPreferencesStorageManager._(this.prefs);
 
   final SharedPreferences prefs;
@@ -90,4 +95,15 @@ class SharedPreferencesStorageManager extends StorageManager {
 
   @override
   Future<void> clear() => prefs.clear();
+
+  @override
+  Future<Uint8List?> getBase64(String key) async {
+    final data = prefs.getString(key);
+    if (data == null) return null;
+    return Future.value(base64.decode(data));
+  }
+
+  @override
+  Future<bool> setBase64(String key, Uint8List value) =>
+      prefs.setString(key, base64.encode(value));
 }

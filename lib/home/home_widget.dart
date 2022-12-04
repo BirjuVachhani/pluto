@@ -23,7 +23,8 @@ abstract class WidgetModelBase with ChangeNotifier, LazyInitializationMixin {
 }
 
 class WidgetModel extends WidgetModelBase {
-  late final StorageManager storage = GetIt.instance.get<StorageManager>();
+  late final LocalStorageManager storage =
+      GetIt.instance.get<LocalStorageManager>();
 
   @override
   Future<void> init() async {

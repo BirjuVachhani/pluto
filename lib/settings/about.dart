@@ -51,7 +51,7 @@ class About extends StatelessWidget {
           IconButton(
             tooltip: 'Reset Settings',
             onPressed: () {
-              GetIt.instance.get<StorageManager>().clear();
+              GetIt.instance.get<LocalStorageManager>().clear();
             },
             icon: const Icon(Icons.refresh_rounded),
           ),

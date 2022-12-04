@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'unsplash_collection.g.dart';
@@ -6,7 +7,7 @@ const String unsplashBaseUrl = 'https://source.unsplash.com';
 
 enum UnsplashSourceType { random, collection, user, likes }
 
-abstract class UnsplashSource {
+abstract class UnsplashSource with EquatableMixin {
   abstract final UnsplashSourceType type;
   final String name;
 
@@ -49,6 +50,9 @@ class UnsplashRandomSource extends UnsplashSource {
   @override
   Map<String, dynamic> toJson() =>
       _$UnsplashRandomSourceToJson(this)..['type'] = type.name;
+
+  @override
+  List<Object?> get props => [type, name];
 }
 
 abstract class UnsplashIdentifiableSource extends UnsplashSource {
@@ -76,6 +80,9 @@ class UnsplashCollectionSource extends UnsplashIdentifiableSource {
   @override
   Map<String, dynamic> toJson() =>
       _$UnsplashCollectionSourceToJson(this)..['type'] = type.name;
+
+  @override
+  List<Object?> get props => [type, id, name];
 }
 
 @JsonSerializable()
@@ -97,6 +104,9 @@ class UnsplashUserSource extends UnsplashIdentifiableSource {
   @override
   Map<String, dynamic> toJson() =>
       _$UnsplashUserSourceToJson(this)..['type'] = type.name;
+
+  @override
+  List<Object?> get props => [type, id, name];
 }
 
 @JsonSerializable()
@@ -118,4 +128,7 @@ class UnsplashLikesSource extends UnsplashIdentifiableSource {
   @override
   Map<String, dynamic> toJson() =>
       _$UnsplashLikesSourceToJson(this)..['type'] = type.name;
+
+  @override
+  List<Object?> get props => [type, id, name];
 }

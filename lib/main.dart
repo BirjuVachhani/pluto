@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
 }
 
 Future<void> initialize() async {
-  GetIt.instance.registerSingleton<StorageManager>(
+  GetIt.instance.registerSingleton<LocalStorageManager>(
       await SharedPreferencesStorageManager.create());
 }
 
