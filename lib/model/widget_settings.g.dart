@@ -77,6 +77,8 @@ AnalogClockWidgetSettings _$AnalogClockWidgetSettingsFromJson(
       radius: (json['radius'] as num?)?.toDouble() ?? 150,
       showSecondsHand: json['showSecondsHand'] as bool? ?? true,
       coloredSecondHand: json['coloredSecondHand'] as bool? ?? false,
+      alignment: $enumDecodeNullable(_$AlignmentCEnumMap, json['alignment']) ??
+          AlignmentC.center,
     );
 
 Map<String, dynamic> _$AnalogClockWidgetSettingsToJson(
@@ -85,4 +87,24 @@ Map<String, dynamic> _$AnalogClockWidgetSettingsToJson(
       'radius': instance.radius,
       'showSecondsHand': instance.showSecondsHand,
       'coloredSecondHand': instance.coloredSecondHand,
+      'alignment': _$AlignmentCEnumMap[instance.alignment]!,
+    };
+
+MessageWidgetSettings _$MessageWidgetSettingsFromJson(
+        Map<String, dynamic> json) =>
+    MessageWidgetSettings(
+      fontSize: (json['fontSize'] as num?)?.toDouble() ?? 100,
+      fontFamily: json['fontFamily'] as String? ?? FontFamilies.product,
+      message: json['message'] as String? ?? 'Hello World!',
+      alignment: $enumDecodeNullable(_$AlignmentCEnumMap, json['alignment']) ??
+          AlignmentC.center,
+    );
+
+Map<String, dynamic> _$MessageWidgetSettingsToJson(
+        MessageWidgetSettings instance) =>
+    <String, dynamic>{
+      'fontSize': instance.fontSize,
+      'fontFamily': instance.fontFamily,
+      'message': instance.message,
+      'alignment': _$AlignmentCEnumMap[instance.alignment]!,
     };

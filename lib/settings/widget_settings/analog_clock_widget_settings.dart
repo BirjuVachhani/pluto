@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../home/home_widget.dart';
+import '../../ui/alignment_control.dart';
 import '../../ui/custom_slider.dart';
 import '../../ui/custom_switch.dart';
 
@@ -24,6 +25,14 @@ class AnalogClockWidgetSettingsView extends StatelessWidget {
               value: settings.radius,
               onChanged: (value) => model.updateAnalogClockSettings(
                 settings.copyWith(radius: value),
+              ),
+            ),
+            const SizedBox(height: 16),
+            AlignmentControl(
+              label: 'Position',
+              alignment: settings.alignment,
+              onChanged: (alignment) => model.updateAnalogClockSettings(
+                settings.copyWith(alignment: alignment),
               ),
             ),
             const SizedBox(height: 16),

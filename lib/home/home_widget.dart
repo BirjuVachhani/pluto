@@ -8,18 +8,23 @@ import '../utils/storage_manager.dart';
 import '../utils/utils.dart';
 import 'widgets/analog_clock_widget.dart';
 import 'widgets/digital_clock_widget.dart';
+import 'widgets/message_widget.dart';
 
 abstract class WidgetModelBase with ChangeNotifier, LazyInitializationMixin {
   WidgetType type = WidgetType.none;
 
   late DigitalClockWidgetSettings digitalClockSettings;
   late AnalogClockWidgetSettings analogueClockSettings;
+  late MessageWidgetSettings messageSettings;
 
   void setType(WidgetType type);
 
   void updateDigitalClockSettings(DigitalClockWidgetSettings settings);
 
   void updateAnalogClockSettings(AnalogClockWidgetSettings settings);
+
+  void updateMessageSettings(MessageWidgetSettings settings,
+      {bool save = true});
 }
 
 class WidgetModel extends WidgetModelBase {
@@ -43,6 +48,11 @@ class WidgetModel extends WidgetModelBase {
                 StorageKeys.analogueClockSettings,
                 AnalogClockWidgetSettings.fromJson) ??
             AnalogClockWidgetSettings();
+
+    messageSettings =
+        await storage.getSerializableObject<MessageWidgetSettings>(
+                StorageKeys.messageSettings, MessageWidgetSettings.fromJson) ??
+            MessageWidgetSettings();
 
     initialized = true;
     notifyListeners();
@@ -68,6 +78,14 @@ class WidgetModel extends WidgetModelBase {
     storage.setJson(StorageKeys.analogueClockSettings, settings.toJson());
     notifyListeners();
   }
+
+  @override
+  void updateMessageSettings(MessageWidgetSettings settings,
+      {bool save = false}) {
+    messageSettings = settings;
+    if (save) storage.setJson(StorageKeys.messageSettings, settings.toJson());
+    notifyListeners();
+  }
 }
 
 class HomeWidget extends StatelessWidget {
@@ -82,6 +100,8 @@ class HomeWidget extends StatelessWidget {
             return const DigitalClockWidget();
           case WidgetType.analogClock:
             return const AnalogClockWidget();
+          case WidgetType.text:
+            return const MessageWidget();
           case WidgetType.none:
             return const SizedBox.shrink();
         }

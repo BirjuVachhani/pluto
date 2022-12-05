@@ -6,13 +6,13 @@ import '../resources/fonts.dart';
 part 'widget_settings.g.dart';
 
 enum WidgetType {
+  none('Nothing'),
   digitalClock('Digital Clock'),
   analogClock('Analog Clock'),
-  none('Nothing');
   // weather('Weather'),
   // calendar('Calendar'),
   // location('Location'),
-  // text('Text');
+  text('Message');
 
   const WidgetType(this.label);
 
@@ -71,6 +71,8 @@ abstract class BaseWidgetSettings with EquatableMixin {
         return DigitalClockWidgetSettings.fromJson(json);
       case WidgetType.analogClock:
         return AnalogClockWidgetSettings.fromJson(json);
+      case WidgetType.text:
+        return MessageWidgetSettings.fromJson(json);
       case WidgetType.none:
         return NoneWidgetSettings();
     }
@@ -158,28 +160,33 @@ class AnalogClockWidgetSettings extends BaseWidgetSettings {
   final double radius;
   final bool showSecondsHand;
   final bool coloredSecondHand;
+  final AlignmentC alignment;
 
   @override
   final WidgetType type = WidgetType.digitalClock;
 
   AnalogClockWidgetSettings({
-    this.radius = 150,
+    this.radius = 100,
     this.showSecondsHand = true,
     this.coloredSecondHand = false,
+    this.alignment = AlignmentC.center,
   });
 
   @override
-  List<Object?> get props => [radius, showSecondsHand, coloredSecondHand, type];
+  List<Object?> get props =>
+      [radius, showSecondsHand, coloredSecondHand, type, alignment];
 
   AnalogClockWidgetSettings copyWith({
     double? radius,
     bool? showSecondsHand,
     bool? coloredSecondHand,
+    AlignmentC? alignment,
   }) {
     return AnalogClockWidgetSettings(
       radius: radius ?? this.radius,
       showSecondsHand: showSecondsHand ?? this.showSecondsHand,
       coloredSecondHand: coloredSecondHand ?? this.coloredSecondHand,
+      alignment: alignment ?? this.alignment,
     );
   }
 
@@ -188,4 +195,51 @@ class AnalogClockWidgetSettings extends BaseWidgetSettings {
 
   @override
   Map<String, dynamic> toJson() => _$AnalogClockWidgetSettingsToJson(this);
+}
+
+@JsonSerializable()
+class MessageWidgetSettings extends BaseWidgetSettings {
+  final double fontSize;
+  final String fontFamily;
+  final String message;
+  final AlignmentC alignment;
+
+  @override
+  final WidgetType type = WidgetType.text;
+
+  MessageWidgetSettings({
+    this.fontSize = 100,
+    this.fontFamily = FontFamilies.product,
+    this.message = 'Hello World!',
+    this.alignment = AlignmentC.center,
+  });
+
+  @override
+  List<Object?> get props => [
+        fontSize,
+        fontFamily,
+        message,
+        type,
+        alignment,
+      ];
+
+  MessageWidgetSettings copyWith({
+    double? fontSize,
+    String? fontFamily,
+    String? message,
+    AlignmentC? alignment,
+  }) {
+    return MessageWidgetSettings(
+      fontSize: fontSize ?? this.fontSize,
+      fontFamily: fontFamily ?? this.fontFamily,
+      message: message ?? this.message,
+      alignment: alignment ?? this.alignment,
+    );
+  }
+
+  factory MessageWidgetSettings.fromJson(Map<String, dynamic> json) =>
+      _$MessageWidgetSettingsFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$MessageWidgetSettingsToJson(this);
 }

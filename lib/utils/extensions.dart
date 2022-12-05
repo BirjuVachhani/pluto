@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 import '../model/color_gradient.dart';
 import '../model/widget_settings.dart';
@@ -42,6 +41,17 @@ extension AlignmentExt on AlignmentC {
         return Alignment.bottomCenter;
       case AlignmentC.bottomRight:
         return Alignment.bottomRight;
+    }
+  }
+
+  TextAlign get textAlign {
+    final alignment = flutterAlignment;
+    if (alignment.x == 0) {
+      return TextAlign.center;
+    } else if (alignment.x < 0) {
+      return TextAlign.left;
+    } else {
+      return TextAlign.right;
     }
   }
 }
