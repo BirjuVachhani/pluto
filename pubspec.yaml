@@ -45,7 +45,6 @@ flutter:
     - family: Cardo Italics
       fonts:
         - asset: assets/fonts/Cardo-Italics.ttf
-#          style: italic
     - family: Jakarta Sans
       fonts:
         - asset: assets/fonts/JakartaSans-Regular.ttf
@@ -57,5 +56,6 @@ flutter:
 
 scripts:
   build: flutter build web --release --web-renderer html --csp
+  codegen: flutter pub run build_runner build --delete-conflicting-outputs
   generate_colors: dart scripts/generators/colors_generator.dart scripts/generators/colors.json lib/resources/flat_colors.dart
   generate_gradients: dart scripts/generators/gradients_generator.dart scripts/generators/colors.json lib/resources/color_gradients.dart
