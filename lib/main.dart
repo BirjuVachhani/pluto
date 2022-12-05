@@ -6,7 +6,8 @@ import 'resources/colors.dart';
 import 'utils/storage_manager.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  final binding = WidgetsFlutterBinding.ensureInitialized();
+  binding.renderView.automaticSystemUiAdjustment = false;
   await initialize();
   runApp(const MyApp());
 }
@@ -34,35 +35,35 @@ Future<void> initialize() async {
 
 ThemeData buildTheme(BuildContext context) {
   return ThemeData(
-      backgroundColor: Colors.black,
-      scaffoldBackgroundColor: Colors.black,
-      brightness: Brightness.light,
-      dividerColor: AppColors.borderColor,
-      tooltipTheme: TooltipThemeData(
-        waitDuration: const Duration(milliseconds: 300),
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-        verticalOffset: 18,
-        textStyle: const TextStyle(
-          fontSize: 12,
-          color: Colors.white,
-        ),
-        decoration: ShapeDecoration(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4),
-          ),
-          color: Colors.black,
-        ),
+    backgroundColor: Colors.black,
+    scaffoldBackgroundColor: Colors.black,
+    brightness: Brightness.light,
+    dividerColor: AppColors.borderColor,
+    // fontFamily: FontFamilies.product,
+    tooltipTheme: TooltipThemeData(
+      waitDuration: const Duration(milliseconds: 300),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      verticalOffset: 18,
+      textStyle: const TextStyle(
+        fontSize: 12,
+        color: Colors.white,
       ),
-      textTheme: const TextTheme(
-        bodyText1: TextStyle(
-          fontWeight: FontWeight.w200,
-          color: AppColors.textColor,
+      decoration: ShapeDecoration(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
         ),
-        bodyText2: TextStyle(
-          fontWeight: FontWeight.w200,
-          color: AppColors.textColor,
-        ),
-      )
-      // fontFamily: FontFamilies.product,
-      );
+        color: Colors.black,
+      ),
+    ),
+    textTheme: const TextTheme(
+      bodyText1: TextStyle(
+        fontWeight: FontWeight.w200,
+        color: AppColors.textColor,
+      ),
+      bodyText2: TextStyle(
+        fontWeight: FontWeight.w200,
+        color: AppColors.textColor,
+      ),
+    ),
+  );
 }

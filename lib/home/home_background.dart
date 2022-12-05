@@ -26,6 +26,16 @@ class _HomeBackgroundState extends State<HomeBackground> {
 
   @override
   Widget build(BuildContext context) {
+    // This enables a fade in transition on opening a new tab.
+    // return TweenAnimationBuilder<double>(
+    //   key: const Key('HomeBackground'),
+    //   duration: const Duration(milliseconds: 0),
+    //   curve: Interval(0.1, 1,curve: Curves.easeOut),
+    //   tween: Tween<double>(begin: 0, end: 1),
+    //   builder: (context, value, child) {
+    //     return Opacity(opacity: value, child: child);
+    //   },
+    // );
     return Consumer<BackgroundModelBase>(
       builder: (context, model, child) {
         if (!model.initialized) return const SizedBox.shrink();

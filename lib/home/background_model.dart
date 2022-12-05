@@ -24,7 +24,7 @@ abstract class BackgroundModelBase
 
   /// Defines the size of the window. This is used to fetch images of the
   /// correct size.
-  late Size windowSize;
+  Size windowSize = const Size(1920, 1080);
 
   bool isLoadingImage = false;
 
@@ -354,6 +354,14 @@ class BackgroundModel extends BackgroundModelBase {
       if (response.statusCode == 200) {
         log('loadUnsplashImage success');
         // Return the image bytes.
+        // try {
+        //   log('pre-caching downloaded image');
+        //   if(context != null) {
+        //     precacheImage(Image.memory(response.bodyBytes).image, context!);
+        //   }
+        // }catch(e){
+        //   return response.bodyBytes;
+        // }
         return response.bodyBytes;
       }
       log('loadUnsplashImage failed ${response.statusCode}');

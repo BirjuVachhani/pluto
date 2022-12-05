@@ -3,5 +3,6 @@ html {
 }
 
 body {
+    background-color: #111111;
     -webkit-font-smoothing: antialiased;
 }
