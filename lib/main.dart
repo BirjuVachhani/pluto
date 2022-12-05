@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 
 import 'home/home.dart';
 import 'resources/colors.dart';
+import 'utils/extensions.dart';
 import 'utils/storage_manager.dart';
 
 void main() async {
@@ -39,6 +40,8 @@ ThemeData buildTheme(BuildContext context) {
     scaffoldBackgroundColor: Colors.black,
     brightness: Brightness.light,
     dividerColor: AppColors.borderColor,
+    primaryColor: Colors.black,
+    primarySwatch: Colors.black.toMaterialColor(),
     // fontFamily: FontFamilies.product,
     tooltipTheme: TooltipThemeData(
       waitDuration: const Duration(milliseconds: 300),

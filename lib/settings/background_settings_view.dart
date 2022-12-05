@@ -67,12 +67,13 @@ class BackgroundSettingsView extends StatelessWidget {
               value: model.color,
               label: 'Color',
               isExpanded: true,
+              itemHeight: 40,
               items: FlatColors.colors.values.toList(),
               itemBuilder: (context, item) => Row(
                 children: [
                   Container(
-                    width: 28,
-                    height: 28,
+                    width: 24,
+                    height: 24,
                     clipBehavior: Clip.antiAlias,
                     decoration: ShapeDecoration(
                       shape: const CircleBorder(),
@@ -97,12 +98,18 @@ class BackgroundSettingsView extends StatelessWidget {
               value: model.gradient,
               label: 'Gradient',
               isExpanded: true,
+              itemHeight: 40,
+              searchable: true,
+              searchMatchFn: (item, query) => (item.value as ColorGradient)
+                  .name
+                  .toLowerCase()
+                  .contains(query.toLowerCase()),
               items: ColorGradients.gradients.values.toList(),
               itemBuilder: (context, item) => Row(
                 children: [
                   Container(
-                    width: 28,
-                    height: 28,
+                    width: 24,
+                    height: 24,
                     clipBehavior: Clip.antiAlias,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,

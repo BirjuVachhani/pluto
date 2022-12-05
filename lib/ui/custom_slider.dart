@@ -50,16 +50,18 @@ class CustomSlider extends StatelessWidget {
             ),
             const SizedBox(width: 8),
             if (valueLabel != null)
-              ColoredBox(
-                color: Colors.grey.shade200,
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  child: Text(
-                    valueLabel!,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(height: 1.2),
-                  ),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade200,
+                  borderRadius: BorderRadius.circular(4),
+                  // border: Border.all(color: Colors.grey.shade300),
+                ),
+                child: Text(
+                  valueLabel!,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(height: 1.2),
                 ),
               ),
             const SizedBox(width: 6),

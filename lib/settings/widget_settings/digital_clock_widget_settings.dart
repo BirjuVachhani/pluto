@@ -74,7 +74,7 @@ class DigitalClockWidgetSettingsView extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             CustomDropdown<ClockFormat>(
-              label: 'Separator',
+              label: 'Format',
               isExpanded: true,
               value: settings.format,
               items: ClockFormat.values,

@@ -67,14 +67,14 @@ class _SettingsPanelState extends State<SettingsPanel>
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.fromLTRB(32, 12, 12, 12),
+                            padding: const EdgeInsets.fromLTRB(24, 10, 8, 10),
                             child: Row(
                               children: [
                                 Expanded(
                                   child: Text(
                                     'Settings',
                                     style:
-                                        Theme.of(context).textTheme.headline5,
+                                        Theme.of(context).textTheme.headline6,
                                   ),
                                 ),
                                 Material(
@@ -110,9 +110,9 @@ class _SettingsPanelState extends State<SettingsPanel>
                                     fontWeight: FontWeight.w300,
                                   ),
                                   padding: const EdgeInsets.symmetric(
-                                      horizontal: 32),
+                                      horizontal: 24),
                                   labelPadding: const EdgeInsets.symmetric(
-                                      horizontal: 20),
+                                      horizontal: 24),
                                   indicator: BoxDecoration(
                                     border: Border(
                                       top: BorderSide(
@@ -147,8 +147,7 @@ class _SettingsPanelState extends State<SettingsPanel>
                           Flexible(
                             child: SingleChildScrollView(
                               physics: const BouncingScrollPhysics(),
-                              padding:
-                                  const EdgeInsets.fromLTRB(32, 24, 32, 16),
+                              padding: const EdgeInsets.fromLTRB(24, 24, 24, 8),
                               child: Builder(builder: (context) {
                                 if (currentTabIndex == 0) {
                                   return const BackgroundSettingsView();
