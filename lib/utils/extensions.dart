@@ -103,9 +103,9 @@ extension ImageResolutionExt on ImageResolution {
   String get sizeLabel {
     final size = toSize();
     if (size == null) {
-      return 'Screen Size';
+      return 'Window size';
     } else {
-      return '${size.width.toInt()}x${size.height.toInt()}';
+      return '${size.width.toInt()} x ${size.height.toInt()}';
     }
   }
 }

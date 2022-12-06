@@ -373,9 +373,16 @@ class UnsplashSourceSettings extends StatelessWidget {
             onSelected: (value) => model.setUnsplashSource(value),
           ),
           const SizedBox(height: 16),
+          Row(
+            children: const [
+              Expanded(child: Text('Resolution')),
+              ResolutionHelpButton(),
+              SizedBox(width: 4),
+            ],
+          ),
+          const SizedBox(height: 10),
           CustomDropdown<ImageResolution>(
             value: model.imageResolution,
-            label: 'Resolution',
             isExpanded: true,
             items: ImageResolution.values,
             itemBuilder: (context, item) => Text.rich(
@@ -396,5 +403,57 @@ class UnsplashSourceSettings extends StatelessWidget {
         ],
       );
     });
+  }
+}
+
+class ResolutionHelpButton extends StatelessWidget {
+  const ResolutionHelpButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Tooltip(
+      padding: EdgeInsets.all(14),
+      richMessage: TextSpan(
+        text: '',
+        children: [
+          TextSpan(
+            text: 'Auto Mode: ',
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 13,
+            ),
+          ),
+          TextSpan(
+            text:
+                'Background images will have\nsame resolution as this window.\n',
+            style: TextStyle(height: 1.3, fontSize: 13),
+          ),
+          TextSpan(
+            text: '\nNote: ',
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 13,
+            ),
+          ),
+          TextSpan(
+            text:
+                'Higher resolution background may\ntake more time to load depending on\nyour connection.',
+            style: TextStyle(height: 1.3, fontSize: 13),
+          ),
+        ],
+      ),
+      margin: EdgeInsets.only(right: 32),
+      triggerMode: TooltipTriggerMode.tap,
+      textAlign: TextAlign.start,
+      preferBelow: true,
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: Icon(
+          Icons.info_outline_rounded,
+          size: 16,
+          color: Colors.grey,
+        ),
+      ),
+    );
   }
 }
