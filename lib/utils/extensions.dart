@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../model/background_settings.dart';
 import '../model/color_gradient.dart';
 import '../model/widget_settings.dart';
 
@@ -76,5 +77,35 @@ extension ColorFS on Color {
       );
     }
     return MaterialColor(value, swatch);
+  }
+}
+
+extension ImageResolutionExt on ImageResolution {
+  Size? toSize() {
+    switch (this) {
+      case ImageResolution.auto:
+        return null;
+      case ImageResolution.hd:
+        return const Size(1280, 720);
+      case ImageResolution.fullHd:
+        return const Size(1920, 1080);
+      case ImageResolution.quadHD:
+        return const Size(2560, 1440);
+      case ImageResolution.ultraHD:
+        return const Size(3840, 2160);
+      case ImageResolution.fiveK:
+        return const Size(5120, 2880);
+      case ImageResolution.eightK:
+        return const Size(7680, 4320);
+    }
+  }
+
+  String get sizeLabel {
+    final size = toSize();
+    if (size == null) {
+      return 'Screen Size';
+    } else {
+      return '${size.width.toInt()}x${size.height.toInt()}';
+    }
   }
 }

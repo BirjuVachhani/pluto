@@ -74,7 +74,7 @@ const _$ClockFormatEnumMap = {
 AnalogClockWidgetSettings _$AnalogClockWidgetSettingsFromJson(
         Map<String, dynamic> json) =>
     AnalogClockWidgetSettings(
-      radius: (json['radius'] as num?)?.toDouble() ?? 150,
+      radius: (json['radius'] as num?)?.toDouble() ?? 100,
       showSecondsHand: json['showSecondsHand'] as bool? ?? true,
       coloredSecondHand: json['coloredSecondHand'] as bool? ?? false,
       alignment: $enumDecodeNullable(_$AlignmentCEnumMap, json['alignment']) ??

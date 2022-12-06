@@ -65,6 +65,20 @@ enum ImageRefreshRate {
   }
 }
 
+enum ImageResolution {
+  auto('Auto'),
+  hd('HD'),
+  fullHd('FHD'),
+  quadHD('2K'),
+  ultraHD('4K'),
+  fiveK('5K'),
+  eightK('8K');
+
+  const ImageResolution(this.label);
+
+  final String label;
+}
+
 @JsonSerializable()
 class BackgroundSettings with EquatableMixin {
   final BackgroundMode mode;
@@ -81,6 +95,7 @@ class BackgroundSettings with EquatableMixin {
   final UnsplashSource unsplashSource;
   final ImageRefreshRate imageRefreshRate;
   final int imageIndex;
+  final ImageResolution imageResolution;
 
   BackgroundSettings({
     this.mode = BackgroundMode.color,
@@ -93,6 +108,7 @@ class BackgroundSettings with EquatableMixin {
     this.unsplashSource = UnsplashSources.random,
     this.imageRefreshRate = ImageRefreshRate.never,
     this.imageIndex = 0,
+    this.imageResolution = ImageResolution.auto,
   });
 
   @override
@@ -107,6 +123,7 @@ class BackgroundSettings with EquatableMixin {
         unsplashSource,
         imageRefreshRate,
         imageIndex,
+        imageResolution,
       ];
 
   BackgroundSettings copyWith({
@@ -120,6 +137,7 @@ class BackgroundSettings with EquatableMixin {
     UnsplashSource? unsplashSource,
     ImageRefreshRate? imageRefreshRate,
     int? imageIndex,
+    ImageResolution? imageResolution,
   }) {
     return BackgroundSettings(
       mode: mode ?? this.mode,
@@ -132,6 +150,7 @@ class BackgroundSettings with EquatableMixin {
       unsplashSource: unsplashSource ?? this.unsplashSource,
       imageRefreshRate: imageRefreshRate ?? this.imageRefreshRate,
       imageIndex: imageIndex ?? this.imageIndex,
+      imageResolution: imageResolution ?? this.imageResolution,
     );
   }
 

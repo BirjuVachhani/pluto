@@ -182,6 +182,21 @@ class BackgroundSettingsView extends StatelessWidget {
                     ),
                   ),
                 ),
+                const SizedBox(width: 16),
+                GestureDetectorWithCursor(
+                  onTap: !model.isLoadingImage ? model.onDownload : null,
+                  tooltip: 'Download Background',
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Icon(
+                      Icons.download_rounded,
+                      color: model.isLoadingImage || model.getImage() == null
+                          ? Colors.grey.shade400
+                          : Colors.black,
+                      size: 26,
+                    ),
+                  ),
+                ),
               ],
             ],
           ),
@@ -356,6 +371,27 @@ class UnsplashSourceSettings extends StatelessWidget {
             items: UnsplashSources.sources,
             itemBuilder: (context, item) => Text(item.name),
             onSelected: (value) => model.setUnsplashSource(value),
+          ),
+          const SizedBox(height: 16),
+          CustomDropdown<ImageResolution>(
+            value: model.imageResolution,
+            label: 'Resolution',
+            isExpanded: true,
+            items: ImageResolution.values,
+            itemBuilder: (context, item) => Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(text: item.label),
+                  const WidgetSpan(child: SizedBox(width: 8)),
+                  TextSpan(
+                    text: '(${item.sizeLabel})',
+                    style: const TextStyle(color: Colors.grey),
+                  ),
+                ],
+              ),
+            ),
+            selectedItemBuilder: (context, item) => Text(item.label),
+            onSelected: (value) => model.setImageResolution(value),
           ),
         ],
       );

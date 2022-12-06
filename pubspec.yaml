@@ -20,6 +20,7 @@ dependencies:
   intl: ^0.17.0
   http: ^0.13.5
   dropdown_button2: ^1.9.2
+  file_picker: ^5.2.3
 
 dev_dependencies:
   flutter_test:

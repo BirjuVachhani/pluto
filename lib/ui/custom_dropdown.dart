@@ -76,6 +76,7 @@ class CustomDropdown<T> extends StatefulWidget {
   final double itemHeight;
   final double dropdownMaxHeight;
   final bool searchable;
+  final Widget Function(BuildContext context, T item)? selectedItemBuilder;
 
   final bool Function(DropdownMenuItem item, String searchValue)? searchMatchFn;
 
@@ -91,6 +92,7 @@ class CustomDropdown<T> extends StatefulWidget {
     this.dropdownMaxHeight = 500,
     this.searchMatchFn,
     this.searchable = false,
+    this.selectedItemBuilder,
   });
 
   @override
@@ -162,9 +164,19 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
                       Text(item.toString()),
                 ),
             ],
-            onChanged: (mode) {
-              if (mode == null) return;
-              widget.onSelected(mode);
+            selectedItemBuilder: widget.selectedItemBuilder != null
+                ? (context) => [
+                      for (final item in widget.items)
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: widget.selectedItemBuilder!(context, item),
+                        ),
+                    ]
+                : null,
+            onChanged: (value) {
+              if (value == null) return;
+              if (value == widget.value) return;
+              widget.onSelected(value);
             },
           ),
         ],

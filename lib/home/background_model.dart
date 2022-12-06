@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:typed_data';
 
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
@@ -11,7 +12,9 @@ import '../model/color_gradient.dart';
 import '../model/flat_color.dart';
 import '../model/unsplash_collection.dart';
 import '../resources/storage_keys.dart';
+import '../utils/extensions.dart';
 import '../utils/storage_manager.dart';
+import '../utils/universal/universal.dart';
 import '../utils/utils.dart';
 
 /// Most important model of all. This model is responsible for the background
@@ -56,6 +59,8 @@ abstract class BackgroundModelBase
 
   int get imageIndex => settings.imageIndex;
 
+  ImageResolution get imageResolution => settings.imageResolution;
+
   void setMode(BackgroundMode mode);
 
   void setColor(FlatColor color);
@@ -74,9 +79,13 @@ abstract class BackgroundModelBase
 
   void setImageRefreshRate(ImageRefreshRate rate);
 
+  void setImageResolution(ImageResolution resolution);
+
   Color getForegroundColor();
 
   Future<void> changeBackground({bool updateAll = false});
+
+  Future<void> onDownload();
 
   Uint8List? getImage();
 
@@ -122,10 +131,11 @@ class BackgroundModel extends BackgroundModelBase {
     if (imageSource == ImageSource.unsplash) {
       if (!await storage.containsKey(StorageKeys.image1)) {
         // If no images are cached, fetch new ones now and cache them.
-        _loadUnsplashImage().then((value) {
-          if (value == null) return;
-          image1 = value;
-          storage.setBase64(StorageKeys.image1, value);
+        _loadUnsplashImage().then((result) {
+          if (result == null) return;
+          image1 = result.value;
+          storage.setBase64(StorageKeys.image1, result.value);
+          storage.setString(StorageKeys.image1Url, result.key ?? '');
         });
       } else {
         // If images are cached, load them.
@@ -133,10 +143,11 @@ class BackgroundModel extends BackgroundModelBase {
       }
       if (!await storage.containsKey(StorageKeys.image2)) {
         // If no images are cached, fetch new ones now and cache them.
-        _loadUnsplashImage().then((value) {
-          if (value == null) return;
-          image2 = value;
-          storage.setBase64(StorageKeys.image2, value);
+        _loadUnsplashImage().then((result) {
+          if (result == null) return;
+          image2 = result.value;
+          storage.setBase64(StorageKeys.image2, result.value);
+          storage.setString(StorageKeys.image2Url, result.key ?? '');
         });
       } else {
         // If images are cached, load them.
@@ -166,16 +177,18 @@ class BackgroundModel extends BackgroundModelBase {
   /// image.
   Future<void> _refetchAndCacheOtherImage() async {
     log('refetchAndCacheOtherImage');
-    _loadUnsplashImage().then((value) {
-      if (value == null) return;
+    _loadUnsplashImage().then((result) {
+      if (result == null) return;
       // We only update the image that is not currently being used so it can
       // be used next time when the user opens a new tab.
       if (imageIndex == 0) {
-        image2 = value;
-        storage.setBase64(StorageKeys.image2, value);
+        image2 = result.value;
+        storage.setBase64(StorageKeys.image2, result.value);
+        storage.setString(StorageKeys.image2Url, result.key ?? '');
       } else {
-        image1 = value;
-        storage.setBase64(StorageKeys.image1, value);
+        image1 = result.value;
+        storage.setBase64(StorageKeys.image1, result.value);
+        storage.setString(StorageKeys.image1Url, result.key ?? '');
       }
     });
     notifyListeners();
@@ -198,8 +211,8 @@ class BackgroundModel extends BackgroundModelBase {
   Future<void> changeBackground({bool updateAll = false}) async {
     if (isLoadingImage) return;
 
-    await _loadUnsplashImage(showLoadingBackground: true).then((value) {
-      if (value == null) return;
+    await _loadUnsplashImage(showLoadingBackground: true).then((result) {
+      if (result == null) return;
 
       // Update last updated time to current time.
       backgroundLastUpdated = DateTime.now();
@@ -212,25 +225,29 @@ class BackgroundModel extends BackgroundModelBase {
 
       // Update the current image and cache it.
       if (imageIndex == 0) {
-        image1 = value;
-        storage.setBase64(StorageKeys.image1, value);
+        image1 = result.value;
+        storage.setBase64(StorageKeys.image1, result.value);
+        storage.setString(StorageKeys.image1Url, result.key ?? '');
       } else {
-        image2 = value;
-        storage.setBase64(StorageKeys.image2, value);
+        image2 = result.value;
+        storage.setBase64(StorageKeys.image2, result.value);
+        storage.setString(StorageKeys.image2Url, result.key ?? '');
       }
     });
     if (updateAll) {
       // Most probably the image source changed, so we need to update the other
       // cached image as well.
-      await _loadUnsplashImage().then((value) {
-        if (value == null) return;
+      await _loadUnsplashImage().then((result) {
+        if (result == null) return;
         // Update the other image(not current one) and cache it.
         if (imageIndex == 0) {
-          image2 = value;
-          storage.setBase64(StorageKeys.image2, value);
+          image2 = result.value;
+          storage.setBase64(StorageKeys.image2, result.value);
+          storage.setString(StorageKeys.image2Url, result.key ?? '');
         } else {
-          image1 = value;
-          storage.setBase64(StorageKeys.image1, value);
+          image1 = result.value;
+          storage.setBase64(StorageKeys.image1, result.value);
+          storage.setString(StorageKeys.image1Url, result.key ?? '');
         }
       });
     }
@@ -308,6 +325,14 @@ class BackgroundModel extends BackgroundModelBase {
     notifyListeners();
   }
 
+  @override
+  void setImageResolution(ImageResolution resolution) {
+    settings = settings.copyWith(imageResolution: resolution);
+    _save();
+    changeBackground(updateAll: true);
+    notifyListeners();
+  }
+
   /// Retrieves the foreground color based on the current settings.
   @override
   Color getForegroundColor() {
@@ -328,12 +353,29 @@ class BackgroundModel extends BackgroundModelBase {
     return imageBytes;
   }
 
+  /// This retrieves the original url for unsplash image as Unsplash source API
+  /// redirects to the original image url.
+  Future<String?> _getUrlLocation(String url) async {
+    final client = http.Client();
+    var uri = Uri.parse(url);
+    var request = http.Request('get', uri);
+    request.followRedirects = false;
+    var response = await client.send(request);
+    return response.headers['location'];
+  }
+
   /// Responsible for fetching a new image from unsplash.
   /// [showLoadingBackground] param is used to show a loading
   /// background (grey scale) while the image is being fetched when true.
   /// Setting [isLoadingImage] to true will only show a loading indicator in
   /// the bottom of the page.
-  Future<Uint8List?> _loadUnsplashImage({
+  ///
+  /// Returns a [MapEntry] where key is the original image URL and the value
+  /// is the image bytes. The key will be an empty string if the original image
+  /// URL could not be retrieved.
+  ///
+  /// Returns null if the image could not be fetched.
+  Future<MapEntry<String?, Uint8List>?> _loadUnsplashImage({
     bool showLoadingBackground = false,
   }) async {
     log('loadUnsplashImage');
@@ -345,12 +387,13 @@ class BackgroundModel extends BackgroundModelBase {
 
     try {
       // Fetch the image from unsplash.
+      final String randomImageUrl = _getUnsplashImageURL();
+      final actualUrl = await _getUrlLocation(randomImageUrl);
       final http.Response response =
-          await http.get(Uri.parse(_getUnsplashImageURL()));
+          await http.get(Uri.parse(actualUrl ?? randomImageUrl));
       isLoadingImage = false;
       this.showLoadingBackground = false;
       notifyListeners();
-
       if (response.statusCode == 200) {
         log('loadUnsplashImage success');
         // Return the image bytes.
@@ -362,7 +405,7 @@ class BackgroundModel extends BackgroundModelBase {
         // }catch(e){
         //   return response.bodyBytes;
         // }
-        return response.bodyBytes;
+        return MapEntry(actualUrl ?? '', response.bodyBytes);
       }
       log('loadUnsplashImage failed ${response.statusCode}');
       // Received some error.
@@ -381,7 +424,8 @@ class BackgroundModel extends BackgroundModelBase {
 
   /// Constructs an image URL of Unsplash based on the current settings.
   String _getUnsplashImageURL() {
-    return 'https://source.unsplash.com${unsplashSource.getPath()}/${windowSize.width.toInt()}x${windowSize.height.toInt()}';
+    final Size size = imageResolution.toSize() ?? windowSize;
+    return 'https://source.unsplash.com${unsplashSource.getPath()}/${size.width.toInt()}x${size.height.toInt()}';
   }
 
   /// Refreshes the background image on timer callback.
@@ -419,5 +463,28 @@ class BackgroundModel extends BackgroundModelBase {
     _logNextBackgroundChange();
 
     await _refetchAndCacheOtherImage();
+  }
+
+  @override
+  Future<void> onDownload() async {
+    final Uint8List? image = getImage();
+    if (image == null) return;
+
+    final fileName =
+        'background_${DateTime.now().millisecondsSinceEpoch ~/ 1000}.jpg';
+
+    if (kIsWeb) {
+      return downloadImage(image, fileName);
+    }
+
+    /// Show native save file dialog on desktop.
+    final String? path = await FilePicker.platform.saveFile(
+      type: FileType.image,
+      dialogTitle: 'Save Image',
+      fileName: fileName,
+    );
+    if (path == null) return;
+
+    downloadImage(image, path);
   }
 }

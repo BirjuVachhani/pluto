@@ -10,4 +10,6 @@ class StorageKeys {
   static const String backgroundLastUpdated = 'background_last_updated';
   static const String image1 = 'image1';
   static const String image2 = 'image2';
+  static const String image1Url = 'image1_url';
+  static const String image2Url = 'image2_url';
 }
