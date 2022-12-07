@@ -7,6 +7,7 @@ import '../ui/custom_dropdown.dart';
 import 'widget_settings/analog_clock_widget_settings.dart';
 import 'widget_settings/digital_clock_widget_settings.dart';
 import 'widget_settings/message_widget_settings.dart';
+import 'widget_settings/timer_widget_settings.dart';
 
 class WidgetSettings extends StatelessWidget {
   const WidgetSettings({super.key});
@@ -43,14 +44,16 @@ class _SettingsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     switch (type) {
+      case WidgetType.none:
+        return const SizedBox(height: 16);
       case WidgetType.digitalClock:
         return const DigitalClockWidgetSettingsView();
       case WidgetType.analogClock:
         return const AnalogClockWidgetSettingsView();
       case WidgetType.text:
         return const MessageWidgetSettingsView();
-      case WidgetType.none:
-        return const SizedBox(height: 16);
+      case WidgetType.timer:
+        return const TimerWidgetSettingsView();
     }
   }
 }

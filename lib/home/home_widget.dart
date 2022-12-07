@@ -9,6 +9,7 @@ import '../utils/utils.dart';
 import 'widgets/analog_clock_widget.dart';
 import 'widgets/digital_clock_widget.dart';
 import 'widgets/message_widget.dart';
+import 'widgets/timer_widget.dart';
 
 abstract class WidgetModelBase with ChangeNotifier, LazyInitializationMixin {
   WidgetType type = WidgetType.none;
@@ -16,6 +17,7 @@ abstract class WidgetModelBase with ChangeNotifier, LazyInitializationMixin {
   late DigitalClockWidgetSettings digitalClockSettings;
   late AnalogClockWidgetSettings analogueClockSettings;
   late MessageWidgetSettings messageSettings;
+  late TimerWidgetSettings timerSettings;
 
   void setType(WidgetType type);
 
@@ -25,6 +27,8 @@ abstract class WidgetModelBase with ChangeNotifier, LazyInitializationMixin {
 
   void updateMessageSettings(MessageWidgetSettings settings,
       {bool save = true});
+
+  void updateTimerSettings(TimerWidgetSettings settings, {bool save = true});
 }
 
 class WidgetModel extends WidgetModelBase {
@@ -41,18 +45,29 @@ class WidgetModel extends WidgetModelBase {
         await storage.getSerializableObject<DigitalClockWidgetSettings>(
                 StorageKeys.digitalClockSettings,
                 DigitalClockWidgetSettings.fromJson) ??
-            DigitalClockWidgetSettings();
+            const DigitalClockWidgetSettings();
 
     analogueClockSettings =
         await storage.getSerializableObject<AnalogClockWidgetSettings>(
                 StorageKeys.analogueClockSettings,
                 AnalogClockWidgetSettings.fromJson) ??
-            AnalogClockWidgetSettings();
+            const AnalogClockWidgetSettings();
 
     messageSettings =
         await storage.getSerializableObject<MessageWidgetSettings>(
                 StorageKeys.messageSettings, MessageWidgetSettings.fromJson) ??
-            MessageWidgetSettings();
+            const MessageWidgetSettings();
+
+    timerSettings = await storage.getSerializableObject<TimerWidgetSettings>(
+            StorageKeys.timerSettings, TimerWidgetSettings.fromJson) ??
+        TimerWidgetSettings(
+          fontSize: 24,
+          textBefore: 'It has been ',
+          textAfter: ' since man first landed on the moon.',
+          time: DateTime(1969, 7, 20, 20, 17),
+          alignment: AlignmentC.center,
+          format: TimerFormat.descriptive,
+        );
 
     initialized = true;
     notifyListeners();
@@ -81,9 +96,16 @@ class WidgetModel extends WidgetModelBase {
 
   @override
   void updateMessageSettings(MessageWidgetSettings settings,
-      {bool save = false}) {
+      {bool save = true}) {
     messageSettings = settings;
     if (save) storage.setJson(StorageKeys.messageSettings, settings.toJson());
+    notifyListeners();
+  }
+
+  @override
+  void updateTimerSettings(TimerWidgetSettings settings, {bool save = true}) {
+    timerSettings = settings;
+    if (save) storage.setJson(StorageKeys.timerSettings, settings.toJson());
     notifyListeners();
   }
 }
@@ -96,14 +118,16 @@ class HomeWidget extends StatelessWidget {
     return Consumer<WidgetModelBase>(
       builder: (context, model, child) {
         switch (model.type) {
+          case WidgetType.none:
+            return const SizedBox.shrink();
           case WidgetType.digitalClock:
             return const DigitalClockWidget();
           case WidgetType.analogClock:
             return const AnalogClockWidget();
           case WidgetType.text:
             return const MessageWidget();
-          case WidgetType.none:
-            return const SizedBox.shrink();
+          case WidgetType.timer:
+            return const TimerWidget();
         }
       },
     );

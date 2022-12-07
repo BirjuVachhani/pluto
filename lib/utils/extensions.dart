@@ -109,3 +109,32 @@ extension ImageResolutionExt on ImageResolution {
     }
   }
 }
+
+extension DateTimeExt on DateTime {
+  DateTime copyWith({
+    int? day,
+    int? month,
+    int? year,
+    int? hour,
+    int? minute,
+    int? second,
+    int? millisecond,
+  }) {
+    return DateTime(
+      year ?? this.year,
+      month ?? this.month,
+      day ?? this.day,
+      hour ?? this.hour,
+      minute ?? this.minute,
+      second ?? this.second,
+      millisecond ?? this.millisecond,
+    );
+  }
+}
+
+extension TimerFormatExt on TimerFormat {
+  bool get showsSeconds =>
+      this == TimerFormat.descriptive ||
+      this == TimerFormat.seconds ||
+      this == TimerFormat.countdown;
+}

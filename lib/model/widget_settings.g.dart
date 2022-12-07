@@ -108,3 +108,38 @@ Map<String, dynamic> _$MessageWidgetSettingsToJson(
       'message': instance.message,
       'alignment': _$AlignmentCEnumMap[instance.alignment]!,
     };
+
+TimerWidgetSettings _$TimerWidgetSettingsFromJson(Map<String, dynamic> json) =>
+    TimerWidgetSettings(
+      fontSize: (json['fontSize'] as num?)?.toDouble() ?? 100,
+      fontFamily: json['fontFamily'] as String? ?? FontFamilies.product,
+      textBefore: json['textBefore'] as String? ?? '',
+      textAfter: json['textAfter'] as String? ?? '',
+      time: dateTimeFromJson(json['time'] as int),
+      alignment: $enumDecodeNullable(_$AlignmentCEnumMap, json['alignment']) ??
+          AlignmentC.center,
+      format: $enumDecodeNullable(_$TimerFormatEnumMap, json['format']) ??
+          TimerFormat.descriptive,
+    );
+
+Map<String, dynamic> _$TimerWidgetSettingsToJson(
+        TimerWidgetSettings instance) =>
+    <String, dynamic>{
+      'fontSize': instance.fontSize,
+      'fontFamily': instance.fontFamily,
+      'textBefore': instance.textBefore,
+      'textAfter': instance.textAfter,
+      'time': dateTimeToJson(instance.time),
+      'alignment': _$AlignmentCEnumMap[instance.alignment]!,
+      'format': _$TimerFormatEnumMap[instance.format]!,
+    };
+
+const _$TimerFormatEnumMap = {
+  TimerFormat.seconds: 'seconds',
+  TimerFormat.minutes: 'minutes',
+  TimerFormat.hours: 'hours',
+  TimerFormat.days: 'days',
+  TimerFormat.years: 'years',
+  TimerFormat.descriptive: 'descriptive',
+  TimerFormat.countdown: 'countdown',
+};

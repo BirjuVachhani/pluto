@@ -9,10 +9,11 @@ enum WidgetType {
   none('Nothing'),
   digitalClock('Digital Clock'),
   analogClock('Analog Clock'),
+  text('Message'),
+  timer('Timer');
   // weather('Weather'),
   // calendar('Calendar'),
-  // location('Location'),
-  text('Message');
+  // location('Location');
 
   const WidgetType(this.label);
 
@@ -62,19 +63,23 @@ enum AlignmentC {
 abstract class BaseWidgetSettings with EquatableMixin {
   abstract final WidgetType type;
 
-  BaseWidgetSettings fromJson(Map<String, dynamic> json) {
+  const BaseWidgetSettings();
+
+  static BaseWidgetSettings fromJson(Map<String, dynamic> json) {
     final WidgetType type = json['type'] != null
         ? WidgetType.values.byName(json['type'])
         : WidgetType.none;
     switch (type) {
+      case WidgetType.none:
+        return const NoneWidgetSettings();
       case WidgetType.digitalClock:
         return DigitalClockWidgetSettings.fromJson(json);
       case WidgetType.analogClock:
         return AnalogClockWidgetSettings.fromJson(json);
       case WidgetType.text:
         return MessageWidgetSettings.fromJson(json);
-      case WidgetType.none:
-        return NoneWidgetSettings();
+      case WidgetType.timer:
+        return TimerWidgetSettings();
     }
   }
 
@@ -86,7 +91,7 @@ class NoneWidgetSettings extends BaseWidgetSettings {
   @override
   final WidgetType type = WidgetType.digitalClock;
 
-  NoneWidgetSettings();
+  const NoneWidgetSettings();
 
   factory NoneWidgetSettings.fromJson(Map<String, dynamic> json) =>
       _$NoneWidgetSettingsFromJson(json);
@@ -110,7 +115,7 @@ class DigitalClockWidgetSettings extends BaseWidgetSettings {
   @override
   final WidgetType type = WidgetType.digitalClock;
 
-  DigitalClockWidgetSettings({
+  const DigitalClockWidgetSettings({
     this.fontSize = 100,
     this.separator = Separator.colon,
     this.borderType = BorderType.none,
@@ -165,7 +170,7 @@ class AnalogClockWidgetSettings extends BaseWidgetSettings {
   @override
   final WidgetType type = WidgetType.digitalClock;
 
-  AnalogClockWidgetSettings({
+  const AnalogClockWidgetSettings({
     this.radius = 100,
     this.showSecondsHand = true,
     this.coloredSecondHand = false,
@@ -207,7 +212,7 @@ class MessageWidgetSettings extends BaseWidgetSettings {
   @override
   final WidgetType type = WidgetType.text;
 
-  MessageWidgetSettings({
+  const MessageWidgetSettings({
     this.fontSize = 100,
     this.fontFamily = FontFamilies.product,
     this.message = 'Hello World!',
@@ -243,3 +248,81 @@ class MessageWidgetSettings extends BaseWidgetSettings {
   @override
   Map<String, dynamic> toJson() => _$MessageWidgetSettingsToJson(this);
 }
+
+enum TimerFormat {
+  seconds,
+  minutes,
+  hours,
+  days,
+  years,
+  descriptive,
+  countdown
+}
+
+@JsonSerializable()
+class TimerWidgetSettings extends BaseWidgetSettings {
+  final double fontSize;
+  final String fontFamily;
+  final String textBefore;
+  final String textAfter;
+  @JsonKey(fromJson: dateTimeFromJson, toJson: dateTimeToJson)
+  final DateTime time;
+  final AlignmentC alignment;
+  final TimerFormat format;
+
+  @override
+  final WidgetType type = WidgetType.timer;
+
+  TimerWidgetSettings({
+    this.fontSize = 100,
+    this.fontFamily = FontFamilies.product,
+    this.textBefore = '',
+    this.textAfter = '',
+    DateTime? time,
+    this.alignment = AlignmentC.center,
+    this.format = TimerFormat.descriptive,
+  }) : time = time ?? DateTime.now();
+
+  @override
+  List<Object?> get props => [
+        fontSize,
+        fontFamily,
+        textBefore,
+        textAfter,
+        time,
+        type,
+        alignment,
+        format,
+      ];
+
+  TimerWidgetSettings copyWith({
+    double? fontSize,
+    String? fontFamily,
+    String? textBefore,
+    String? textAfter,
+    DateTime? time,
+    AlignmentC? alignment,
+    TimerFormat? format,
+  }) {
+    return TimerWidgetSettings(
+      fontSize: fontSize ?? this.fontSize,
+      fontFamily: fontFamily ?? this.fontFamily,
+      textBefore: textBefore ?? this.textBefore,
+      textAfter: textAfter ?? this.textAfter,
+      time: time ?? this.time,
+      alignment: alignment ?? this.alignment,
+      format: format ?? this.format,
+    );
+  }
+
+  factory TimerWidgetSettings.fromJson(Map<String, dynamic> json) =>
+      _$TimerWidgetSettingsFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$TimerWidgetSettingsToJson(this);
+}
+
+DateTime dateTimeFromJson(int millis) =>
+    DateTime.fromMillisecondsSinceEpoch(millis);
+
+int dateTimeToJson(DateTime dateTime) => dateTime.millisecondsSinceEpoch;

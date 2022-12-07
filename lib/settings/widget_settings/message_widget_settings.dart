@@ -50,6 +50,7 @@ class MessageWidgetSettingsView extends StatelessWidget {
             const SizedBox(height: 16),
             ResizableTextInput(
               label: 'Message',
+              initialHeight: 150,
               initialValue: settings.message,
               onChanged: (message) => model.updateMessageSettings(
                 settings.copyWith(message: message),

@@ -36,7 +36,7 @@ class _SettingsPanelState extends State<SettingsPanel>
         children: [
           const _BackgroundDismissible(),
           Positioned(
-            top: 56,
+            top: 32,
             right: 32,
             bottom: 32,
             child: Column(
