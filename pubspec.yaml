@@ -35,6 +35,7 @@ dev_dependencies:
   characters: ^1.2.1
   dart_style: ^2.2.4
   json_serializable: ^6.5.4
+  flutter_launcher_icons: ^0.11.0
 
 flutter:
   uses-material-design: true
@@ -61,8 +62,4 @@ flutter:
       fonts:
         - asset: assets/fonts/Renner-Medium.otf
 
-scripts:
-  build: flutter build web --release --web-renderer html --csp
-  codegen: flutter pub run build_runner build --delete-conflicting-outputs
-  generate_colors: dart scripts/generators/colors_generator.dart scripts/generators/colors.json lib/resources/flat_colors.dart
-  generate_gradients: dart scripts/generators/gradients_generator.dart scripts/generators/colors.json lib/resources/color_gradients.dart
+scripts: derry.yaml
