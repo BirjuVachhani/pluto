@@ -205,6 +205,7 @@ class _TimerWidgetState extends State<TimerWidget>
         );
         break;
       case TimerFormat.descriptive:
+      case TimerFormat.descriptiveWithSeconds:
         int seconds = duration.inSeconds;
         int minutes = seconds ~/ 60;
         int hours = minutes ~/ 60;
@@ -234,7 +235,8 @@ class _TimerWidgetState extends State<TimerWidget>
           buffer.write(
               '${formatAsNumber(minutes)} ${fixGrammar(minutes, 'minute')} ');
         }
-        if (seconds > 0) {
+        if (seconds > 0 &&
+            settings.format == TimerFormat.descriptiveWithSeconds) {
           buffer.write(
               '${formatAsNumber(seconds)} ${fixGrammar(seconds, 'second')}');
         }

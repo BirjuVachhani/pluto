@@ -134,7 +134,7 @@ extension DateTimeExt on DateTime {
 
 extension TimerFormatExt on TimerFormat {
   bool get showsSeconds =>
-      this == TimerFormat.descriptive ||
+      this == TimerFormat.descriptiveWithSeconds ||
       this == TimerFormat.seconds ||
       this == TimerFormat.countdown;
 }

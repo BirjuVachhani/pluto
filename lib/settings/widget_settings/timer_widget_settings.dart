@@ -58,40 +58,7 @@ class TimerWidgetSettingsView extends StatelessWidget {
               isExpanded: true,
               value: settings.format,
               items: TimerFormat.values,
-              itemBuilder: (context, format) => Text(format.name.capitalize()),
-              onSelected: (format) => model.updateTimerSettings(
-                settings.copyWith(format: format),
-              ),
-            ),
-            const SizedBox(height: 16),
-            CustomDropdown<TimerFormat>(
-              label: 'Format',
-              isExpanded: true,
-              value: settings.format,
-              items: TimerFormat.values,
-              itemBuilder: (context, format) => Text(format.name.capitalize()),
-              onSelected: (format) => model.updateTimerSettings(
-                settings.copyWith(format: format),
-              ),
-            ),
-            const SizedBox(height: 16),
-            CustomDropdown<TimerFormat>(
-              label: 'Format',
-              isExpanded: true,
-              value: settings.format,
-              items: TimerFormat.values,
-              itemBuilder: (context, format) => Text(format.name.capitalize()),
-              onSelected: (format) => model.updateTimerSettings(
-                settings.copyWith(format: format),
-              ),
-            ),
-            const SizedBox(height: 16),
-            CustomDropdown<TimerFormat>(
-              label: 'Format',
-              isExpanded: true,
-              value: settings.format,
-              items: TimerFormat.values,
-              itemBuilder: (context, format) => Text(format.name.capitalize()),
+              itemBuilder: (context, format) => Text(format.label),
               onSelected: (format) => model.updateTimerSettings(
                 settings.copyWith(format: format),
               ),

@@ -32,7 +32,7 @@ enum ClockFormat {
 }
 
 enum Separator {
-  none(''),
+  nothing(''),
   dot('•'),
   colon(':'),
   dash('-'),
@@ -250,13 +250,18 @@ class MessageWidgetSettings extends BaseWidgetSettings {
 }
 
 enum TimerFormat {
-  seconds,
-  minutes,
-  hours,
-  days,
-  years,
-  descriptive,
-  countdown
+  seconds('Seconds'),
+  minutes('minutes'),
+  hours('Hours'),
+  days('days'),
+  years('Years'),
+  descriptive('Descriptive'),
+  descriptiveWithSeconds('Descriptive (with Seconds)'),
+  countdown('Countdown');
+
+  const TimerFormat(this.label);
+
+  final String label;
 }
 
 @JsonSerializable()

@@ -40,7 +40,7 @@ Map<String, dynamic> _$DigitalClockWidgetSettingsToJson(
     };
 
 const _$SeparatorEnumMap = {
-  Separator.none: 'none',
+  Separator.nothing: 'none',
   Separator.dot: 'dot',
   Separator.colon: 'colon',
   Separator.dash: 'dash',
