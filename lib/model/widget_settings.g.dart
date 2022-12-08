@@ -40,7 +40,7 @@ Map<String, dynamic> _$DigitalClockWidgetSettingsToJson(
     };
 
 const _$SeparatorEnumMap = {
-  Separator.nothing: 'none',
+  Separator.nothing: 'nothing',
   Separator.dot: 'dot',
   Separator.colon: 'colon',
   Separator.dash: 'dash',
@@ -141,5 +141,44 @@ const _$TimerFormatEnumMap = {
   TimerFormat.days: 'days',
   TimerFormat.years: 'years',
   TimerFormat.descriptive: 'descriptive',
+  TimerFormat.descriptiveWithSeconds: 'descriptiveWithSeconds',
   TimerFormat.countdown: 'countdown',
+};
+
+WeatherWidgetSettings _$WeatherWidgetSettingsFromJson(
+        Map<String, dynamic> json) =>
+    WeatherWidgetSettings(
+      fontSize: (json['fontSize'] as num?)?.toDouble() ?? 100,
+      fontFamily: json['fontFamily'] as String? ?? FontFamilies.product,
+      alignment: $enumDecodeNullable(_$AlignmentCEnumMap, json['alignment']) ??
+          AlignmentC.center,
+      format: $enumDecodeNullable(_$WeatherFormatEnumMap, json['format']) ??
+          WeatherFormat.temperatureAndSummary,
+      temperatureUnit: $enumDecodeNullable(
+              _$TemperatureUnitEnumMap, json['temperatureUnit']) ??
+          TemperatureUnit.celsius,
+      latitude: (json['latitude'] as num?)?.toDouble() ?? 35.6762,
+      longitude: (json['longitude'] as num?)?.toDouble() ?? 139.6503,
+    );
+
+Map<String, dynamic> _$WeatherWidgetSettingsToJson(
+        WeatherWidgetSettings instance) =>
+    <String, dynamic>{
+      'fontSize': instance.fontSize,
+      'fontFamily': instance.fontFamily,
+      'alignment': _$AlignmentCEnumMap[instance.alignment]!,
+      'format': _$WeatherFormatEnumMap[instance.format]!,
+      'temperatureUnit': _$TemperatureUnitEnumMap[instance.temperatureUnit]!,
+      'latitude': instance.latitude,
+      'longitude': instance.longitude,
+    };
+
+const _$WeatherFormatEnumMap = {
+  WeatherFormat.temperature: 'temperature',
+  WeatherFormat.temperatureAndSummary: 'temperatureAndSummary',
+};
+
+const _$TemperatureUnitEnumMap = {
+  TemperatureUnit.celsius: 'celsius',
+  TemperatureUnit.fahrenheit: 'fahrenheit',
 };

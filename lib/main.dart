@@ -5,6 +5,7 @@ import 'home/home.dart';
 import 'resources/colors.dart';
 import 'utils/extensions.dart';
 import 'utils/storage_manager.dart';
+import 'utils/weather_service.dart';
 
 void main() async {
   final binding = WidgetsFlutterBinding.ensureInitialized();
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
 Future<void> initialize() async {
   GetIt.instance.registerSingleton<LocalStorageManager>(
       await SharedPreferencesStorageManager.create());
+  GetIt.instance.registerSingleton<WeatherService>(OpenMeteoWeatherService());
 }
 
 ThemeData buildTheme(BuildContext context) {

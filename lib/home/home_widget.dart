@@ -10,6 +10,7 @@ import 'widgets/analog_clock_widget.dart';
 import 'widgets/digital_clock_widget.dart';
 import 'widgets/message_widget.dart';
 import 'widgets/timer_widget.dart';
+import 'widgets/weather_widget.dart';
 
 abstract class WidgetModelBase with ChangeNotifier, LazyInitializationMixin {
   WidgetType type = WidgetType.none;
@@ -18,6 +19,7 @@ abstract class WidgetModelBase with ChangeNotifier, LazyInitializationMixin {
   late AnalogClockWidgetSettings analogueClockSettings;
   late MessageWidgetSettings messageSettings;
   late TimerWidgetSettings timerSettings;
+  late WeatherWidgetSettings weatherSettings;
 
   void setType(WidgetType type);
 
@@ -29,6 +31,9 @@ abstract class WidgetModelBase with ChangeNotifier, LazyInitializationMixin {
       {bool save = true});
 
   void updateTimerSettings(TimerWidgetSettings settings, {bool save = true});
+
+  void updateWeatherSettings(WeatherWidgetSettings settings,
+      {bool save = true});
 }
 
 class WidgetModel extends WidgetModelBase {
@@ -69,6 +74,11 @@ class WidgetModel extends WidgetModelBase {
           format: TimerFormat.descriptive,
         );
 
+    weatherSettings =
+        await storage.getSerializableObject<WeatherWidgetSettings>(
+                StorageKeys.weatherSettings, WeatherWidgetSettings.fromJson) ??
+            WeatherWidgetSettings();
+
     initialized = true;
     notifyListeners();
   }
@@ -108,6 +118,14 @@ class WidgetModel extends WidgetModelBase {
     if (save) storage.setJson(StorageKeys.timerSettings, settings.toJson());
     notifyListeners();
   }
+
+  @override
+  void updateWeatherSettings(WeatherWidgetSettings settings,
+      {bool save = true}) {
+    weatherSettings = settings;
+    if (save) storage.setJson(StorageKeys.weatherSettings, settings.toJson());
+    notifyListeners();
+  }
 }
 
 class HomeWidget extends StatelessWidget {
@@ -128,6 +146,14 @@ class HomeWidget extends StatelessWidget {
             return const MessageWidget();
           case WidgetType.timer:
             return const TimerWidget();
+          case WidgetType.weather:
+            final latitude = model.weatherSettings.latitude;
+            final longitude = model.weatherSettings.longitude;
+            return WeatherWidgetWrapper(
+              key: ValueKey('$latitude, $longitude'),
+              latitude: latitude,
+              longitude: longitude,
+            );
         }
       },
     );

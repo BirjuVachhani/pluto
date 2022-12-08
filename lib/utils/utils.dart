@@ -70,3 +70,17 @@ ColorFilter greyscale([double value = 1]) {
     0,
   ]);
 }
+
+// TODO: replace with places auto-complete
+const Map<String, List<double>> testCities = {
+  'Rajkot, India': [22.3039, 70.8022],
+  'Delhi, India': [28.7041, 77.1025],
+  'Tokyo, Japan': [35.6762, 139.6503],
+  'New York, USA': [40.7128, -74.0060],
+  'Chicago, USA': [41.8781, -87.6298],
+  'Ahmedabad, India': [23.0225, 72.5714],
+  'Manali, India': [32.2432, 77.1892],
+  'Mumbai, India': [19.0760, 72.8777],
+  'San Francisco, USA': [37.7749, 122.4194],
+  'Amsterdam, Netherlands': [52.3676, 4.9041],
+};

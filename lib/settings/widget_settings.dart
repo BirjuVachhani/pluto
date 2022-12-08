@@ -8,6 +8,7 @@ import 'widget_settings/analog_clock_widget_settings.dart';
 import 'widget_settings/digital_clock_widget_settings.dart';
 import 'widget_settings/message_widget_settings.dart';
 import 'widget_settings/timer_widget_settings.dart';
+import 'widget_settings/weather_widget_settings.dart';
 
 class WidgetSettings extends StatelessWidget {
   const WidgetSettings({super.key});
@@ -54,6 +55,8 @@ class _SettingsWidget extends StatelessWidget {
         return const MessageWidgetSettingsView();
       case WidgetType.timer:
         return const TimerWidgetSettingsView();
+      case WidgetType.weather:
+        return const WeatherWidgetSettingsView();
     }
   }
 }

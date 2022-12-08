@@ -10,10 +10,9 @@ enum WidgetType {
   digitalClock('Digital Clock'),
   analogClock('Analog Clock'),
   text('Message'),
-  timer('Timer');
-  // weather('Weather'),
-  // calendar('Calendar'),
-  // location('Location');
+  timer('Timer'),
+  weather('Weather');
+  // calendar('Calendar');
 
   const WidgetType(this.label);
 
@@ -71,7 +70,7 @@ abstract class BaseWidgetSettings with EquatableMixin {
         : WidgetType.none;
     switch (type) {
       case WidgetType.none:
-        return const NoneWidgetSettings();
+        return NoneWidgetSettings();
       case WidgetType.digitalClock:
         return DigitalClockWidgetSettings.fromJson(json);
       case WidgetType.analogClock:
@@ -79,7 +78,9 @@ abstract class BaseWidgetSettings with EquatableMixin {
       case WidgetType.text:
         return MessageWidgetSettings.fromJson(json);
       case WidgetType.timer:
-        return TimerWidgetSettings();
+        return TimerWidgetSettings.fromJson(json);
+      case WidgetType.weather:
+        return WeatherWidgetSettings.fromJson(json);
     }
   }
 
@@ -91,7 +92,7 @@ class NoneWidgetSettings extends BaseWidgetSettings {
   @override
   final WidgetType type = WidgetType.digitalClock;
 
-  const NoneWidgetSettings();
+  NoneWidgetSettings();
 
   factory NoneWidgetSettings.fromJson(Map<String, dynamic> json) =>
       _$NoneWidgetSettingsFromJson(json);
@@ -331,3 +332,84 @@ DateTime dateTimeFromJson(int millis) =>
     DateTime.fromMillisecondsSinceEpoch(millis);
 
 int dateTimeToJson(DateTime dateTime) => dateTime.millisecondsSinceEpoch;
+
+enum WeatherFormat {
+  temperature('Temperature'),
+  temperatureAndSummary('Temperature and Summary');
+
+  const WeatherFormat(this.label);
+
+  final String label;
+}
+
+enum TemperatureUnit {
+  celsius('Celsius'),
+  fahrenheit('Fahrenheit');
+
+  const TemperatureUnit(this.label);
+
+  final String label;
+}
+
+@JsonSerializable()
+class WeatherWidgetSettings extends BaseWidgetSettings {
+  final double fontSize;
+  final String fontFamily;
+  final AlignmentC alignment;
+  final WeatherFormat format;
+  final TemperatureUnit temperatureUnit;
+  final double latitude;
+  final double longitude;
+
+  @override
+  final WidgetType type = WidgetType.weather;
+
+  WeatherWidgetSettings({
+    this.fontSize = 100,
+    this.fontFamily = FontFamilies.product,
+    this.alignment = AlignmentC.center,
+    this.format = WeatherFormat.temperatureAndSummary,
+    this.temperatureUnit = TemperatureUnit.celsius,
+    // Place: Tokyo, Japan
+    this.latitude = 35.6762,
+    this.longitude = 139.6503,
+  });
+
+  @override
+  List<Object?> get props => [
+        fontSize,
+        fontFamily,
+        type,
+        alignment,
+        format,
+        temperatureUnit,
+        latitude,
+        longitude,
+      ];
+
+  WeatherWidgetSettings copyWith({
+    double? fontSize,
+    String? fontFamily,
+    AlignmentC? alignment,
+    WeatherFormat? format,
+    TemperatureUnit? temperatureUnit,
+    double? latitude,
+    double? longitude,
+  }) {
+    return WeatherWidgetSettings(
+      fontSize: fontSize ?? this.fontSize,
+      fontFamily: fontFamily ?? this.fontFamily,
+      alignment: alignment ?? this.alignment,
+      format: format ?? this.format,
+      temperatureUnit: temperatureUnit ?? this.temperatureUnit,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
+    );
+  }
+
+  factory WeatherWidgetSettings.fromJson(Map<String, dynamic> json) =>
+      _$WeatherWidgetSettingsFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$WeatherWidgetSettingsToJson(this);
+}
