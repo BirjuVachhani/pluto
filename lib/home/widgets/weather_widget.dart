@@ -68,8 +68,10 @@ class WeatherWidgetModel extends WeatherWidgetModelBase {
         (weatherInfo!.latitude != latitude ||
             weatherInfo!.longitude != longitude);
 
-    log('cached location: ${weatherInfo!.latitude}, ${weatherInfo!.longitude}');
-    log('current location: $latitude, $longitude');
+    if (locationChanged) {
+      log('cached location: ${weatherInfo?.latitude}, ${weatherInfo?.longitude}');
+      log('current location: $latitude, $longitude');
+    }
 
     // re-fetch weather info if expired or location changed or weather info is null.
     if (weatherInfo == null || isExpired || locationChanged) {
@@ -229,9 +231,9 @@ class _WeatherWidgetState extends State<WeatherWidget>
     if (weatherInfo == null) return '_ _';
     final String temperature;
     if (settings.temperatureUnit == TemperatureUnit.celsius) {
-      temperature = '${weatherInfo.temperature.toInt()}°';
+      temperature = '${weatherInfo.temperature.round()}°';
     } else {
-      temperature = '${(weatherInfo.temperature * 9 / 5 + 32).toInt()}°';
+      temperature = '${(weatherInfo.temperature * 9 / 5 + 32).round()}°';
     }
     switch (settings.format) {
       case WeatherFormat.temperature:

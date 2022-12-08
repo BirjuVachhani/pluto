@@ -20,10 +20,12 @@ class BottomBar extends StatelessWidget {
           Row(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              ChangeBackgroundButton(),
-              SizedBox(width: 24),
-              SettingsButton(),
+            children: [
+              if (model.mode.isImage) ...[
+                const ChangeBackgroundButton(),
+                const SizedBox(width: 24),
+              ],
+              const SettingsButton(),
             ],
           ),
           Container(
