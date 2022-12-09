@@ -180,7 +180,9 @@ class BackgroundSettingsView extends StatelessWidget {
                       AssetImage(model.isLoadingImage
                           ? 'assets/images/ic_hourglass.png'
                           : 'assets/images/ic_fan.png'),
-                      color: Colors.black,
+                      color: model.isLoadingImage
+                          ? Colors.grey.shade400
+                          : Colors.black,
                       size: 20,
                     ),
                   ),

@@ -499,16 +499,18 @@ class BackgroundModel extends BackgroundModelBase {
     }
 
     Uri uri = Uri.parse(url);
-    // final updatedUri =uri;
-    final updatedUri = Uri(
-      scheme: uri.scheme,
-      host: uri.host,
-      path: uri.path,
-      // queryParameters: {
-      //   'ixid': uri.queryParameters['ixid'],
-      //   'q': '100',
-      // },
-    );
+    final updatedUri = uri;
+    // TODO: enable this for high quality images.
+    // final updatedUri = Uri(
+    //   scheme: uri.scheme,
+    //   host: uri.host,
+    //   path: uri.path,
+    //   queryParameters: {
+    //     // 'ixid': uri.queryParameters['ixid'],
+    //     ...uri.queryParameters,
+    //     'q': '100',
+    //   },
+    // );
 
     await launchUrl(updatedUri);
   }
