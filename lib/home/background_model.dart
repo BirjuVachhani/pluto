@@ -496,15 +496,21 @@ class BackgroundModel extends BackgroundModelBase {
     if (!mode.isImage) return;
     final String? url = await storage.getString(
         imageIndex == 0 ? StorageKeys.image1Url : StorageKeys.image2Url);
-    if (url == null) return;
+    if (url == null) {
+      // ignore: avoid_print
+      print('No image url found');
+      return;
+    }
 
     Uri uri = Uri.parse(url);
+    // final updatedUri =uri;
     final updatedUri = Uri(
       scheme: uri.scheme,
       host: uri.host,
       path: uri.path,
       queryParameters: {
         'ixid': uri.queryParameters['ixid'],
+        'q': '100',
       },
     );
 
