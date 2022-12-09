@@ -147,8 +147,8 @@ class HomeWidget extends StatelessWidget {
           case WidgetType.timer:
             return const TimerWidget();
           case WidgetType.weather:
-            final latitude = model.weatherSettings.latitude;
-            final longitude = model.weatherSettings.longitude;
+            final latitude = model.weatherSettings.location.latitude;
+            final longitude = model.weatherSettings.location.longitude;
             return WeatherWidgetWrapper(
               key: ValueKey('$latitude, $longitude'),
               latitude: latitude,

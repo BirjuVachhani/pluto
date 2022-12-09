@@ -358,8 +358,7 @@ class WeatherWidgetSettings extends BaseWidgetSettings {
   final AlignmentC alignment;
   final WeatherFormat format;
   final TemperatureUnit temperatureUnit;
-  final double latitude;
-  final double longitude;
+  final Location location;
 
   @override
   final WidgetType type = WidgetType.weather;
@@ -370,9 +369,11 @@ class WeatherWidgetSettings extends BaseWidgetSettings {
     this.alignment = AlignmentC.center,
     this.format = WeatherFormat.temperatureAndSummary,
     this.temperatureUnit = TemperatureUnit.celsius,
-    // Place: Tokyo, Japan
-    this.latitude = 35.6762,
-    this.longitude = 139.6503,
+    this.location = const Location(
+      name: 'Tokyo, Japan',
+      latitude: 35.6762,
+      longitude: 139.6503,
+    ),
   });
 
   @override
@@ -383,8 +384,7 @@ class WeatherWidgetSettings extends BaseWidgetSettings {
         alignment,
         format,
         temperatureUnit,
-        latitude,
-        longitude,
+        location,
       ];
 
   WeatherWidgetSettings copyWith({
@@ -393,8 +393,7 @@ class WeatherWidgetSettings extends BaseWidgetSettings {
     AlignmentC? alignment,
     WeatherFormat? format,
     TemperatureUnit? temperatureUnit,
-    double? latitude,
-    double? longitude,
+    Location? location,
   }) {
     return WeatherWidgetSettings(
       fontSize: fontSize ?? this.fontSize,
@@ -402,8 +401,7 @@ class WeatherWidgetSettings extends BaseWidgetSettings {
       alignment: alignment ?? this.alignment,
       format: format ?? this.format,
       temperatureUnit: temperatureUnit ?? this.temperatureUnit,
-      latitude: latitude ?? this.latitude,
-      longitude: longitude ?? this.longitude,
+      location: location ?? this.location,
     );
   }
 
@@ -412,4 +410,41 @@ class WeatherWidgetSettings extends BaseWidgetSettings {
 
   @override
   Map<String, dynamic> toJson() => _$WeatherWidgetSettingsToJson(this);
+}
+
+@JsonSerializable()
+class Location with EquatableMixin {
+  final double latitude;
+  final double longitude;
+  final String name;
+
+  const Location({
+    required this.name,
+    required this.latitude,
+    required this.longitude,
+  });
+
+  @override
+  List<Object?> get props => [
+        latitude,
+        longitude,
+        name,
+      ];
+
+  Location copyWith({
+    double? latitude,
+    double? longitude,
+    String? name,
+  }) {
+    return Location(
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
+      name: name ?? this.name,
+    );
+  }
+
+  factory Location.fromJson(Map<String, dynamic> json) =>
+      _$LocationFromJson(json);
+
+  Map<String, dynamic> toJson() => _$LocationToJson(this);
 }

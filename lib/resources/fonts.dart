@@ -2,7 +2,7 @@ class FontFamilies {
   FontFamilies._();
 
   static const String product = 'Product';
-  static const String systemUI = 'system-ui';
+  static const String systemUI = 'System UI';
   static const String cardo = 'Cardo';
   static const String cardoItalics = 'Cardo Italics';
   static const String jakartaSans = 'Jakarta Sans';

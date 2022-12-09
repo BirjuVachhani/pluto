@@ -17,6 +17,12 @@ class TextInput extends StatefulWidget {
   final TextStyle? textStyle;
   final TextStyle? hintStyle;
   final TextInputAction? textInputAction;
+  final FocusNode? focusNode;
+  final VoidCallback? onFocusLost;
+  final Widget? suffix;
+  final Widget? suffixIcon;
+  final Color? fillColor;
+  final bool showInitialBorder;
 
   const TextInput({
     super.key,
@@ -33,6 +39,12 @@ class TextInput extends StatefulWidget {
     this.textStyle,
     this.hintStyle,
     this.textInputAction,
+    this.focusNode,
+    this.onFocusLost,
+    this.suffix,
+    this.suffixIcon,
+    this.fillColor,
+    this.showInitialBorder = true,
   });
 
   @override
@@ -44,23 +56,32 @@ class _TextInputState extends State<TextInput> {
 
   late FocusNode _focusNode;
 
+  bool isSubmitted = false;
+
   @override
   void initState() {
     super.initState();
     _controller =
         widget.controller ?? TextEditingController(text: widget.initialValue);
-    _focusNode = FocusNode();
+    _focusNode = widget.focusNode ?? FocusNode();
 
     _focusNode.addListener(onFocusChange);
   }
 
-  void onFocusChange() async {
-    if (!_focusNode.hasFocus) {
-      final bool? accepted = await widget.onSubmitted?.call(_controller.text);
-      if (accepted == null) return;
-      if (!accepted) {
-        _controller.text = widget.initialValue ?? '';
-      }
+  void onFocusChange() {
+    if (!_focusNode.hasFocus && !isSubmitted) {
+      _submit();
+      widget.onFocusLost?.call();
+      isSubmitted = false;
+    }
+  }
+
+  void _submit() async {
+    isSubmitted = true;
+    final bool? accepted = await widget.onSubmitted?.call(_controller.text);
+    if (accepted == null) return;
+    if (!accepted) {
+      _controller.text = widget.initialValue ?? '';
     }
   }
 
@@ -74,6 +95,12 @@ class _TextInputState extends State<TextInput> {
     }
     if (oldWidget.initialValue != widget.initialValue) {
       _controller.text = widget.initialValue ?? '';
+    }
+    if (widget.focusNode != oldWidget.focusNode) {
+      if (oldWidget.focusNode == null) _focusNode.dispose();
+      oldWidget.focusNode?.removeListener(onFocusChange);
+      _focusNode = widget.focusNode ?? FocusNode();
+      _focusNode.addListener(onFocusChange);
     }
   }
 
@@ -101,9 +128,12 @@ class _TextInputState extends State<TextInput> {
               textInputAction: widget.textInputAction ?? TextInputAction.done,
               style: const TextStyle(height: 1.2, fontSize: 15)
                   .merge(widget.textStyle),
+              onSubmitted: (_) => _submit(),
               decoration: InputDecoration(
                 isDense: true,
                 hintText: widget.hintText,
+                suffix: widget.suffix,
+                suffixIcon: widget.suffixIcon,
                 hintTextDirection: TextDirection.ltr,
                 hintStyle: const TextStyle(
                   height: 1.2,
@@ -113,24 +143,28 @@ class _TextInputState extends State<TextInput> {
                 contentPadding: widget.contentPadding ??
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
                 filled: true,
-                fillColor: Colors.grey.withOpacity(0.05),
+                fillColor: widget.fillColor ?? Colors.grey.withOpacity(0.05),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(
-                    color: Colors.grey.shade600,
+                    color: Theme.of(context).primaryColor,
                     width: 1.5,
                   ),
                   borderRadius: BorderRadius.circular(4),
                 ),
                 border: OutlineInputBorder(
                   borderSide: BorderSide(
-                    color: Colors.grey.shade300,
+                    color: widget.showInitialBorder
+                        ? Colors.grey.shade300
+                        : Colors.transparent,
                     width: 1,
                   ),
                   borderRadius: BorderRadius.circular(4),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(
-                    color: Colors.grey.shade300,
+                    color: widget.showInitialBorder
+                        ? Colors.grey.shade300
+                        : Colors.transparent,
                     width: 1,
                   ),
                   borderRadius: BorderRadius.circular(4),
@@ -146,7 +180,7 @@ class _TextInputState extends State<TextInput> {
   @override
   void dispose() {
     if (widget.controller == null) _controller.dispose();
-    _focusNode.dispose();
+    if (widget.focusNode == null) _focusNode.dispose();
     super.dispose();
   }
 }

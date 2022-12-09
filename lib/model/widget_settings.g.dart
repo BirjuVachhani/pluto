@@ -157,8 +157,10 @@ WeatherWidgetSettings _$WeatherWidgetSettingsFromJson(
       temperatureUnit: $enumDecodeNullable(
               _$TemperatureUnitEnumMap, json['temperatureUnit']) ??
           TemperatureUnit.celsius,
-      latitude: (json['latitude'] as num?)?.toDouble() ?? 35.6762,
-      longitude: (json['longitude'] as num?)?.toDouble() ?? 139.6503,
+      location: json['location'] == null
+          ? const Location(
+              name: 'Tokyo, Japan', latitude: 35.6762, longitude: 139.6503)
+          : Location.fromJson(json['location'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$WeatherWidgetSettingsToJson(
@@ -169,8 +171,7 @@ Map<String, dynamic> _$WeatherWidgetSettingsToJson(
       'alignment': _$AlignmentCEnumMap[instance.alignment]!,
       'format': _$WeatherFormatEnumMap[instance.format]!,
       'temperatureUnit': _$TemperatureUnitEnumMap[instance.temperatureUnit]!,
-      'latitude': instance.latitude,
-      'longitude': instance.longitude,
+      'location': instance.location,
     };
 
 const _$WeatherFormatEnumMap = {
@@ -182,3 +183,15 @@ const _$TemperatureUnitEnumMap = {
   TemperatureUnit.celsius: 'celsius',
   TemperatureUnit.fahrenheit: 'fahrenheit',
 };
+
+Location _$LocationFromJson(Map<String, dynamic> json) => Location(
+      latitude: (json['latitude'] as num).toDouble(),
+      longitude: (json['longitude'] as num).toDouble(),
+      name: json['name'] as String,
+    );
+
+Map<String, dynamic> _$LocationToJson(Location instance) => <String, dynamic>{
+      'latitude': instance.latitude,
+      'longitude': instance.longitude,
+      'name': instance.name,
+    };
