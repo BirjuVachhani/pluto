@@ -152,6 +152,7 @@ class BackgroundSettingsView extends StatelessWidget {
                   child: Icon(
                     Icons.lens_blur_rounded,
                     color: model.texture ? Colors.black : Colors.grey.shade400,
+                    size: 20,
                   ),
                 ),
               ),
@@ -165,6 +166,7 @@ class BackgroundSettingsView extends StatelessWidget {
                     child: Icon(
                       Icons.brightness_medium_rounded,
                       color: model.invert ? Colors.black : Colors.grey.shade400,
+                      size: 20,
                     ),
                   ),
                 ),
@@ -179,13 +181,14 @@ class BackgroundSettingsView extends StatelessWidget {
                           ? 'assets/images/ic_hourglass.png'
                           : 'assets/images/ic_fan.png'),
                       color: Colors.black,
+                      size: 20,
                     ),
                   ),
                 ),
                 const SizedBox(width: 16),
                 GestureDetectorWithCursor(
                   onTap: !model.isLoadingImage ? model.onDownload : null,
-                  tooltip: 'Download Background',
+                  tooltip: 'Download Image',
                   child: Padding(
                     padding: const EdgeInsets.all(8),
                     child: Icon(
@@ -193,7 +196,22 @@ class BackgroundSettingsView extends StatelessWidget {
                       color: model.isLoadingImage || model.getImage() == null
                           ? Colors.grey.shade400
                           : Colors.black,
-                      size: 26,
+                      size: 20,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                GestureDetectorWithCursor(
+                  onTap: !model.isLoadingImage ? model.onOpenImage : null,
+                  tooltip: 'Open Original Image',
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Icon(
+                      Icons.open_in_new_rounded,
+                      color: model.isLoadingImage || model.getImage() == null
+                          ? Colors.grey.shade400
+                          : Colors.black,
+                      size: 20,
                     ),
                   ),
                 ),

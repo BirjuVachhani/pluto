@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
 import '../model/background_settings.dart';
 import '../model/color_gradient.dart';
@@ -86,6 +87,8 @@ abstract class BackgroundModelBase
   Future<void> changeBackground({bool updateAll = false});
 
   Future<void> onDownload();
+
+  Future<void> onOpenImage();
 
   Uint8List? getImage();
 
@@ -486,5 +489,25 @@ class BackgroundModel extends BackgroundModelBase {
     if (path == null) return;
 
     downloadImage(image, path);
+  }
+
+  @override
+  Future<void> onOpenImage() async {
+    if (!mode.isImage) return;
+    final String? url = await storage.getString(
+        imageIndex == 0 ? StorageKeys.image1Url : StorageKeys.image2Url);
+    if (url == null) return;
+
+    Uri uri = Uri.parse(url);
+    final updatedUri = Uri(
+      scheme: uri.scheme,
+      host: uri.host,
+      path: uri.path,
+      queryParameters: {
+        'ixid': uri.queryParameters['ixid'],
+      },
+    );
+
+    if (await canLaunchUrl(updatedUri)) await launchUrl(updatedUri);
   }
 }
