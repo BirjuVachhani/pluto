@@ -185,9 +185,9 @@ const _$TemperatureUnitEnumMap = {
 };
 
 Location _$LocationFromJson(Map<String, dynamic> json) => Location(
+      name: json['name'] as String,
       latitude: (json['latitude'] as num).toDouble(),
       longitude: (json['longitude'] as num).toDouble(),
-      name: json['name'] as String,
     );
 
 Map<String, dynamic> _$LocationToJson(Location instance) => <String, dynamic>{
