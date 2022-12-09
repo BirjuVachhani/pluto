@@ -138,7 +138,7 @@ class BackgroundModel extends BackgroundModelBase {
           if (result == null) return;
           image1 = result.value;
           storage.setBase64(StorageKeys.image1, result.value);
-          storage.setString(StorageKeys.image1Url, result.key ?? '');
+          storage.setString(StorageKeys.image1Url, result.key);
         });
       } else {
         // If images are cached, load them.
@@ -150,7 +150,7 @@ class BackgroundModel extends BackgroundModelBase {
           if (result == null) return;
           image2 = result.value;
           storage.setBase64(StorageKeys.image2, result.value);
-          storage.setString(StorageKeys.image2Url, result.key ?? '');
+          storage.setString(StorageKeys.image2Url, result.key);
         });
       } else {
         // If images are cached, load them.
@@ -187,11 +187,11 @@ class BackgroundModel extends BackgroundModelBase {
       if (imageIndex == 0) {
         image2 = result.value;
         storage.setBase64(StorageKeys.image2, result.value);
-        storage.setString(StorageKeys.image2Url, result.key ?? '');
+        storage.setString(StorageKeys.image2Url, result.key);
       } else {
         image1 = result.value;
         storage.setBase64(StorageKeys.image1, result.value);
-        storage.setString(StorageKeys.image1Url, result.key ?? '');
+        storage.setString(StorageKeys.image1Url, result.key);
       }
     });
     notifyListeners();
@@ -230,11 +230,11 @@ class BackgroundModel extends BackgroundModelBase {
       if (imageIndex == 0) {
         image1 = result.value;
         storage.setBase64(StorageKeys.image1, result.value);
-        storage.setString(StorageKeys.image1Url, result.key ?? '');
+        storage.setString(StorageKeys.image1Url, result.key);
       } else {
         image2 = result.value;
         storage.setBase64(StorageKeys.image2, result.value);
-        storage.setString(StorageKeys.image2Url, result.key ?? '');
+        storage.setString(StorageKeys.image2Url, result.key);
       }
     });
     if (updateAll) {
@@ -246,11 +246,11 @@ class BackgroundModel extends BackgroundModelBase {
         if (imageIndex == 0) {
           image2 = result.value;
           storage.setBase64(StorageKeys.image2, result.value);
-          storage.setString(StorageKeys.image2Url, result.key ?? '');
+          storage.setString(StorageKeys.image2Url, result.key);
         } else {
           image1 = result.value;
           storage.setBase64(StorageKeys.image1, result.value);
-          storage.setString(StorageKeys.image1Url, result.key ?? '');
+          storage.setString(StorageKeys.image1Url, result.key);
         }
       });
     }
@@ -359,12 +359,7 @@ class BackgroundModel extends BackgroundModelBase {
   /// This retrieves the original url for unsplash image as Unsplash source API
   /// redirects to the original image url.
   Future<String?> _getUrlLocation(String url) async {
-    final client = http.Client();
-    var uri = Uri.parse(url);
-    var request = http.Request('get', uri);
-    request.followRedirects = false;
-    var response = await client.send(request);
-    return response.headers['location'];
+    return getRedirectionUrl(url);
   }
 
   /// Responsible for fetching a new image from unsplash.
@@ -378,7 +373,7 @@ class BackgroundModel extends BackgroundModelBase {
   /// URL could not be retrieved.
   ///
   /// Returns null if the image could not be fetched.
-  Future<MapEntry<String?, Uint8List>?> _loadUnsplashImage({
+  Future<MapEntry<String, Uint8List>?> _loadUnsplashImage({
     bool showLoadingBackground = false,
   }) async {
     log('loadUnsplashImage');
@@ -390,8 +385,9 @@ class BackgroundModel extends BackgroundModelBase {
 
     try {
       // Fetch the image from unsplash.
-      final String randomImageUrl = _getUnsplashImageURL();
+      final String randomImageUrl = _buildUnsplashImageURL();
       final actualUrl = await _getUrlLocation(randomImageUrl);
+      log('actualUrl: $actualUrl');
       final http.Response response =
           await http.get(Uri.parse(actualUrl ?? randomImageUrl));
       isLoadingImage = false;
@@ -426,7 +422,7 @@ class BackgroundModel extends BackgroundModelBase {
   }
 
   /// Constructs an image URL of Unsplash based on the current settings.
-  String _getUnsplashImageURL() {
+  String _buildUnsplashImageURL() {
     final Size size = imageResolution.toSize() ?? windowSize;
     return 'https://source.unsplash.com${unsplashSource.getPath()}/${size.width.toInt()}x${size.height.toInt()}';
   }
@@ -508,12 +504,12 @@ class BackgroundModel extends BackgroundModelBase {
       scheme: uri.scheme,
       host: uri.host,
       path: uri.path,
-      queryParameters: {
-        'ixid': uri.queryParameters['ixid'],
-        'q': '100',
-      },
+      // queryParameters: {
+      //   'ixid': uri.queryParameters['ixid'],
+      //   'q': '100',
+      // },
     );
 
-    if (await canLaunchUrl(updatedUri)) await launchUrl(updatedUri);
+    await launchUrl(updatedUri);
   }
 }

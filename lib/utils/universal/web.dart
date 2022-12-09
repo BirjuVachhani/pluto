@@ -11,3 +11,8 @@ Future<void> downloadImage(Uint8List bytes, String path) async {
     ..click();
   Url.revokeObjectUrl(url);
 }
+
+Future<String?> getRedirectionUrl(String url) async {
+  final htmlRequest = await HttpRequest.request(url, method: 'GET');
+  return htmlRequest.responseUrl;
+}
