@@ -1,17 +1,17 @@
 name: Deploy
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - '**.dart'
-      - '**.yaml'
-      - '**.yml'
+#  push:
+#    branches:
+#      - main
+#    paths:
+#      - '**.dart'
+#      - '**.yaml'
+#      - '**.yml'
   workflow_dispatch:
 
 jobs:
-  deploy_docs:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
