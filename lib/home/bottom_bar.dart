@@ -14,36 +14,107 @@ class BottomBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<BackgroundModelBase>(builder: (context, model, child) {
       if (!model.initialized) return const SizedBox.shrink();
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (model.mode.isImage) ...[
-                const ChangeBackgroundButton(),
-                const SizedBox(width: 24),
+      return Horizon(
+        color: model.getForegroundColor(),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: 16),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (model.mode.isImage) ...[
+                  const ChangeBackgroundButton(),
+                  const SizedBox(width: 24),
+                ],
+                const SettingsButton(),
               ],
-              const SettingsButton(),
-            ],
+            ),
+            Container(
+              width: 132,
+              height: 2,
+              margin: const EdgeInsets.only(bottom: 6, top: 6),
+              child: Visibility(
+                visible: model.isLoadingImage,
+                child: LinearProgressIndicator(
+                  color: model.getForegroundColor(),
+                  minHeight: 2,
+                  backgroundColor: model.getForegroundColor().withOpacity(0.3),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    });
+  }
+}
+
+class Horizon extends StatefulWidget {
+  final Widget child;
+  final Color? color;
+
+  const Horizon({
+    super.key,
+    required this.child,
+    this.color,
+  });
+
+  @override
+  State<Horizon> createState() => _HorizonState();
+}
+
+class _HorizonState extends State<Horizon> {
+  bool hovering = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 150,
+      child: Stack(
+        children: [
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: AnimatedOpacity(
+              opacity: hovering ? 1 : 0,
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.easeInOutCubic,
+              child: Container(
+                height: 150,
+                alignment: Alignment.bottomCenter,
+                decoration: BoxDecoration(
+                  gradient: RadialGradient(
+                    colors: [
+                      (widget.color ?? Colors.white).withOpacity(1),
+                      (widget.color ?? Colors.white).withOpacity(0.7),
+                      Colors.transparent,
+                    ],
+                    stops: const [0.25, 0.3, 0.35],
+                    center: const Alignment(0, 20.2),
+                    focalRadius: 1,
+                    radius: 30,
+                  ),
+                ),
+              ),
+            ),
           ),
-          Container(
-            width: 132,
-            height: 2,
-            margin: const EdgeInsets.only(bottom: 6, top: 6),
-            child: Visibility(
-              visible: model.isLoadingImage,
-              child: LinearProgressIndicator(
-                color: model.getForegroundColor(),
-                minHeight: 2,
-                backgroundColor: model.getForegroundColor().withOpacity(0.3),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: MouseRegion(
+              onEnter: (_) => setState(() => hovering = true),
+              onExit: (_) => setState(() => hovering = false),
+              child: ColoredBox(
+                color: Colors.transparent,
+                child: widget.child,
               ),
             ),
           ),
         ],
-      );
-    });
+      ),
+    );
   }
 }
 
