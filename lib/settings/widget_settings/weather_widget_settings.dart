@@ -1,18 +1,21 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import '../../home/home_widget.dart';
+import '../../model/location_response.dart';
 import '../../model/widget_settings.dart';
 import '../../resources/fonts.dart';
 import '../../ui/alignment_control.dart';
 import '../../ui/custom_dropdown.dart';
 import '../../ui/custom_slider.dart';
 import '../../ui/text_input.dart';
-import '../../utils/utils.dart';
+import '../../utils/geocoding_service.dart';
 
 class WeatherWidgetSettingsView extends StatelessWidget {
   const WeatherWidgetSettingsView({super.key});
@@ -67,7 +70,7 @@ class WeatherWidgetSettingsView extends StatelessWidget {
             const SizedBox(height: 16),
             LocationAutoCompleteField(
               key: ValueKey(settings.location),
-              label: 'Location',
+              label: 'Location (city)',
               location: settings.location,
               onChanged: (location) {
                 if (location.latitude == settings.location.latitude &&
@@ -116,7 +119,10 @@ class LocationAutoCompleteField extends StatefulWidget {
 
 class _LocationAutoCompleteFieldState extends State<LocationAutoCompleteField> {
   late final AsyncDeBouncer _deBouncer =
-      AsyncDeBouncer(const Duration(milliseconds: 500));
+      AsyncDeBouncer(const Duration(milliseconds: 700));
+
+  late final GeocodingService geocodingService =
+      GetIt.instance.get<GeocodingService>();
 
   ValueNotifier<bool> loadingNotifier = ValueNotifier(false);
 
@@ -128,38 +134,38 @@ class _LocationAutoCompleteFieldState extends State<LocationAutoCompleteField> {
       children: [
         Text(widget.label),
         const SizedBox(height: 10),
-        Autocomplete<Location>(
-          initialValue: TextEditingValue(text: widget.location.name),
+        Autocomplete<LocationResponse>(
+          initialValue: TextEditingValue(
+              text: '${widget.location.name}'
+                  '${widget.location.country.isNotEmpty ? ', ${widget.location.country}' : ''}'),
           optionsMaxHeight: 180,
+          displayStringForOption: (option) =>
+              '${option.name}, ${option.country}',
           onSelected: (item) {
             // log('onSelected: $item');
             _deBouncer.cancel();
             if (item is _EmptyLocation) return;
-            widget.onChanged(item);
+            if (item is _LocationError) return;
+            widget.onChanged(item.toLocation());
           },
           optionsBuilder: (textEditingValue) async {
             if (textEditingValue.text.isEmpty) {
               _deBouncer.cancel();
-              loadingNotifier.value = false;
-              return [
-                _EmptyLocation(
-                  name: 'no_items',
-                  latitude: widget.location.latitude,
-                  longitude: widget.location.longitude,
-                )
-              ];
+              if (mounted) loadingNotifier.value = false;
+              return [const _EmptyLocation()];
             }
             loadingNotifier.value = true;
-            return _deBouncer.run<List<Location>>(() async {
-              log('optionsBuilder: ${textEditingValue.text}');
-              await Future.delayed(const Duration(seconds: 2));
-              final results = testCities.where((location) {
-                return location.name
-                    .toLowerCase()
-                    .contains(textEditingValue.text.toLowerCase());
-              }).toList();
-              if (mounted) loadingNotifier.value = false;
-              return results;
+            return _deBouncer.run<List<LocationResponse>>(() async {
+              log('optionsBuilder: ${textEditingValue.text.trim()}');
+              try {
+                final List<LocationResponse> response =
+                    await fetchLocations(textEditingValue.text.trim());
+                if (mounted) loadingNotifier.value = false;
+                return response;
+              } catch (e) {
+                if (mounted) loadingNotifier.value = false;
+                return [const _LocationError()];
+              }
             });
           },
           fieldViewBuilder: (
@@ -210,7 +216,7 @@ class _LocationAutoCompleteFieldState extends State<LocationAutoCompleteField> {
                 type: MaterialType.transparency,
                 child: Container(
                   constraints:
-                      const BoxConstraints(maxHeight: 200, maxWidth: 310),
+                      const BoxConstraints(maxHeight: 250, maxWidth: 310),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(6),
@@ -231,6 +237,9 @@ class _LocationAutoCompleteFieldState extends State<LocationAutoCompleteField> {
                         final bool isEmpty = index == 0 &&
                             options.length == 1 &&
                             options.first is _EmptyLocation;
+                        final bool isError = index == 0 &&
+                            options.length == 1 &&
+                            options.first is _LocationError;
                         final location = options.elementAt(index);
                         final selected =
                             AutocompleteHighlightedOption.of(context) == index;
@@ -251,6 +260,23 @@ class _LocationAutoCompleteFieldState extends State<LocationAutoCompleteField> {
                             ),
                           );
                         }
+                        if (isError) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 14),
+                            child: Align(
+                              alignment: Alignment.center,
+                              heightFactor: 1,
+                              child: Text(
+                                'Failed to fetch locations',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.red.shade400,
+                                ),
+                              ),
+                            ),
+                          );
+                        }
 
                         return Material(
                           type: MaterialType.transparency,
@@ -262,19 +288,61 @@ class _LocationAutoCompleteFieldState extends State<LocationAutoCompleteField> {
                                 Colors.grey.withOpacity(0.15)),
                             child: Container(
                               color: selected
-                                  ? Colors.grey.shade300
+                                  ? Colors.grey.withOpacity(0.2)
                                   : Colors.transparent,
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 10),
-                              child: Text(
-                                location.name,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyText1!
-                                    .copyWith(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 14,
+                                  horizontal: 12, vertical: 10),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 28,
+                                    decoration: BoxDecoration(
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.1),
+                                          blurRadius: 10,
+                                          offset: const Offset(0, 4),
+                                        ),
+                                      ],
                                     ),
+                                    child: Image.network(
+                                      getFlagUrl(location.countryCode),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
+                                      children: [
+                                        Text(
+                                          location.name,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1!
+                                              .copyWith(
+                                                fontWeight: FontWeight.w400,
+                                                fontSize: 14,
+                                              ),
+                                        ),
+                                        const SizedBox(height: 3),
+                                        Text(
+                                          getDescription(location),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1!
+                                              .copyWith(
+                                                fontWeight: FontWeight.w300,
+                                                color: Colors.grey.shade600,
+                                                fontSize: 12,
+                                              ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
@@ -291,10 +359,30 @@ class _LocationAutoCompleteFieldState extends State<LocationAutoCompleteField> {
     );
   }
 
+  Future<List<LocationResponse>> fetchLocations(String query) async {
+    final response = await geocodingService.fetchLocations(query);
+    return response;
+  }
+
   @override
   void dispose() {
     loadingNotifier.dispose();
     super.dispose();
+  }
+
+  String getDescription(LocationResponse location) {
+    final List<String> components = [
+      location.description3,
+      location.description2,
+      location.description1,
+      location.country,
+    ].whereNotNull().where((element) => element.isNotEmpty).toList();
+
+    return components.join(', ');
+  }
+
+  String getFlagUrl(String countryCode) {
+    return 'https://countryflagsapi.com/png/$countryCode';
   }
 }
 
@@ -334,10 +422,34 @@ class AsyncDeBouncer {
   }
 }
 
-class _EmptyLocation extends Location {
-  const _EmptyLocation({
-    required super.name,
-    required super.latitude,
-    required super.longitude,
-  });
+class _EmptyLocation extends LocationResponse {
+  const _EmptyLocation()
+      : super(
+          name: 'Empty',
+          latitude: -1,
+          longitude: -1,
+          country: '',
+          countryCode: '',
+          timezone: '',
+          description1: '',
+          description2: '',
+          description3: '',
+          elevation: -1,
+        );
+}
+
+class _LocationError extends LocationResponse {
+  const _LocationError()
+      : super(
+          name: 'Error',
+          latitude: -1,
+          longitude: -1,
+          country: '',
+          countryCode: '',
+          timezone: '',
+          description1: '',
+          description2: '',
+          description3: '',
+          elevation: -1,
+        );
 }

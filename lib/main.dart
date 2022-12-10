@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'home/home.dart';
 import 'resources/colors.dart';
 import 'utils/extensions.dart';
+import 'utils/geocoding_service.dart';
 import 'utils/storage_manager.dart';
 import 'utils/weather_service.dart';
 
@@ -31,9 +32,11 @@ class MyApp extends StatelessWidget {
 }
 
 Future<void> initialize() async {
-  GetIt.instance.registerSingleton<LocalStorageManager>(
-      await SharedPreferencesStorageManager.create());
+  final storage = await SharedPreferencesStorageManager.create();
+  GetIt.instance.registerSingleton<LocalStorageManager>(storage);
   GetIt.instance.registerSingleton<WeatherService>(OpenMeteoWeatherService());
+  GetIt.instance
+      .registerSingleton<GeocodingService>(OpenMeteoGeocodingService());
 }
 
 ThemeData buildTheme(BuildContext context) {
@@ -44,6 +47,10 @@ ThemeData buildTheme(BuildContext context) {
     dividerColor: AppColors.borderColor,
     primaryColor: Colors.black,
     primarySwatch: Colors.black.toMaterialColor(),
+    scrollbarTheme: ScrollbarThemeData(
+      thickness: MaterialStateProperty.all(4),
+      thumbVisibility: MaterialStateProperty.all(true),
+    ),
     // fontFamily: FontFamilies.product,
     tooltipTheme: TooltipThemeData(
       waitDuration: const Duration(milliseconds: 300),

@@ -159,7 +159,11 @@ WeatherWidgetSettings _$WeatherWidgetSettingsFromJson(
           TemperatureUnit.celsius,
       location: json['location'] == null
           ? const Location(
-              name: 'Tokyo, Japan', latitude: 35.6762, longitude: 139.6503)
+              name: 'Tokyo',
+              latitude: 35.6762,
+              longitude: 139.6503,
+              country: 'Japan',
+              countryCode: 'JP')
           : Location.fromJson(json['location'] as Map<String, dynamic>),
     );
 
@@ -188,10 +192,14 @@ Location _$LocationFromJson(Map<String, dynamic> json) => Location(
       name: json['name'] as String,
       latitude: (json['latitude'] as num).toDouble(),
       longitude: (json['longitude'] as num).toDouble(),
+      country: json['country'] as String? ?? '',
+      countryCode: json['countryCode'] as String? ?? '',
     );
 
 Map<String, dynamic> _$LocationToJson(Location instance) => <String, dynamic>{
       'latitude': instance.latitude,
       'longitude': instance.longitude,
       'name': instance.name,
+      'country': instance.country,
+      'countryCode': instance.countryCode,
     };

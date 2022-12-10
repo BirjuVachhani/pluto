@@ -135,6 +135,7 @@ class HomeWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<WidgetModelBase>(
       builder: (context, model, child) {
+        if (!model.initialized) return const SizedBox.shrink();
         switch (model.type) {
           case WidgetType.none:
             return const SizedBox.shrink();

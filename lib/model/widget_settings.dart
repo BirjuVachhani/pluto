@@ -370,9 +370,11 @@ class WeatherWidgetSettings extends BaseWidgetSettings {
     this.format = WeatherFormat.temperatureAndSummary,
     this.temperatureUnit = TemperatureUnit.celsius,
     this.location = const Location(
-      name: 'Tokyo, Japan',
+      name: 'Tokyo',
       latitude: 35.6762,
       longitude: 139.6503,
+      country: 'Japan',
+      countryCode: 'JP',
     ),
   });
 
@@ -417,11 +419,15 @@ class Location with EquatableMixin {
   final double latitude;
   final double longitude;
   final String name;
+  final String country;
+  final String countryCode;
 
   const Location({
     required this.name,
     required this.latitude,
     required this.longitude,
+    this.country = '',
+    this.countryCode = '',
   });
 
   @override
@@ -435,11 +441,15 @@ class Location with EquatableMixin {
     double? latitude,
     double? longitude,
     String? name,
+    String? country,
+    String? countryCode,
   }) {
     return Location(
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
       name: name ?? this.name,
+      country: country ?? this.country,
+      countryCode: countryCode ?? this.countryCode,
     );
   }
 
