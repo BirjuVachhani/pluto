@@ -14,7 +14,7 @@ class MainFlutterWindow: NSWindow {
           // set defult tool bar for better spacing.
           self.toolbar = NSToolbar()
           self.toolbar?.displayMode = NSToolbar.DisplayMode.iconOnly
-          self.toolbar?.isVisible = false
+//          self.toolbar?.isVisible = false
           
           var localStyle = self.styleMask;
           localStyle.insert(.fullSizeContentView)
@@ -23,12 +23,15 @@ class MainFlutterWindow: NSWindow {
           self.titleVisibility = .hidden
           self.isOpaque = false
           self.isMovable = true
+          self.setIsZoomed(true)
 
           // Disable full screen button.
           // let button = self.standardWindowButton(NSWindow.ButtonType.zoomButton)
           // button?.isEnabled = false
+
       }
 
     super.awakeFromNib()
   }
+    
 }
