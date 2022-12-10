@@ -96,6 +96,7 @@ class BackgroundSettings with EquatableMixin {
   final ImageRefreshRate imageRefreshRate;
   final int imageIndex;
   final ImageResolution imageResolution;
+  final bool greyScale;
 
   BackgroundSettings({
     this.mode = BackgroundMode.color,
@@ -109,6 +110,7 @@ class BackgroundSettings with EquatableMixin {
     this.imageRefreshRate = ImageRefreshRate.never,
     this.imageIndex = 0,
     this.imageResolution = ImageResolution.auto,
+    this.greyScale = false,
   });
 
   @override
@@ -124,6 +126,7 @@ class BackgroundSettings with EquatableMixin {
         imageRefreshRate,
         imageIndex,
         imageResolution,
+        greyScale,
       ];
 
   BackgroundSettings copyWith({
@@ -138,6 +141,7 @@ class BackgroundSettings with EquatableMixin {
     ImageRefreshRate? imageRefreshRate,
     int? imageIndex,
     ImageResolution? imageResolution,
+    bool? greyScale,
   }) {
     return BackgroundSettings(
       mode: mode ?? this.mode,
@@ -151,6 +155,7 @@ class BackgroundSettings with EquatableMixin {
       imageRefreshRate: imageRefreshRate ?? this.imageRefreshRate,
       imageIndex: imageIndex ?? this.imageIndex,
       imageResolution: imageResolution ?? this.imageResolution,
+      greyScale: greyScale ?? this.greyScale,
     );
   }
 

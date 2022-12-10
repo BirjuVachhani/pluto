@@ -52,6 +52,8 @@ abstract class BackgroundModelBase
 
   bool get invert => settings.invert;
 
+  bool get greyScale => settings.greyScale;
+
   ImageSource get imageSource => settings.source;
 
   UnsplashSource get unsplashSource => settings.unsplashSource;
@@ -81,6 +83,8 @@ abstract class BackgroundModelBase
   void setImageRefreshRate(ImageRefreshRate rate);
 
   void setImageResolution(ImageResolution resolution);
+
+  void setGreyScale(bool greyScale);
 
   Color getForegroundColor();
 
@@ -333,6 +337,13 @@ class BackgroundModel extends BackgroundModelBase {
     settings = settings.copyWith(imageResolution: resolution);
     _save();
     changeBackground(updateAll: true);
+    notifyListeners();
+  }
+
+  @override
+  void setGreyScale(bool greyScale) {
+    settings = settings.copyWith(greyScale: greyScale);
+    _save();
     notifyListeners();
   }
 

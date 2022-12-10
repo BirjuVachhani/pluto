@@ -32,6 +32,7 @@ BackgroundSettings _$BackgroundSettingsFromJson(Map<String, dynamic> json) =>
       imageResolution: $enumDecodeNullable(
               _$ImageResolutionEnumMap, json['imageResolution']) ??
           ImageResolution.auto,
+      greyScale: json['greyScale'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$BackgroundSettingsToJson(BackgroundSettings instance) =>
@@ -47,6 +48,7 @@ Map<String, dynamic> _$BackgroundSettingsToJson(BackgroundSettings instance) =>
       'imageRefreshRate': _$ImageRefreshRateEnumMap[instance.imageRefreshRate]!,
       'imageIndex': instance.imageIndex,
       'imageResolution': _$ImageResolutionEnumMap[instance.imageResolution]!,
+      'greyScale': instance.greyScale,
     };
 
 const _$BackgroundModeEnumMap = {

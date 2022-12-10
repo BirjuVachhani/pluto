@@ -12,6 +12,7 @@ import '../resources/flat_colors.dart';
 import '../resources/unsplash_sources.dart';
 import '../ui/custom_dropdown.dart';
 import '../ui/custom_slider.dart';
+import '../ui/custom_switch.dart';
 import '../ui/gesture_detector_with_cursor.dart';
 import '../utils/extensions.dart';
 
@@ -130,6 +131,16 @@ class BackgroundSettingsView extends StatelessWidget {
             // ),
           ],
           if (model.mode.isImage) const ImageSettings(),
+          if (model.mode.isImage) ...[
+            const SizedBox(height: 16),
+            CustomSwitch(
+              label: 'Black & White Filter',
+              value: model.greyScale,
+              onChanged: (value) {
+                model.setGreyScale(value);
+              },
+            ),
+          ],
           const SizedBox(height: 16),
           CustomSlider(
             label: 'Tint',

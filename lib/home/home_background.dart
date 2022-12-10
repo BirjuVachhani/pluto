@@ -60,6 +60,7 @@ class _HomeBackgroundState extends State<HomeBackground> {
                   child: ImageBackgroundView(
                     imageBytes: imageBytes,
                     showLoadingBackground: model.showLoadingBackground,
+                    greyScale: model.greyScale,
                   ),
                 ),
               if (model.texture)
@@ -102,11 +103,13 @@ class _HomeBackgroundState extends State<HomeBackground> {
 class ImageBackgroundView extends StatefulWidget {
   final Uint8List imageBytes;
   final bool showLoadingBackground;
+  final bool greyScale;
 
   const ImageBackgroundView({
     super.key,
     required this.imageBytes,
     this.showLoadingBackground = false,
+    this.greyScale = false,
   });
 
   @override
@@ -169,12 +172,14 @@ class _ImageBackgroundViewState extends State<ImageBackgroundView> {
       firstChild: ImageChild(
         key: const ValueKey('imageBytes1'),
         imageBytes: imageBytes1,
+        greyScale: widget.greyScale,
         showLoadingBackground: widget.showLoadingBackground,
         showing: crossFadeState == CrossFadeState.showFirst,
       ),
       secondChild: ImageChild(
         key: const ValueKey('imageBytes2'),
         imageBytes: imageBytes2,
+        greyScale: widget.greyScale,
         showLoadingBackground: widget.showLoadingBackground,
         showing: crossFadeState == CrossFadeState.showSecond,
       ),
@@ -186,12 +191,14 @@ class ImageChild extends StatefulWidget {
   final Uint8List imageBytes;
   final bool showLoadingBackground;
   final bool showing;
+  final bool greyScale;
 
   const ImageChild({
     super.key,
     required this.imageBytes,
     this.showLoadingBackground = false,
     required this.showing,
+    this.greyScale = false,
   });
 
   @override
@@ -229,16 +236,18 @@ class _ImageChildState extends State<ImageChild> {
       children: [
         Positioned.fill(
           child: ColorFiltered(
-              colorFilter: greyscale(),
-              child: Image.memory(
-                widget.imageBytes,
-                fit: BoxFit.cover,
-              )),
+            colorFilter: greyscale(),
+            child: Image.memory(
+              widget.imageBytes,
+              fit: BoxFit.cover,
+            ),
+          ),
         ),
         Positioned.fill(
           child: AnimatedOpacity(
             duration: const Duration(milliseconds: 500),
-            opacity: showGreyScale && widget.showing ? 0 : 1,
+            opacity:
+                (showGreyScale && widget.showing) || widget.greyScale ? 0 : 1,
             child: Image.memory(
               widget.imageBytes,
               fit: BoxFit.cover,
