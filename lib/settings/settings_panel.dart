@@ -15,14 +15,12 @@ class SettingsPanel extends StatefulWidget {
 
 class _SettingsPanelState extends State<SettingsPanel>
     with SingleTickerProviderStateMixin {
-  late final TabController tabController;
-
-  int currentTabIndex = 0;
+  late final HomeModelBase model = context.read<HomeModelBase>();
 
   @override
   void initState() {
     super.initState();
-    tabController = TabController(length: 3, vsync: this);
+    model.tabController = TabController(length: 3, vsync: this);
   }
 
   @override
@@ -102,7 +100,7 @@ class _SettingsPanelState extends State<SettingsPanel>
                               SizedBox(
                                 width: 360,
                                 child: TabBar(
-                                  controller: tabController,
+                                  controller: model.tabController,
                                   unselectedLabelColor: Colors.black,
                                   labelColor: Colors.black,
                                   isScrollable: true,
@@ -138,8 +136,8 @@ class _SettingsPanelState extends State<SettingsPanel>
                                     Tab(text: 'Widget'),
                                     Tab(text: 'About'),
                                   ],
-                                  onTap: (index) =>
-                                      setState(() => currentTabIndex = index),
+                                  onTap: (index) => setState(
+                                      () => model.currentTabIndex = index),
                                 ),
                               ),
                             ],
@@ -149,13 +147,14 @@ class _SettingsPanelState extends State<SettingsPanel>
                               physics: const BouncingScrollPhysics(),
                               padding: const EdgeInsets.fromLTRB(24, 24, 24, 8),
                               child: Builder(builder: (context) {
-                                if (currentTabIndex == 0) {
+                                if (model.currentTabIndex == 0) {
                                   return const BackgroundSettingsView();
                                 }
-                                if (currentTabIndex == 1) {
+                                if (model.currentTabIndex == 1) {
                                   return const WidgetSettings();
                                 }
-                                if (currentTabIndex == 2) return const About();
+                                if (model.currentTabIndex == 2)
+                                  return const About();
 
                                 return const SizedBox.shrink();
                               }),

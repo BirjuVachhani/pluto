@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:screwdriver/screwdriver.dart';
 
 import '../home/background_model.dart';
 import '../model/background_settings.dart';
@@ -67,6 +68,7 @@ class BackgroundSettingsView extends StatelessWidget {
             CustomDropdown<FlatColor>(
               value: model.color,
               label: 'Color',
+              hint: 'Select a color',
               isExpanded: true,
               itemHeight: 40,
               items: FlatColors.colors.values.toList(),
@@ -98,6 +100,7 @@ class BackgroundSettingsView extends StatelessWidget {
             CustomDropdown<ColorGradient>(
               value: model.gradient,
               label: 'Gradient',
+              hint: 'Select a gradient',
               isExpanded: true,
               itemHeight: 40,
               searchable: true,
@@ -132,7 +135,7 @@ class BackgroundSettingsView extends StatelessWidget {
           ],
           if (model.mode.isImage) const ImageSettings(),
           if (model.mode.isImage) ...[
-            const SizedBox(height: 16),
+            // const SizedBox(height: 16),
             CustomSwitch(
               label: 'Black & White Filter',
               value: model.greyScale,
@@ -351,8 +354,15 @@ class GradientsGridView extends StatelessWidget {
   }
 }
 
-class ImageSettings extends StatelessWidget {
+class ImageSettings extends StatefulWidget {
   const ImageSettings({super.key});
+
+  @override
+  State<ImageSettings> createState() => _ImageSettingsState();
+}
+
+class _ImageSettingsState extends State<ImageSettings> {
+  bool showError = false;
 
   @override
   Widget build(BuildContext context) {
@@ -361,6 +371,67 @@ class ImageSettings extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
         children: [
+          // const SizedBox(height: 16),
+          Row(
+            children: [
+              const Text('Source'),
+              if (model.imageSource == ImageSource.userLikes && showError)
+                const Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.only(right: 6),
+                    child: Text(
+                      'Please like few backgrounds first! ',
+                      textAlign: TextAlign.end,
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                )
+              else if (model.imageSource == ImageSource.userLikes)
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 6),
+                    child: Text(
+                      '${model.likedBackgrounds.length} liked',
+                      textAlign: TextAlign.end,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey.shade400,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          CustomDropdown<ImageSource>(
+            value: model.imageSource,
+            // label: 'Source',
+            hint: 'Select source',
+            isExpanded: true,
+            items: ImageSource.values.except([ImageSource.local]).toList(),
+            itemBuilder: (context, item) => Text(
+              item.label,
+              style: TextStyle(
+                color: item == ImageSource.userLikes &&
+                        model.likedBackgrounds.isEmpty
+                    ? Colors.grey.shade400
+                    : null,
+              ),
+            ),
+            onSelected: (value) {
+              if (value == ImageSource.userLikes &&
+                  model.likedBackgrounds.isEmpty) {
+                triggerError();
+                return;
+              }
+              model.setImageSource(value);
+            },
+          ),
           const SizedBox(height: 16),
           Builder(builder: (context) {
             switch (model.imageSource) {
@@ -368,19 +439,31 @@ class ImageSettings extends StatelessWidget {
                 return const UnsplashSourceSettings();
               case ImageSource.local:
                 return const SizedBox.shrink();
+              case ImageSource.userLikes:
+                return const SizedBox.shrink();
             }
           }),
-          const SizedBox(height: 16),
+          // const SizedBox(height: 16),
           CustomDropdown<ImageRefreshRate>(
             value: model.imageRefreshRate,
             label: 'Auto Refresh Background',
+            hint: 'Select duration',
             isExpanded: true,
             items: ImageRefreshRate.values,
             itemBuilder: (context, item) => Text(item.label),
             onSelected: (value) => model.setImageRefreshRate(value),
           ),
+          const SizedBox(height: 6),
         ],
       );
+    });
+  }
+
+  void triggerError() {
+    setState(() => showError = true);
+    Future.delayed(const Duration(seconds: 3), () {
+      showError = false;
+      if (mounted) setState(() {});
     });
   }
 }
@@ -398,6 +481,7 @@ class UnsplashSourceSettings extends StatelessWidget {
           CustomDropdown<UnsplashSource>(
             value: model.unsplashSource,
             label: 'Background Collection',
+            hint: 'Select a collection',
             isExpanded: true,
             items: UnsplashSources.sources,
             itemBuilder: (context, item) => Text(item.name),
@@ -415,6 +499,7 @@ class UnsplashSourceSettings extends StatelessWidget {
           CustomDropdown<ImageResolution>(
             value: model.imageResolution,
             isExpanded: true,
+            hint: 'Select a resolution',
             items: ImageResolution.values,
             itemBuilder: (context, item) => Text.rich(
               TextSpan(
@@ -431,6 +516,7 @@ class UnsplashSourceSettings extends StatelessWidget {
             selectedItemBuilder: (context, item) => Text(item.label),
             onSelected: (value) => model.setImageResolution(value),
           ),
+          const SizedBox(height: 16),
         ],
       );
     });

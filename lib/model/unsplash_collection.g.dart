@@ -32,26 +32,15 @@ Map<String, dynamic> _$UnsplashCollectionSourceToJson(
       'id': instance.id,
     };
 
-UnsplashUserSource _$UnsplashUserSourceFromJson(Map<String, dynamic> json) =>
-    UnsplashUserSource(
+UnsplashUserLikesSource _$UnsplashUserLikesSourceFromJson(
+        Map<String, dynamic> json) =>
+    UnsplashUserLikesSource(
       id: json['id'] as String,
       name: json['name'] as String,
     );
 
-Map<String, dynamic> _$UnsplashUserSourceToJson(UnsplashUserSource instance) =>
-    <String, dynamic>{
-      'name': instance.name,
-      'id': instance.id,
-    };
-
-UnsplashLikesSource _$UnsplashLikesSourceFromJson(Map<String, dynamic> json) =>
-    UnsplashLikesSource(
-      id: json['id'] as String,
-      name: json['name'] as String,
-    );
-
-Map<String, dynamic> _$UnsplashLikesSourceToJson(
-        UnsplashLikesSource instance) =>
+Map<String, dynamic> _$UnsplashUserLikesSourceToJson(
+        UnsplashUserLikesSource instance) =>
     <String, dynamic>{
       'name': instance.name,
       'id': instance.id,

@@ -22,7 +22,7 @@ BackgroundSettings _$BackgroundSettingsFromJson(Map<String, dynamic> json) =>
       source: $enumDecodeNullable(_$ImageSourceEnumMap, json['source']) ??
           ImageSource.unsplash,
       unsplashSource: json['unsplashSource'] == null
-          ? UnsplashSources.random
+          ? UnsplashSources.curated
           : UnsplashSource.fromJson(
               json['unsplashSource'] as Map<String, dynamic>),
       imageRefreshRate: $enumDecodeNullable(
@@ -60,6 +60,7 @@ const _$BackgroundModeEnumMap = {
 const _$ImageSourceEnumMap = {
   ImageSource.unsplash: 'unsplash',
   ImageSource.local: 'local',
+  ImageSource.userLikes: 'userLikes',
 };
 
 const _$ImageRefreshRateEnumMap = {
@@ -83,3 +84,28 @@ const _$ImageResolutionEnumMap = {
   ImageResolution.fiveK: 'fiveK',
   ImageResolution.eightK: 'eightK',
 };
+
+Background _$BackgroundFromJson(Map<String, dynamic> json) => Background(
+      url: json['url'] as String,
+      id: json['id'] as String,
+      bytes: base64Decode(json['bytes'] as String),
+    );
+
+Map<String, dynamic> _$BackgroundToJson(Background instance) =>
+    <String, dynamic>{
+      'url': instance.url,
+      'id': instance.id,
+      'bytes': base64Encode(instance.bytes),
+    };
+
+LikedBackground _$LikedBackgroundFromJson(Map<String, dynamic> json) =>
+    LikedBackground(
+      id: json['id'] as String,
+      url: json['url'] as String,
+    );
+
+Map<String, dynamic> _$LikedBackgroundToJson(LikedBackground instance) =>
+    <String, dynamic>{
+      'url': instance.url,
+      'id': instance.id,
+    };

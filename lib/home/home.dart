@@ -35,9 +35,14 @@ class HomeWrapper extends StatelessWidget {
 abstract class HomeModelBase with ChangeNotifier, LazyInitializationMixin {
   bool isPanelVisible = false;
 
+  int currentTabIndex = 0;
+  late final TabController tabController;
+
   void showPanel();
 
   void hidePanel();
+
+  Future<void> reset();
 }
 
 class HomeModel extends HomeModelBase {
@@ -58,6 +63,15 @@ class HomeModel extends HomeModelBase {
   void hidePanel() {
     isPanelVisible = false;
     notifyListeners();
+  }
+
+  @override
+  Future<void> reset() async {
+    isPanelVisible = false;
+    initialized = false;
+    currentTabIndex = 0;
+    notifyListeners();
+    await init();
   }
 }
 

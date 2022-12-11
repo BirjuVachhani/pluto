@@ -25,12 +25,15 @@ class CustomSwitch extends StatelessWidget {
           children: [
             Expanded(child: Text(label)),
             const SizedBox(height: 10),
-            Transform.scale(
-              scale: 0.8,
-              child: CupertinoSwitch(
-                value: value,
-                activeColor: Colors.black,
-                onChanged: onChanged,
+            Transform.translate(
+              offset: const Offset(7, 0),
+              child: Transform.scale(
+                scale: 0.8,
+                child: CupertinoSwitch(
+                  value: value,
+                  activeColor: Colors.black,
+                  onChanged: onChanged,
+                ),
               ),
             ),
           ],

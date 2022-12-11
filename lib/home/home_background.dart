@@ -40,7 +40,7 @@ class _HomeBackgroundState extends State<HomeBackground> {
       builder: (context, model, child) {
         if (!model.initialized) return const SizedBox.shrink();
 
-        final imageBytes = model.getImage();
+        final Uint8List? imageBytes = model.getImage()?.bytes;
 
         return AnimatedContainer(
           duration: const Duration(milliseconds: 500),

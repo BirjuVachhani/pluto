@@ -3,13 +3,11 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'unsplash_collection.g.dart';
 
-const String unsplashBaseUrl = 'https://source.unsplash.com';
-
-enum UnsplashSourceType { random, collection, user, likes }
+enum UnsplashSourceType { random, collection, likes }
 
 abstract class UnsplashSource with EquatableMixin {
-  abstract final UnsplashSourceType type;
   final String name;
+  abstract final UnsplashSourceType type;
 
   const UnsplashSource({required this.name});
 
@@ -26,10 +24,8 @@ abstract class UnsplashSource with EquatableMixin {
         return UnsplashRandomSource.fromJson(json);
       case UnsplashSourceType.collection:
         return UnsplashCollectionSource.fromJson(json);
-      case UnsplashSourceType.user:
-        return UnsplashUserSource.fromJson(json);
       case UnsplashSourceType.likes:
-        return UnsplashLikesSource.fromJson(json);
+        return UnsplashUserLikesSource.fromJson(json);
     }
   }
 }
@@ -86,48 +82,24 @@ class UnsplashCollectionSource extends UnsplashIdentifiableSource {
 }
 
 @JsonSerializable()
-class UnsplashUserSource extends UnsplashIdentifiableSource {
-  @override
-  String getPath() => '/user/$id';
-
-  @override
-  final UnsplashSourceType type = UnsplashSourceType.user;
-
-  const UnsplashUserSource({
-    required super.id,
-    required super.name,
-  });
-
-  factory UnsplashUserSource.fromJson(Map<String, dynamic> json) =>
-      _$UnsplashUserSourceFromJson(json);
-
-  @override
-  Map<String, dynamic> toJson() =>
-      _$UnsplashUserSourceToJson(this)..['type'] = type.name;
-
-  @override
-  List<Object?> get props => [type, id, name];
-}
-
-@JsonSerializable()
-class UnsplashLikesSource extends UnsplashIdentifiableSource {
+class UnsplashUserLikesSource extends UnsplashIdentifiableSource {
   @override
   String getPath() => '/user/$id/likes';
 
   @override
   final UnsplashSourceType type = UnsplashSourceType.likes;
 
-  const UnsplashLikesSource({
+  const UnsplashUserLikesSource({
     required super.id,
     required super.name,
   });
 
-  factory UnsplashLikesSource.fromJson(Map<String, dynamic> json) =>
-      _$UnsplashLikesSourceFromJson(json);
+  factory UnsplashUserLikesSource.fromJson(Map<String, dynamic> json) =>
+      _$UnsplashUserLikesSourceFromJson(json);
 
   @override
   Map<String, dynamic> toJson() =>
-      _$UnsplashLikesSourceToJson(this)..['type'] = type.name;
+      _$UnsplashUserLikesSourceToJson(this)..['type'] = type.name;
 
   @override
   List<Object?> get props => [type, id, name];

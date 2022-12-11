@@ -34,6 +34,8 @@ abstract class WidgetModelBase with ChangeNotifier, LazyInitializationMixin {
 
   void updateWeatherSettings(WeatherWidgetSettings settings,
       {bool save = true});
+
+  Future<void> reset();
 }
 
 class WidgetModel extends WidgetModelBase {
@@ -125,6 +127,13 @@ class WidgetModel extends WidgetModelBase {
     weatherSettings = settings;
     if (save) storage.setJson(StorageKeys.weatherSettings, settings.toJson());
     notifyListeners();
+  }
+
+  @override
+  Future<void> reset() async {
+    initialized = false;
+    notifyListeners();
+    await init();
   }
 }
 

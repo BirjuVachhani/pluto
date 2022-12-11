@@ -1,10 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
 
+import '../home/background_model.dart';
+import '../home/home.dart';
+import '../home/home_widget.dart';
 import '../utils/storage_manager.dart';
 
-class About extends StatelessWidget {
+class About extends StatefulWidget {
   const About({super.key});
+
+  @override
+  State<About> createState() => _AboutState();
+}
+
+class _AboutState extends State<About> {
+  late final BackgroundModelBase backgroundModel =
+      context.read<BackgroundModelBase>();
+  late final HomeModelBase homeModel = context.read<HomeModelBase>();
+  late final WidgetModelBase widgetModel = context.read<WidgetModelBase>();
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +35,7 @@ class About extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           const Text(
-            'Minima',
+            'Pluto',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -50,9 +64,7 @@ class About extends StatelessWidget {
           const SizedBox(height: 24),
           IconButton(
             tooltip: 'Reset Settings',
-            onPressed: () {
-              GetIt.instance.get<LocalStorageManager>().clear();
-            },
+            onPressed: onReset,
             icon: const Icon(Icons.refresh_rounded),
           ),
           const SizedBox(height: 48),
@@ -69,5 +81,12 @@ class About extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void onReset() async {
+    await GetIt.instance.get<LocalStorageManager>().clear();
+    homeModel.reset();
+    backgroundModel.reset();
+    widgetModel.reset();
   }
 }

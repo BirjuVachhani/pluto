@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -27,7 +30,15 @@ enum BackgroundMode {
   bool get isImage => this == BackgroundMode.image;
 }
 
-enum ImageSource { unsplash, local }
+enum ImageSource {
+  unsplash('Unsplash'),
+  local('Local'),
+  userLikes('Liked By You');
+
+  const ImageSource(this.label);
+
+  final String label;
+}
 
 enum ImageRefreshRate {
   never('Never', Duration(days: 365)),
@@ -106,7 +117,7 @@ class BackgroundSettings with EquatableMixin {
     this.texture = false,
     this.invert = false,
     this.source = ImageSource.unsplash,
-    this.unsplashSource = UnsplashSources.random,
+    this.unsplashSource = UnsplashSources.curated,
     this.imageRefreshRate = ImageRefreshRate.never,
     this.imageIndex = 0,
     this.imageResolution = ImageResolution.auto,
@@ -174,3 +185,43 @@ ColorGradient colorGradientFromJson(String name) =>
 String flatColorToJson(FlatColor color) => color.name;
 
 String colorGradientToJson(ColorGradient gradient) => gradient.name;
+
+@JsonSerializable()
+class Background with EquatableMixin {
+  final String url;
+  final String id;
+  @JsonKey(toJson: base64Encode, fromJson: base64Decode)
+  final Uint8List bytes;
+
+  Background({
+    required this.url,
+    required this.id,
+    required this.bytes,
+  });
+
+  factory Background.fromJson(Map<String, dynamic> json) =>
+      _$BackgroundFromJson(json);
+
+  Map<String, dynamic> toJson() => _$BackgroundToJson(this);
+
+  LikedBackground toLikedBackground() => LikedBackground(url: url, id: id);
+
+  @override
+  List<Object?> get props => [url, id];
+}
+
+@JsonSerializable()
+class LikedBackground with EquatableMixin {
+  final String url;
+  final String id;
+
+  LikedBackground({required this.id, required this.url});
+
+  factory LikedBackground.fromJson(Map<String, dynamic> json) =>
+      _$LikedBackgroundFromJson(json);
+
+  Map<String, dynamic> toJson() => _$LikedBackgroundToJson(this);
+
+  @override
+  List<Object?> get props => [id, url];
+}

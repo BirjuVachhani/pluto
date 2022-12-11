@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../model/background_settings.dart';
 import '../ui/gesture_detector_with_cursor.dart';
 import 'background_model.dart';
 import 'home.dart';
@@ -29,6 +30,10 @@ class BottomBar extends StatelessWidget {
                   const SizedBox(width: 24),
                 ],
                 const SettingsButton(),
+                if (model.mode.isImage) ...[
+                  const SizedBox(width: 24),
+                  const LikeBackgroundButton(),
+                ],
               ],
             ),
             Container(
@@ -142,31 +147,29 @@ class _SettingsButtonState extends State<SettingsButton>
   Widget build(BuildContext context) {
     return Consumer<BackgroundModelBase>(builder: (context, model, child) {
       if (!model.initialized) return const SizedBox.shrink();
-      return GestureDetector(
-        child: GestureDetectorWithCursor(
-          onTap: () {
-            context.read<HomeModelBase>().showPanel();
-          },
-          onEnter: (_) => controller.forward(),
-          onExit: (_) => controller.reverse(),
-          tooltip: 'Settings',
-          child: AnimatedBuilder(
-            animation: CurvedAnimation(
-              parent: controller,
-              curve: Curves.fastOutSlowIn,
-            ),
-            builder: (context, child) {
-              return Transform.rotate(
-                angle: controller.value * pi / pi,
-                child: Icon(
-                  Icons.settings,
-                  color: model
-                      .getForegroundColor()
-                      .withOpacity(max(0.2, controller.value)),
-                ),
-              );
-            },
+      return GestureDetectorWithCursor(
+        onTap: () {
+          context.read<HomeModelBase>().showPanel();
+        },
+        onEnter: (_) => controller.forward(),
+        onExit: (_) => controller.reverse(),
+        tooltip: 'Settings',
+        child: AnimatedBuilder(
+          animation: CurvedAnimation(
+            parent: controller,
+            curve: Curves.fastOutSlowIn,
           ),
+          builder: (context, child) {
+            return Transform.rotate(
+              angle: controller.value * pi / pi,
+              child: Icon(
+                Icons.settings,
+                color: model
+                    .getForegroundColor()
+                    .withOpacity(max(0.2, controller.value)),
+              ),
+            );
+          },
         ),
       );
     });
@@ -203,28 +206,88 @@ class _ChangeBackgroundButtonState extends State<ChangeBackgroundButton>
   Widget build(BuildContext context) {
     return Consumer<BackgroundModelBase>(builder: (context, model, child) {
       if (!model.initialized) return const SizedBox.shrink();
-      return GestureDetector(
-        child: GestureDetectorWithCursor(
-          onTap: !model.isLoadingImage ? model.changeBackground : null,
-          onEnter: (_) => controller.forward(),
-          onExit: (_) => controller.reverse(),
-          tooltip: 'Change Background',
-          child: AnimatedBuilder(
-            animation: CurvedAnimation(
-              parent: controller,
-              curve: Curves.fastOutSlowIn,
-            ),
-            builder: (context, child) {
-              return ImageIcon(
-                AssetImage(model.isLoadingImage
-                    ? 'assets/images/ic_hourglass.png'
-                    : 'assets/images/ic_fan.png'),
-                color: model
-                    .getForegroundColor()
-                    .withOpacity(max(0.2, controller.value)),
-              );
-            },
+      return GestureDetectorWithCursor(
+        onTap: !model.isLoadingImage ? model.changeBackground : null,
+        onEnter: (_) => controller.forward(),
+        onExit: (_) => controller.reverse(),
+        tooltip: 'Change Background',
+        child: AnimatedBuilder(
+          animation: CurvedAnimation(
+            parent: controller,
+            curve: Curves.fastOutSlowIn,
           ),
+          builder: (context, child) {
+            return ImageIcon(
+              AssetImage(model.isLoadingImage
+                  ? 'assets/images/ic_hourglass.png'
+                  : 'assets/images/ic_fan.png'),
+              color: model
+                  .getForegroundColor()
+                  .withOpacity(max(0.2, controller.value)),
+            );
+          },
+        ),
+      );
+    });
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+}
+
+class LikeBackgroundButton extends StatefulWidget {
+  const LikeBackgroundButton({super.key});
+
+  @override
+  State<LikeBackgroundButton> createState() => _LikeBackgroundButtonState();
+}
+
+class _LikeBackgroundButtonState extends State<LikeBackgroundButton>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 200),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<BackgroundModelBase>(builder: (context, model, child) {
+      if (!model.initialized) return const SizedBox.shrink();
+      if (model.imageSource == ImageSource.userLikes &&
+          model.likedBackgrounds.length <= 1) {
+        return const SizedBox.shrink();
+      }
+      final image = model.getImage();
+      final liked = image == null ? false : model.isLiked(image.id);
+      return GestureDetectorWithCursor(
+        onTap: !model.showLoadingBackground
+            ? () => model.onToggleLike(!liked)
+            : null,
+        onEnter: (_) => controller.forward(),
+        onExit: (_) => controller.reverse(),
+        tooltip: liked ? 'Liked' : 'Like',
+        child: AnimatedBuilder(
+          animation: CurvedAnimation(
+            parent: controller,
+            curve: Curves.fastOutSlowIn,
+          ),
+          builder: (context, child) {
+            return Icon(
+              liked ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+              color: model
+                  .getForegroundColor()
+                  .withOpacity(max(0.2, controller.value)),
+            );
+          },
         ),
       );
     });

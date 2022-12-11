@@ -46,6 +46,8 @@ abstract class LocalStorageManager {
 
   Future<bool> setBase64(String key, Uint8List value);
 
+  Future<Set<String>> getKeys();
+
   Future<void> clear();
 }
 
@@ -121,4 +123,7 @@ class SharedPreferencesStorageManager extends LocalStorageManager {
 
   @override
   Future<bool> containsKey(String key) => Future.value(prefs.containsKey(key));
+
+  @override
+  Future<Set<String>> getKeys() async => prefs.getKeys();
 }

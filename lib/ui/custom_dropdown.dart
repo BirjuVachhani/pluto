@@ -76,6 +76,7 @@ class CustomDropdown<T> extends StatefulWidget {
   final double itemHeight;
   final double dropdownMaxHeight;
   final bool searchable;
+  final String? hint;
   final Widget Function(BuildContext context, T item)? selectedItemBuilder;
 
   final bool Function(DropdownMenuItem item, String searchValue)? searchMatchFn;
@@ -93,6 +94,7 @@ class CustomDropdown<T> extends StatefulWidget {
     this.searchMatchFn,
     this.searchable = false,
     this.selectedItemBuilder,
+    this.hint,
   });
 
   @override
@@ -115,7 +117,10 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
           if (widget.label != null) Text(widget.label!),
           if (widget.label != null) const SizedBox(height: 10),
           DropdownButton2<T>(
-            value: widget.value,
+            value: widget.value == null || widget.items.contains(widget.value)
+                ? widget.value
+                : null,
+            hint: Text(widget.hint ?? 'Select'),
             isExpanded: widget.isExpanded,
             barrierDismissible: true,
             // offset: const Offset(0, 0),
