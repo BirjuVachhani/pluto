@@ -30,7 +30,7 @@ class _AboutState extends State<About> {
           SizedBox.square(
             dimension: 120,
             child: Image.asset(
-              'assets/images/ic_minima_dark.png',
+              'assets/images/logo.png',
             ),
           ),
           const SizedBox(height: 8),

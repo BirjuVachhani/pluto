@@ -70,79 +70,77 @@ class _ResizableTextInputState extends State<ResizableTextInput> {
           Text(widget.label!),
           const SizedBox(height: 10),
         ],
-        DefaultSelectionStyle(
-          cursorColor: Colors.black,
-          selectionColor: Colors.black.withOpacity(0.1),
-          child: Stack(
-            children: [
-              SizedBox(
-                height: _height,
-                child: TextField(
-                  controller: _controller,
-                  focusNode: _focusNode,
-                  onChanged: widget.onChanged,
-                  expands: true,
-                  maxLines: null,
-                  decoration: InputDecoration(
-                    isDense: true,
-                    contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 16),
-                    filled: true,
-                    isCollapsed: true,
-                    fillColor: Colors.grey.withOpacity(0.05),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.grey.shade600,
-                        width: 1.5,
-                      ),
-                      borderRadius: BorderRadius.circular(4),
+        Stack(
+          children: [
+            SizedBox(
+              height: _height,
+              child: TextField(
+                controller: _controller,
+                focusNode: _focusNode,
+                onChanged: widget.onChanged,
+                expands: true,
+                maxLines: null,
+                style:
+                    const TextStyle(fontWeight: FontWeight.w300, fontSize: 14),
+                decoration: InputDecoration(
+                  isDense: true,
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                  filled: true,
+                  isCollapsed: true,
+                  fillColor: Colors.grey.withOpacity(0.05),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Theme.of(context).primaryColor,
+                      width: 1,
                     ),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.grey.shade300,
-                        width: 1,
-                      ),
-                      borderRadius: BorderRadius.circular(4),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.grey.withOpacity(0.2),
+                      width: 1,
                     ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.grey.shade300,
-                        width: 1,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.grey.withOpacity(0.15),
+                      width: 1,
+                    ),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              right: -5,
+              bottom: -5,
+              child: GestureDetector(
+                onHorizontalDragDown: (details) {
+                  dragStartHeight = _height;
+                },
+                onHorizontalDragUpdate: (details) {
+                  _height = dragStartHeight + details.localPosition.dy;
+                  _height = max(_height, 50);
+                  setState(() {});
+                },
+                child: MouseRegion(
+                  cursor: SystemMouseCursors.resizeUpDown,
+                  child: SizedBox(
+                    child: Transform.rotate(
+                      angle: pi / 180 * -45,
+                      child: Icon(
+                        Icons.filter_list,
+                        color: Colors.grey.withOpacity(0.3),
+                        size: 18,
                       ),
-                      borderRadius: BorderRadius.circular(4),
                     ),
                   ),
                 ),
               ),
-              Positioned(
-                right: -5,
-                bottom: -5,
-                child: GestureDetector(
-                  onHorizontalDragDown: (details) {
-                    dragStartHeight = _height;
-                  },
-                  onHorizontalDragUpdate: (details) {
-                    _height = dragStartHeight + details.localPosition.dy;
-                    _height = max(_height, 50);
-                    setState(() {});
-                  },
-                  child: MouseRegion(
-                    cursor: SystemMouseCursors.resizeUpDown,
-                    child: SizedBox(
-                      child: Transform.rotate(
-                        angle: pi / 180 * -45,
-                        child: Icon(
-                          Icons.filter_list,
-                          color: Colors.grey.shade400,
-                          size: 18,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              )
-            ],
-          ),
+            )
+          ],
         ),
       ],
     );

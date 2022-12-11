@@ -31,7 +31,7 @@ class CustomSwitch extends StatelessWidget {
                 scale: 0.8,
                 child: CupertinoSwitch(
                   value: value,
-                  activeColor: Colors.black,
+                  activeColor: Theme.of(context).primaryColor,
                   onChanged: onChanged,
                 ),
               ),

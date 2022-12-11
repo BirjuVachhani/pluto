@@ -1,6 +1,8 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 
+import '../resources/colors.dart';
+
 class CustomDropdown2<T> extends StatelessWidget {
   final List<T> items;
   final ValueChanged<T> onSelected;
@@ -107,8 +109,8 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
   @override
   Widget build(BuildContext context) {
     return DefaultSelectionStyle(
-      cursorColor: Colors.black,
-      selectionColor: Colors.black.withOpacity(0.15),
+      cursorColor: Theme.of(context).primaryColor,
+      selectionColor: Theme.of(context).primaryColor.withOpacity(0.15),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -123,7 +125,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
             hint: Text(widget.hint ?? 'Select'),
             isExpanded: widget.isExpanded,
             barrierDismissible: true,
-            // offset: const Offset(0, 0),
+            offset: const Offset(0, -4),
             itemHeight: widget.itemHeight,
             buttonHeight: 44,
             dropdownOverButton: false,
@@ -131,7 +133,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
             dropdownMaxHeight: widget.dropdownMaxHeight,
             scrollbarThickness: 4,
             dropdownElevation: 2,
-            selectedItemHighlightColor: Colors.grey.shade300,
+            selectedItemHighlightColor: Theme.of(context).primaryColor,
             dropdownPadding: EdgeInsets.zero,
             searchInnerWidget: widget.searchable
                 ? SearchBar(controller: searchController)
@@ -145,16 +147,17 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
             searchController: widget.searchable ? searchController : null,
             buttonPadding: const EdgeInsets.only(right: 12),
             underline: const SizedBox.shrink(),
-            style: Theme.of(context)
-                .textTheme
-                .bodyText1!
-                .copyWith(fontWeight: FontWeight.w400, height: 1),
+            style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                  fontWeight: FontWeight.w400,
+                  height: 1,
+                ),
             buttonDecoration: BoxDecoration(
-              color: Colors.grey.withOpacity(0.15),
+              color: AppColors.borderColor.withOpacity(0.25),
               borderRadius: BorderRadius.circular(4),
             ),
             dropdownDecoration: BoxDecoration(
               borderRadius: BorderRadius.circular(6),
+              color: AppColors.dropdownOverlayColor,
             ),
             icon: const Icon(
               Icons.keyboard_arrow_down_rounded,
@@ -207,11 +210,11 @@ class SearchBar extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
+        // color: Colors.white,
         border: Border(
           bottom: BorderSide(
-            color: Colors.grey.shade300,
-            width: 1,
+            color: Colors.grey.withOpacity(0.5),
+            width: 0.5,
           ),
         ),
       ),
@@ -226,18 +229,20 @@ class SearchBar extends StatelessWidget {
           hintText: 'Search',
           filled: true,
           prefixIcon: const Icon(Icons.search_rounded),
-          fillColor: Colors.grey.withOpacity(0.1),
+          fillColor: AppColors.borderColor.withOpacity(0.25),
           hintStyle: const TextStyle(fontSize: 13, height: 1.2),
           enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
+            borderSide:
+                BorderSide(color: Colors.grey.withOpacity(0.3), width: 0.5),
             borderRadius: BorderRadius.circular(4),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
+            borderSide:
+                BorderSide(color: Colors.grey.withOpacity(0.3), width: 0.5),
             borderRadius: BorderRadius.circular(4),
           ),
           border: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
+            borderSide: BorderSide(color: Colors.grey.shade300, width: 0.5),
             borderRadius: BorderRadius.circular(4),
           ),
         ),

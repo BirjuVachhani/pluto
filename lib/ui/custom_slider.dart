@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../resources/colors.dart';
+
 class CustomSlider extends StatelessWidget {
   final ValueChanged<double> onChanged;
   final double value;
@@ -42,8 +44,8 @@ class CustomSlider extends StatelessWidget {
                   value: value,
                   min: min ?? 0,
                   max: max ?? 100,
-                  activeColor: Colors.black,
-                  inactiveColor: Colors.black.withOpacity(0.1),
+                  activeColor: Theme.of(context).primaryColor,
+                  inactiveColor: Colors.white.withOpacity(0.1),
                   onChanged: onChanged,
                 ),
               ),
@@ -54,7 +56,7 @@ class CustomSlider extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade200,
+                  color: AppColors.borderColor.withOpacity(0.5),
                   borderRadius: BorderRadius.circular(4),
                   // border: Border.all(color: Colors.grey.shade300),
                 ),

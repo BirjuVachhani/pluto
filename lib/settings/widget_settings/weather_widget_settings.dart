@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import '../../home/home_widget.dart';
 import '../../model/location_response.dart';
 import '../../model/widget_settings.dart';
+import '../../resources/colors.dart';
 import '../../resources/fonts.dart';
 import '../../ui/alignment_control.dart';
 import '../../ui/custom_dropdown.dart';
@@ -177,7 +178,6 @@ class _LocationAutoCompleteFieldState extends State<LocationAutoCompleteField> {
             return TextInput(
               controller: textEditingController,
               focusNode: focusNode,
-              fillColor: Colors.grey.withOpacity(0.15),
               showInitialBorder: false,
               suffixIcon: ValueListenableBuilder<bool>(
                 valueListenable: loadingNotifier,
@@ -218,7 +218,7 @@ class _LocationAutoCompleteFieldState extends State<LocationAutoCompleteField> {
                   constraints:
                       const BoxConstraints(maxHeight: 250, maxWidth: 310),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: AppColors.dropdownOverlayColor,
                     borderRadius: BorderRadius.circular(6),
                     boxShadow: [
                       BoxShadow(
@@ -288,7 +288,7 @@ class _LocationAutoCompleteFieldState extends State<LocationAutoCompleteField> {
                                 Colors.grey.withOpacity(0.15)),
                             child: Container(
                               color: selected
-                                  ? Colors.grey.withOpacity(0.2)
+                                  ? Theme.of(context).primaryColor
                                   : Colors.transparent,
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 12, vertical: 10),
@@ -335,7 +335,9 @@ class _LocationAutoCompleteFieldState extends State<LocationAutoCompleteField> {
                                               .bodyText1!
                                               .copyWith(
                                                 fontWeight: FontWeight.w300,
-                                                color: Colors.grey.shade600,
+                                                color: selected
+                                                    ? Colors.grey.shade200
+                                                    : Colors.grey.shade400,
                                                 fontSize: 12,
                                               ),
                                         ),

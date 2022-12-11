@@ -9,6 +9,7 @@ import '../model/color_gradient.dart';
 import '../model/flat_color.dart';
 import '../model/unsplash_collection.dart';
 import '../resources/color_gradients.dart';
+import '../resources/colors.dart';
 import '../resources/flat_colors.dart';
 import '../resources/unsplash_sources.dart';
 import '../ui/custom_dropdown.dart';
@@ -33,14 +34,14 @@ class BackgroundSettingsView extends StatelessWidget {
           const SizedBox(height: 10),
           CupertinoTheme(
             data: const CupertinoThemeData(
-              primaryContrastingColor: Colors.white,
-              primaryColor: Colors.black,
-            ),
+                // primaryContrastingColor: Colors.transparent,
+                // primaryColor: Colors.black,
+                ),
             child: CupertinoSegmentedControl<BackgroundMode>(
               padding: EdgeInsets.zero,
               groupValue: model.mode,
-              selectedColor: Colors.black,
-              borderColor: Colors.black,
+              // selectedColor: Colors.black,
+              // borderColor: Colors.black,
               onValueChanged: (mode) => model.setMode(mode),
               children: {
                 for (final mode in BackgroundMode.values)
@@ -103,11 +104,11 @@ class BackgroundSettingsView extends StatelessWidget {
               hint: 'Select a gradient',
               isExpanded: true,
               itemHeight: 40,
-              searchable: true,
-              searchMatchFn: (item, query) => (item.value as ColorGradient)
-                  .name
-                  .toLowerCase()
-                  .contains(query.toLowerCase()),
+              // searchable: true,
+              // searchMatchFn: (item, query) => (item.value as ColorGradient)
+              //     .name
+              //     .toLowerCase()
+              //     .contains(query.toLowerCase()),
               items: ColorGradients.gradients.values.toList(),
               itemBuilder: (context, item) => Row(
                 children: [
@@ -165,7 +166,9 @@ class BackgroundSettingsView extends StatelessWidget {
                   padding: const EdgeInsets.all(8),
                   child: Icon(
                     Icons.lens_blur_rounded,
-                    color: model.texture ? Colors.black : Colors.grey.shade400,
+                    color: model.texture
+                        ? Theme.of(context).primaryColor
+                        : AppColors.textColor.withOpacity(0.5),
                     size: 20,
                   ),
                 ),
@@ -179,7 +182,9 @@ class BackgroundSettingsView extends StatelessWidget {
                     padding: const EdgeInsets.all(8),
                     child: Icon(
                       Icons.brightness_medium_rounded,
-                      color: model.invert ? Colors.black : Colors.grey.shade400,
+                      color: model.invert
+                          ? Theme.of(context).primaryColor
+                          : AppColors.textColor.withOpacity(0.5),
                       size: 20,
                     ),
                   ),
@@ -195,8 +200,8 @@ class BackgroundSettingsView extends StatelessWidget {
                           ? 'assets/images/ic_hourglass.png'
                           : 'assets/images/ic_fan.png'),
                       color: model.isLoadingImage
-                          ? Colors.grey.shade400
-                          : Colors.black,
+                          ? Colors.grey.withOpacity(0.5)
+                          : AppColors.textColor.withOpacity(0.5),
                       size: 20,
                     ),
                   ),
@@ -210,8 +215,8 @@ class BackgroundSettingsView extends StatelessWidget {
                     child: Icon(
                       Icons.download_rounded,
                       color: model.isLoadingImage || model.getImage() == null
-                          ? Colors.grey.shade400
-                          : Colors.black,
+                          ? Colors.grey.withOpacity(0.5)
+                          : AppColors.textColor.withOpacity(0.5),
                       size: 20,
                     ),
                   ),
@@ -225,8 +230,8 @@ class BackgroundSettingsView extends StatelessWidget {
                     child: Icon(
                       Icons.open_in_new_rounded,
                       color: model.isLoadingImage || model.getImage() == null
-                          ? Colors.grey.shade400
-                          : Colors.black,
+                          ? Colors.grey.withOpacity(0.5)
+                          : AppColors.textColor.withOpacity(0.5),
                       size: 20,
                     ),
                   ),

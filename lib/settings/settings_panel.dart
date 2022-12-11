@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../home/home.dart';
+import '../resources/colors.dart';
 import 'about.dart';
 import 'background_settings_view.dart';
 import 'widget_settings.dart';
@@ -45,7 +46,7 @@ class _SettingsPanelState extends State<SettingsPanel>
                   child: Container(
                     width: 360,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: AppColors.settingsPanelBackgroundColor,
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: [
                         BoxShadow(
@@ -91,18 +92,22 @@ class _SettingsPanelState extends State<SettingsPanel>
                           const SizedBox(height: 16),
                           Stack(
                             children: [
-                              const Positioned(
+                              Positioned(
                                 left: 0,
                                 right: 0,
                                 bottom: 0.5,
-                                child: Divider(height: 1, thickness: 1),
+                                child: Divider(
+                                  height: 0.5,
+                                  thickness: 0.5,
+                                  color: AppColors.textColor.withOpacity(0.5),
+                                ),
                               ),
                               SizedBox(
                                 width: 360,
                                 child: TabBar(
                                   controller: model.tabController,
-                                  unselectedLabelColor: Colors.black,
-                                  labelColor: Colors.black,
+                                  // unselectedLabelColor: Colors.black,
+                                  // labelColor: Colors.black,
                                   isScrollable: true,
                                   labelStyle: const TextStyle(
                                     fontWeight: FontWeight.w300,
@@ -114,19 +119,23 @@ class _SettingsPanelState extends State<SettingsPanel>
                                   indicator: BoxDecoration(
                                     border: Border(
                                       top: BorderSide(
-                                        color: Theme.of(context).dividerColor,
-                                        width: 1,
+                                        color: AppColors.textColor
+                                            .withOpacity(0.5),
+                                        width: 0.5,
                                       ),
                                       left: BorderSide(
-                                        color: Theme.of(context).dividerColor,
-                                        width: 1,
+                                        color: AppColors.textColor
+                                            .withOpacity(0.5),
+                                        width: 0.5,
                                       ),
                                       right: BorderSide(
-                                        color: Theme.of(context).dividerColor,
-                                        width: 1,
+                                        color: AppColors.textColor
+                                            .withOpacity(0.5),
+                                        width: 0.5,
                                       ),
                                       bottom: const BorderSide(
-                                        color: Colors.white,
+                                        color: AppColors
+                                            .settingsPanelBackgroundColor,
                                         width: 2,
                                       ),
                                     ),
@@ -153,9 +162,9 @@ class _SettingsPanelState extends State<SettingsPanel>
                                 if (model.currentTabIndex == 1) {
                                   return const WidgetSettings();
                                 }
-                                if (model.currentTabIndex == 2)
+                                if (model.currentTabIndex == 2) {
                                   return const About();
-
+                                }
                                 return const SizedBox.shrink();
                               }),
                             ),

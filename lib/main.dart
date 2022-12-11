@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
@@ -43,10 +44,12 @@ ThemeData buildTheme(BuildContext context) {
   return ThemeData(
     backgroundColor: Colors.black,
     scaffoldBackgroundColor: Colors.black,
-    brightness: Brightness.light,
+    canvasColor: Colors.black,
+    cardColor: Colors.black,
+    brightness: Brightness.dark,
     dividerColor: AppColors.borderColor,
-    primaryColor: Colors.black,
-    primarySwatch: Colors.black.toMaterialColor(),
+    primaryColor: CupertinoColors.systemBlue.color,
+    primarySwatch: CupertinoColors.systemBlue.toMaterialColor(),
     scrollbarTheme: ScrollbarThemeData(
       thickness: MaterialStateProperty.all(4),
       thumbVisibility: MaterialStateProperty.all(true),
@@ -58,16 +61,34 @@ ThemeData buildTheme(BuildContext context) {
       verticalOffset: 18,
       textStyle: const TextStyle(
         fontSize: 12,
-        color: Colors.white,
+        color: Colors.white60,
       ),
       decoration: ShapeDecoration(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(4),
         ),
-        color: Colors.black,
+        color: Colors.grey.shade900,
       ),
     ),
     textTheme: const TextTheme(
+      headline1: TextStyle(
+        color: AppColors.textColor,
+      ),
+      headline2: TextStyle(
+        color: AppColors.textColor,
+      ),
+      headline3: TextStyle(
+        color: AppColors.textColor,
+      ),
+      headline4: TextStyle(
+        color: AppColors.textColor,
+      ),
+      headline5: TextStyle(
+        color: AppColors.textColor,
+      ),
+      headline6: TextStyle(
+        color: AppColors.textColor,
+      ),
       bodyText1: TextStyle(
         fontWeight: FontWeight.w200,
         color: AppColors.textColor,

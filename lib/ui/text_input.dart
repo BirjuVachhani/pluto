@@ -114,61 +114,58 @@ class _TextInputState extends State<TextInput> {
           Text(widget.label!),
           const SizedBox(height: 10),
         ],
-        DefaultSelectionStyle(
-          cursorColor: Colors.black,
-          selectionColor: Colors.black.withOpacity(0.1),
-          child: SizedBox(
-            width: widget.width,
-            child: TextField(
-              controller: _controller,
-              focusNode: _focusNode,
-              onChanged: widget.onChanged,
-              textAlign: widget.textAlign ?? TextAlign.start,
-              inputFormatters: widget.inputFormatters,
-              textInputAction: widget.textInputAction ?? TextInputAction.done,
-              style: const TextStyle(height: 1.2, fontSize: 15)
-                  .merge(widget.textStyle),
-              onSubmitted: (_) => _submit(),
-              decoration: InputDecoration(
-                isDense: true,
-                hintText: widget.hintText,
-                suffix: widget.suffix,
-                suffixIcon: widget.suffixIcon,
-                hintTextDirection: TextDirection.ltr,
-                hintStyle: const TextStyle(
-                  height: 1.2,
-                  color: Colors.grey,
-                  fontSize: 14,
-                ).merge(widget.hintStyle),
-                contentPadding: widget.contentPadding ??
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-                filled: true,
-                fillColor: widget.fillColor ?? Colors.grey.withOpacity(0.05),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Theme.of(context).primaryColor,
-                    width: 1.5,
-                  ),
-                  borderRadius: BorderRadius.circular(4),
+        SizedBox(
+          width: widget.width,
+          child: TextField(
+            controller: _controller,
+            focusNode: _focusNode,
+            onChanged: widget.onChanged,
+            textAlign: widget.textAlign ?? TextAlign.start,
+            inputFormatters: widget.inputFormatters,
+            textInputAction: widget.textInputAction ?? TextInputAction.done,
+            style: const TextStyle(
+                    height: 1.2, fontSize: 15, fontWeight: FontWeight.w300)
+                .merge(widget.textStyle),
+            onSubmitted: (_) => _submit(),
+            decoration: InputDecoration(
+              isDense: true,
+              hintText: widget.hintText,
+              suffix: widget.suffix,
+              suffixIcon: widget.suffixIcon,
+              hintTextDirection: TextDirection.ltr,
+              hintStyle: const TextStyle(
+                height: 1.2,
+                color: Colors.grey,
+                fontSize: 14,
+              ).merge(widget.hintStyle),
+              contentPadding: widget.contentPadding ??
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+              filled: true,
+              fillColor: widget.fillColor ?? Colors.grey.withOpacity(0.05),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Theme.of(context).primaryColor,
+                  width: 1,
                 ),
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: widget.showInitialBorder
-                        ? Colors.grey.shade300
-                        : Colors.transparent,
-                    width: 1,
-                  ),
-                  borderRadius: BorderRadius.circular(4),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              border: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: widget.showInitialBorder
+                      ? Colors.grey.withOpacity(0.15)
+                      : Colors.transparent,
+                  width: 1,
                 ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: widget.showInitialBorder
-                        ? Colors.grey.shade300
-                        : Colors.transparent,
-                    width: 1,
-                  ),
-                  borderRadius: BorderRadius.circular(4),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: widget.showInitialBorder
+                      ? Colors.grey.withOpacity(0.15)
+                      : Colors.transparent,
+                  width: 1,
                 ),
+                borderRadius: BorderRadius.circular(4),
               ),
             ),
           ),
