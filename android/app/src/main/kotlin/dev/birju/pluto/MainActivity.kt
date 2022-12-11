@@ -1,4 +1,4 @@
-package dev.birju.minima
+package dev.birju.pluto
 
 import io.flutter.embedding.android.FlutterActivity
 

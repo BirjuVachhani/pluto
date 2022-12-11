@@ -33,15 +33,14 @@ class BackgroundSettingsView extends StatelessWidget {
           const Text('Background Mode'),
           const SizedBox(height: 10),
           CupertinoTheme(
-            data: const CupertinoThemeData(
-                // primaryContrastingColor: Colors.transparent,
-                // primaryColor: Colors.black,
-                ),
+            data: CupertinoThemeData(
+              brightness: Brightness.dark,
+              primaryColor: Theme.of(context).primaryColor,
+              primaryContrastingColor: AppColors.settingsPanelBackgroundColor,
+            ),
             child: CupertinoSegmentedControl<BackgroundMode>(
               padding: EdgeInsets.zero,
               groupValue: model.mode,
-              // selectedColor: Colors.black,
-              // borderColor: Colors.black,
               onValueChanged: (mode) => model.setMode(mode),
               children: {
                 for (final mode in BackgroundMode.values)
@@ -55,15 +54,6 @@ class BackgroundSettingsView extends StatelessWidget {
               },
             ),
           ),
-          // const SizedBox(height: 16),
-          // CustomDropdown<BackgroundMode>(
-          //   value: model.mode,
-          //   label: 'Background Mode',
-          //   isExpanded: true,
-          //   items: BackgroundMode.values,
-          //   itemBuilder: (context, item) => Text(item.label),
-          //   onSelected: (mode) => model.setMode(mode),
-          // ),
           const SizedBox(height: 16),
           if (model.mode.isColor) ...[
             CustomDropdown<FlatColor>(

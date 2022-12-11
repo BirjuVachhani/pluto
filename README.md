@@ -1,4 +1,4 @@
-# minima
+# Pluto
 
 A minimal new tab for Chrome.(more on the way!) built with [Flutter](https://flutter.dev/) ![logo](flutter.png).
 
@@ -10,7 +10,7 @@ A minimal new tab for Chrome.(more on the way!) built with [Flutter](https://flu
 
 #### Local Install
 
-1. Download `chrome.zip` from [Releases](https://github.com/birjuvachhani/minima/releases)
+1. Download `chrome.zip` from [Releases](https://github.com/birjuvachhani/pluto/releases)
 2. Unzip the file
 3. In Chrome/Edge go to the extensions page (`chrome://extensions` or `edge://extensions`).
 4. Enable Developer Mode.

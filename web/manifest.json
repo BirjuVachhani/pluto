@@ -1,9 +1,9 @@
 {
-  "name": "minima",
-  "description": "A minimal newtab for Chrome",
+  "name": "Pluto",
+  "description": "A minimal new tab for Chrome",
   "version": "1.0.0",
   "manifest_version": 3,
-  "short_name": "minima",
+  "short_name": "Pluto",
   "content_security_policy": {
     "content_security_policy": {
       "extension_pages": "script-src 'self' ; object-src 'self'"

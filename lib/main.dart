@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Minima',
+      title: 'Pluto',
       debugShowCheckedModeBanner: false,
       theme: buildTheme(context),
       home: const HomeWrapper(

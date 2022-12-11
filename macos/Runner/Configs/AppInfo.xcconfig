@@ -5,10 +5,10 @@
 // 'flutter create' template.
 
 // The application's name. By default this is also the title of the Flutter window.
-PRODUCT_NAME = minima
+PRODUCT_NAME = Pluto
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = dev.birju.minima
+PRODUCT_BUNDLE_IDENTIFIER = dev.birju.pluto
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2022 dev.birju. All rights reserved.

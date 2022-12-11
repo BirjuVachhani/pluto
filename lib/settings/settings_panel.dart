@@ -45,6 +45,7 @@ class _SettingsPanelState extends State<SettingsPanel>
                 Flexible(
                   child: Container(
                     width: 360,
+                    clipBehavior: Clip.antiAlias,
                     decoration: BoxDecoration(
                       color: AppColors.settingsPanelBackgroundColor,
                       borderRadius: BorderRadius.circular(12),
