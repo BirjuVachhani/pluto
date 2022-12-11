@@ -533,9 +533,9 @@ class ResolutionHelpButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Tooltip(
-      padding: EdgeInsets.all(14),
-      richMessage: TextSpan(
+    return Tooltip(
+      padding: const EdgeInsets.all(14),
+      richMessage: const TextSpan(
         text: '',
         children: [
           TextSpan(
@@ -564,7 +564,7 @@ class ResolutionHelpButton extends StatelessWidget {
           ),
         ],
       ),
-      margin: EdgeInsets.only(right: 32),
+      margin: const EdgeInsets.only(right: 32),
       triggerMode: TooltipTriggerMode.tap,
       textAlign: TextAlign.start,
       preferBelow: true,
@@ -573,7 +573,7 @@ class ResolutionHelpButton extends StatelessWidget {
         child: Icon(
           Icons.info_outline_rounded,
           size: 16,
-          color: Colors.grey,
+          color: Theme.of(context).primaryColor,
         ),
       ),
     );

@@ -99,7 +99,7 @@ class _SettingsPanelState extends State<SettingsPanel>
                                 child: Divider(
                                   height: 0.5,
                                   thickness: 0.5,
-                                  color: AppColors.textColor.withOpacity(0.5),
+                                  color: Theme.of(context).primaryColor,
                                 ),
                               ),
                               SizedBox(
@@ -107,8 +107,9 @@ class _SettingsPanelState extends State<SettingsPanel>
                                 child: TabBar(
                                   controller: model.tabController,
                                   // unselectedLabelColor: Colors.black,
-                                  // labelColor: Colors.black,
+                                  labelColor: Theme.of(context).primaryColor,
                                   isScrollable: true,
+                                  unselectedLabelColor: AppColors.textColor,
                                   labelStyle: const TextStyle(
                                     fontWeight: FontWeight.w300,
                                   ),
@@ -119,18 +120,15 @@ class _SettingsPanelState extends State<SettingsPanel>
                                   indicator: BoxDecoration(
                                     border: Border(
                                       top: BorderSide(
-                                        color: AppColors.textColor
-                                            .withOpacity(0.5),
+                                        color: Theme.of(context).primaryColor,
                                         width: 0.5,
                                       ),
                                       left: BorderSide(
-                                        color: AppColors.textColor
-                                            .withOpacity(0.5),
+                                        color: Theme.of(context).primaryColor,
                                         width: 0.5,
                                       ),
                                       right: BorderSide(
-                                        color: AppColors.textColor
-                                            .withOpacity(0.5),
+                                        color: Theme.of(context).primaryColor,
                                         width: 0.5,
                                       ),
                                       bottom: const BorderSide(
