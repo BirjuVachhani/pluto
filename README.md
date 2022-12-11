@@ -2,7 +2,7 @@
 
 A minimal new tab for Chrome.(more on the way!) built with [Flutter](https://flutter.dev/) ![logo](flutter.png).
 
-![Screenshot](./banner.jpg)
+![Screenshot](preview.png)
 
 ## Installation
 
