@@ -1,11 +1,11 @@
-<p align="center"> <img src="logo_animated.svg" width="132px" height="132px" /></p>
-<p align="center"> <img alt="android" width="150px" src="./screenshots/ic_text_logo_light.png#gh-light-mode-only" /> </p>
-<p align="center"> <img alt="android" width="150px" src="./screenshots/ic_text_logo_dark.png#gh-dark-mode-only"/> </p>
+<p align="center"> <img src=".github/assets/logo_animated.svg" width="132px" height="132px" /></p>
+<p align="center"> <img alt="android" width="150px" src=".github/assets/ic_text_logo_light.png#gh-light-mode-only" /> </p>
+<p align="center"> <img alt="android" width="150px" src=".github/assets/ic_text_logo_dark.png#gh-dark-mode-only"/> </p>
 
-<p align="center">A beautiful new tab for Chrome built with love ❤️ in <img src="flutter.png" /><a href="https://flutter.dev/">Flutter</a>.</p>
+<p align="center">A beautiful new tab for Chrome built with love ❤️ in <img src=".github/assets/flutter.png" /><a href="https://flutter.dev/">Flutter</a>.</p>
 
 
-![Screenshot](screenshots/banner.png)
+![Screenshot](.github/assets/banner.png)
 
 ## Installation
 
