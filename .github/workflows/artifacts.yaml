@@ -20,10 +20,14 @@ jobs:
         run: flutter pub get
       - name: Build
         run: flutter build web --release --web-renderer html --csp
+      - name: Add LICENSE
+        run: cp LICENSE build/web
+      - name: Install ZIP tool
+        run: sudo apt-get install zip
       - name: Archive
         run: |
           tar -czf pluto-extension-${{ github.event.release.tag_name }}.tar.gz build/web
-          tar -czf pluto-extension-${{ github.event.release.tag_name }}.zip build/web
+          zip -r pluto-extension-${{ github.event.release.tag_name }}.zip build/web
       - uses: actions/upload-artifact@v3
         with:
           if-no-files-found: error
