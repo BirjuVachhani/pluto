@@ -1,7 +1,9 @@
 clean:
   - flutter clean
   - flutter pub get
-build: flutter build web --release --web-renderer html --csp
+build:
+  - flutter build web --release --web-renderer html --csp
+  - mv build/web build/extension
 app_icons: flutter pub run flutter_launcher_icons
 codegen: flutter pub run build_runner build --delete-conflicting-outputs
 generate_colors: dart scripts/generators/colors_generator.dart scripts/generators/colors.json lib/resources/flat_colors.dart
