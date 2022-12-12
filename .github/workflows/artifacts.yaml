@@ -28,8 +28,7 @@ jobs:
         run: |
           cd build
           mkdir artifact
-          tar -czf artifact/pluto-extension-${{ github.event.release.tag_name }}.tar.gz web
-          zip -r artifact/pluto-extension-${{ github.event.release.tag_name }}.zip web
+          zip -r artifact/pluto-v${{ github.event.release.tag_name }}.zip web
           cd ..
       - name: Upload artifacts to release
         uses: svenstaro/upload-release-action@v2
