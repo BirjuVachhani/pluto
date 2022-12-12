@@ -1,0 +1,32 @@
+name: Artifacts
+
+on:
+  release:
+    types: [ published ]
+  workflow_dispatch:
+    branches: [ main ]
+
+jobs:
+  build_artifacts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: flutter --version
+      - name: Install dependencies
+        run: flutter pub get
+      - name: Build
+        run: flutter build web --release --web-renderer html --csp
+      - name: Archive
+        run: |
+          tar -czf pluto-extension-${{ github.event.release.tag_name }}.tar.gz build/web
+          tar -czf pluto-extension-${{ github.event.release.tag_name }}.zip build/web
+      - uses: actions/upload-artifact@v3
+        with:
+          if-no-files-found: error
+          path: |
+            pluto-extension-${{ github.event.release.tag_name }}.tar.gz
+            pluto-extension-${{ github.event.release.tag_name }}.zip

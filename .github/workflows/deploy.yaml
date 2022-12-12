@@ -9,6 +9,7 @@ on:
 #      - '**.yaml'
 #      - '**.yml'
   workflow_dispatch:
+    branches: [ main ]
 
 jobs:
   deploy:
