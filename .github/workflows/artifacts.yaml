@@ -7,10 +7,10 @@ on:
     branches: [ main ]
 
 jobs:
-  build_artifacts:
+  publish_artifacts:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -26,11 +26,15 @@ jobs:
         run: sudo apt-get install zip
       - name: Archive
         run: |
-          tar -czf pluto-extension-${{ github.event.release.tag_name }}.tar.gz build/web
-          zip -r pluto-extension-${{ github.event.release.tag_name }}.zip build/web
-      - uses: actions/upload-artifact@v3
+          cd build
+          mkdir artifact
+          tar -czf artifact/pluto-extension-${{ github.event.release.tag_name }}.tar.gz web
+          zip -r artifact/pluto-extension-${{ github.event.release.tag_name }}.zip web
+          cd ..
+      - name: Upload artifacts to release
+        uses: svenstaro/upload-release-action@v2
         with:
-          if-no-files-found: error
-          path: |
-            pluto-extension-${{ github.event.release.tag_name }}.tar.gz
-            pluto-extension-${{ github.event.release.tag_name }}.zip
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: build/artifact/*
+          tag: ${{ github.ref }}
+          file_glob: true
