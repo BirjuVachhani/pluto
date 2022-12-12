@@ -1,0 +1,106 @@
+<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <foreignObject width="512" height="512">
+        <div xmlns="http://www.w3.org/1999/xhtml" class="container">
+            <style>
+                .base {
+                position: relative;
+                }
+
+                .image {
+                position: absolute;
+                }
+                .planet {
+                z-index: 0;
+                }
+
+                .bg {
+                width: 512px;
+                height: 512px;
+                background-image: url("ic_pluto_logo_bg.png");
+                }
+
+                .pluto {
+                margin-left: 91px;
+                margin-top: 91px;
+                z-index: 1;
+                width: 330px;
+                height: 330px;
+                object-fit: cover;
+                overflow: hidden;
+                background-image: url("ic_pluto_planet.png");
+                }
+
+                .shadow {
+                margin-left: 91px;
+                margin-top: 91px;
+                z-index: 2;
+                width: 330.5px;
+                height: 330.5px;
+                object-fit: cover;
+                overflow: hidden;
+                // clip-path: circle(50%);
+                border-radius: 50%;
+                // background-repeat: no-repeat, repeat;
+                // background-image: url("ic_pluto_shadow.png");
+                mix-blend-mode: hard-light;
+                background-blend-mode: hard-light;
+
+                /* Created with https://www.css-gradient.com */
+                // background: #01010100;
+                // background: -webkit-radial-gradient(top left, #01010100, #010101);
+                // background: -moz-radial-gradient(top left, #01010100, #010101);
+                // background: radial-gradient(to bottom right, #01010100, #010101);
+
+                background: radial-gradient(61.55% 61.55% at 35.73% 25.6%, rgba(0, 0, 0, 0) 25.58%, rgba(0, 0, 0, 0.55) 71.35%, rgba(0, 0, 0, 0.60) 75.42%, rgba(0, 0, 0, 0.90) 100%);
+                }
+
+                @keyframes rotating {
+                from {
+                -ms-transform: rotate(0deg);
+                -moz-transform: rotate(0deg);
+                -webkit-transform: rotate(0deg);
+                -o-transform: rotate(0deg);
+                transform: rotate(0deg);
+                }
+                to {
+                -ms-transform: rotate(360deg);
+                -moz-transform: rotate(360deg);
+                -webkit-transform: rotate(360deg);
+                -o-transform: rotate(360deg);
+                transform: rotate(360deg);
+                }
+                }
+                .rotating {
+                -webkit-animation: rotating 20s linear infinite;
+                -moz-animation: rotating 20s linear infinite;
+                -ms-animation: rotating 20s linear infinite;
+                -o-animation: rotating 20s linear infinite;
+                animation: rotating 20s linear infinite;
+                }
+            </style>
+
+            <div class="base">
+                <div class="bg image"></div>
+                <div class="pluto rotating image"></div>
+                <div class="shadow image"></div>
+            </div>
+
+            <!-- <div class="currentStatus">{{status}}</div> -->
+
+<!--            <div class="main">-->
+<!--                <a class="art" href="{}" target="_blank">-->
+<!--                    <center>-->
+<!--                        <img src="data:image/png;base64, {{image}}" class="cover" />-->
+<!--                    </center>-->
+<!--                </a>-->
+
+<!--                <div class="content">-->
+<!--                    <div class="song">{{songName}}</div>-->
+<!--                    <div class="artist">{{artistName}}</div>-->
+<!--                    <div id="bars">{{contentBar|safe}}</div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+        </div>
+    </foreignObject>
+</svg>
