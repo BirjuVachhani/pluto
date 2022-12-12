@@ -6,3 +6,4 @@ app_icons: flutter pub run flutter_launcher_icons
 codegen: flutter pub run build_runner build --delete-conflicting-outputs
 generate_colors: dart scripts/generators/colors_generator.dart scripts/generators/colors.json lib/resources/flat_colors.dart
 generate_gradients: dart scripts/generators/gradients_generator.dart scripts/generators/colors.json lib/resources/color_gradients.dart
+gen_animated_logo: dart scripts/animated_logo_resizer.dart scripts/logo_animated_template.svg logo_animated.svg
