@@ -1,4 +1,4 @@
-<p align="center"> <img src="logo_animated.svg" width="132px" /></p>
+<p align="center"> <img src="logo_animated.svg" width="132px" height="132px" /></p>
 <p align="center"> <img alt="android" width="150px" src="./screenshots/ic_text_logo_light.png#gh-light-mode-only" /> </p>
 <p align="center"> <img alt="android" width="150px" src="./screenshots/ic_text_logo_dark.png#gh-dark-mode-only"/> </p>
 
