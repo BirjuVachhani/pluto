@@ -1,7 +1,7 @@
 {
   "name": "Pluto",
   "description": "A minimal new tab for Chrome",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "manifest_version": 3,
   "short_name": "Pluto",
   "content_security_policy": {
@@ -15,7 +15,6 @@
   "background": {
     "service_worker": "background.js"
   },
-  "permissions": ["contextMenus", "clipboardWrite", "clipboardRead"],
   "icons": {
     "16": "icons/16.png",
     "32": "icons/32.png",

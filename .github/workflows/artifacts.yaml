@@ -18,6 +18,8 @@ jobs:
       - run: flutter --version
       - name: Install dependencies
         run: flutter pub get
+      - name: Update version
+        run: dart scripts/update_version.dart
       - name: Build
         run: flutter build web --release --web-renderer html --csp
       - name: Add LICENSE
