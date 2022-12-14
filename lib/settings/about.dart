@@ -31,37 +31,48 @@ class _AboutState extends State<About> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         const SizedBox(height: 24),
-        const PlutoLogo(
-          animate: true,
+        const Center(
+          child: PlutoLogo(size: 110, animate: true),
         ),
         const SizedBox(height: 16),
         Text(
           'Plut°'.toUpperCase(),
+          textAlign: TextAlign.center,
           style: const TextStyle(
-            fontSize: 20,
+            fontSize: 24,
             letterSpacing: 10,
             height: 1,
             // fontWeight: FontWeight.bold,
             fontFamily: FontFamilies.systemUI,
           ),
         ),
-        const SizedBox(height: 48),
-        Text.rich(
-          const TextSpan(
-            text: 'Made with love',
-            children: [
-              TextSpan(
-                text: ' ❤️',
-                style: TextStyle(
-                  color: Colors.red,
-                  fontSize: 13,
-                ),
+        const SizedBox(height: 12),
+        FutureBuilder<PackageInfo>(
+          future: packageInfo,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return const SizedBox.shrink();
+            }
+            return Text(
+              'v${snapshot.data!.version}'.toUpperCase(),
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 10,
+                letterSpacing: 2,
+                fontFamily: FontFamilies.systemUI,
+                fontWeight: FontWeight.w300,
+                color: Colors.white.withOpacity(0.5),
               ),
-              TextSpan(text: ' in'),
-            ],
-          ),
+            );
+          },
+        ),
+        const SizedBox(height: 48),
+        Text(
+          'Made with love ❤️ in',
+          textAlign: TextAlign.center,
           style: TextStyle(
             fontWeight: FontWeight.w300,
             fontSize: 11,
@@ -146,32 +157,54 @@ class _AboutState extends State<About> {
             ),
           ],
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: 32),
         // IconButton(
         //   tooltip: 'Reset Settings',
         //   onPressed: onReset,
         //   icon: const Icon(Icons.refresh_rounded),
         // ),
-        const SizedBox(height: 32),
-        FutureBuilder<PackageInfo>(
-          future: packageInfo,
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return const SizedBox.shrink();
-            }
-            return Text(
-              'Version v${snapshot.data!.version}'.toUpperCase(),
-              style: TextStyle(
-                fontSize: 8,
-                letterSpacing: 4,
-                fontFamily: FontFamilies.systemUI,
-                fontWeight: FontWeight.w300,
-                color: Colors.white.withOpacity(0.5),
-              ),
-            );
-          },
+        Text(
+          'Backgrounds by',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontWeight: FontWeight.w300,
+            fontSize: 11,
+            letterSpacing: 0.2,
+            color: Theme.of(context).primaryColor,
+            // color: Colors.white.withOpacity(0.5),
+          ),
         ),
         const SizedBox(height: 8),
+        GestureDetectorWithCursor(
+          onTap: () => launchUrl(Uri.parse('https://unsplash.com')),
+          child: Image.asset(
+            'assets/images/ic_unsplash.png',
+            height: 24,
+            color: Colors.white,
+          ),
+        ),
+        const SizedBox(height: 32),
+        Text(
+          'Weather & Geocoding API by',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontWeight: FontWeight.w300,
+            fontSize: 11,
+            letterSpacing: 0.2,
+            color: Theme.of(context).primaryColor,
+            // color: Colors.white.withOpacity(0.5),
+          ),
+        ),
+        const SizedBox(height: 8),
+        GestureDetectorWithCursor(
+          onTap: () => launchUrl(Uri.parse('https://open-meteo.com')),
+          child: Image.asset(
+            'assets/images/ic_open_meteo.png',
+            height: 32,
+            color: Colors.white,
+          ),
+        ),
+        const SizedBox(height: 24),
       ],
     );
   }
@@ -262,7 +295,7 @@ class _PlutoLogoState extends State<PlutoLogo>
           ),
           // Shadow
           SizedBox.square(
-            dimension: widget.size * 0.7,
+            dimension: (widget.size * 0.7) + 1,
             child: Container(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,

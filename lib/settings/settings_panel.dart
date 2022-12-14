@@ -151,21 +151,26 @@ class _SettingsPanelState extends State<SettingsPanel>
                             ],
                           ),
                           Flexible(
-                            child: SingleChildScrollView(
-                              physics: const BouncingScrollPhysics(),
-                              padding: const EdgeInsets.fromLTRB(24, 24, 24, 8),
-                              child: Builder(builder: (context) {
-                                if (model.currentTabIndex == 0) {
-                                  return const BackgroundSettingsView();
-                                }
-                                if (model.currentTabIndex == 1) {
-                                  return const WidgetSettings();
-                                }
-                                if (model.currentTabIndex == 2) {
-                                  return const About();
-                                }
-                                return const SizedBox.shrink();
-                              }),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 4),
+                              child: SingleChildScrollView(
+                                physics: const BouncingScrollPhysics(),
+                                padding:
+                                    const EdgeInsets.fromLTRB(20, 24, 20, 8),
+                                child: Builder(builder: (context) {
+                                  if (model.currentTabIndex == 0) {
+                                    return const BackgroundSettingsView();
+                                  }
+                                  if (model.currentTabIndex == 1) {
+                                    return const WidgetSettings();
+                                  }
+                                  if (model.currentTabIndex == 2) {
+                                    return const About();
+                                  }
+                                  return const SizedBox.shrink();
+                                }),
+                              ),
                             ),
                           ),
                         ],
