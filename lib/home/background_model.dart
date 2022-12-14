@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:screwdriver/screwdriver.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -241,10 +242,13 @@ class BackgroundModel extends BackgroundModelBase {
   void _logNextBackgroundChange() {
     if (!imageRefreshRate.requiresTimer) return;
 
-    final nextUpdateTime = backgroundLastUpdated.add(imageRefreshRate.duration);
+    final DateTime? nextUpdateTime =
+        imageRefreshRate.nextUpdateTime(backgroundLastUpdated);
+    if (nextUpdateTime == null) return;
 
     // ignore: avoid_print
-    print('Next Background change at $nextUpdateTime');
+    print(
+        'Next Background change at ${DateFormat('dd/MM/yyyy hh:mm:ss a').format(nextUpdateTime)}');
   }
 
   /// Fetches a new image from unsplash and sets it as the current image.
@@ -482,8 +486,8 @@ class BackgroundModel extends BackgroundModelBase {
     // log('Auto Background refresh has been triggered');
     // Exit if it is not time to change the background based on the user
     // settings.
-    if (backgroundLastUpdated
-            .add(imageRefreshRate.duration)
+    if (imageRefreshRate
+            .nextUpdateTime(backgroundLastUpdated)!
             .isAfter(DateTime.now()) ||
         isLoadingImage) {
       // Enable this to see the remaining time in console.
@@ -491,7 +495,7 @@ class BackgroundModel extends BackgroundModelBase {
       // final remainingTime = backgroundLastUpdated
       //     .add(imageRefreshRate.duration)
       //     .difference(DateTime.now());
-      // log('Next background update in ${remainingTime.inSeconds} seconds');
+      // log('[DEBUG] Next background update in ${remainingTime.inSeconds} seconds');
       return;
     }
 

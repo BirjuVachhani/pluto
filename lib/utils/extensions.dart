@@ -119,6 +119,7 @@ extension DateTimeExt on DateTime {
     int? minute,
     int? second,
     int? millisecond,
+    int? microsecond,
   }) {
     return DateTime(
       year ?? this.year,
@@ -128,8 +129,11 @@ extension DateTimeExt on DateTime {
       minute ?? this.minute,
       second ?? this.second,
       millisecond ?? this.millisecond,
+      microsecond ?? this.microsecond,
     );
   }
+
+  DateTime get startOfDay => DateTime(year, month, day);
 }
 
 extension TimerFormatExt on TimerFormat {
@@ -137,4 +141,34 @@ extension TimerFormatExt on TimerFormat {
       this == TimerFormat.descriptiveWithSeconds ||
       this == TimerFormat.seconds ||
       this == TimerFormat.countdown;
+}
+
+extension ImageRefreshRateExt on ImageRefreshRate {
+  /// Calculates the next refresh time for given refresh rate and
+  /// last refresh time.
+  /// For daily refresh rate, it will return the next day at 00:00:00.
+  /// For weekly refresh rate, it will return the start of the next week
+  /// at 00:00:00.
+  DateTime? nextUpdateTime(DateTime lastRefresh) {
+    switch (this) {
+      case ImageRefreshRate.never:
+      case ImageRefreshRate.newTab:
+        return null;
+      case ImageRefreshRate.minute:
+      case ImageRefreshRate.fiveMinute:
+      case ImageRefreshRate.fifteenMinute:
+      case ImageRefreshRate.thirtyMinute:
+      case ImageRefreshRate.hour:
+        return lastRefresh.add(duration);
+      case ImageRefreshRate.daily:
+        // Reset at midnight: 00:00:00
+        return lastRefresh.startOfDay.add(duration);
+      case ImageRefreshRate.weekly:
+        final now = DateTime.now();
+        // next monday
+        final DateTime nextMonday =
+            DateTime(now.year, now.month, now.day + 7 - now.weekday + 1);
+        return nextMonday;
+    }
+  }
 }

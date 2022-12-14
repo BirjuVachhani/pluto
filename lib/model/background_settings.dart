@@ -58,22 +58,6 @@ enum ImageRefreshRate {
 
   bool get requiresTimer =>
       this != ImageRefreshRate.never && this != ImageRefreshRate.newTab;
-
-  bool get isShort {
-    switch (this) {
-      case ImageRefreshRate.minute:
-      case ImageRefreshRate.fiveMinute:
-      case ImageRefreshRate.fifteenMinute:
-      case ImageRefreshRate.thirtyMinute:
-      case ImageRefreshRate.hour:
-        return true;
-      case ImageRefreshRate.never:
-      case ImageRefreshRate.newTab:
-      case ImageRefreshRate.daily:
-      case ImageRefreshRate.weekly:
-        return false;
-    }
-  }
 }
 
 enum ImageResolution {
