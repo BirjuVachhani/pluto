@@ -24,6 +24,8 @@
 
 ### Install to Chrome/Edge
 
+<a href="https://chrome.google.com/webstore/detail/pluto/cjhgdglialdlkabijejcpddhjjagdkio"><img src=".github/assets/chrome_web_store.png" width="300px"/></a>
+
 #### Local Install
 
 1. Download `chrome.zip` from [Releases](https://github.com/birjuvachhani/pluto/releases)
