@@ -7,6 +7,19 @@
 
 ![Screenshot](.github/assets/banner.png)
 
+## Features:
+- Select from wide range of background colors and gradients or use huge selection of curated background images from Unsplash.
+- Create your own collection of photos you like by adding photos to favorites.
+- Set grey-scale or background tint or toggle tint to your liking to make it feel right at home! 
+- No analytics, no ads, no tracking. Pure privacy!
+- Open source.
+
+### Widgets:
+1. **Digital/Analog Clock:** Keep track of time by having a clock always on you new tab customized to your liking.
+2. **Message:** Write your favorite quotes or quick notes with Message widget.
+3. **Timer:** Always keep tabs on your running timer with Timer widget that also allows you to customize the message along with it.
+4. **Weather:** Keep an eye out on the weather around you with this minimal weather widget.
+
 ## Installation
 
 ### Install to Chrome/Edge
