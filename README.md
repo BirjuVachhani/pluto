@@ -12,7 +12,7 @@
 - Create your own collection of photos you like by adding photos to favorites.
 - Set grey-scale or background tint or toggle tint to your liking to make it feel right at home! 
 - No analytics, no ads, no tracking. Pure privacy!
-- Open source.
+- Support local images (Coming soon!)
 
 ### Widgets:
 1. **Digital/Analog Clock:** Keep track of time by having a clock always on you new tab customized to your liking.
