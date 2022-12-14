@@ -5,10 +5,11 @@ clean:
 build:
   - $deps
   - flutter build web --release --web-renderer html --csp
+  - mv build/web build/extension
 pack:
   - $deps
   - $update_version
-  - $build
+  - flutter build web --release --web-renderer html --csp
   - cd build && zip -r pluto.zip web
 app_icons: flutter pub run flutter_launcher_icons
 codegen: flutter pub run build_runner build --delete-conflicting-outputs
