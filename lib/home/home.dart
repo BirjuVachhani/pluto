@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -85,17 +86,48 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   late final BackgroundModelBase model = context.read<BackgroundModelBase>();
 
-  late Timer? _timer;
+  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
     model.initializationFuture.then((_) {
-      // Start the timer for auto background refresh if required.
+      listenToEvents();
+      // Start the timer for auto background refresh only if required.
       if (!model.imageRefreshRate.requiresTimer) return;
-      _timer = Timer.periodic(
-          const Duration(seconds: 1), (timer) => model.onTimerCallback());
+      startTimer();
     });
+  }
+
+  void listenToEvents() {
+    model.addListener(onBackgroundModelChange);
+  }
+
+  /// Start and stop timer based on the current [ImageRefreshRate] when
+  /// changed from settings panel. Doing this allows us to avoid unnecessary
+  /// timer updates.
+  void onBackgroundModelChange() {
+    if (model.imageRefreshRate.requiresTimer) {
+      startTimer();
+    } else if (!model.imageRefreshRate.requiresTimer) {
+      stopTimer();
+    }
+  }
+
+  /// Start the timer for auto background refresh.
+  void startTimer() {
+    if (_timer != null) return;
+    log('Starting timer for background refresh');
+    _timer = Timer.periodic(
+        const Duration(seconds: 1), (timer) => model.onTimerCallback());
+  }
+
+  /// Stop the timer for auto background refresh.
+  void stopTimer() {
+    if (_timer == null) return;
+    log('Stopping timer for background refresh');
+    _timer?.cancel();
+    _timer = null;
   }
 
   @override
