@@ -14,11 +14,11 @@ dependencies:
     sdk: flutter
   equatable: ^2.0.5
   shared_preferences: ^2.0.15
-  provider: ^6.0.4
+  provider: ^6.0.5
   get_it: ^7.2.0
   json_annotation: ^4.7.0
   collection: ^1.17.0
-  intl: ^0.17.0
+  intl: ^0.18.0
   http: ^0.13.5
   dropdown_button2: ^1.9.2
   file_picker: ^5.2.4
@@ -29,6 +29,7 @@ dependencies:
 
 dependency_overrides:
   collection: ^1.17.0
+  intl: ^0.18.0
 
 dev_dependencies:
   flutter_test:
