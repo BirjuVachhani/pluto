@@ -5,7 +5,7 @@
 <p align="center">A beautiful new tab for Chrome built with love ❤️ in <img src=".github/assets/flutter.png" /><a href="https://flutter.dev/">Flutter</a>.</p>
 
 
-![Screenshot](.github/assets/banner2x.png)
+![Screenshot](.github/assets/banner2.png)
 
 ## Features:
 - Select from wide range of background colors and gradients or use huge selection of curated background images from Unsplash.
