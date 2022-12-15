@@ -35,6 +35,7 @@ class AlignmentControl extends StatelessWidget {
             // const SizedBox(width: 16),
             Expanded(
               child: CustomDropdown<AlignmentC>(
+                key: ValueKey(alignment),
                 // label: 'Alignment',
                 value: alignment,
                 isExpanded: true,

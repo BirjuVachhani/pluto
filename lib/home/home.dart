@@ -36,8 +36,8 @@ class HomeWrapper extends StatelessWidget {
 abstract class HomeModelBase with ChangeNotifier, LazyInitializationMixin {
   bool isPanelVisible = false;
 
-  int currentTabIndex = 0;
-  late final TabController tabController;
+  ValueNotifier<int> currentTabIndex = ValueNotifier(0);
+  TabController? tabController;
 
   void showPanel();
 
@@ -70,9 +70,16 @@ class HomeModel extends HomeModelBase {
   Future<void> reset() async {
     isPanelVisible = false;
     initialized = false;
-    currentTabIndex = 0;
+    currentTabIndex.value = 0;
     notifyListeners();
     await init();
+  }
+
+  @override
+  void dispose() {
+    currentTabIndex.dispose();
+    tabController?.dispose();
+    super.dispose();
   }
 }
 
@@ -138,10 +145,10 @@ class _HomeState extends State<Home> {
           fit: StackFit.expand,
           alignment: Alignment.center,
           children: const [
-            Positioned.fill(child: HomeBackground()),
-            Positioned.fill(child: HomeWidget()),
+            Positioned.fill(child: RepaintBoundary(child: HomeBackground())),
+            Positioned.fill(child: RepaintBoundary(child: HomeWidget())),
             Align(alignment: Alignment.bottomCenter, child: BottomBar()),
-            SettingsPanel(),
+            RepaintBoundary(child: SettingsPanel()),
           ],
         ),
       ),
