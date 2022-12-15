@@ -7,6 +7,8 @@
 
 ![Screenshot](.github/assets/banner2.png)
 
+See live demo [here](https://birjuvachhani.github.io/pluto/).
+
 ## Features:
 - Select from wide range of background colors and gradients or use huge selection of curated background images from Unsplash.
 - Create your own collection of photos you like by adding photos to favorites.
@@ -18,7 +20,7 @@
 1. **Digital/Analog Clock:** Keep track of time by having a clock always on you new tab customized to your liking.
 2. **Message:** Write your favorite quotes or quick notes with Message widget.
 3. **Timer:** Always keep tabs on your running timer with Timer widget that also allows you to customize the message along with it.
-4. **Weather:** Keep an eye out on the weather around you with this minimal weather widget.
+4. **Weather:** Keep an eye out on the surrounding weather with this minimal weather widget.
 
 ## Installation
 
@@ -28,7 +30,7 @@
 
 #### Local Install
 
-1. Download `chrome.zip` from [Releases](https://github.com/birjuvachhani/pluto/releases)
+1. Download `pluto.zip` from [Releases](https://github.com/birjuvachhani/pluto/releases)
 2. Unzip the file
 3. In Chrome/Edge go to the extensions page (`chrome://extensions` or `edge://extensions`).
 4. Enable Developer Mode.
