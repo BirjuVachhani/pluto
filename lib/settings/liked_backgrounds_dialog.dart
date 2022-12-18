@@ -70,15 +70,16 @@ class _LikedBackgroundsDialogState extends State<LikedBackgroundsDialog> {
                                     fontWeight: FontWeight.w500,
                                   ),
                         ),
-                        Text(
-                          '${entries.length} photos',
-                          style: const TextStyle(
-                            fontSize: 13,
-                            height: 1.4,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.grey,
+                        if (entries.isNotEmpty)
+                          Text(
+                            '${entries.length} photos',
+                            style: const TextStyle(
+                              fontSize: 13,
+                              height: 1.4,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.grey,
+                            ),
                           ),
-                        ),
                       ],
                     ),
                   ),
@@ -95,31 +96,57 @@ class _LikedBackgroundsDialogState extends State<LikedBackgroundsDialog> {
               ),
             ),
             const Divider(height: 1, thickness: 1),
-            Expanded(
-              child: GridView.builder(
-                padding: const EdgeInsets.all(24),
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                  maxCrossAxisExtent: 300,
-                  mainAxisExtent: 300 * 9 / 16,
+            if (entries.isEmpty)
+              Expanded(
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.photo_library_outlined,
+                        size: 100,
+                        color: Colors.grey.shade700,
+                      ),
+                      const SizedBox(height: 10),
+                      const Text(
+                        "You haven't liked any photos yet. Photos you like will show up here.",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          color: Colors.grey,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                itemCount: entries.length,
-                itemBuilder: (context, index) {
-                  final background = entries[index];
-                  return _Item(
-                    key: ValueKey(background.key),
-                    entry: background,
-                    downloadState: downloadingItems[background.value.url],
-                    onUnlike: () => onUnlikeImage(background),
-                    onDownload: () => onDownloadImage(background),
-                    onRemoveDownloadState: () => setState(() {
-                      downloadingItems.remove(background.value.url);
-                    }),
-                  );
-                },
+              )
+            else
+              Expanded(
+                child: GridView.builder(
+                  padding: const EdgeInsets.all(24),
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
+                    maxCrossAxisExtent: 300,
+                    mainAxisExtent: 300 * 9 / 16,
+                  ),
+                  itemCount: entries.length,
+                  itemBuilder: (context, index) {
+                    final background = entries[index];
+                    return _Item(
+                      key: ValueKey(background.key),
+                      entry: background,
+                      downloadState: downloadingItems[background.value.url],
+                      onUnlike: () => onUnlikeImage(background),
+                      onDownload: () => onDownloadImage(background),
+                      onRemoveDownloadState: () => setState(() {
+                        downloadingItems.remove(background.value.url);
+                      }),
+                    );
+                  },
+                ),
               ),
-            ),
           ],
         ),
       ),
@@ -127,9 +154,8 @@ class _LikedBackgroundsDialogState extends State<LikedBackgroundsDialog> {
   }
 
   Future<void> onUnlikeImage(MapEntry<String, LikedBackground> entry) async {
-    widget.model.likedBackgrounds.remove(entry.key);
+    widget.model.removeLikedPhoto(entry.key);
     if (mounted) setState(() {});
-    await storage.clearKey(entry.key);
   }
 
   Future<void> onDownloadImage(

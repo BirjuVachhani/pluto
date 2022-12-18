@@ -111,6 +111,8 @@ abstract class BackgroundModelBase
   Future<void> onToggleLike(bool liked);
 
   Future<void> reset();
+
+  Future<void> removeLikedPhoto(String key);
 }
 
 class BackgroundModel extends BackgroundModelBase {
@@ -635,5 +637,12 @@ class BackgroundModel extends BackgroundModelBase {
     initializationFuture = init();
     notifyListeners();
     await initializationFuture;
+  }
+
+  @override
+  Future<void> removeLikedPhoto(String key) async {
+    likedBackgrounds.remove(key);
+    notifyListeners();
+    await storage.clearKey(key);
   }
 }

@@ -221,19 +221,22 @@ class MenuButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Theme(
       data: Theme.of(context).copyWith(
-        hoverColor: Theme.of(context).primaryColor,
-      ),
+          // hoverColor: Theme.of(context).primaryColor,
+          ),
       child: Material(
         type: MaterialType.transparency,
         child: PopupMenuButton(
           itemBuilder: (context) => [
             for (final option in options.entries)
-              PopupMenuItem(
+              PopupMenuItem<String>(
                 value: option.key,
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
                 height: 34,
-                textStyle: const TextStyle(fontSize: 14),
+                textStyle: const TextStyle(
+                  fontSize: 14,
+                  color: AppColors.textColor,
+                ),
                 child: Text(option.value),
               ),
           ],
