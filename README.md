@@ -2,7 +2,7 @@
 <p align="center"> <img alt="android" width="150px" src=".github/assets/ic_text_logo_light.png#gh-light-mode-only" /> </p>
 <p align="center"> <img alt="android" width="150px" src=".github/assets/ic_text_logo_dark.png#gh-dark-mode-only"/> </p>
 
-<p align="center">A beautiful new tab for Chrome built with love ❤️ in <img src=".github/assets/flutter.png" /><a href="https://flutter.dev/">Flutter</a>.</p>
+<p align="center">A beautiful new tab for Chrome/Edge built with love ❤️ in <img src=".github/assets/flutter.png" /><a href="https://flutter.dev/">Flutter</a>.</p>
 
 
 ![Screenshot](.github/assets/banner2x.png)
@@ -26,8 +26,8 @@ See live demo [here](https://birjuvachhani.github.io/pluto/).
 
 ### Install to Chrome/Edge
 
-<a href="https://chrome.google.com/webstore/detail/pluto/cjhgdglialdlkabijejcpddhjjagdkio"><img src=".github/assets/chrome_store_light.png#gh-light-mode-only" height="100px"/></a>
-<a href="https://chrome.google.com/webstore/detail/pluto/cjhgdglialdlkabijejcpddhjjagdkio"><img src=".github/assets/chrome_store_dark.png#gh-dark-mode-only" height="100px"/></a>
+<a href="https://chrome.google.com/webstore/detail/pluto/cjhgdglialdlkabijejcpddhjjagdkio"><img src=".github/assets/chrome_store_dark.png#gh-light-mode-only" height="60px"/></a>‎ ‎ ‎ ‎ 
+<a href="https://microsoftedge.microsoft.com/addons/detail/pluto/fhldfedplhnmdpfkdmdopelpbhjkmken"><img src=".github/assets/microsoft_store_dark.png#gh-dark-mode-only" height="60px"/></a>
 
 #### Local Install
 
