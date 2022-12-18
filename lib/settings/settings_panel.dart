@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../home/background_model.dart';
 import '../home/home.dart';
 import '../resources/colors.dart';
 import 'about.dart';
 import 'background_settings_view.dart';
 import 'changelog_dialog.dart';
+import 'liked_backgrounds_dialog.dart';
 import 'widget_settings.dart';
 
 class SettingsPanel extends StatelessWidget {
@@ -211,8 +213,8 @@ class MenuButton extends StatelessWidget {
   const MenuButton({super.key});
 
   static const Map<String, String> options = {
-    'changelog': 'View Changelog',
-    // 'liked_backgrounds': 'View liked',
+    'changelog': 'View changelog',
+    'liked_backgrounds': 'View liked photos',
   };
 
   @override
@@ -259,7 +261,13 @@ class MenuButton extends StatelessWidget {
         );
         break;
       case 'liked_backgrounds':
-        // TODO:
+        showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (_) => LikedBackgroundsDialog(
+            model: context.read<BackgroundModelBase>(),
+          ),
+        );
         break;
     }
   }

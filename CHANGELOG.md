@@ -2,6 +2,7 @@
 
 - Add option to view the latest changelog.
 - Auto show changelog when a new version is installed.
+- Add `Liked photos` dialog to view all your liked photos.
 
 # 0.1.1
 

@@ -10,6 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import '../resources/colors.dart';
 import '../ui/gesture_detector_with_cursor.dart';
 
@@ -54,7 +55,9 @@ class _ChangelogDialogState extends State<ChangelogDialog> {
                   Expanded(
                     child: Text(
                       "What's new in Pluto",
-                      style: Theme.of(context).textTheme.headline5,
+                      style: Theme.of(context).textTheme.headline5!.copyWith(
+                            fontWeight: FontWeight.w500,
+                          ),
                     ),
                   ),
                   Material(
@@ -200,6 +203,7 @@ class _ChangelogDialogState extends State<ChangelogDialog> {
     } catch (err, stacktrace) {
       log(err.toString());
       log(stacktrace.toString());
+      isLoading = false;
       error = 'Unable to load changelog. Please try again later.';
       if (mounted) setState(() {});
     }
