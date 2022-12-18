@@ -2,9 +2,14 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 
+import '../resources/storage_keys.dart';
+import '../settings/changelog_dialog.dart';
 import '../settings/settings_panel.dart';
+import '../utils/storage_manager.dart';
 import '../utils/utils.dart';
 import 'background_model.dart';
 import 'bottom_bar.dart';
@@ -93,6 +98,9 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   late final BackgroundModelBase model = context.read<BackgroundModelBase>();
 
+  late final LocalStorageManager storageManager =
+      GetIt.instance.get<LocalStorageManager>();
+
   Timer? _timer;
 
   @override
@@ -104,6 +112,7 @@ class _HomeState extends State<Home> {
       if (!model.imageRefreshRate.requiresTimer) return;
       startTimer();
     });
+    _shouldShowChangelog();
   }
 
   void listenToEvents() {
@@ -159,5 +168,26 @@ class _HomeState extends State<Home> {
   void dispose() {
     _timer?.cancel();
     super.dispose();
+  }
+
+  Future<void> _shouldShowChangelog() async {
+    final PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    final String currentVersion = packageInfo.version;
+    final String? storedVersion =
+        await storageManager.getString(StorageKeys.version);
+    if (storedVersion == null || storedVersion != currentVersion) {
+      log('Showing changelog dialog');
+      await storageManager.setString(StorageKeys.version, currentVersion);
+      await Future.delayed(const Duration(seconds: 1));
+      if (!mounted) return;
+      showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (context) => const Material(
+          type: MaterialType.transparency,
+          child: ChangelogDialog(),
+        ),
+      );
+    }
   }
 }

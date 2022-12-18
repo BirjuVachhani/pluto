@@ -5,6 +5,7 @@ import '../home/home.dart';
 import '../resources/colors.dart';
 import 'about.dart';
 import 'background_settings_view.dart';
+import 'changelog_dialog.dart';
 import 'widget_settings.dart';
 
 class SettingsPanel extends StatelessWidget {
@@ -85,6 +86,7 @@ class _SettingsPanelContentState extends State<SettingsPanelContent>
                           style: Theme.of(context).textTheme.headline6,
                         ),
                       ),
+                      const MenuButton(),
                       Material(
                         type: MaterialType.transparency,
                         child: IconButton(
@@ -202,5 +204,63 @@ class _BackgroundDismissible extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class MenuButton extends StatelessWidget {
+  const MenuButton({super.key});
+
+  static const Map<String, String> options = {
+    'changelog': 'View Changelog',
+    // 'liked_backgrounds': 'View liked',
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    return Theme(
+      data: Theme.of(context).copyWith(
+        hoverColor: Theme.of(context).primaryColor,
+      ),
+      child: Material(
+        type: MaterialType.transparency,
+        child: PopupMenuButton(
+          itemBuilder: (context) => [
+            for (final option in options.entries)
+              PopupMenuItem(
+                value: option.key,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+                height: 34,
+                textStyle: const TextStyle(fontSize: 14),
+                child: Text(option.value),
+              ),
+          ],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(6),
+          ),
+          color: AppColors.dropdownOverlayColor,
+          position: PopupMenuPosition.under,
+          onSelected: (value) => onSelected(context, value),
+          icon: const Icon(Icons.more_vert_rounded),
+          iconSize: 18,
+          splashRadius: 16,
+        ),
+      ),
+    );
+  }
+
+  void onSelected(BuildContext context, String value) {
+    switch (value) {
+      case 'changelog':
+        showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (context) => const ChangelogDialog(),
+        );
+        break;
+      case 'liked_backgrounds':
+        // TODO:
+        break;
+    }
   }
 }

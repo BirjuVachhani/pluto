@@ -15,6 +15,7 @@ class StorageKeys {
   static const String image1 = 'image1';
   static const String image2 = 'image2';
   static const String liked = 'liked';
+  static const String version = 'version';
 
   static String likedBackground(String id) => 'liked:$id';
 }

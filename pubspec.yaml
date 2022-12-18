@@ -26,6 +26,8 @@ dependencies:
   flutter_multi_formatter: ^2.9.11
   url_launcher: ^6.1.7
   package_info_plus: ^3.0.2
+  flutter_screwdriver: ^2.1.0
+  flutter_markdown: ^0.6.13
 
 dependency_overrides:
   collection: ^1.17.0
@@ -34,7 +36,7 @@ dependency_overrides:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  build_runner: ^2.3.2
+  build_runner: ^2.3.3
   flutter_lints: ^2.0.1
   characters: ^1.2.1
   dart_style: ^2.2.4
