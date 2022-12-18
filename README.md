@@ -5,7 +5,7 @@
 <p align="center">A beautiful new tab for Chrome built with love ❤️ in <img src=".github/assets/flutter.png" /><a href="https://flutter.dev/">Flutter</a>.</p>
 
 
-![Screenshot](.github/assets/banner2.png)
+![Screenshot](.github/assets/banner2x.png)
 
 See live demo [here](https://birjuvachhani.github.io/pluto/).
 
@@ -26,7 +26,8 @@ See live demo [here](https://birjuvachhani.github.io/pluto/).
 
 ### Install to Chrome/Edge
 
-<a href="https://chrome.google.com/webstore/detail/pluto/cjhgdglialdlkabijejcpddhjjagdkio"><img src=".github/assets/chrome_web_store.png" width="300px"/></a>
+<a href="https://chrome.google.com/webstore/detail/pluto/cjhgdglialdlkabijejcpddhjjagdkio"><img src=".github/assets/chrome_store_light.png#gh-light-mode-only" height="100px"/></a>
+<a href="https://chrome.google.com/webstore/detail/pluto/cjhgdglialdlkabijejcpddhjjagdkio"><img src=".github/assets/chrome_store_dark.png#gh-dark-mode-only" height="100px"/></a>
 
 #### Local Install
 
