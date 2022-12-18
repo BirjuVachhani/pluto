@@ -1,6 +1,6 @@
 {
   "name": "Pluto",
-  "description": "A minimal new tab for Chrome",
+  "description": "A beautiful new tab for your browser.",
   "version": "0.1.1",
   "manifest_version": 3,
   "short_name": "Pluto",
