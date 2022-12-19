@@ -4,6 +4,7 @@ clean:
   - $deps
 build:
   - $deps
+  - $update_version
   - flutter build web --release --web-renderer html --csp
   - rm -rf extension
   - mv build/web build/extension

@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -10,6 +9,7 @@ import '../home/background_model.dart';
 import '../home/home.dart';
 import '../home/home_widget.dart';
 import '../resources/fonts.dart';
+import '../src/version.dart';
 import '../ui/gesture_detector_with_cursor.dart';
 import '../utils/storage_manager.dart';
 
@@ -25,8 +25,6 @@ class _AboutState extends State<About> {
       context.read<BackgroundModelBase>();
   late final HomeModelBase homeModel = context.read<HomeModelBase>();
   late final WidgetModelBase widgetModel = context.read<WidgetModelBase>();
-
-  late final Future<PackageInfo> packageInfo = PackageInfo.fromPlatform();
 
   @override
   Widget build(BuildContext context) {
@@ -50,24 +48,16 @@ class _AboutState extends State<About> {
           ),
         ),
         const SizedBox(height: 12),
-        FutureBuilder<PackageInfo>(
-          future: packageInfo,
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return const SizedBox.shrink();
-            }
-            return Text(
-              'v${snapshot.data!.version}'.toUpperCase(),
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 10,
-                letterSpacing: 2,
-                fontFamily: FontFamilies.systemUI,
-                fontWeight: FontWeight.w300,
-                color: Colors.white.withOpacity(0.5),
-              ),
-            );
-          },
+        Text(
+          'v$packageVersion'.toUpperCase(),
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 10,
+            letterSpacing: 2,
+            fontFamily: FontFamilies.systemUI,
+            fontWeight: FontWeight.w300,
+            color: Colors.white.withOpacity(0.5),
+          ),
         ),
         const SizedBox(height: 48),
         Text(

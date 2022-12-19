@@ -3,12 +3,12 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 
 import '../resources/storage_keys.dart';
 import '../settings/changelog_dialog.dart';
 import '../settings/settings_panel.dart';
+import '../src/version.dart';
 import '../utils/storage_manager.dart';
 import '../utils/utils.dart';
 import 'background_model.dart';
@@ -68,6 +68,7 @@ class HomeModel extends HomeModelBase {
   @override
   void hidePanel() {
     isPanelVisible = false;
+    currentTabIndex.value = 0;
     notifyListeners();
   }
 
@@ -171,13 +172,11 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> _shouldShowChangelog() async {
-    final PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    final String currentVersion = packageInfo.version;
     final String? storedVersion =
         await storageManager.getString(StorageKeys.version);
-    if (storedVersion == null || storedVersion != currentVersion) {
+    if (storedVersion == null || storedVersion != packageVersion) {
       log('Showing changelog dialog');
-      await storageManager.setString(StorageKeys.version, currentVersion);
+      await storageManager.setString(StorageKeys.version, packageVersion);
       await Future.delayed(const Duration(seconds: 1));
       if (!mounted) return;
       showDialog(

@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="main profile" type="FlutterRunConfigurationType" factoryName="Flutter">
-    <option name="additionalArgs" value="--profile" />
+    <option name="additionalArgs" value="--profile --web-renderer html --csp" />
     <option name="filePath" value="$PROJECT_DIR$/lib/main.dart" />
     <method v="2" />
   </configuration>
