@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
+import 'package:screwdriver/screwdriver.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class LocalStorageManager {
@@ -48,7 +49,7 @@ abstract class LocalStorageManager {
 
   Future<Set<String>> getKeys();
 
-  Future<void> clear();
+  Future<void> clear({Iterable<String> except = const []});
 }
 
 class SharedPreferencesStorageManager extends LocalStorageManager {
@@ -102,7 +103,12 @@ class SharedPreferencesStorageManager extends LocalStorageManager {
   }
 
   @override
-  Future<void> clear() => prefs.clear();
+  Future<void> clear({Iterable<String> except = const []}) async {
+    final Iterable<String> keys = prefs.getKeys().except(except);
+    for (final key in keys) {
+      await prefs.remove(key);
+    }
+  }
 
   @override
   Future<Uint8List?> getBase64(String key) async {

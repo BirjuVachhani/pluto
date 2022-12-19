@@ -8,6 +8,7 @@ import '../home/background_model.dart';
 import '../home/home.dart';
 import '../home/home_widget.dart';
 import '../resources/colors.dart';
+import '../resources/storage_keys.dart';
 import '../utils/dropdown_button3.dart';
 import '../utils/storage_manager.dart';
 import 'about.dart';
@@ -309,7 +310,9 @@ class MenuButton extends StatelessWidget {
         context.read<BackgroundModelBase>();
     final HomeModelBase homeModel = context.read<HomeModelBase>();
     final WidgetModelBase widgetModel = context.read<WidgetModelBase>();
-    await GetIt.instance.get<LocalStorageManager>().clear();
+    await GetIt.instance
+        .get<LocalStorageManager>()
+        .clear(except: [StorageKeys.version]);
     homeModel.reset();
     backgroundModel.reset();
     widgetModel.reset();
