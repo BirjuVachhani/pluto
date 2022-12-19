@@ -6,6 +6,8 @@ class UnsplashSources {
   static const UnsplashRandomSource random = UnsplashRandomSource();
   static const UnsplashUserLikesSource curated =
       UnsplashUserLikesSource(name: 'Curated by Pluto', id: 'birjuvachhani');
+  static const UnsplashCollectionSource christmas =
+      UnsplashCollectionSource(name: 'Christmas', id: '2340020');
   static const UnsplashCollectionSource nature =
       UnsplashCollectionSource(name: 'Nature', id: '3330448');
   static const UnsplashCollectionSource wallpapers =
@@ -28,6 +30,7 @@ class UnsplashSources {
   static const List<UnsplashSource> sources = [
     random,
     curated,
+    christmas,
     nature,
     wallpapers,
     texturesAndPatterns,

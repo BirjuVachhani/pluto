@@ -5,6 +5,8 @@
 - Add `Liked photos` dialog to view all your liked photos.
 - Fix version crash.
 - Improve performance for dropdowns.
+- Add reset settings option.
+- Add backgrounds collection for Christmas.
 
 # 0.1.1
 

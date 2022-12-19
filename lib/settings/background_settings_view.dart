@@ -479,7 +479,12 @@ class UnsplashSourceSettings extends StatelessWidget {
             hint: 'Select a collection',
             isExpanded: true,
             items: UnsplashSources.sources,
-            itemBuilder: (context, item) => Text(item.name),
+            itemBuilder: (context, item) {
+              if (item == UnsplashSources.christmas) {
+                return Text('🎄${item.name}');
+              }
+              return Text(item.name);
+            },
             onSelected: (value) => model.setUnsplashSource(value),
           ),
           const SizedBox(height: 16),
