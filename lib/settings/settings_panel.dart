@@ -1,9 +1,15 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 import '../home/background_model.dart';
 import '../home/home.dart';
+import '../home/home_widget.dart';
 import '../resources/colors.dart';
+import '../utils/dropdown_button3.dart';
+import '../utils/storage_manager.dart';
 import 'about.dart';
 import 'background_settings_view.dart';
 import 'changelog_dialog.dart';
@@ -213,42 +219,56 @@ class MenuButton extends StatelessWidget {
   const MenuButton({super.key});
 
   static const Map<String, String> options = {
-    'changelog': 'View changelog',
+    'changelog': "See what's new",
     'liked_backgrounds': 'View liked photos',
+    'reset': 'Reset to default',
   };
 
   @override
   Widget build(BuildContext context) {
     return Theme(
       data: Theme.of(context).copyWith(
-          // hoverColor: Theme.of(context).primaryColor,
-          ),
+        hoverColor: Theme.of(context).primaryColor,
+      ),
       child: Material(
         type: MaterialType.transparency,
-        child: PopupMenuButton(
-          itemBuilder: (context) => [
-            for (final option in options.entries)
-              PopupMenuItem<String>(
-                value: option.key,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
-                height: 34,
-                textStyle: const TextStyle(
-                  fontSize: 14,
-                  color: AppColors.textColor,
-                ),
-                child: Text(option.value),
-              ),
-          ],
-          shape: RoundedRectangleBorder(
+        child: CustomDropdownButton<MapEntry<String, String>>(
+          items: options.entries.toList(),
+          underline: const SizedBox.shrink(),
+          dropdownWidth: 180,
+          dropdownDirection: DropdownDirection.left,
+          dropdownOverButton: false,
+          scrollbarThickness: 4,
+          focusColor: Theme.of(context).primaryColor,
+          dropdownElevation: 2,
+          dropdownPadding: EdgeInsets.zero,
+          itemHeight: 32,
+          onChanged: (value) {
+            if (value == null) return;
+            onSelected(context, value.key);
+          },
+          dropdownDecoration: BoxDecoration(
             borderRadius: BorderRadius.circular(6),
+            color: AppColors.dropdownOverlayColor,
           ),
-          color: AppColors.dropdownOverlayColor,
-          position: PopupMenuPosition.under,
-          onSelected: (value) => onSelected(context, value),
-          icon: const Icon(Icons.more_vert_rounded),
-          iconSize: 18,
-          splashRadius: 16,
+          style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                fontWeight: FontWeight.w400,
+                height: 1,
+              ),
+          itemBuilder: (context, item) =>
+              DropdownMenuItem<MapEntry<String, String>>(
+            value: item,
+            child: Text(item.value),
+          ),
+          childBuilder: (ctx, item, onTap) => Theme(
+            data: Theme.of(context),
+            child: IconButton(
+              onPressed: onTap,
+              icon: const Icon(Icons.more_vert_rounded),
+              iconSize: 18,
+              splashRadius: 16,
+            ),
+          ),
         ),
       ),
     );
@@ -272,6 +292,159 @@ class MenuButton extends StatelessWidget {
           ),
         );
         break;
+      case 'reset':
+        showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (_) => ResetDialog(
+            onReset: () => onReset(context),
+          ),
+        );
+        break;
     }
+  }
+
+  void onReset(BuildContext context) async {
+    final BackgroundModelBase backgroundModel =
+        context.read<BackgroundModelBase>();
+    final HomeModelBase homeModel = context.read<HomeModelBase>();
+    final WidgetModelBase widgetModel = context.read<WidgetModelBase>();
+    await GetIt.instance.get<LocalStorageManager>().clear();
+    homeModel.reset();
+    backgroundModel.reset();
+    widgetModel.reset();
+  }
+}
+
+class ResetDialog extends StatelessWidget {
+  final VoidCallback onReset;
+
+  const ResetDialog({super.key, required this.onReset});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        width: min(500, MediaQuery.of(context).size.width * 0.9),
+        // height: min(500, MediaQuery.of(context).size.height * 0.9),
+        padding: const EdgeInsets.fromLTRB(0, 24, 0, 16),
+        decoration: BoxDecoration(
+          color: AppColors.settingsPanelBackgroundColor,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.restore_rounded,
+                    size: 72,
+                    color: Colors.grey.shade700,
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Reset to default settings?',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        const Text(
+                          'Are you sure you want to reset all settings to default? This cannot be reversed.',
+                          style: TextStyle(
+                            fontSize: 14,
+                            height: 1.4,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4),
+                            color: Colors.red.withOpacity(0.1),
+                          ),
+                          child: Row(
+                            children: const [
+                              Icon(
+                                Icons.info_outline_rounded,
+                                color: Colors.red,
+                                size: 16,
+                              ),
+                              SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  'Note that this will also clear your liked photos!',
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            const Divider(height: 1),
+            const SizedBox(height: 16),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  ElevatedButton(
+                    onPressed: () => Navigator.pop(context),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey.shade900,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 16,
+                      ),
+                    ),
+                    child: const Text('Cancel'),
+                  ),
+                  const SizedBox(width: 14),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      onReset();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 16,
+                      ),
+                    ),
+                    child: const Text('Yes, Reset!'),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

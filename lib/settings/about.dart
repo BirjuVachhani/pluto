@@ -1,30 +1,14 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
-import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../home/background_model.dart';
-import '../home/home.dart';
-import '../home/home_widget.dart';
 import '../resources/fonts.dart';
 import '../src/version.dart';
 import '../ui/gesture_detector_with_cursor.dart';
-import '../utils/storage_manager.dart';
 
-class About extends StatefulWidget {
+class About extends StatelessWidget {
   const About({super.key});
-
-  @override
-  State<About> createState() => _AboutState();
-}
-
-class _AboutState extends State<About> {
-  late final BackgroundModelBase backgroundModel =
-      context.read<BackgroundModelBase>();
-  late final HomeModelBase homeModel = context.read<HomeModelBase>();
-  late final WidgetModelBase widgetModel = context.read<WidgetModelBase>();
 
   @override
   Widget build(BuildContext context) {
@@ -148,11 +132,6 @@ class _AboutState extends State<About> {
           ],
         ),
         const SizedBox(height: 32),
-        // IconButton(
-        //   tooltip: 'Reset Settings',
-        //   onPressed: onReset,
-        //   icon: const Icon(Icons.refresh_rounded),
-        // ),
         Text(
           'Backgrounds by',
           textAlign: TextAlign.center,
@@ -197,13 +176,6 @@ class _AboutState extends State<About> {
         const SizedBox(height: 24),
       ],
     );
-  }
-
-  void onReset() async {
-    await GetIt.instance.get<LocalStorageManager>().clear();
-    homeModel.reset();
-    backgroundModel.reset();
-    widgetModel.reset();
   }
 }
 

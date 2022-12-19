@@ -1081,6 +1081,7 @@ class CustomDropdownButton<T> extends StatefulWidget {
     super.key,
     required this.items,
     required this.itemBuilder,
+    this.childBuilder,
     this.selectedItemBuilder,
     this.value,
     this.hint,
@@ -1150,6 +1151,7 @@ class CustomDropdownButton<T> extends StatefulWidget {
     super.key,
     required this.items,
     required this.itemBuilder,
+    this.childBuilder,
     this.selectedItemBuilder,
     this.value,
     this.hint,
@@ -1510,6 +1512,9 @@ class CustomDropdownButton<T> extends StatefulWidget {
   /// DropdownButtonFormField2 to update the FormField's focus.
   final OnMenuStateChangeFn? formFieldCallBack;
 
+  final Widget Function(BuildContext context, T? item, VoidCallback onTap)?
+      childBuilder;
+
   @override
   State<CustomDropdownButton<T>> createState() =>
       CustomDropdownButtonState<T>();
@@ -1837,6 +1842,13 @@ class CustomDropdownButtonState<T> extends State<CustomDropdownButton<T>>
     }
 
     const Icon defaultIcon = Icon(Icons.arrow_drop_down);
+
+    if (widget.childBuilder != null) {
+      return widget.childBuilder!(
+          context,
+          _selectedIndex != null ? widget.items[_selectedIndex!] : null,
+          _handleTap);
+    }
 
     Widget result = DefaultTextStyle(
       style: _enabled
