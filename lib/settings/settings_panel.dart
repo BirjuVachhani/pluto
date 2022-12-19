@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../home/background_model.dart';
 import '../home/home.dart';
@@ -222,6 +223,9 @@ class MenuButton extends StatelessWidget {
   static const Map<String, String> options = {
     'changelog': "See what's new",
     'liked_backgrounds': 'View liked photos',
+    'donate': 'Donate',
+    'sponsor': 'Become a sponsor',
+    'report': 'Report an issue',
     'reset': 'Reset to default',
   };
 
@@ -259,7 +263,10 @@ class MenuButton extends StatelessWidget {
           itemBuilder: (context, item) =>
               DropdownMenuItem<MapEntry<String, String>>(
             value: item,
-            child: Text(item.value),
+            child: Text(
+              item.value,
+              style: TextStyle(color: item.key == 'reset' ? Colors.red : null),
+            ),
           ),
           childBuilder: (ctx, item, onTap) => Theme(
             data: Theme.of(context),
@@ -301,6 +308,16 @@ class MenuButton extends StatelessWidget {
             onReset: () => onReset(context),
           ),
         );
+        break;
+      case 'report':
+        launchUrl(Uri.parse(
+            'https://github.com/birjuvachhani/pluto/issues/new/choose'));
+        break;
+      case 'donate':
+        launchUrl(Uri.parse('https://www.buymeacoffee.com/birjuvachhani'));
+        break;
+      case 'sponsor':
+        launchUrl(Uri.parse('https://github.com/sponsors/BirjuVachhani'));
         break;
     }
   }
