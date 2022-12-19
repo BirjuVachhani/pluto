@@ -235,13 +235,13 @@ class MenuButton extends StatelessWidget {
         child: CustomDropdownButton<MapEntry<String, String>>(
           items: options.entries.toList(),
           underline: const SizedBox.shrink(),
-          dropdownWidth: 180,
+          dropdownWidth: 200,
           dropdownDirection: DropdownDirection.left,
           dropdownOverButton: false,
           scrollbarThickness: 4,
           focusColor: Theme.of(context).primaryColor,
           dropdownElevation: 2,
-          dropdownPadding: EdgeInsets.zero,
+          // dropdownPadding: EdgeInsets.zero,
           itemHeight: 32,
           onChanged: (value) {
             if (value == null) return;
