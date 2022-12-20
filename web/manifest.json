@@ -1,7 +1,7 @@
 {
   "name": "Pluto",
   "description": "A beautiful new tab for your browser.",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "manifest_version": 3,
   "short_name": "Pluto",
   "content_security_policy": {

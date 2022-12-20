@@ -1,4 +1,4 @@
-# 0.2.0 [Unreleased]
+# 0.2.0
 
 - Add backgrounds collection for Christmas.
 - Add option to view the latest changelog.
