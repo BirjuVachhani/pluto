@@ -52,7 +52,7 @@ jobs:
           refresh-token: ${{ secrets.REFRESH_TOKEN }}
           client-id: ${{ secrets.CLIENT_ID }}
           client-secret: ${{ secrets.CLIENT_SECRET }}
-          file-name: dist/extension.zip
+          file-name: dist/artifact/extension.zip
           app-id: ${{ secrets.APP_ID }}
           publish: true
 
@@ -70,7 +70,7 @@ jobs:
         uses: wdzeng/edge-addon@v1
         with:
           product-id: ${{ secrets.EDGE_PRODUCT_ID }}
-          zip-path: dist/extension.zip
+          zip-path: dist/artifact/extension.zip
           client-id: ${{ secrets.EDGE_CLIENT_ID }}
           client-secret: ${{ secrets.EDGE_CLIENT_SECRET }}
           access-token-url: ${{ secrets.EDGE_ACCESS_TOKEN_URL }}
