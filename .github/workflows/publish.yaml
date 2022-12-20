@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  publish:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -31,12 +31,46 @@ jobs:
           cd build
           zip -r extension.zip web
           cd ..
+      - name: Upload job artifact
+        uses: actions/upload-artifact@v3
+        with:
+          path: build/extension.zip
+
+  publish_chrome:
+    needs: [ build ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download job artifact
+        uses: actions/download-artifact@v3
+        with:
+          path: dist
+      - name: Display structure of downloaded files
+        run: ls -R dist
       - name: Chrome Extension upload & publish
         uses: Passiverecords/chrome-extension-upload-action@1.4.1
         with:
           refresh-token: ${{ secrets.REFRESH_TOKEN }}
           client-id: ${{ secrets.CLIENT_ID }}
           client-secret: ${{ secrets.CLIENT_SECRET }}
-          file-name: build/extension.zip
+          file-name: dist/extension.zip
           app-id: ${{ secrets.APP_ID }}
           publish: true
+
+  publish_edge:
+    needs: [ build ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download job artifact
+        uses: actions/download-artifact@v3
+        with:
+          path: dist
+      - name: Display structure of downloaded files
+        run: ls -R dist
+      - name: Edge Add-on upload & publish
+        uses: wdzeng/edge-addon@v1
+        with:
+          product-id: ${{ secrets.EDGE_PRODUCT_ID }}
+          zip-path: dist/extension.zip
+          client-id: ${{ secrets.EDGE_CLIENT_ID }}
+          client-secret: ${{ secrets.EDGE_CLIENT_SECRET }}
+          access-token-url: ${{ secrets.EDGE_ACCESS_TOKEN_URL }}
