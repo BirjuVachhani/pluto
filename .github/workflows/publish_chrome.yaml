@@ -1,0 +1,57 @@
+name: Publish Chrome
+
+on:
+  release:
+    types: [ published ]
+  workflow_dispatch:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - run: flutter --version
+      - name: Install dependencies
+        run: flutter pub get
+      - name: Update version
+        run: dart scripts/update_version.dart
+      - name: Build
+        run: flutter build web --release --web-renderer html --csp
+      - name: Add LICENSE
+        run: cp LICENSE build/web
+      - name: Install ZIP tool
+        run: sudo apt-get install zip
+      - name: Archive
+        run: |
+          cd build
+          zip -r extension.zip web
+          cd ..
+      - name: Upload job artifact
+        uses: actions/upload-artifact@v3
+        with:
+          path: build/extension.zip
+
+  publish_chrome:
+    needs: [ build ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download job artifact
+        uses: actions/download-artifact@v3
+        with:
+          path: dist
+      - name: Display structure of downloaded files
+        run: ls -R dist
+      - name: Chrome Extension upload & publish
+        uses: Passiverecords/chrome-extension-upload-action@1.4.1
+        with:
+          refresh-token: ${{ secrets.CHROME_REFRESH_TOKEN }}
+          client-id: ${{ secrets.CHROME_CLIENT_ID }}
+          client-secret: ${{ secrets.CHROME_CLIENT_SECRET }}
+          file-name: dist/artifact/extension.zip
+          app-id: ${{ secrets.CHROME_APP_ID }}
+          publish: true
