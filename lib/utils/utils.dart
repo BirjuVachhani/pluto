@@ -1,7 +1,5 @@
 import 'dart:ui';
 
-import 'package:flutter/cupertino.dart';
-
 import '../model/color_gradient.dart';
 import '../model/flat_color.dart';
 import '../resources/color_gradients.dart';
@@ -14,9 +12,7 @@ ColorGradient? findGradientByName(String name) =>
 /// Finds a color by [name] from the [FlatColors] list.
 FlatColor? findColorByName(String name) => FlatColors.colors[name];
 
-mixin LazyInitializationMixin on ChangeNotifier {
-  bool initialized = false;
-
+mixin LazyInitializationMixin {
   Future<void> init();
 }
 

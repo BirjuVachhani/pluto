@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import '../../model/weather_info.dart';
 import '../../model/widget_settings.dart';
 import '../../resources/storage_keys.dart';
+import '../../utils/custom_observer.dart';
 import '../../utils/extensions.dart';
 import '../../utils/storage_manager.dart';
 import '../../utils/utils.dart';
@@ -23,6 +24,7 @@ abstract class WeatherWidgetModelBase
   WeatherInfo? weatherInfo;
 
   bool isLoadingWeather = false;
+  bool initialized = false;
 
   void onTimerCallback();
 
@@ -202,26 +204,31 @@ class _WeatherWidgetState extends State<WeatherWidget>
 
   @override
   Widget build(BuildContext context) {
-    return Consumer3<BackgroundModelBase, WeatherWidgetModelBase,
-        WidgetModelBase>(
-      builder: (context, backgroundModel, weatherModel, model, child) {
-        final settings = model.weatherSettings;
-        return Align(
-          alignment: settings.alignment.flutterAlignment,
-          child: Padding(
-            padding: const EdgeInsets.all(56),
-            child: FittedBox(
-              child: Text(
-                buildText(weatherModel.weatherInfo, settings),
-                textAlign: settings.alignment.textAlign,
-                style: TextStyle(
-                  color: backgroundModel.getForegroundColor(),
-                  fontSize: settings.fontSize,
-                  fontFamily: settings.fontFamily,
+    final BackgroundStore backgroundStore = context.read<BackgroundStore>();
+    return CustomObserver(
+      name: 'WeatherWidget',
+      builder: (context) {
+        return Consumer2<WeatherWidgetModelBase, WidgetModelBase>(
+          builder: (_, weatherModel, model, child) {
+            final settings = model.weatherSettings;
+            return Align(
+              alignment: settings.alignment.flutterAlignment,
+              child: Padding(
+                padding: const EdgeInsets.all(56),
+                child: FittedBox(
+                  child: Text(
+                    buildText(weatherModel.weatherInfo, settings),
+                    textAlign: settings.alignment.textAlign,
+                    style: TextStyle(
+                      color: backgroundStore.foregroundColor,
+                      fontSize: settings.fontSize,
+                      fontFamily: settings.fontFamily,
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
+            );
+          },
         );
       },
     );

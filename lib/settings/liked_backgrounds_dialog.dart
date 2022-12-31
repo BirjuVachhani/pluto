@@ -27,9 +27,9 @@ enum DownloadState {
 }
 
 class LikedBackgroundsDialog extends StatefulWidget {
-  final BackgroundModelBase model;
+  final BackgroundStore store;
 
-  const LikedBackgroundsDialog({super.key, required this.model});
+  const LikedBackgroundsDialog({super.key, required this.store});
 
   @override
   State<LikedBackgroundsDialog> createState() => _LikedBackgroundsDialogState();
@@ -43,7 +43,7 @@ class _LikedBackgroundsDialogState extends State<LikedBackgroundsDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final entries = widget.model.likedBackgrounds.entries.toList();
+    final entries = widget.store.likedBackgrounds.entries.toList();
     return Center(
       child: Container(
         width: min(1024, MediaQuery.of(context).size.width * 0.9),
@@ -154,7 +154,7 @@ class _LikedBackgroundsDialogState extends State<LikedBackgroundsDialog> {
   }
 
   Future<void> onUnlikeImage(MapEntry<String, LikedBackground> entry) async {
-    widget.model.removeLikedPhoto(entry.key);
+    widget.store.removeLikedPhoto(entry.key);
     if (mounted) setState(() {});
   }
 
@@ -454,13 +454,19 @@ class _NetworkImageWithStates extends StatelessWidget {
   final double? height;
 
   const _NetworkImageWithStates({
+    // ignore: unused_element
     super.key,
     required this.url,
     this.fit,
+    // ignore: unused_element
     this.alignment = Alignment.center,
+    // ignore: unused_element
     this.opacity,
+    // ignore: unused_element
     this.scale = 1,
+    // ignore: unused_element
     this.width,
+    // ignore: unused_element
     this.height,
   });
 

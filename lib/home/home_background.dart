@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../resources/colors.dart';
 import '../ui/texture_painter.dart';
+import '../utils/custom_observer.dart';
 import '../utils/utils.dart';
 import 'background_model.dart';
 
@@ -16,12 +17,12 @@ class HomeBackground extends StatefulWidget {
 }
 
 class _HomeBackgroundState extends State<HomeBackground> {
-  late final BackgroundModelBase model = context.read<BackgroundModelBase>();
+  late final BackgroundStore store = context.read<BackgroundStore>();
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    model.windowSize = MediaQuery.of(context).size;
+    store.windowSize = MediaQuery.of(context).size;
   }
 
   @override
@@ -36,41 +37,72 @@ class _HomeBackgroundState extends State<HomeBackground> {
     //     return Opacity(opacity: value, child: child);
     //   },
     // );
-    return Consumer<BackgroundModelBase>(
-      builder: (context, model, child) {
-        if (!model.initialized) return const SizedBox.shrink();
-
-        final Uint8List? imageBytes = model.getImage()?.bytes;
+    return CustomObserver(
+      name: 'HomeBackground',
+      builder: (context) {
+        if (!store.initialized) return const SizedBox.shrink();
 
         return AnimatedContainer(
           duration: const Duration(milliseconds: 500),
           curve: Curves.easeOut,
           decoration: BoxDecoration(
-            gradient: getBackground(model),
+            gradient: backgroundGradient,
           ),
-          foregroundDecoration: BoxDecoration(
-            color: (model.invert ? Colors.white : AppColors.tint)
-                .withOpacity(model.tint / 100),
-          ),
+          // foregroundDecoration: BoxDecoration(
+          //   color: (store.invert ? Colors.white : AppColors.tint)
+          //       .withOpacity(store.tint / 100),
+          // ),
           child: Stack(
             fit: StackFit.expand,
             children: [
-              if (model.mode.isImage && imageBytes != null)
-                Positioned.fill(
-                  child: ImageBackgroundView(
-                    imageBytes: imageBytes,
-                    showLoadingBackground: model.showLoadingBackground,
-                    greyScale: model.greyScale,
-                  ),
+              Positioned.fill(
+                child: CustomObserver(
+                  name: 'HomeBackgroundImage',
+                  builder: (context) {
+                    final Uint8List? imageBytes = store.currentImage?.bytes;
+
+                    if (!store.isImageMode || imageBytes == null) {
+                      return const SizedBox.shrink();
+                    }
+
+                    return ImageBackgroundView(
+                      imageBytes: imageBytes,
+                      showLoadingBackground: store.showLoadingBackground,
+                      greyScale: store.greyScale,
+                    );
+                  },
                 ),
-              if (model.texture)
-                Positioned.fill(
-                  child: CustomPaint(
-                    painter: TexturePainter(
-                      color: model.getForegroundColor().withOpacity(0.4),
-                    ),
-                  ),
+              ),
+              Positioned.fill(
+                child: CustomObserver(
+                  name: 'HomeBackgroundTint',
+                  key: const ValueKey('HomeBackgroundTint'),
+                  builder: (context) {
+                    return AnimatedContainer(
+                      key: const ValueKey('HomeBackgroundTint-Container'),
+                      duration: const Duration(milliseconds: 500),
+                      curve: Curves.easeOut,
+                      decoration: BoxDecoration(
+                        color: (store.invert ? Colors.white : AppColors.tint)
+                            .withOpacity(store.tint / 100),
+                      ),
+                    );
+                  },
                 ),
+              ),
+              Positioned.fill(
+                child: CustomObserver(
+                  name: 'HomeBackgroundTexture',
+                  builder: (context) {
+                    if (!store.texture) return const SizedBox.shrink();
+                    return CustomPaint(
+                      painter: TexturePainter(
+                        color: store.foregroundColor.withOpacity(0.4),
+                      ),
+                    );
+                  },
+                ),
+              ),
             ],
           ),
         );
@@ -78,24 +110,19 @@ class _HomeBackgroundState extends State<HomeBackground> {
     );
   }
 
-  Color? getBackgroundColor(BackgroundModelBase model) {
-    if (!model.mode.isColor) return null;
-    return model.color.background;
-  }
+  LinearGradient? get backgroundGradient {
+    if (store.isImageMode) return null;
+    final gradient = store.gradient;
 
-  LinearGradient? getBackground(BackgroundModelBase model) {
-    if (model.mode.isImage) return null;
-    final gradient = model.gradient;
-
-    final colors = model.mode.isGradient
+    final colors = store.isGradientMode
         ? gradient.colors
-        : [model.color.background, model.color.background];
+        : [store.color.background, store.color.background];
 
     return LinearGradient(
       colors: colors,
       begin: gradient.begin,
       end: gradient.end,
-      stops: model.mode.isGradient ? gradient.stops : null,
+      stops: store.isGradientMode ? gradient.stops : null,
     );
   }
 }
