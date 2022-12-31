@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:screwdriver/screwdriver.dart';
 
 import '../../model/widget_settings.dart';
+import '../../utils/custom_observer.dart';
 import '../../utils/extensions.dart';
 import '../background_model.dart';
 import '../home_widget.dart';
@@ -45,61 +46,67 @@ class _TimerWidgetState extends State<TimerWidget>
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<BackgroundModelBase, WidgetModelBase>(
-      builder: (context, backgroundModel, model, child) {
-        final settings = model.timerSettings;
-        final hasFixedWidth = settings.textBefore.isEmpty &&
-            settings.textAfter.isEmpty &&
-            settings.format == TimerFormat.countdown;
+    final BackgroundStore backgroundStore = context.read<BackgroundStore>();
+    return CustomObserver(
+      name: 'TimerWidget',
+      builder: (context) {
+        return Consumer<WidgetModelBase>(
+          builder: (_, model, child) {
+            final settings = model.timerSettings;
+            final hasFixedWidth = settings.textBefore.isEmpty &&
+                settings.textAfter.isEmpty &&
+                settings.format == TimerFormat.countdown;
 
-        return Align(
-          alignment: settings.alignment.flutterAlignment,
-          child: FittedBox(
-            child: Builder(
-              builder: (context) {
-                Widget wid = Text.rich(
-                  buildTimerTextSpan(settings),
-                  textAlign: settings.alignment.textAlign,
-                  style: TextStyle(
-                    color: backgroundModel.getForegroundColor(),
-                    fontSize: settings.fontSize,
-                    fontFamily: settings.fontFamily,
-                    height: 1.4,
-                    letterSpacing: 0.2,
-                  ),
-                );
-                if (hasFixedWidth) {
-                  final style = TextStyle(
-                    color: backgroundModel.getForegroundColor(),
-                    fontSize: settings.fontSize,
-                    fontFamily: settings.fontFamily,
-                    height: 1.4,
-                    letterSpacing: 0.2,
-                  );
-                  wid = Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      for (final char in buildTime(settings).split(''))
-                        SizedBox(
-                          width: char == ':'
-                              ? settings.fontSize * 0.3
-                              : settings.fontSize * 0.6,
-                          child: Text(
-                            char,
-                            textAlign: settings.alignment.textAlign,
-                            style: style,
-                          ),
-                        ),
-                    ],
-                  );
-                }
-                return Padding(
-                  padding: const EdgeInsets.all(56),
-                  child: wid,
-                );
-              },
-            ),
-          ),
+            return Align(
+              alignment: settings.alignment.flutterAlignment,
+              child: FittedBox(
+                child: Builder(
+                  builder: (context) {
+                    Widget wid = Text.rich(
+                      buildTimerTextSpan(settings),
+                      textAlign: settings.alignment.textAlign,
+                      style: TextStyle(
+                        color: backgroundStore.foregroundColor,
+                        fontSize: settings.fontSize,
+                        fontFamily: settings.fontFamily,
+                        height: 1.4,
+                        letterSpacing: 0.2,
+                      ),
+                    );
+                    if (hasFixedWidth) {
+                      final style = TextStyle(
+                        color: backgroundStore.foregroundColor,
+                        fontSize: settings.fontSize,
+                        fontFamily: settings.fontFamily,
+                        height: 1.4,
+                        letterSpacing: 0.2,
+                      );
+                      wid = Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          for (final char in buildTime(settings).split(''))
+                            SizedBox(
+                              width: char == ':'
+                                  ? settings.fontSize * 0.3
+                                  : settings.fontSize * 0.6,
+                              child: Text(
+                                char,
+                                textAlign: settings.alignment.textAlign,
+                                style: style,
+                              ),
+                            ),
+                        ],
+                      );
+                    }
+                    return Padding(
+                      padding: const EdgeInsets.all(56),
+                      child: wid,
+                    );
+                  },
+                ),
+              ),
+            );
+          },
         );
       },
     );

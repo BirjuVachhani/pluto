@@ -89,7 +89,6 @@ class BackgroundSettings with EquatableMixin {
   final ImageSource source;
   final UnsplashSource unsplashSource;
   final ImageRefreshRate imageRefreshRate;
-  final int imageIndex;
   final ImageResolution imageResolution;
   final bool greyScale;
 
@@ -103,7 +102,6 @@ class BackgroundSettings with EquatableMixin {
     this.source = ImageSource.unsplash,
     this.unsplashSource = UnsplashSources.curated,
     this.imageRefreshRate = ImageRefreshRate.never,
-    this.imageIndex = 0,
     this.imageResolution = ImageResolution.auto,
     this.greyScale = false,
   });
@@ -119,7 +117,6 @@ class BackgroundSettings with EquatableMixin {
         source,
         unsplashSource,
         imageRefreshRate,
-        imageIndex,
         imageResolution,
         greyScale,
       ];
@@ -134,7 +131,6 @@ class BackgroundSettings with EquatableMixin {
     ImageSource? source,
     UnsplashSource? unsplashSource,
     ImageRefreshRate? imageRefreshRate,
-    int? imageIndex,
     ImageResolution? imageResolution,
     bool? greyScale,
   }) {
@@ -148,7 +144,6 @@ class BackgroundSettings with EquatableMixin {
       source: source ?? this.source,
       unsplashSource: unsplashSource ?? this.unsplashSource,
       imageRefreshRate: imageRefreshRate ?? this.imageRefreshRate,
-      imageIndex: imageIndex ?? this.imageIndex,
       imageResolution: imageResolution ?? this.imageResolution,
       greyScale: greyScale ?? this.greyScale,
     );

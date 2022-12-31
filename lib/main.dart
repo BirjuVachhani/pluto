@@ -21,12 +21,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Pluto',
-      debugShowCheckedModeBanner: false,
-      theme: buildTheme(context),
-      home: const HomeWrapper(
-        key: ValueKey('HomeWrapper'),
+    return DebugRender(
+      debugHighlightObserverRebuild: true,
+      child: MaterialApp(
+        title: 'Pluto',
+        debugShowCheckedModeBanner: false,
+        theme: buildTheme(context),
+        home: const HomeWrapper(
+          key: ValueKey('HomeWrapper'),
+        ),
       ),
     );
   }
@@ -99,4 +102,24 @@ ThemeData buildTheme(BuildContext context) {
       ),
     ),
   );
+}
+
+class DebugRender extends InheritedWidget {
+  final bool debugHighlightObserverRebuild;
+
+  const DebugRender({
+    super.key,
+    this.debugHighlightObserverRebuild = false,
+    required super.child,
+  });
+
+  static DebugRender? of(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<DebugRender>();
+  }
+
+  @override
+  bool updateShouldNotify(covariant DebugRender oldWidget) {
+    return debugHighlightObserverRebuild !=
+        oldWidget.debugHighlightObserverRebuild;
+  }
 }

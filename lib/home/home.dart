@@ -26,8 +26,8 @@ class HomeWrapper extends StatelessWidget {
         ChangeNotifierProvider<HomeModelBase>(
           create: (context) => HomeModel()..init(),
         ),
-        ChangeNotifierProvider<BackgroundModelBase>(
-          create: (context) => BackgroundModel(),
+        ChangeNotifierProvider<BackgroundStore>(
+          create: (context) => BackgroundStore(),
         ),
         ChangeNotifierProvider<WidgetModelBase>(
           create: (context) => WidgetModel()..init(),
@@ -40,6 +40,7 @@ class HomeWrapper extends StatelessWidget {
 
 abstract class HomeModelBase with ChangeNotifier, LazyInitializationMixin {
   bool isPanelVisible = false;
+  bool initialized = false;
 
   ValueNotifier<int> currentTabIndex = ValueNotifier(0);
   TabController? tabController;
@@ -97,7 +98,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  late final BackgroundModelBase model = context.read<BackgroundModelBase>();
+  late final BackgroundStore model = context.read<BackgroundStore>();
 
   late final LocalStorageManager storageManager =
       GetIt.instance.get<LocalStorageManager>();

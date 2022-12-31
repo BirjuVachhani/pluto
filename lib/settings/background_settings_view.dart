@@ -16,6 +16,7 @@ import '../ui/custom_dropdown.dart';
 import '../ui/custom_slider.dart';
 import '../ui/custom_switch.dart';
 import '../ui/gesture_detector_with_cursor.dart';
+import '../utils/custom_observer.dart';
 import '../utils/extensions.dart';
 
 class BackgroundSettingsView extends StatelessWidget {
@@ -23,25 +24,209 @@ class BackgroundSettingsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<BackgroundModelBase>(builder: (context, model, child) {
-      if (!model.initialized) return const SizedBox(height: 200);
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const Text('Background Mode'),
-          const SizedBox(height: 10),
-          CupertinoTheme(
-            data: CupertinoThemeData(
-              brightness: Brightness.dark,
-              primaryColor: Theme.of(context).primaryColor,
-              primaryContrastingColor: AppColors.settingsPanelBackgroundColor,
+    final BackgroundStore store = context.read<BackgroundStore>();
+    return CustomObserver(
+      name: 'BackgroundSettingsView',
+      builder: (context) {
+        if (!store.initialized) return const SizedBox(height: 200);
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const BackgroundModeSelector(),
+            const SizedBox(height: 16),
+            const _ColorSelector(),
+            const _GradientSelector(),
+            CustomObserver(
+              name: 'ImageSettings',
+              builder: (context) {
+                if (!store.isImageMode) return const SizedBox.shrink();
+                return const ImageSettings();
+              },
             ),
-            child: CupertinoSegmentedControl<BackgroundMode>(
+            const SizedBox(height: 16),
+            LabeledObserver(
+              label: 'Tint',
+              builder: (context) => CustomSlider(
+                value: store.tint,
+                min: 0,
+                max: 100,
+                valueLabel: '${store.tint.floor().toString()} %',
+                onChanged: (value) => store.setTint(value),
+              ),
+            ),
+            const SizedBox(height: 40),
+            const _BackgroundOptions(),
+            const SizedBox(height: 16),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _BackgroundOptions extends StatelessWidget {
+  const _BackgroundOptions();
+
+  @override
+  Widget build(BuildContext context) {
+    final store = context.read<BackgroundStore>();
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        CustomObserver(
+          name: 'Texture',
+          builder: (context) {
+            return GestureDetectorWithCursor(
+              onTap: () => store.setTexture(!store.texture),
+              tooltip: 'Texture',
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Icon(
+                  Icons.lens_blur_rounded,
+                  color: store.texture
+                      ? Theme.of(context).primaryColor
+                      : AppColors.textColor.withOpacity(0.5),
+                  size: 20,
+                ),
+              ),
+            );
+          },
+        ),
+        CustomObserver(
+          name: 'Image background options',
+          builder: (context) {
+            if (!store.mode.isImage) return const SizedBox.shrink();
+            return const _ImageBackgroundOptions();
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class _ImageBackgroundOptions extends StatelessWidget {
+  const _ImageBackgroundOptions();
+
+  @override
+  Widget build(BuildContext context) {
+    final store = context.read<BackgroundStore>();
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const SizedBox(width: 16),
+        CustomObserver(
+          name: 'Invert',
+          builder: (context) {
+            return GestureDetectorWithCursor(
+              onTap: () => store.setInvert(!store.invert),
+              tooltip: 'Invert',
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Icon(
+                  Icons.brightness_medium_rounded,
+                  color: store.invert
+                      ? Theme.of(context).primaryColor
+                      : AppColors.textColor.withOpacity(0.5),
+                  size: 20,
+                ),
+              ),
+            );
+          },
+        ),
+        const SizedBox(width: 16),
+        CustomObserver(
+          name: 'Change Background',
+          builder: (context) {
+            return GestureDetectorWithCursor(
+              onTap: !store.isLoadingImage ? store.changeBackground : null,
+              tooltip: 'Change Background',
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: ImageIcon(
+                  AssetImage(store.isLoadingImage
+                      ? 'assets/images/ic_hourglass.png'
+                      : 'assets/images/ic_fan.png'),
+                  color: store.isLoadingImage
+                      ? Colors.grey.withOpacity(0.5)
+                      : AppColors.textColor.withOpacity(0.5),
+                  size: 20,
+                ),
+              ),
+            );
+          },
+        ),
+        const SizedBox(width: 16),
+        CustomObserver(
+          name: 'Download Background',
+          builder: (context) {
+            return GestureDetectorWithCursor(
+              onTap: !store.isLoadingImage ? store.onDownload : null,
+              tooltip: 'Download Image',
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Icon(
+                  Icons.download_rounded,
+                  color: store.isLoadingImage || store.currentImage == null
+                      ? Colors.grey.withOpacity(0.5)
+                      : AppColors.textColor.withOpacity(0.5),
+                  size: 20,
+                ),
+              ),
+            );
+          },
+        ),
+        const SizedBox(width: 16),
+        CustomObserver(
+          name: 'Open Image',
+          builder: (context) {
+            return GestureDetectorWithCursor(
+              onTap: !store.isLoadingImage ? store.onOpenImage : null,
+              tooltip: 'Open Original Image',
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Icon(
+                  Icons.open_in_new_rounded,
+                  color: store.isLoadingImage || store.currentImage == null
+                      ? Colors.grey.withOpacity(0.5)
+                      : AppColors.textColor.withOpacity(0.5),
+                  size: 20,
+                ),
+              ),
+            );
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class BackgroundModeSelector extends StatelessWidget {
+  const BackgroundModeSelector({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final store = context.read<BackgroundStore>();
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const Text('Background Mode'),
+        const SizedBox(height: 10),
+        CupertinoTheme(
+          data: CupertinoThemeData(
+            brightness: Brightness.dark,
+            primaryColor: Theme.of(context).primaryColor,
+            primaryContrastingColor: AppColors.settingsPanelBackgroundColor,
+          ),
+          child: CustomObserver(
+            name: 'BackgroundModeSelector',
+            builder: (context) => CupertinoSegmentedControl<BackgroundMode>(
               padding: EdgeInsets.zero,
-              groupValue: model.mode,
-              onValueChanged: (mode) => model.setMode(mode),
+              groupValue: store.mode,
+              onValueChanged: (mode) => store.setMode(mode),
               children: {
                 for (final mode in BackgroundMode.values)
                   mode: Padding(
@@ -54,382 +239,28 @@ class BackgroundSettingsView extends StatelessWidget {
               },
             ),
           ),
-          const SizedBox(height: 16),
-          if (model.mode.isColor) ...[
-            CustomDropdown<FlatColor>(
-              value: model.color,
-              label: 'Color',
-              hint: 'Select a color',
-              isExpanded: true,
-              itemHeight: 40,
-              items: FlatColors.colors.values.toList(),
-              itemBuilder: (context, item) => Row(
-                children: [
-                  Container(
-                    width: 24,
-                    height: 24,
-                    clipBehavior: Clip.antiAlias,
-                    decoration: ShapeDecoration(
-                      shape: const CircleBorder(),
-                      color: item.background,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(child: Text(item.name)),
-                ],
-              ),
-              onSelected: (color) => model.setColor(color),
-            ),
-            // const SizedBox(height: 16),
-            // ColorsGridView(
-            //   value: model.color,
-            //   items: FlatColors.colors.values.toList(),
-            //   onSelected: (color) => model.setColor(color),
-            // ),
-          ],
-          if (model.mode.isGradient) ...[
-            CustomDropdown<ColorGradient>(
-              value: model.gradient,
-              label: 'Gradient',
-              hint: 'Select a gradient',
-              isExpanded: true,
-              itemHeight: 40,
-              // searchable: true,
-              // searchMatchFn: (item, query) => (item.value as ColorGradient)
-              //     .name
-              //     .toLowerCase()
-              //     .contains(query.toLowerCase()),
-              items: ColorGradients.gradients.values.toList(),
-              itemBuilder: (context, item) => Row(
-                children: [
-                  Container(
-                    width: 24,
-                    height: 24,
-                    clipBehavior: Clip.antiAlias,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: item.toLinearGradient(),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(child: Text(item.name)),
-                ],
-              ),
-              onSelected: (gradient) => model.setGradient(gradient),
-            ),
-            // const SizedBox(height: 16),
-            // GradientsGridView(
-            //   value: model.gradient,
-            //   items: ColorGradients.gradients.values.toList(),
-            //   onSelected: (gradient) => model.setGradient(gradient),
-            // ),
-          ],
-          if (model.mode.isImage) const ImageSettings(),
-          if (model.mode.isImage) ...[
-            // const SizedBox(height: 16),
-            CustomSwitch(
-              label: 'Black & White Filter',
-              value: model.greyScale,
-              onChanged: (value) {
-                model.setGreyScale(value);
-              },
-            ),
-          ],
-          const SizedBox(height: 16),
-          CustomSlider(
-            label: 'Tint',
-            value: model.tint,
-            min: 0,
-            max: 100,
-            valueLabel: '${model.tint.floor().toString()} %',
-            onChanged: (value) => model.setTint(value),
-          ),
-          const SizedBox(height: 40),
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              GestureDetectorWithCursor(
-                onTap: () => model.setTexture(!model.texture),
-                tooltip: 'Texture',
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Icon(
-                    Icons.lens_blur_rounded,
-                    color: model.texture
-                        ? Theme.of(context).primaryColor
-                        : AppColors.textColor.withOpacity(0.5),
-                    size: 20,
-                  ),
-                ),
-              ),
-              if (model.mode.isImage) ...[
-                const SizedBox(width: 16),
-                GestureDetectorWithCursor(
-                  onTap: () => model.setInvert(!model.invert),
-                  tooltip: 'Invert',
-                  child: Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Icon(
-                      Icons.brightness_medium_rounded,
-                      color: model.invert
-                          ? Theme.of(context).primaryColor
-                          : AppColors.textColor.withOpacity(0.5),
-                      size: 20,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                GestureDetectorWithCursor(
-                  onTap: !model.isLoadingImage ? model.changeBackground : null,
-                  tooltip: 'Change Background',
-                  child: Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: ImageIcon(
-                      AssetImage(model.isLoadingImage
-                          ? 'assets/images/ic_hourglass.png'
-                          : 'assets/images/ic_fan.png'),
-                      color: model.isLoadingImage
-                          ? Colors.grey.withOpacity(0.5)
-                          : AppColors.textColor.withOpacity(0.5),
-                      size: 20,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                GestureDetectorWithCursor(
-                  onTap: !model.isLoadingImage ? model.onDownload : null,
-                  tooltip: 'Download Image',
-                  child: Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Icon(
-                      Icons.download_rounded,
-                      color: model.isLoadingImage || model.getImage() == null
-                          ? Colors.grey.withOpacity(0.5)
-                          : AppColors.textColor.withOpacity(0.5),
-                      size: 20,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                GestureDetectorWithCursor(
-                  onTap: !model.isLoadingImage ? model.onOpenImage : null,
-                  tooltip: 'Open Original Image',
-                  child: Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Icon(
-                      Icons.open_in_new_rounded,
-                      color: model.isLoadingImage || model.getImage() == null
-                          ? Colors.grey.withOpacity(0.5)
-                          : AppColors.textColor.withOpacity(0.5),
-                      size: 20,
-                    ),
-                  ),
-                ),
-              ],
-            ],
-          ),
-          const SizedBox(height: 16),
-        ],
-      );
-    });
-  }
-}
-
-class ColorsGridView extends StatelessWidget {
-  final List<FlatColor> items;
-  final ValueChanged<FlatColor> onSelected;
-  final FlatColor? value;
-
-  const ColorsGridView({
-    super.key,
-    required this.items,
-    required this.onSelected,
-    this.value,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        const Text('Colors'),
-        GridView(
-          shrinkWrap: true,
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 5,
-            mainAxisSpacing: 8,
-            crossAxisSpacing: 8,
-          ),
-          children: [
-            for (final item in items)
-              GestureDetector(
-                onTap: () => onSelected(item),
-                child: MouseRegion(
-                  cursor: SystemMouseCursors.click,
-                  child: Container(
-                    alignment: Alignment.center,
-                    decoration: ShapeDecoration(
-                      shape: const CircleBorder(
-                        side: BorderSide(
-                          color: Colors.black,
-                          // width: 0.5,
-                        ),
-                      ),
-                      color: item.background,
-                    ),
-                    child: value == item
-                        ? Icon(Icons.done, color: item.foreground)
-                        : null,
-                  ),
-                ),
-              ),
-          ],
         ),
       ],
     );
   }
 }
 
-class GradientsGridView extends StatelessWidget {
-  final List<ColorGradient> items;
-  final ValueChanged<ColorGradient> onSelected;
-  final ColorGradient? value;
-
-  const GradientsGridView({
-    super.key,
-    required this.items,
-    required this.onSelected,
-    this.value,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        const Text('Gradients'),
-        GridView(
-          shrinkWrap: true,
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 5,
-            mainAxisSpacing: 8,
-            crossAxisSpacing: 8,
-          ),
-          children: [
-            for (final item in items)
-              GestureDetector(
-                onTap: () => onSelected(item),
-                child: MouseRegion(
-                  cursor: SystemMouseCursors.click,
-                  child: Container(
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: Colors.black,
-                        // width: 0.5,
-                      ),
-                      gradient: item.toLinearGradient(),
-                    ),
-                    child: value == item
-                        ? Icon(Icons.done, color: item.foreground)
-                        : null,
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ],
-    );
-  }
-}
-
-class ImageSettings extends StatefulWidget {
+class ImageSettings extends StatelessWidget {
   const ImageSettings({super.key});
 
   @override
-  State<ImageSettings> createState() => _ImageSettingsState();
-}
-
-class _ImageSettingsState extends State<ImageSettings> {
-  bool showError = false;
-
-  @override
   Widget build(BuildContext context) {
-    return Consumer<BackgroundModelBase>(builder: (context, model, child) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // const SizedBox(height: 16),
-          Row(
-            children: [
-              const Text('Source'),
-              if (model.imageSource == ImageSource.userLikes && showError)
-                const Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.only(right: 6),
-                    child: Text(
-                      'Please like few backgrounds first! ',
-                      textAlign: TextAlign.end,
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ),
-                )
-              else if (model.imageSource == ImageSource.userLikes)
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 6),
-                    child: Text(
-                      '${model.likedBackgrounds.length} liked',
-                      textAlign: TextAlign.end,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey.shade400,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ),
-                ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          CustomDropdown<ImageSource>(
-            value: model.imageSource,
-            // label: 'Source',
-            hint: 'Select source',
-            isExpanded: true,
-            items: ImageSource.values.except([ImageSource.local]).toList(),
-            itemBuilder: (context, item) => Text(
-              item.label,
-              style: TextStyle(
-                color: item == ImageSource.userLikes &&
-                        model.likedBackgrounds.isEmpty
-                    ? Colors.grey.shade400
-                    : null,
-              ),
-            ),
-            onSelected: (value) {
-              if (value == ImageSource.userLikes &&
-                  model.likedBackgrounds.isEmpty) {
-                triggerError();
-                return;
-              }
-              model.setImageSource(value);
-            },
-          ),
-          const SizedBox(height: 16),
-          Builder(builder: (context) {
-            switch (model.imageSource) {
+    final BackgroundStore store = context.read<BackgroundStore>();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const _ImageSourceSelector(),
+        const SizedBox(height: 16),
+        CustomObserver(
+          name: 'Image Source Settings',
+          builder: (context) {
+            switch (store.imageSource) {
               case ImageSource.unsplash:
                 return const UnsplashSourceSettings();
               case ImageSource.local:
@@ -437,21 +268,126 @@ class _ImageSettingsState extends State<ImageSettings> {
               case ImageSource.userLikes:
                 return const SizedBox.shrink();
             }
-          }),
-          // const SizedBox(height: 16),
-          CustomDropdown<ImageRefreshRate>(
-            value: model.imageRefreshRate,
-            label: 'Auto Refresh Background',
-            hint: 'Select duration',
-            isExpanded: true,
-            items: ImageRefreshRate.values,
-            itemBuilder: (context, item) => Text(item.label),
-            onSelected: (value) => model.setImageRefreshRate(value),
-          ),
-          const SizedBox(height: 6),
-        ],
-      );
-    });
+          },
+        ),
+        // const SizedBox(height: 16),
+        LabeledObserver(
+          label: 'Auto Refresh Background',
+          builder: (context) {
+            return CustomDropdown<ImageRefreshRate>(
+              value: store.imageRefreshRate,
+              hint: 'Select duration',
+              isExpanded: true,
+              items: ImageRefreshRate.values,
+              itemBuilder: (context, item) => Text(item.label),
+              onSelected: (value) => store.setImageRefreshRate(value),
+            );
+          },
+        ),
+        const SizedBox(height: 6),
+        CustomObserver(
+          name: 'B&W Filter',
+          builder: (context) {
+            return CustomSwitch(
+              label: 'Black & White Filter',
+              value: store.greyScale,
+              onChanged: (value) {
+                store.setGreyScale(value);
+              },
+            );
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class _ImageSourceSelector extends StatefulWidget {
+  const _ImageSourceSelector();
+
+  @override
+  State<_ImageSourceSelector> createState() => _ImageSourceSelectorState();
+}
+
+class _ImageSourceSelectorState extends State<_ImageSourceSelector> {
+  bool showError = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final store = context.read<BackgroundStore>();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Row(
+          children: [
+            const Text('Source'),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(right: 6),
+                child: CustomObserver(
+                  name: 'Image Source Header',
+                  builder: (context) {
+                    if (showError) {
+                      return const Text(
+                        'Please like few backgrounds first! ',
+                        textAlign: TextAlign.end,
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      );
+                    }
+                    if (store.imageSource != ImageSource.userLikes) {
+                      return const SizedBox.shrink();
+                    }
+                    return Text(
+                      '${store.likedBackgrounds.length} liked',
+                      textAlign: TextAlign.end,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey.shade400,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 10),
+        CustomObserver(
+          name: 'Image Source Selector',
+          builder: (context) {
+            return CustomDropdown<ImageSource>(
+              value: store.imageSource,
+              // label: 'Source',
+              hint: 'Select source',
+              isExpanded: true,
+              items: ImageSource.values.except([ImageSource.local]).toList(),
+              itemBuilder: (context, item) => Text(
+                item.label,
+                style: TextStyle(
+                  color: item == ImageSource.userLikes &&
+                          store.likedBackgrounds.isEmpty
+                      ? Colors.grey.shade400
+                      : null,
+                ),
+              ),
+              onSelected: (value) {
+                if (value == ImageSource.userLikes &&
+                    store.likedBackgrounds.isEmpty) {
+                  triggerError();
+                  return;
+                }
+                store.setImageSource(value);
+              },
+            );
+          },
+        ),
+      ],
+    );
   }
 
   void triggerError() {
@@ -468,58 +404,66 @@ class UnsplashSourceSettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<BackgroundModelBase>(builder: (context, model, child) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          CustomDropdown<UnsplashSource>(
-            value: model.unsplashSource,
-            label: 'Background Collection',
-            hint: 'Select a collection',
-            isExpanded: true,
-            items: UnsplashSources.sources,
-            itemBuilder: (context, item) {
-              if (item == UnsplashSources.christmas) {
-                return Text('🎄${item.name}');
-              }
-              return Text(item.name);
-            },
-            onSelected: (value) => model.setUnsplashSource(value),
-          ),
-          const SizedBox(height: 16),
-          Row(
-            children: const [
-              Expanded(child: Text('Resolution')),
-              ResolutionHelpButton(),
-              SizedBox(width: 4),
-            ],
-          ),
-          const SizedBox(height: 10),
-          CustomDropdown<ImageResolution>(
-            value: model.imageResolution,
-            isExpanded: true,
-            hint: 'Select a resolution',
-            items: ImageResolution.values,
-            itemBuilder: (context, item) => Text.rich(
-              TextSpan(
-                children: [
-                  TextSpan(text: item.label),
-                  const WidgetSpan(child: SizedBox(width: 8)),
-                  TextSpan(
-                    text: '(${item.sizeLabel})',
-                    style: const TextStyle(color: Colors.grey),
-                  ),
-                ],
+    final BackgroundStore store = context.read<BackgroundStore>();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        LabeledObserver(
+          label: 'Background Collection',
+          builder: (context) {
+            return CustomDropdown<UnsplashSource>(
+              value: store.unsplashSource,
+              hint: 'Select a collection',
+              isExpanded: true,
+              items: UnsplashSources.sources,
+              itemBuilder: (context, item) {
+                if (item == UnsplashSources.christmas) {
+                  return Text('🎄${item.name}');
+                }
+                return Text(item.name);
+              },
+              onSelected: (value) => store.setUnsplashSource(value),
+            );
+          },
+        ),
+        const SizedBox(height: 16),
+        Row(
+          children: const [
+            Expanded(child: Text('Resolution')),
+            ResolutionHelpButton(),
+            SizedBox(width: 4),
+          ],
+        ),
+        const SizedBox(height: 10),
+        CustomObserver(
+          name: 'Resolution Selector',
+          builder: (context) {
+            return CustomDropdown<ImageResolution>(
+              value: store.imageResolution,
+              isExpanded: true,
+              hint: 'Select a resolution',
+              items: ImageResolution.values,
+              itemBuilder: (context, item) => Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(text: item.label),
+                    const WidgetSpan(child: SizedBox(width: 8)),
+                    TextSpan(
+                      text: '(${item.sizeLabel})',
+                      style: const TextStyle(color: Colors.grey),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            selectedItemBuilder: (context, item) => Text(item.label),
-            onSelected: (value) => model.setImageResolution(value),
-          ),
-          const SizedBox(height: 16),
-        ],
-      );
-    });
+              selectedItemBuilder: (context, item) => Text(item.label),
+              onSelected: (value) => store.setImageResolution(value),
+            );
+          },
+        ),
+        const SizedBox(height: 16),
+      ],
+    );
   }
 }
 
@@ -571,6 +515,112 @@ class ResolutionHelpButton extends StatelessWidget {
           color: Theme.of(context).primaryColor,
         ),
       ),
+    );
+  }
+}
+
+class _ColorSelector extends StatelessWidget {
+  const _ColorSelector();
+
+  @override
+  Widget build(BuildContext context) {
+    final store = context.read<BackgroundStore>();
+    return CustomObserver(
+      name: 'ColorSelector',
+      builder: (context) {
+        if (!store.isColorMode) return const SizedBox.shrink();
+        return CustomDropdown<FlatColor>(
+          value: store.color,
+          label: 'Color',
+          hint: 'Select a color',
+          isExpanded: true,
+          itemHeight: 40,
+          items: FlatColors.colors.values.toList(),
+          itemBuilder: (context, item) => _ColorSelectorItem(
+            key: ValueKey(item),
+            item: item,
+          ),
+          onSelected: (color) => store.setColor(color),
+        );
+      },
+    );
+  }
+}
+
+class _ColorSelectorItem extends StatelessWidget {
+  final FlatColor item;
+
+  const _ColorSelectorItem({super.key, required this.item});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          width: 24,
+          height: 24,
+          clipBehavior: Clip.antiAlias,
+          decoration: ShapeDecoration(
+            shape: const CircleBorder(),
+            color: item.background,
+          ),
+        ),
+        const SizedBox(width: 10),
+        Expanded(child: Text(item.name)),
+      ],
+    );
+  }
+}
+
+class _GradientSelector extends StatelessWidget {
+  const _GradientSelector();
+
+  @override
+  Widget build(BuildContext context) {
+    final store = context.read<BackgroundStore>();
+    return CustomObserver(
+      name: 'ColorGradientSelector',
+      builder: (context) {
+        if (!store.isGradientMode) return const SizedBox.shrink();
+        return CustomDropdown<ColorGradient>(
+          value: store.gradient,
+          label: 'Gradient',
+          hint: 'Select a gradient',
+          isExpanded: true,
+          itemHeight: 40,
+          items: ColorGradients.gradients.values.toList(),
+          itemBuilder: (context, item) => _GradientSelectorItem(
+            key: ValueKey(item),
+            item: item,
+          ),
+          onSelected: (gradient) => store.setGradient(gradient),
+        );
+      },
+    );
+  }
+}
+
+class _GradientSelectorItem extends StatelessWidget {
+  final ColorGradient item;
+
+  const _GradientSelectorItem({super.key, required this.item});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          width: 24,
+          height: 24,
+          clipBehavior: Clip.antiAlias,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: item.toLinearGradient(),
+          ),
+        ),
+        const SizedBox(width: 10),
+        Expanded(child: Text(item.name)),
+      ],
     );
   }
 }

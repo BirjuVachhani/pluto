@@ -296,7 +296,7 @@ class MenuButton extends StatelessWidget {
           context: context,
           barrierDismissible: true,
           builder: (_) => LikedBackgroundsDialog(
-            model: context.read<BackgroundModelBase>(),
+            store: context.read<BackgroundStore>(),
           ),
         );
         break;
@@ -323,15 +323,14 @@ class MenuButton extends StatelessWidget {
   }
 
   void onReset(BuildContext context) async {
-    final BackgroundModelBase backgroundModel =
-        context.read<BackgroundModelBase>();
+    final BackgroundStore backgroundStore = context.read<BackgroundStore>();
     final HomeModelBase homeModel = context.read<HomeModelBase>();
     final WidgetModelBase widgetModel = context.read<WidgetModelBase>();
     await GetIt.instance
         .get<LocalStorageManager>()
         .clear(except: [StorageKeys.version]);
     homeModel.reset();
-    backgroundModel.reset();
+    backgroundStore.reset();
     widgetModel.reset();
   }
 }

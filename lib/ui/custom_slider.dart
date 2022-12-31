@@ -66,7 +66,6 @@ class CustomSlider extends StatelessWidget {
                   style: const TextStyle(height: 1.2),
                 ),
               ),
-            const SizedBox(width: 6),
           ],
         ),
       ],

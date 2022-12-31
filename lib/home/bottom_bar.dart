@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../model/background_settings.dart';
 import '../ui/gesture_detector_with_cursor.dart';
+import '../utils/custom_observer.dart';
 import 'background_model.dart';
 import 'home.dart';
 
@@ -13,46 +14,46 @@ class BottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<BackgroundModelBase>(builder: (context, model, child) {
-      if (!model.initialized) return const SizedBox.shrink();
-      return Horizon(
-        color: model.getForegroundColor(),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const SizedBox(height: 16),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                if (model.mode.isImage) ...[
-                  const ChangeBackgroundButton(),
-                  const SizedBox(width: 24),
+    final BackgroundStore store = context.read<BackgroundStore>();
+    return CustomObserver(
+      name: 'BottomBar',
+      builder: (context) {
+        if (!store.initialized) return const SizedBox.shrink();
+        return Horizon(
+          color: store.foregroundColor,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 16),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  ChangeBackgroundButton(),
+                  SizedBox(width: 24),
+                  SettingsButton(),
+                  SizedBox(width: 24),
+                  LikeBackgroundButton(),
                 ],
-                const SettingsButton(),
-                if (model.mode.isImage) ...[
-                  const SizedBox(width: 24),
-                  const LikeBackgroundButton(),
-                ],
-              ],
-            ),
-            Container(
-              width: 132,
-              height: 2,
-              margin: const EdgeInsets.only(bottom: 6, top: 6),
-              child: Visibility(
-                visible: model.isLoadingImage,
-                child: LinearProgressIndicator(
-                  color: model.getForegroundColor(),
-                  minHeight: 2,
-                  backgroundColor: model.getForegroundColor().withOpacity(0.3),
+              ),
+              Container(
+                width: 132,
+                height: 2,
+                margin: const EdgeInsets.only(bottom: 6, top: 6),
+                child: Visibility(
+                  visible: store.isLoadingImage,
+                  child: LinearProgressIndicator(
+                    color: store.foregroundColor,
+                    minHeight: 2,
+                    backgroundColor: store.foregroundColor.withOpacity(0.3),
+                  ),
                 ),
               ),
-            ),
-          ],
-        ),
-      );
-    });
+            ],
+          ),
+        );
+      },
+    );
   }
 }
 
@@ -145,34 +146,37 @@ class _SettingsButtonState extends State<SettingsButton>
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<BackgroundModelBase>(builder: (context, model, child) {
-      if (!model.initialized) return const SizedBox.shrink();
-      return GestureDetectorWithCursor(
-        onTap: () {
-          context.read<HomeModelBase>().showPanel();
-        },
-        onEnter: (_) => controller.forward(),
-        onExit: (_) => controller.reverse(),
-        tooltip: 'Settings',
-        child: AnimatedBuilder(
-          animation: CurvedAnimation(
-            parent: controller,
-            curve: Curves.fastOutSlowIn,
-          ),
-          builder: (context, child) {
-            return Transform.rotate(
-              angle: controller.value * pi / pi,
-              child: Icon(
-                Icons.settings,
-                color: model
-                    .getForegroundColor()
-                    .withOpacity(max(0.2, controller.value)),
-              ),
-            );
+    final BackgroundStore store = context.read<BackgroundStore>();
+    return CustomObserver(
+      name: 'SettingsButton',
+      builder: (context) {
+        if (!store.initialized) return const SizedBox.shrink();
+        return GestureDetectorWithCursor(
+          onTap: () {
+            context.read<HomeModelBase>().showPanel();
           },
-        ),
-      );
-    });
+          onEnter: (_) => controller.forward(),
+          onExit: (_) => controller.reverse(),
+          tooltip: 'Settings',
+          child: AnimatedBuilder(
+            animation: CurvedAnimation(
+              parent: controller,
+              curve: Curves.fastOutSlowIn,
+            ),
+            builder: (context, child) {
+              return Transform.rotate(
+                angle: controller.value * pi / pi,
+                child: Icon(
+                  Icons.settings,
+                  color: store.foregroundColor
+                      .withOpacity(max(0.2, controller.value)),
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -204,31 +208,36 @@ class _ChangeBackgroundButtonState extends State<ChangeBackgroundButton>
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<BackgroundModelBase>(builder: (context, model, child) {
-      if (!model.initialized) return const SizedBox.shrink();
-      return GestureDetectorWithCursor(
-        onTap: !model.isLoadingImage ? model.changeBackground : null,
-        onEnter: (_) => controller.forward(),
-        onExit: (_) => controller.reverse(),
-        tooltip: 'Change Background',
-        child: AnimatedBuilder(
-          animation: CurvedAnimation(
-            parent: controller,
-            curve: Curves.fastOutSlowIn,
+    final BackgroundStore store = context.read<BackgroundStore>();
+    return CustomObserver(
+      name: 'ChangeBackgroundButton',
+      builder: (context) {
+        if (!store.initialized || !store.mode.isImage) {
+          return const SizedBox.shrink();
+        }
+        return GestureDetectorWithCursor(
+          onTap: !store.isLoadingImage ? store.changeBackground : null,
+          onEnter: (_) => controller.forward(),
+          onExit: (_) => controller.reverse(),
+          tooltip: 'Change Background',
+          child: AnimatedBuilder(
+            animation: CurvedAnimation(
+              parent: controller,
+              curve: Curves.fastOutSlowIn,
+            ),
+            builder: (context, child) {
+              return ImageIcon(
+                AssetImage(store.isLoadingImage
+                    ? 'assets/images/ic_hourglass.png'
+                    : 'assets/images/ic_fan.png'),
+                color: store.foregroundColor
+                    .withOpacity(max(0.2, controller.value)),
+              );
+            },
           ),
-          builder: (context, child) {
-            return ImageIcon(
-              AssetImage(model.isLoadingImage
-                  ? 'assets/images/ic_hourglass.png'
-                  : 'assets/images/ic_fan.png'),
-              color: model
-                  .getForegroundColor()
-                  .withOpacity(max(0.2, controller.value)),
-            );
-          },
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 
   @override
@@ -260,37 +269,42 @@ class _LikeBackgroundButtonState extends State<LikeBackgroundButton>
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<BackgroundModelBase>(builder: (context, model, child) {
-      if (!model.initialized) return const SizedBox.shrink();
-      if (model.imageSource == ImageSource.userLikes &&
-          model.likedBackgrounds.length <= 1) {
-        return const SizedBox.shrink();
-      }
-      final image = model.getImage();
-      final liked = image == null ? false : model.isLiked(image.id);
-      return GestureDetectorWithCursor(
-        onTap: !model.showLoadingBackground
-            ? () => model.onToggleLike(!liked)
-            : null,
-        onEnter: (_) => controller.forward(),
-        onExit: (_) => controller.reverse(),
-        tooltip: liked ? 'Liked' : 'Like',
-        child: AnimatedBuilder(
-          animation: CurvedAnimation(
-            parent: controller,
-            curve: Curves.fastOutSlowIn,
+    final BackgroundStore store = context.read<BackgroundStore>();
+    return CustomObserver(
+      name: 'LikeBackgroundButton',
+      builder: (context) {
+        if (!store.initialized || !store.isImageMode) {
+          return const SizedBox.shrink();
+        }
+        if (store.imageSource == ImageSource.userLikes &&
+            store.likedBackgrounds.length <= 1) {
+          return const SizedBox.shrink();
+        }
+        return GestureDetectorWithCursor(
+          onTap: !store.showLoadingBackground
+              ? () => store.onToggleLike(!store.isLiked)
+              : null,
+          onEnter: (_) => controller.forward(),
+          onExit: (_) => controller.reverse(),
+          tooltip: store.isLiked ? 'Liked' : 'Like',
+          child: AnimatedBuilder(
+            animation: CurvedAnimation(
+              parent: controller,
+              curve: Curves.fastOutSlowIn,
+            ),
+            builder: (context, child) {
+              return Icon(
+                store.isLiked
+                    ? Icons.favorite_rounded
+                    : Icons.favorite_border_rounded,
+                color: store.foregroundColor
+                    .withOpacity(max(0.2, controller.value)),
+              );
+            },
           ),
-          builder: (context, child) {
-            return Icon(
-              liked ? Icons.favorite_rounded : Icons.favorite_border_rounded,
-              color: model
-                  .getForegroundColor()
-                  .withOpacity(max(0.2, controller.value)),
-            );
-          },
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 
   @override

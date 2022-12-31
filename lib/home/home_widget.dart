@@ -14,6 +14,7 @@ import 'widgets/weather_widget.dart';
 
 abstract class WidgetModelBase with ChangeNotifier, LazyInitializationMixin {
   WidgetType type = WidgetType.none;
+  bool initialized = false;
 
   late DigitalClockWidgetSettings digitalClockSettings;
   late AnalogClockWidgetSettings analogueClockSettings;

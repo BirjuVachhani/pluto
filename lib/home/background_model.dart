@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:mobx/mobx.dart';
 import 'package:screwdriver/screwdriver.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -15,126 +16,135 @@ import '../model/background_settings.dart';
 import '../model/color_gradient.dart';
 import '../model/flat_color.dart';
 import '../model/unsplash_collection.dart';
+import '../resources/color_gradients.dart';
+import '../resources/flat_colors.dart';
 import '../resources/storage_keys.dart';
+import '../resources/unsplash_sources.dart';
 import '../utils/extensions.dart';
 import '../utils/storage_manager.dart';
 import '../utils/universal/universal.dart';
 import '../utils/utils.dart';
 
+part 'background_model.g.dart';
+
 /// Most important model of all. This model is responsible for the background
 /// of the home screen. It is responsible for loading the background image
 /// from the internet, cache it, manage it, and for storing the settings of
 /// the background.
-abstract class BackgroundModelBase
-    with ChangeNotifier, LazyInitializationMixin {
-  late BackgroundSettings settings;
+// ignore: library_private_types_in_public_api
+class BackgroundStore = _BackgroundStore with _$BackgroundStore;
 
-  /// Defines the size of the window. This is used to fetch images of the
+abstract class _BackgroundStore
+    with Store, ChangeNotifier, LazyInitializationMixin {
+  late final LocalStorageManager storage =
+      GetIt.instance.get<LocalStorageManager>();
+
+  // Defines the size of the window. This is used to fetch images of the
   /// correct size.
   Size windowSize = const Size(1920, 1080);
 
-  bool isLoadingImage = false;
+  @readonly
+  bool _isLoadingImage = false;
 
-  bool showLoadingBackground = false;
+  @readonly
+  bool _showLoadingBackground = false;
+
+  @readonly
+  bool _initialized = false;
 
   /// In memory copy of the cached images.
-  Background? image1;
-  Background? image2;
-  Map<String, LikedBackground> likedBackgrounds = {};
+  @readonly
+  Background? _image1;
 
-  /// indicates that a like save operation is in progress
-  ValueNotifier<bool> likeSaveNotifier = ValueNotifier(false);
+  @readonly
+  Background? _image2;
+
+  @readonly
+  Map<String, LikedBackground> _likedBackgrounds = {};
 
   late Future initializationFuture;
 
-  BackgroundMode get mode => settings.mode;
+  @readonly
+  BackgroundMode _mode = BackgroundMode.color;
 
-  FlatColor get color => settings.color;
+  @readonly
+  FlatColor _color = FlatColors.minimal;
 
-  ColorGradient get gradient => settings.gradient;
+  @readonly
+  ColorGradient _gradient = ColorGradients.youtube;
 
-  double get tint => settings.tint;
+  @readonly
+  double _tint = 0.0;
 
-  bool get texture => settings.texture;
+  @readonly
+  bool _texture = false;
 
-  bool get invert => settings.invert;
+  @readonly
+  bool _invert = false;
 
-  bool get greyScale => settings.greyScale;
+  @readonly
+  bool _greyScale = false;
 
-  ImageSource get imageSource => settings.source;
+  @readonly
+  ImageSource _imageSource = ImageSource.unsplash;
 
-  UnsplashSource get unsplashSource => settings.unsplashSource;
+  @readonly
+  UnsplashSource _unsplashSource = UnsplashSources.curated;
 
-  ImageRefreshRate get imageRefreshRate => settings.imageRefreshRate;
+  @readonly
+  ImageRefreshRate _imageRefreshRate = ImageRefreshRate.newTab;
 
-  int get imageIndex => settings.imageIndex;
+  @readonly
+  int _imageIndex = 0;
 
-  ImageResolution get imageResolution => settings.imageResolution;
+  @readonly
+  ImageResolution _imageResolution = ImageResolution.auto;
 
-  bool isLiked(String id) =>
-      likedBackgrounds.containsKey(StorageKeys.likedBackground(id));
+  @computed
+  bool get isLiked {
+    return currentImage != null &&
+        _likedBackgrounds
+            .containsKey(StorageKeys.likedBackground(currentImage!.id));
+  }
 
-  void setMode(BackgroundMode mode);
+  @computed
+  bool get isColorMode => _mode.isColor;
 
-  void setColor(FlatColor color);
+  @computed
+  bool get isGradientMode => _mode.isGradient;
 
-  void setGradient(ColorGradient gradient);
-
-  void setTint(double tint);
-
-  void setTexture(bool texture);
-
-  void setInvert(bool invert);
-
-  void setImageSource(ImageSource source);
-
-  void setUnsplashSource(UnsplashSource source);
-
-  void setImageRefreshRate(ImageRefreshRate rate);
-
-  void setImageResolution(ImageResolution resolution);
-
-  void setGreyScale(bool greyScale);
-
-  Color getForegroundColor();
-
-  Future<void> changeBackground({bool updateAll = false});
-
-  Future<void> onDownload();
-
-  Future<void> onOpenImage();
-
-  Background? getImage();
-
-  void onTimerCallback();
-
-  Future<void> onToggleLike(bool liked);
-
-  Future<void> reset();
-
-  Future<void> removeLikedPhoto(String key);
-}
-
-class BackgroundModel extends BackgroundModelBase {
-  late final LocalStorageManager storage =
-      GetIt.instance.get<LocalStorageManager>();
+  @computed
+  bool get isImageMode => _mode.isImage;
 
   /// Latest background change time.
   late DateTime backgroundLastUpdated;
 
   late final DeBouncer _debouncer = DeBouncer(const Duration(seconds: 1));
 
-  BackgroundModel() {
+  _BackgroundStore() {
     initializationFuture = init();
   }
 
   @override
   Future<void> init() async {
     final data = await storage.getJson(StorageKeys.backgroundSettings);
-    settings =
+    final settings =
         data != null ? BackgroundSettings.fromJson(data) : BackgroundSettings();
 
+    _mode = settings.mode;
+    _color = settings.color;
+    _gradient = settings.gradient;
+    _tint = settings.tint;
+    _texture = settings.texture;
+    _invert = settings.invert;
+    _greyScale = settings.greyScale;
+    _imageSource = settings.source;
+    _unsplashSource = settings.unsplashSource;
+    _imageRefreshRate = settings.imageRefreshRate;
+    _imageResolution = settings.imageResolution;
+
     // load image last updated time
+    _imageIndex = await storage.getInt(StorageKeys.imageIndex) ?? 0;
     backgroundLastUpdated =
         await storage.getInt(StorageKeys.backgroundLastUpdated).then((value) {
       if (value == null) return DateTime.now();
@@ -144,53 +154,53 @@ class BackgroundModel extends BackgroundModelBase {
     // Initialize image data
     initializeImages();
 
-    initialized = true;
-    notifyListeners();
+    _initialized = true;
   }
 
   /// Initializes images based on the current settings.
   /// We maintain 2 cached images at any time so that the user don't have to
   /// wait for it to load when they open new tab(Only applies if refresh rate is
   /// set to new tab).
+  @action
   Future<void> initializeImages() async {
-    if (imageSource == ImageSource.unsplash ||
-        imageSource == ImageSource.userLikes) {
+    if (_imageSource == ImageSource.unsplash ||
+        _imageSource == ImageSource.userLikes) {
       if (!await storage.containsKey(StorageKeys.image1)) {
         // If no images are cached, fetch new ones now and cache them.
         _loadImageFromSource().then((result) {
           if (result == null) return;
-          image1 = result;
+          _image1 = result;
           storage.setJson(StorageKeys.image1, result.toJson());
         });
       } else {
         // If images are cached, load them.
-        image1 = await storage.getSerializableObject(
+        _image1 = await storage.getSerializableObject(
             StorageKeys.image1, Background.fromJson);
       }
       if (!await storage.containsKey(StorageKeys.image2)) {
         // If no images are cached, fetch new ones now and cache them.
         _loadImageFromSource().then((result) {
           if (result == null) return;
-          image2 = result;
+          _image2 = result;
           storage.setJson(StorageKeys.image2, result.toJson());
         });
       } else {
         // If images are cached, load them.
-        image2 = await storage.getSerializableObject(
+        _image2 = await storage.getSerializableObject(
             StorageKeys.image2, Background.fromJson);
       }
       final future = _loadLikedBackgrounds();
-      if (imageSource == ImageSource.userLikes) {
+      if (_imageSource == ImageSource.userLikes) {
         // If the user likes are the source, we need to wait for the liked
         // backgrounds to load before we can load the image.
         log('Waiting for liked backgrounds to load');
         await future;
       }
-    } else if (imageSource == ImageSource.local) {
+    } else if (_imageSource == ImageSource.local) {
       // TODO: support local images | load local images
     }
 
-    if (imageRefreshRate == ImageRefreshRate.newTab) {
+    if (_imageRefreshRate == ImageRefreshRate.newTab) {
       // If the refresh rate is set to new tab, then we update the image index
       // and schedule a new image fetch for the next time so we already have
       // an image cached when the user opens a new tab again.
@@ -198,12 +208,12 @@ class BackgroundModel extends BackgroundModelBase {
       log('fetch new images for new tab type');
       _refetchAndCacheOtherImage();
       // toggle the index and save it.
-      settings = settings.copyWith(imageIndex: imageIndex == 0 ? 1 : 0);
-      _save();
+
+      _imageIndex = _imageIndex == 0 ? 1 : 0;
+      storage.setInt(StorageKeys.imageIndex, _imageIndex);
     }
 
     _logNextBackgroundChange();
-    notifyListeners();
   }
 
   /// Loads the liked backgrounds from the storage.
@@ -218,34 +228,34 @@ class BackgroundModel extends BackgroundModelBase {
       likedBackgrounds[key] = background;
     }
     log('Found ${likedBackgrounds.length} liked backgrounds');
-    this.likedBackgrounds = likedBackgrounds;
+    _likedBackgrounds = likedBackgrounds;
   }
 
   /// Responsible for fetching and caching the image other than the current
   /// image.
+  @action
   Future<void> _refetchAndCacheOtherImage() async {
     log('refetchAndCacheOtherImage');
     _loadImageFromSource().then((result) {
       if (result == null) return;
       // We only update the image that is not currently being used so it can
       // be used next time when the user opens a new tab.
-      if (imageIndex == 0) {
-        image2 = result;
+      if (_imageIndex == 0) {
+        _image2 = result;
         storage.setJson(StorageKeys.image2, result.toJson());
       } else {
-        image1 = result;
+        _image1 = result;
         storage.setJson(StorageKeys.image1, result.toJson());
       }
     });
-    notifyListeners();
   }
 
   /// Logs the next background change time.
   void _logNextBackgroundChange() {
-    if (!imageRefreshRate.requiresTimer) return;
+    if (!_imageRefreshRate.requiresTimer) return;
 
     final DateTime? nextUpdateTime =
-        imageRefreshRate.nextUpdateTime(backgroundLastUpdated);
+        _imageRefreshRate.nextUpdateTime(backgroundLastUpdated);
     if (nextUpdateTime == null) return;
 
     // ignore: avoid_print
@@ -256,9 +266,9 @@ class BackgroundModel extends BackgroundModelBase {
   /// Fetches a new image from unsplash and sets it as the current image.
   /// If [updateAll] is set then it will also update the other cached image.
   /// This is helpful when the user changes the source of the image.
-  @override
+  @action
   Future<void> changeBackground({bool updateAll = false}) async {
-    if (isLoadingImage) return;
+    if (_isLoadingImage) return;
 
     await _loadImageFromSource(showLoadingBackground: true).then((result) {
       if (result == null) return;
@@ -273,11 +283,11 @@ class BackgroundModel extends BackgroundModelBase {
       _logNextBackgroundChange();
 
       // Update the current image and cache it.
-      if (imageIndex == 0) {
-        image1 = result;
+      if (_imageIndex == 0) {
+        _image1 = result;
         storage.setJson(StorageKeys.image1, result.toJson());
       } else {
-        image2 = result;
+        _image2 = result;
         storage.setJson(StorageKeys.image2, result.toJson());
       }
     });
@@ -287,11 +297,11 @@ class BackgroundModel extends BackgroundModelBase {
       await _loadImageFromSource().then((result) {
         if (result == null) return;
         // Update the other image(not current one) and cache it.
-        if (imageIndex == 0) {
-          image2 = result;
+        if (_imageIndex == 0) {
+          _image2 = result;
           storage.setJson(StorageKeys.image2, result.toJson());
         } else {
-          image1 = result;
+          _image1 = result;
           storage.setJson(StorageKeys.image1, result.toJson());
         }
       });
@@ -299,111 +309,114 @@ class BackgroundModel extends BackgroundModelBase {
   }
 
   /// Saves the current settings to storage.
-  Future<bool> _save() =>
-      storage.setJson(StorageKeys.backgroundSettings, settings.toJson());
+  Future<bool> _save() {
+    final settings = BackgroundSettings(
+      mode: _mode,
+      color: _color,
+      gradient: _gradient,
+      source: _imageSource,
+      tint: _tint,
+      texture: _texture,
+      invert: _invert,
+      greyScale: _greyScale,
+      imageRefreshRate: _imageRefreshRate,
+      imageResolution: _imageResolution,
+      unsplashSource: _unsplashSource,
+    );
+    return storage.setJson(StorageKeys.backgroundSettings, settings.toJson());
+  }
 
-  @override
+  @action
   void setMode(BackgroundMode mode) {
     // Auto set some tint when image mode is selected.
-    final tint = mode.isImage ? 17.0 : settings.tint;
-    settings = settings.copyWith(mode: mode, tint: tint);
+    _mode = mode;
+    _tint = mode.isImage ? 17 : 0;
     _save();
-    notifyListeners();
   }
 
-  @override
+  @action
   void setColor(FlatColor color) {
-    settings = settings.copyWith(color: color);
+    _color = color;
     _save();
-    notifyListeners();
   }
 
-  @override
+  @action
   void setGradient(ColorGradient gradient) {
-    settings = settings.copyWith(gradient: gradient);
+    _gradient = gradient;
     _save();
-    notifyListeners();
   }
 
-  @override
+  @action
   void setTint(double tint) {
-    settings = settings.copyWith(tint: tint);
+    _tint = tint;
     _save();
-    notifyListeners();
   }
 
-  @override
+  @action
   void setTexture(bool texture) {
-    settings = settings.copyWith(texture: texture);
+    _texture = texture;
     _save();
-    notifyListeners();
   }
 
   /// This would invert the current tint color and the foreground color.
-  @override
+  @action
   void setInvert(bool invert) {
-    settings = settings.copyWith(invert: invert);
+    _invert = invert;
     _save();
-    notifyListeners();
   }
 
-  @override
+  @action
   void setImageSource(ImageSource source) {
-    settings = settings.copyWith(source: source);
+    _imageSource = source;
     _save();
     // Update the current image to the new source.
     changeBackground(updateAll: true);
-    notifyListeners();
   }
 
-  @override
+  @action
   void setUnsplashSource(UnsplashSource source) {
-    settings = settings.copyWith(unsplashSource: source);
+    _unsplashSource = source;
     _save();
     // Update the current image to the new source.
     changeBackground(updateAll: true);
-    notifyListeners();
   }
 
-  @override
+  @action
   void setImageRefreshRate(ImageRefreshRate rate) {
-    settings = settings.copyWith(imageRefreshRate: rate);
+    _imageRefreshRate = rate;
     _save();
-    notifyListeners();
   }
 
-  @override
+  @action
   void setImageResolution(ImageResolution resolution) {
-    settings = settings.copyWith(imageResolution: resolution);
+    _imageResolution = resolution;
     _save();
     changeBackground(updateAll: true);
-    notifyListeners();
   }
 
-  @override
+  @action
   void setGreyScale(bool greyScale) {
-    settings = settings.copyWith(greyScale: greyScale);
+    _greyScale = greyScale;
     _save();
-    notifyListeners();
   }
 
   /// Retrieves the foreground color based on the current settings.
-  @override
-  Color getForegroundColor() {
-    if (mode.isColor) return color.foreground;
-    if (mode.isGradient) return gradient.foreground;
+  @computed
+  Color get foregroundColor {
+    if (_mode.isColor) return _color.foreground;
+    if (_mode.isGradient) return _gradient.foreground;
     // Return black(inverted) foreground color for image mode when
     // invert is true.
-    if (invert) return Colors.black;
+    if (_invert) return Colors.black;
     // This is the default foreground color for images.
     return Colors.white;
   }
 
   /// Retrieves the current image bytes based on the current settings.
-  @override
-  Background? getImage() {
-    if (!mode.isImage) return null;
-    final image = imageIndex == 0 ? image1 : image2;
+  @computed
+  Background? get currentImage {
+    if (!_mode.isImage) return null;
+    final image = _imageIndex == 0 ? _image1 : _image2;
     return image;
   }
 
@@ -416,7 +429,7 @@ class BackgroundModel extends BackgroundModelBase {
   /// Responsible for fetching a new image from unsplash.
   /// [showLoadingBackground] param is used to show a loading
   /// background (grey scale) while the image is being fetched when true.
-  /// Setting [isLoadingImage] to true will only show a loading indicator in
+  /// Setting [_isLoadingImage] to true will only show a loading indicator in
   /// the bottom of the page.
   ///
   /// Returns a [MapEntry] where key is the original image URL and the value
@@ -424,24 +437,23 @@ class BackgroundModel extends BackgroundModelBase {
   /// URL could not be retrieved.
   ///
   /// Returns null if the image could not be fetched.
+  @action
   Future<Background?> _loadImageFromSource({
     bool showLoadingBackground = false,
   }) async {
     log('loadImageFromSource');
-    isLoadingImage = true;
+    _isLoadingImage = true;
     // This means that only show loading image background(grey scale) when
     // explicitly told to.
-    this.showLoadingBackground = showLoadingBackground;
-    notifyListeners();
+    _showLoadingBackground = showLoadingBackground;
 
     try {
       // Fetch the image from unsplash.
       final String actualImageUrl = await _getImageUrlFromSource();
       log('actualUrl: $actualImageUrl');
       final http.Response response = await http.get(Uri.parse(actualImageUrl));
-      isLoadingImage = false;
-      this.showLoadingBackground = false;
-      notifyListeners();
+      _isLoadingImage = false;
+      _showLoadingBackground = false;
       if (response.statusCode == 200) {
         log('loadUnsplashImage success');
         // Return the image bytes.
@@ -467,31 +479,30 @@ class BackgroundModel extends BackgroundModelBase {
       log(error.toString());
       log(stacktrace.toString());
       // Some error occurred. Set loading to false.
-      isLoadingImage = false;
-      this.showLoadingBackground = false;
-      notifyListeners();
+      _isLoadingImage = false;
+      _showLoadingBackground = false;
       return null;
     }
   }
 
   /// Constructs an image URL of Unsplash based on the current settings.
   String _buildUnsplashImageURL(UnsplashSource source) {
-    final Size size = imageResolution.toSize() ?? windowSize;
+    final Size size = _imageResolution.toSize() ?? windowSize;
     return 'https://source.unsplash.com${source.getPath()}/${size.width.toInt()}x${size.height.toInt()}';
   }
 
   /// Refreshes the background image on timer callback.
-  @override
-  void onTimerCallback() async {
-    if (!imageRefreshRate.requiresTimer) return;
+  @action
+  Future<void> onTimerCallback() async {
+    if (!_imageRefreshRate.requiresTimer) return;
 
     // log('Auto Background refresh has been triggered');
     // Exit if it is not time to change the background based on the user
     // settings.
-    if (imageRefreshRate
+    if (_imageRefreshRate
             .nextUpdateTime(backgroundLastUpdated)!
             .isAfter(DateTime.now()) ||
-        isLoadingImage) {
+        _isLoadingImage) {
       // Enable this to see the remaining time in console.
 
       // final remainingTime = backgroundLastUpdated
@@ -508,8 +519,8 @@ class BackgroundModel extends BackgroundModelBase {
         backgroundLastUpdated.millisecondsSinceEpoch);
 
     // Toggle the image index.
-    settings = settings.copyWith(imageIndex: imageIndex == 0 ? 1 : 0);
-    _save();
+    _imageIndex = _imageIndex == 0 ? 1 : 0;
+    storage.setInt(StorageKeys.imageIndex, _imageIndex);
 
     // Log next background change time.
     _logNextBackgroundChange();
@@ -517,9 +528,8 @@ class BackgroundModel extends BackgroundModelBase {
     await _refetchAndCacheOtherImage();
   }
 
-  @override
   Future<void> onDownload() async {
-    final Background? image = getImage();
+    final Background? image = currentImage;
     if (image == null) return;
 
     final fileName =
@@ -540,10 +550,9 @@ class BackgroundModel extends BackgroundModelBase {
     downloadImage(image.bytes, path);
   }
 
-  @override
   Future<void> onOpenImage() async {
-    if (!mode.isImage) return;
-    final Background? image = imageIndex == 0 ? image1 : image2;
+    if (!_mode.isImage) return;
+    final Background? image = _imageIndex == 0 ? _image1 : _image2;
     if (image == null) {
       // ignore: avoid_print
       print('No image url found');
@@ -568,9 +577,9 @@ class BackgroundModel extends BackgroundModelBase {
   }
 
   Future<String> _getImageUrlFromSource() async {
-    switch (imageSource) {
+    switch (_imageSource) {
       case ImageSource.unsplash:
-        final String randomImageUrl = _buildUnsplashImageURL(unsplashSource);
+        final String randomImageUrl = _buildUnsplashImageURL(_unsplashSource);
         log('randomImageUrl: $randomImageUrl');
         final redirectionUrl = await _getUrlLocation(randomImageUrl);
         if (redirectionUrl != null) {
@@ -579,9 +588,9 @@ class BackgroundModel extends BackgroundModelBase {
           return randomImageUrl;
         }
       case ImageSource.userLikes:
-        assert(likedBackgrounds.isNotEmpty, 'No liked backgrounds found');
-        final LikedBackground background = likedBackgrounds.values
-            .elementAt(Random().nextInt(likedBackgrounds.length));
+        assert(_likedBackgrounds.isNotEmpty, 'No liked backgrounds found');
+        final LikedBackground background = _likedBackgrounds.values
+            .elementAt(Random().nextInt(_likedBackgrounds.length));
         log('liked background url: ${background.url}');
         return background.url;
       case ImageSource.local:
@@ -590,25 +599,22 @@ class BackgroundModel extends BackgroundModelBase {
     }
   }
 
-  @override
+  @action
   Future<void> onToggleLike(bool liked) async {
-    final likedBackground = getImage()!.toLikedBackground();
+    final likedBackground = currentImage!.toLikedBackground();
     final String storageKey = StorageKeys.likedBackground(likedBackground.id);
     if (liked) {
-      likedBackgrounds[storageKey] = likedBackground;
+      _likedBackgrounds[storageKey] = likedBackground;
     } else {
-      likedBackgrounds.remove(storageKey);
+      _likedBackgrounds.remove(storageKey);
     }
-    notifyListeners();
-    if (imageSource == ImageSource.userLikes && !liked) {
-      likeSaveNotifier.value = true;
+    _likedBackgrounds = _likedBackgrounds;
+    if (_imageSource == ImageSource.userLikes && !liked) {
       await storage.clearKey(storageKey);
-      likeSaveNotifier.value = false;
       await changeBackground();
     } else {
       _debouncer.run(() async {
         log('Saving liked background $liked');
-        likeSaveNotifier.value = true;
         if (liked) {
           // save
           await storage.setJson(storageKey, likedBackground.toJson());
@@ -616,7 +622,6 @@ class BackgroundModel extends BackgroundModelBase {
           // remove
           await storage.clearKey(storageKey);
         }
-        likeSaveNotifier.value = false;
       });
     }
   }
@@ -624,25 +629,23 @@ class BackgroundModel extends BackgroundModelBase {
   @override
   void dispose() {
     _debouncer.cancel();
-    likeSaveNotifier.dispose();
     super.dispose();
   }
 
-  @override
+  @action
   Future<void> reset() async {
-    likedBackgrounds.clear();
-    image1 = null;
-    image2 = null;
-    initialized = false;
+    _likedBackgrounds.clear();
+    _image1 = null;
+    _image2 = null;
+    _initialized = false;
     initializationFuture = init();
-    notifyListeners();
     await initializationFuture;
   }
 
-  @override
+  @action
   Future<void> removeLikedPhoto(String key) async {
-    likedBackgrounds.remove(key);
-    notifyListeners();
+    _likedBackgrounds.remove(key);
+    _likedBackgrounds = _likedBackgrounds;
     await storage.clearKey(key);
   }
 }

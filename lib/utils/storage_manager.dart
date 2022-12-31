@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:collection/collection.dart';
 import 'package:screwdriver/screwdriver.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
