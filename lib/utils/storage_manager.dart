@@ -9,7 +9,11 @@ abstract class LocalStorageManager {
 
   Future<Map<String, dynamic>?> getJson(String key);
 
+  Future<List<dynamic>?> getJsonArray(String key);
+
   Future<bool> setJson(String key, Map<String, dynamic> value);
+
+  Future<bool> setJsonArray(String key, List<dynamic> value);
 
   Future<bool> clearKey(String key);
 
@@ -69,7 +73,18 @@ class SharedPreferencesStorageManager extends LocalStorageManager {
   }
 
   @override
+  Future<List<dynamic>?> getJsonArray(String key) async {
+    final data = prefs.getString(key);
+    if (data == null || data is! List) return null;
+    return List.of(json.decode(data));
+  }
+
+  @override
   Future<bool> setJson(String key, Map<String, dynamic> value) =>
+      prefs.setString(key, json.encode(value));
+
+  @override
+  Future<bool> setJsonArray(String key, List<dynamic> value) async =>
       prefs.setString(key, json.encode(value));
 
   @override

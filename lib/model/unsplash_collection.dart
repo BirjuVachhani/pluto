@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'unsplash_collection.g.dart';
 
-enum UnsplashSourceType { random, collection, likes }
+enum UnsplashSourceType { random, collection, likes, tags }
 
 abstract class UnsplashSource with EquatableMixin {
   final String name;
@@ -26,6 +26,8 @@ abstract class UnsplashSource with EquatableMixin {
         return UnsplashCollectionSource.fromJson(json);
       case UnsplashSourceType.likes:
         return UnsplashUserLikesSource.fromJson(json);
+      case UnsplashSourceType.tags:
+        return UnsplashTagsSource.fromJson(json);
     }
   }
 }
@@ -103,4 +105,31 @@ class UnsplashUserLikesSource extends UnsplashIdentifiableSource {
 
   @override
   List<Object?> get props => [type, id, name];
+}
+
+@JsonSerializable()
+class UnsplashTagsSource extends UnsplashRandomSource {
+  final String tags;
+
+  @override
+  String get name => tags;
+
+  String get suffix => '/?/$tags';
+
+  @override
+  final UnsplashSourceType type = UnsplashSourceType.tags;
+
+  const UnsplashTagsSource({
+    required this.tags,
+  }) : super(name: '');
+
+  factory UnsplashTagsSource.fromJson(Map<String, dynamic> json) =>
+      _$UnsplashTagsSourceFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() =>
+      _$UnsplashTagsSourceToJson(this)..['type'] = type.name;
+
+  @override
+  List<Object?> get props => [type, suffix];
 }

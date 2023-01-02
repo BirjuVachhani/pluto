@@ -376,6 +376,24 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
     });
   }
 
+  late final _$_customSourcesAtom =
+      Atom(name: '_BackgroundStore._customSources', context: context);
+
+  List<UnsplashSource> get customSources {
+    _$_customSourcesAtom.reportRead();
+    return super._customSources;
+  }
+
+  @override
+  List<UnsplashSource> get _customSources => customSources;
+
+  @override
+  set _customSources(List<UnsplashSource> value) {
+    _$_customSourcesAtom.reportWrite(value, super._customSources, () {
+      super._customSources = value;
+    });
+  }
+
   late final _$initializeImagesAsyncAction =
       AsyncAction('_BackgroundStore.initializeImages', context: context);
 
@@ -564,6 +582,17 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
         name: '_BackgroundStore.setGreyScale');
     try {
       return super.setGreyScale(greyScale);
+    } finally {
+      _$_BackgroundStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void addNewCollection(UnsplashSource source, {bool setAsCurrent = false}) {
+    final _$actionInfo = _$_BackgroundStoreActionController.startAction(
+        name: '_BackgroundStore.addNewCollection');
+    try {
+      return super.addNewCollection(source, setAsCurrent: setAsCurrent);
     } finally {
       _$_BackgroundStoreActionController.endAction(_$actionInfo);
     }

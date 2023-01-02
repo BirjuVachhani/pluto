@@ -32,6 +32,9 @@ BackgroundSettings _$BackgroundSettingsFromJson(Map<String, dynamic> json) =>
               _$ImageResolutionEnumMap, json['imageResolution']) ??
           ImageResolution.auto,
       greyScale: json['greyScale'] as bool? ?? false,
+      customSources: (json['customSources'] as List<dynamic>?)
+          ?.map((e) => UnsplashSource.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$BackgroundSettingsToJson(BackgroundSettings instance) =>
@@ -47,6 +50,7 @@ Map<String, dynamic> _$BackgroundSettingsToJson(BackgroundSettings instance) =>
       'imageRefreshRate': _$ImageRefreshRateEnumMap[instance.imageRefreshRate]!,
       'imageResolution': _$ImageResolutionEnumMap[instance.imageResolution]!,
       'greyScale': instance.greyScale,
+      'customSources': instance.customSources,
     };
 
 const _$BackgroundModeEnumMap = {
