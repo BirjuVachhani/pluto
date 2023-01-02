@@ -549,9 +549,9 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
     downloadImage(image.bytes, path);
   }
 
-  Future<void> onOpenImage() async {
+  Future<void> onOpenImage([BackgroundBase? image]) async {
     if (!_mode.isImage) return;
-    final Background? image = _imageIndex == 0 ? _image1 : _image2;
+    image ??= _imageIndex == 0 ? _image1 : _image2;
     if (image == null) {
       // ignore: avoid_print
       print('No image url found');

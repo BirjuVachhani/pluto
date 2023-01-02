@@ -166,21 +166,20 @@ String flatColorToJson(FlatColor color) => color.name;
 String colorGradientToJson(ColorGradient gradient) => gradient.name;
 
 @JsonSerializable()
-class Background with EquatableMixin {
-  final String url;
-  final String id;
+class Background extends BackgroundBase {
   @JsonKey(toJson: base64Encode, fromJson: base64Decode)
   final Uint8List bytes;
 
   Background({
-    required this.url,
-    required this.id,
+    required super.url,
+    required super.id,
     required this.bytes,
   });
 
   factory Background.fromJson(Map<String, dynamic> json) =>
       _$BackgroundFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$BackgroundToJson(this);
 
   LikedBackground toLikedBackground() => LikedBackground(url: url, id: id);
@@ -190,17 +189,24 @@ class Background with EquatableMixin {
 }
 
 @JsonSerializable()
-class LikedBackground with EquatableMixin {
-  final String url;
-  final String id;
-
-  LikedBackground({required this.id, required this.url});
+class LikedBackground extends BackgroundBase {
+  LikedBackground({required super.id, required super.url});
 
   factory LikedBackground.fromJson(Map<String, dynamic> json) =>
       _$LikedBackgroundFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$LikedBackgroundToJson(this);
 
   @override
   List<Object?> get props => [id, url];
+}
+
+abstract class BackgroundBase with EquatableMixin {
+  final String url;
+  final String id;
+
+  BackgroundBase({required this.id, required this.url});
+
+  Map<String, dynamic> toJson();
 }

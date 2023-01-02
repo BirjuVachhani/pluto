@@ -140,6 +140,7 @@ class _LikedBackgroundsDialogState extends State<LikedBackgroundsDialog> {
                       downloadState: downloadingItems[background.value.url],
                       onUnlike: () => onUnlikeImage(background),
                       onDownload: () => onDownloadImage(background),
+                      onOpen: () => onOpenImage(background),
                       onRemoveDownloadState: () => setState(() {
                         downloadingItems.remove(background.value.url);
                       }),
@@ -206,12 +207,17 @@ class _LikedBackgroundsDialogState extends State<LikedBackgroundsDialog> {
       if (mounted) setState(() {});
     }
   }
+
+  void onOpenImage(MapEntry<String, LikedBackground> background) {
+    widget.store.onOpenImage(background.value);
+  }
 }
 
 class _Item extends StatefulWidget {
   final MapEntry<String, LikedBackground> entry;
   final VoidCallback onUnlike;
   final VoidCallback onDownload;
+  final VoidCallback onOpen;
   final DownloadState? downloadState;
   final VoidCallback onRemoveDownloadState;
 
@@ -220,6 +226,7 @@ class _Item extends StatefulWidget {
     required this.entry,
     required this.onUnlike,
     required this.onDownload,
+    required this.onOpen,
     required this.downloadState,
     required this.onRemoveDownloadState,
   });
@@ -260,6 +267,13 @@ class _ItemState extends State<_Item> {
           tooltip: 'Download',
           color: Theme.of(context).primaryColor,
           icon: const Icon(Icons.download_rounded),
+        ),
+        const SizedBox(width: 14),
+        _ItemOptionButton(
+          onPressed: widget.onOpen,
+          tooltip: 'Open Image',
+          color: Colors.grey.shade300,
+          icon: const Icon(Icons.open_in_new_rounded),
         ),
       ],
     );
