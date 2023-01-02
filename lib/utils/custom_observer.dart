@@ -34,16 +34,22 @@ class CustomObserver extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log('Rebuilding Observer $name');
     final color = _colors[name.hashCode % _colors.length];
+    final bool debugHighlightObserverRebuild =
+        DebugRender.of(context)?.debugHighlightObserverRebuild ?? false;
+
+    if (debugHighlightObserverRebuild) {
+      log('Rebuilding Observer $name');
+    }
     return Observer(
       name: name,
       builder: (context) {
-        if (!kDebugMode ||
-            DebugRender.of(context)?.debugHighlightObserverRebuild != true) {
+        if (!kDebugMode || debugHighlightObserverRebuild != true) {
           return builder(context);
         }
-        log('Rebuilding $name');
+        if (debugHighlightObserverRebuild) {
+          log('Rebuilding $name');
+        }
         return TweenAnimationBuilder<double>(
           key: ValueKey(DateTime.now().second),
           tween: Tween<double>(begin: -1, end: 1),
