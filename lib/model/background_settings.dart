@@ -91,6 +91,7 @@ class BackgroundSettings with EquatableMixin {
   final ImageRefreshRate imageRefreshRate;
   final ImageResolution imageResolution;
   final bool greyScale;
+  final List<UnsplashSource> customSources;
 
   BackgroundSettings({
     this.mode = BackgroundMode.color,
@@ -104,7 +105,8 @@ class BackgroundSettings with EquatableMixin {
     this.imageRefreshRate = ImageRefreshRate.never,
     this.imageResolution = ImageResolution.auto,
     this.greyScale = false,
-  });
+    List<UnsplashSource>? customSources,
+  }) : customSources = customSources ?? [];
 
   @override
   List<Object?> get props => [
@@ -119,6 +121,7 @@ class BackgroundSettings with EquatableMixin {
         imageRefreshRate,
         imageResolution,
         greyScale,
+        customSources,
       ];
 
   BackgroundSettings copyWith({
@@ -133,6 +136,7 @@ class BackgroundSettings with EquatableMixin {
     ImageRefreshRate? imageRefreshRate,
     ImageResolution? imageResolution,
     bool? greyScale,
+    List<UnsplashSource>? customSources,
   }) {
     return BackgroundSettings(
       mode: mode ?? this.mode,
@@ -146,6 +150,7 @@ class BackgroundSettings with EquatableMixin {
       imageRefreshRate: imageRefreshRate ?? this.imageRefreshRate,
       imageResolution: imageResolution ?? this.imageResolution,
       greyScale: greyScale ?? this.greyScale,
+      customSources: customSources ?? this.customSources,
     );
   }
 

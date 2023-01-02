@@ -18,6 +18,7 @@ import '../ui/custom_switch.dart';
 import '../ui/gesture_detector_with_cursor.dart';
 import '../utils/custom_observer.dart';
 import '../utils/extensions.dart';
+import 'new_collection_dialog.dart';
 
 class BackgroundSettingsView extends StatelessWidget {
   const BackgroundSettingsView({super.key});
@@ -409,14 +410,37 @@ class UnsplashSourceSettings extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
-        LabeledObserver(
-          label: 'Background Collection',
+        Row(
+          children: [
+            const Text('Background Collection', style: TextStyle(height: 1)),
+            const SizedBox(width: 6),
+            CustomObserver(
+              name: 'Add Collection',
+              builder: (context) {
+                if (store.imageSource != ImageSource.unsplash) {
+                  return const SizedBox.shrink();
+                }
+                return GestureDetectorWithCursor(
+                  onTap: () => onCreateNewCollection(context, store),
+                  child: Icon(
+                    Icons.add_circle_rounded,
+                    size: 18,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        CustomObserver(
+          name: 'Background Collection',
           builder: (context) {
             return CustomDropdown<UnsplashSource>(
               value: store.unsplashSource,
               hint: 'Select a collection',
               isExpanded: true,
-              items: UnsplashSources.sources,
+              items: [...store.customSources, ...UnsplashSources.sources],
               itemBuilder: (context, item) {
                 if (item == UnsplashSources.christmas) {
                   return Text('🎄${item.name}');
@@ -464,6 +488,19 @@ class UnsplashSourceSettings extends StatelessWidget {
         const SizedBox(height: 16),
       ],
     );
+  }
+
+  Future<void> onCreateNewCollection(
+      BuildContext context, BackgroundStore store) async {
+    final String? result = await showDialog<String>(
+      context: context,
+      builder: (context) => NewCollectionDialog(store: store),
+    );
+    if (result != null) {
+      store.addNewCollection(
+          UnsplashTagsSource(tags: result.trim().capitalized),
+          setAsCurrent: true);
+    }
   }
 }
 

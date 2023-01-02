@@ -99,6 +99,9 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
   @readonly
   ImageResolution _imageResolution = ImageResolution.auto;
 
+  @readonly
+  List<UnsplashSource> _customSources = [];
+
   @computed
   bool get isLiked {
     return currentImage != null &&
@@ -141,6 +144,7 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
     _unsplashSource = settings.unsplashSource;
     _imageRefreshRate = settings.imageRefreshRate;
     _imageResolution = settings.imageResolution;
+    _customSources = [...settings.customSources];
 
     // load image last updated time
     _imageIndex = await storage.getInt(StorageKeys.imageIndex) ?? 0;
@@ -321,6 +325,7 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
       imageRefreshRate: _imageRefreshRate,
       imageResolution: _imageResolution,
       unsplashSource: _unsplashSource,
+      customSources: _customSources,
     );
     return storage.setJson(StorageKeys.backgroundSettings, settings.toJson());
   }
@@ -421,7 +426,7 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
 
   /// This retrieves the original url for unsplash image as Unsplash source API
   /// redirects to the original image url.
-  Future<String?> _getUrlLocation(String url) async {
+  Future<String?> retrieveRedirectionUrl(String url) async {
     return getRedirectionUrl(url);
   }
 
@@ -485,9 +490,14 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
   }
 
   /// Constructs an image URL of Unsplash based on the current settings.
-  String _buildUnsplashImageURL(UnsplashSource source) {
+  String buildUnsplashImageURL(UnsplashSource source) {
     final Size size = _imageResolution.toSize() ?? windowSize;
-    return 'https://source.unsplash.com${source.getPath()}/${size.width.toInt()}x${size.height.toInt()}';
+    String url =
+        'https://source.unsplash.com${source.getPath()}/${size.width.toInt()}x${size.height.toInt()}';
+    if (source is UnsplashTagsSource) {
+      url += source.suffix;
+    }
+    return url;
   }
 
   /// Refreshes the background image on timer callback.
@@ -578,9 +588,9 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
   Future<String> _getImageUrlFromSource() async {
     switch (_imageSource) {
       case ImageSource.unsplash:
-        final String randomImageUrl = _buildUnsplashImageURL(_unsplashSource);
+        final String randomImageUrl = buildUnsplashImageURL(_unsplashSource);
         log('randomImageUrl: $randomImageUrl');
-        final redirectionUrl = await _getUrlLocation(randomImageUrl);
+        final redirectionUrl = await retrieveRedirectionUrl(randomImageUrl);
         if (redirectionUrl != null) {
           return redirectionUrl;
         } else {
@@ -627,6 +637,21 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
 
   void dispose() {
     _debouncer.cancel();
+  }
+
+  /// Adds a custom unsplash collection to the list of collections.
+  @action
+  void addNewCollection(UnsplashSource source, {bool setAsCurrent = false}) {
+    _customSources.add(source);
+    // Self-assigned to trigger the observer.
+    _customSources = _customSources;
+    if (setAsCurrent) {
+      // This internally saves the changes to storage.
+      setUnsplashSource(source);
+    } else {
+      // Explicitly save the changes to storage.
+      _save();
+    }
   }
 
   @action

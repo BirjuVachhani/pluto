@@ -45,3 +45,13 @@ Map<String, dynamic> _$UnsplashUserLikesSourceToJson(
       'name': instance.name,
       'id': instance.id,
     };
+
+UnsplashTagsSource _$UnsplashTagsSourceFromJson(Map<String, dynamic> json) =>
+    UnsplashTagsSource(
+      tags: json['tags'] as String,
+    );
+
+Map<String, dynamic> _$UnsplashTagsSourceToJson(UnsplashTagsSource instance) =>
+    <String, dynamic>{
+      'tags': instance.tags,
+    };
