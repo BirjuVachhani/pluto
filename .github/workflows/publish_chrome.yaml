@@ -44,12 +44,21 @@ jobs:
           path: dist
       - name: Display structure of downloaded files
         run: ls -R dist
-      - name: Upload to Chrome Web Store
-        uses: mobilefirstllc/cws-publish@latest
+      - name: Chrome Extension upload & publish
+        uses: Passiverecords/chrome-extension-upload-action@1.4.1
         with:
-          action: 'publish' 
-          client_id: ${{ secrets.CHROME_CLIENT_ID }}
-          client_secret: ${{ secrets.CHROME_CLIENT_SECRET }}
-          refresh_token: ${{ secrets.CHROME_REFRESH_TOKEN }}
-          extension_id: ${{ secrets.CHROME_APP_ID }}
-          zip_file: dist/artifact/extension.zip
+          refresh-token: ${{ secrets.CHROME_REFRESH_TOKEN }}
+          client-id: ${{ secrets.CHROME_CLIENT_ID }}
+          client-secret: ${{ secrets.CHROME_CLIENT_SECRET }}
+          file-name: dist/artifact/extension.zip
+          app-id: ${{ secrets.CHROME_APP_ID }}
+          publish: true
+#      - name: Upload to Chrome Web Store
+#        uses: mobilefirstllc/cws-publish@latest
+#        with:
+#          action: 'publish'
+#          client_id: ${{ secrets.CHROME_CLIENT_ID }}
+#          client_secret: ${{ secrets.CHROME_CLIENT_SECRET }}
+#          refresh_token: ${{ secrets.CHROME_REFRESH_TOKEN }}
+#          extension_id: ${{ secrets.CHROME_APP_ID }}
+#          zip_file: dist/artifact/extension.zip
