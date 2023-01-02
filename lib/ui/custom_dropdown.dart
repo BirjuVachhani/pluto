@@ -166,14 +166,14 @@ class CustomDropdown<T> extends StatelessWidget {
             Icons.keyboard_arrow_down_rounded,
             size: 20,
           ),
-          itemBuilder: (context, item) => DropdownMenuItem<T>(
+          itemBuilder: (context, item) => CustomDropdownMenuItem<T>(
             value: item,
             alignment: Alignment.centerLeft,
             child: itemBuilder?.call(context, item) ?? Text(item.toString()),
           ),
           items: items,
           selectedItemBuilder: selectedItemBuilder != null
-              ? (context, item) => DropdownMenuItem<T>(
+              ? (context, item) => CustomDropdownMenuItem<T>(
                     value: item,
                     alignment: Alignment.centerLeft,
                     child: selectedItemBuilder!(context, item),

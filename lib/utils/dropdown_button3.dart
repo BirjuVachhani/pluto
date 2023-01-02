@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screwdriver/flutter_screwdriver.dart';
 
 enum DropdownDirection {
   textDirection,
@@ -36,7 +37,7 @@ const EdgeInsets _kUnalignedButtonPadding = EdgeInsets.zero;
 typedef OnMenuStateChangeFn = void Function(bool isOpen);
 
 typedef SearchMatchFn = bool Function(
-  DropdownMenuItem item,
+  CustomDropdownMenuItem item,
   String searchValue,
 );
 
@@ -167,7 +168,7 @@ class _DropdownMenuItemButtonState<T>
   }
 
   void _handleOnTap() {
-    final DropdownMenuItem<T> dropdownMenuItem =
+    final CustomDropdownMenuItem<T> dropdownMenuItem =
         widget.route.items[widget.itemIndex].item!;
 
     dropdownMenuItem.onTap?.call();
@@ -190,7 +191,7 @@ class _DropdownMenuItemButtonState<T>
 
   @override
   Widget build(BuildContext context) {
-    final DropdownMenuItem<T> dropdownMenuItem =
+    final CustomDropdownMenuItem<T> dropdownMenuItem =
         widget.route.items[widget.itemIndex].item!;
     final double unit = 0.5 / (widget.route.items.length + 1.5);
     final double start =
@@ -217,6 +218,7 @@ class _DropdownMenuItemButtonState<T>
         onTap: _handleOnTap,
         onFocusChange: _handleFocusChange,
         splashColor: widget.itemSplashColor,
+        hoverColor: dropdownMenuItem.hoverBackgroundColor,
         highlightColor: widget.itemHighlightColor,
         child: Container(
           color:
@@ -949,7 +951,7 @@ class _MenuItem<T> extends SingleChildRenderObjectWidget {
   }) : super(child: item);
 
   final ValueChanged<Size> onLayout;
-  final DropdownMenuItem<T>? item;
+  final CustomDropdownMenuItem<T>? item;
 
   @override
   RenderObject createRenderObject(BuildContext context) {
@@ -1014,7 +1016,7 @@ class _DropdownMenuItemContainer extends StatelessWidget {
   }
 }
 
-typedef DropdownButtonBuilder<T> = DropdownMenuItem<T> Function(
+typedef DropdownButtonBuilder<T> = CustomDropdownMenuItem<T> Function(
     BuildContext context, T item);
 
 /// A Material Design button for selecting from a list of items.
@@ -1381,12 +1383,12 @@ class CustomDropdownButton<T> extends StatefulWidget {
   ///
   /// {@tool dartpad}
   /// This sample shows a `DropdownButton` with a button with [Text] that
-  /// corresponds to but is unique from [DropdownMenuItem].
+  /// corresponds to but is unique from [CustomDropdownMenuItem].
   ///
   /// ** See code in examples/api/lib/material/dropdown/dropdown_button.selected_item_builder.0.dart **
   /// {@end-tool}
   ///
-  /// If this callback is null, the [DropdownMenuItem] from [items]
+  /// If this callback is null, the [CustomDropdownMenuItem] from [items]
   /// that matches [value] will be displayed.
   final DropdownButtonBuilder? selectedItemBuilder;
 
@@ -2190,5 +2192,67 @@ class _DropdownButtonFormFieldState<T> extends FormFieldState<T> {
     if (oldWidget.initialValue != widget.initialValue) {
       setValue(widget.initialValue);
     }
+  }
+}
+
+/// An item in a menu created by a [DropdownButton].
+///
+/// The type `T` is the type of the value the entry represents. All the entries
+/// in a given menu must represent values with consistent types.
+class CustomDropdownMenuItem<T> extends StatelessWidget {
+  /// Creates an item for a dropdown menu.
+  ///
+  /// The [child] argument is required.
+  const CustomDropdownMenuItem({
+    super.key,
+    this.onTap,
+    this.value,
+    this.enabled = true,
+    this.alignment = AlignmentDirectional.centerStart,
+    this.hoverBackgroundColor,
+    this.textColor,
+    this.hoverTextColor,
+    required this.child,
+  });
+
+  /// Called when the dropdown menu item is tapped.
+  final VoidCallback? onTap;
+
+  /// The value to return if the user selects this menu item.
+  ///
+  /// Eventually returned in a call to [DropdownButton.onChanged].
+  final T? value;
+
+  /// Whether or not a user can select this menu item.
+  ///
+  /// Defaults to `true`.
+  final bool enabled;
+
+  final Widget child;
+
+  final Color? hoverBackgroundColor;
+
+  final Color? textColor;
+  final Color? hoverTextColor;
+
+  final AlignmentGeometry alignment;
+
+  @override
+  Widget build(BuildContext context) {
+    return Hoverable(
+      builder: (context, hovering, child) => DefaultTextStyle(
+        style: DefaultTextStyle.of(context).style.copyWith(
+              color: hovering && hoverTextColor != null
+                  ? hoverTextColor
+                  : textColor,
+            ),
+        child: child!,
+      ),
+      child: Container(
+        constraints: const BoxConstraints(minHeight: _kMenuItemHeight),
+        alignment: alignment,
+        child: child,
+      ),
+    );
   }
 }

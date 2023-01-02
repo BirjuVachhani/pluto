@@ -275,12 +275,12 @@ class MenuButton extends StatelessWidget {
                 height: 1,
               ),
           itemBuilder: (context, item) =>
-              DropdownMenuItem<MapEntry<String, String>>(
+              CustomDropdownMenuItem<MapEntry<String, String>>(
             value: item,
-            child: Text(
-              item.value,
-              style: TextStyle(color: item.key == 'reset' ? Colors.red : null),
-            ),
+            hoverBackgroundColor: item.key == 'reset' ? Colors.red : null,
+            hoverTextColor: item.key == 'reset' ? Colors.white : null,
+            textColor: item.key == 'reset' ? Colors.red : null,
+            child: Text(item.value),
           ),
           childBuilder: (ctx, item, onTap) => Theme(
             data: Theme.of(context),
