@@ -1,4 +1,4 @@
-# 0.3.0 [Unpublished]
+# 0.3.0
 
 - Performance improvements.
 - Improve menu button dropdown UI.
