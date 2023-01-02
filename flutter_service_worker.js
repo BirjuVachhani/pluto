@@ -4,12 +4,12 @@ const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 const RESOURCES = {
   "icon128.png": "062bc769d4d13ca82acb840b2d28f141",
-"main.dart.js": "e2f7aaba25b2a5a69504191e1c1b3d17",
+"main.dart.js": "95c2428b4b8177a11092ba2e27e1661a",
 "canvaskit/canvaskit.wasm": "bf50631470eb967688cca13ee181af62",
 "canvaskit/profiling/canvaskit.wasm": "95a45378b69e77af5ed2bc72b2209b94",
 "canvaskit/profiling/canvaskit.js": "38164e5a72bdad0faa4ce740c9b8e564",
 "canvaskit/canvaskit.js": "2bc454a691c631b07a9307ac4ca47797",
-"manifest.json": "2792a2e4bf11692bb3a0c595376e15f8",
+"manifest.json": "4a9fe6c0799894f3be4403eff76f6827",
 "icons/16.png": "76ca79832e2428bf8f8601a26315e804",
 "icons/64.png": "f9f5646c4c2ab6db1263fbef22618e05",
 "icons/32.png": "bbbfca2a523d3de3eb90aaf135f90ea7",
@@ -295,11 +295,11 @@ const RESOURCES = {
 "assets/assets/fonts/JakartaSans-Regular.ttf": "e7016ca9ddd6dd32e24dfe0296b62b2b",
 "assets/assets/fonts/Product.ttf": "eae9c18cee82a8a1a52e654911f8fe83",
 "assets/assets/fonts/Cardo-Italics.ttf": "36276bf672f94c08cc5a57966cb49641",
-"assets/NOTICES": "812b013c7a380bce0977210b5f5d9d8f",
+"assets/NOTICES": "232f378866a424a2f6db310c5c4b8973",
 "index.html": "e129182f13d52935caa2963f042a347a",
 "/": "e129182f13d52935caa2963f042a347a",
 "favicon.png": "1daa53c93abfc2b8509ca9a9ffb7f3ec",
-"version.json": "67fa495a6cd2cb2f7fe37ac0e5638919",
+"version.json": "6225829a7cbb3b357b811b328be32d46",
 "background.js": "bc7b08996ad6ed84eedc27a8e9cfaf5d"
 };
 
