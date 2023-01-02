@@ -1,3 +1,10 @@
+# 0.3.0 [Unpublished]
+
+- Performance improvements.
+- Improve menu button dropdown UI.
+- Add open image option in liked backgrounds dialog.
+- Fix bug where images are cut off at bottom in liked backgrounds dialog.
+
 # 0.2.0
 
 - Add backgrounds collection for Christmas.
