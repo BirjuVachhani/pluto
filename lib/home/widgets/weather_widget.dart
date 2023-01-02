@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 
 import '../../model/weather_info.dart';
@@ -13,25 +14,24 @@ import '../../utils/extensions.dart';
 import '../../utils/storage_manager.dart';
 import '../../utils/utils.dart';
 import '../../utils/weather_service.dart';
-import '../background_model.dart';
-import '../home_widget.dart';
+import '../background_store.dart';
+import '../widget_store.dart';
+
+part 'weather_widget.g.dart';
 
 /// Duration between weather updates.
 const Duration weatherUpdateDuration = Duration(minutes: 30);
 
-abstract class WeatherWidgetModelBase
-    with ChangeNotifier, LazyInitializationMixin {
+// ignore: library_private_types_in_public_api
+class WeatherStore = _WeatherStore with _$WeatherStore;
+
+abstract class _WeatherStore with Store, LazyInitializationMixin {
+  @observable
   WeatherInfo? weatherInfo;
 
   bool isLoadingWeather = false;
   bool initialized = false;
 
-  void onTimerCallback();
-
-  Future<void> refetchWeather();
-}
-
-class WeatherWidgetModel extends WeatherWidgetModelBase {
   final double latitude;
   final double longitude;
 
@@ -43,7 +43,7 @@ class WeatherWidgetModel extends WeatherWidgetModelBase {
 
   DateTime? weatherLastUpdated;
 
-  WeatherWidgetModel(this.latitude, this.longitude) {
+  _WeatherStore(this.latitude, this.longitude) {
     init();
   }
 
@@ -83,11 +83,9 @@ class WeatherWidgetModel extends WeatherWidgetModelBase {
     }
 
     initialized = true;
-    notifyListeners();
   }
 
   /// Refreshes the background image on timer callback.
-  @override
   void onTimerCallback() async {
     final DateTime? weatherLastUpdated = this.weatherLastUpdated;
     if (weatherLastUpdated == null) return;
@@ -117,12 +115,11 @@ class WeatherWidgetModel extends WeatherWidgetModelBase {
     await refetchWeather();
   }
 
-  @override
+  @action
   Future<void> refetchWeather() async {
     return fetchWeather().then((value) {
       if (value == null) return;
       weatherInfo = value;
-      notifyListeners();
 
       // save weather info
       storage.setJson(StorageKeys.weatherInfo, value.toJson());
@@ -173,8 +170,8 @@ class WeatherWidgetWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<WeatherWidgetModelBase>(
-      create: (context) => WeatherWidgetModel(latitude, longitude),
+    return Provider<WeatherStore>(
+      create: (context) => WeatherStore(latitude, longitude),
       child: const WeatherWidget(),
     );
   }
@@ -191,50 +188,49 @@ class _WeatherWidgetState extends State<WeatherWidget>
     with SingleTickerProviderStateMixin {
   Timer? _timer;
 
-  late final WeatherWidgetModelBase model =
-      context.read<WeatherWidgetModelBase>();
+  late final WeatherStore store = context.read<WeatherStore>();
 
   @override
   void initState() {
     super.initState();
 
     _timer = Timer.periodic(
-        const Duration(seconds: 1), (timer) => model.onTimerCallback());
+        const Duration(seconds: 1), (timer) => store.onTimerCallback());
   }
 
   @override
   Widget build(BuildContext context) {
     final BackgroundStore backgroundStore = context.read<BackgroundStore>();
+    final settings = context.read<WidgetStore>().weatherSettings;
+
     return CustomObserver(
       name: 'WeatherWidget',
       builder: (context) {
-        return Consumer2<WeatherWidgetModelBase, WidgetModelBase>(
-          builder: (_, weatherModel, model, child) {
-            final settings = model.weatherSettings;
-            return Align(
-              alignment: settings.alignment.flutterAlignment,
-              child: Padding(
-                padding: const EdgeInsets.all(56),
-                child: FittedBox(
-                  child: Text(
-                    buildText(weatherModel.weatherInfo, settings),
-                    textAlign: settings.alignment.textAlign,
-                    style: TextStyle(
-                      color: backgroundStore.foregroundColor,
-                      fontSize: settings.fontSize,
-                      fontFamily: settings.fontFamily,
-                    ),
-                  ),
+        return Align(
+          alignment: settings.alignment.flutterAlignment,
+          child: Padding(
+            padding: const EdgeInsets.all(56),
+            child: FittedBox(
+              child: Text(
+                buildText(store.weatherInfo, settings),
+                textAlign: settings.alignment.textAlign,
+                style: TextStyle(
+                  color: backgroundStore.foregroundColor,
+                  fontSize: settings.fontSize,
+                  fontFamily: settings.fontFamily,
                 ),
               ),
-            );
-          },
+            ),
+          ),
         );
       },
     );
   }
 
-  String buildText(WeatherInfo? weatherInfo, WeatherWidgetSettings settings) {
+  String buildText(
+    WeatherInfo? weatherInfo,
+    WeatherWidgetSettingsStore settings,
+  ) {
     if (weatherInfo == null) return '_ _';
     final String temperature;
     if (settings.temperatureUnit == TemperatureUnit.celsius) {

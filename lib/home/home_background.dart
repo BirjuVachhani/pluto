@@ -7,7 +7,7 @@ import '../resources/colors.dart';
 import '../ui/texture_painter.dart';
 import '../utils/custom_observer.dart';
 import '../utils/utils.dart';
-import 'background_model.dart';
+import 'background_store.dart';
 
 class HomeBackground extends StatefulWidget {
   const HomeBackground({super.key});

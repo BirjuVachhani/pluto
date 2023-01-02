@@ -3,17 +3,20 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mobx/mobx.dart';
+import 'widget_store.dart';
 import 'package:provider/provider.dart';
 
+import '../model/background_settings.dart';
 import '../resources/storage_keys.dart';
 import '../settings/changelog_dialog.dart';
 import '../settings/settings_panel.dart';
 import '../src/version.dart';
 import '../utils/storage_manager.dart';
-import '../utils/utils.dart';
-import 'background_model.dart';
+import 'background_store.dart';
 import 'bottom_bar.dart';
 import 'home_background.dart';
+import 'home_store.dart';
 import 'home_widget.dart';
 
 class HomeWrapper extends StatelessWidget {
@@ -23,70 +26,20 @@ class HomeWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<HomeModelBase>(
-          create: (context) => HomeModel()..init(),
+        Provider<HomeStore>(
+          create: (context) => HomeStore(),
+          dispose: (context, store) => store.dispose(),
         ),
-        ChangeNotifierProvider<BackgroundStore>(
+        Provider<BackgroundStore>(
           create: (context) => BackgroundStore(),
+          dispose: (context, store) => store.dispose(),
         ),
-        ChangeNotifierProvider<WidgetModelBase>(
-          create: (context) => WidgetModel()..init(),
+        Provider<WidgetStore>(
+          create: (context) => WidgetStore(),
         ),
       ],
       child: const Home(key: ValueKey('Home')),
     );
-  }
-}
-
-abstract class HomeModelBase with ChangeNotifier, LazyInitializationMixin {
-  bool isPanelVisible = false;
-  bool initialized = false;
-
-  ValueNotifier<int> currentTabIndex = ValueNotifier(0);
-  TabController? tabController;
-
-  void showPanel();
-
-  void hidePanel();
-
-  Future<void> reset();
-}
-
-class HomeModel extends HomeModelBase {
-  @override
-  Future<void> init() async {
-    // Initialize stuff
-    initialized = true;
-    notifyListeners();
-  }
-
-  @override
-  void showPanel() {
-    isPanelVisible = true;
-    notifyListeners();
-  }
-
-  @override
-  void hidePanel() {
-    isPanelVisible = false;
-    currentTabIndex.value = 0;
-    notifyListeners();
-  }
-
-  @override
-  Future<void> reset() async {
-    isPanelVisible = false;
-    initialized = false;
-    currentTabIndex.value = 0;
-    notifyListeners();
-    await init();
-  }
-
-  @override
-  void dispose() {
-    currentTabIndex.dispose();
-    tabController?.dispose();
-    super.dispose();
   }
 }
 
@@ -98,36 +51,39 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  late final BackgroundStore model = context.read<BackgroundStore>();
+  late final BackgroundStore store = context.read<BackgroundStore>();
 
   late final LocalStorageManager storageManager =
       GetIt.instance.get<LocalStorageManager>();
+
+  ReactionDisposer? _disposer;
 
   Timer? _timer;
 
   @override
   void initState() {
     super.initState();
-    model.initializationFuture.then((_) {
+    store.initializationFuture.then((_) {
       listenToEvents();
       // Start the timer for auto background refresh only if required.
-      if (!model.imageRefreshRate.requiresTimer) return;
+      if (!store.imageRefreshRate.requiresTimer) return;
       startTimer();
     });
     _shouldShowChangelog();
   }
 
   void listenToEvents() {
-    model.addListener(onBackgroundModelChange);
+    _disposer =
+        reaction((react) => store.imageRefreshRate, onRefreshRateChanged);
   }
 
   /// Start and stop timer based on the current [ImageRefreshRate] when
   /// changed from settings panel. Doing this allows us to avoid unnecessary
   /// timer updates.
-  void onBackgroundModelChange() {
-    if (model.imageRefreshRate.requiresTimer) {
+  void onRefreshRateChanged(ImageRefreshRate refreshRate) {
+    if (refreshRate.requiresTimer) {
       startTimer();
-    } else if (!model.imageRefreshRate.requiresTimer) {
+    } else if (!refreshRate.requiresTimer) {
       stopTimer();
     }
   }
@@ -137,7 +93,7 @@ class _HomeState extends State<Home> {
     if (_timer != null) return;
     log('Starting timer for background refresh');
     _timer = Timer.periodic(
-        const Duration(seconds: 1), (timer) => model.onTimerCallback());
+        const Duration(seconds: 1), (timer) => store.onTimerCallback());
   }
 
   /// Stop the timer for auto background refresh.
@@ -169,6 +125,7 @@ class _HomeState extends State<Home> {
   @override
   void dispose() {
     _timer?.cancel();
+    _disposer?.reaction.dispose();
     super.dispose();
   }
 

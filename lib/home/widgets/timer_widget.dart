@@ -9,8 +9,8 @@ import 'package:screwdriver/screwdriver.dart';
 import '../../model/widget_settings.dart';
 import '../../utils/custom_observer.dart';
 import '../../utils/extensions.dart';
-import '../background_model.dart';
-import '../home_widget.dart';
+import '../background_store.dart';
+import '../widget_store.dart';
 
 class TimerWidget extends StatefulWidget {
   const TimerWidget({super.key});
@@ -25,7 +25,7 @@ class _TimerWidgetState extends State<TimerWidget>
   late DateTime _initialTime;
   late DateTime _now;
 
-  late final WidgetModelBase model = context.read<WidgetModelBase>();
+  late final WidgetStore store = context.read<WidgetStore>();
 
   @override
   void initState() {
@@ -34,7 +34,7 @@ class _TimerWidgetState extends State<TimerWidget>
     _ticker = createTicker((elapsed) {
       final newTime = _initialTime.add(elapsed);
       // rebuild only if seconds changes instead of every frame
-      if (model.timerSettings.format.showsSeconds &&
+      if (store.timerSettings.format.showsSeconds &&
           _now.second != newTime.second) {
         setState(() => _now = newTime);
       } else if (_now.minute != newTime.minute) {
@@ -47,66 +47,60 @@ class _TimerWidgetState extends State<TimerWidget>
   @override
   Widget build(BuildContext context) {
     final BackgroundStore backgroundStore = context.read<BackgroundStore>();
+    final settings = store.timerSettings;
+
     return CustomObserver(
       name: 'TimerWidget',
       builder: (context) {
-        return Consumer<WidgetModelBase>(
-          builder: (_, model, child) {
-            final settings = model.timerSettings;
-            final hasFixedWidth = settings.textBefore.isEmpty &&
-                settings.textAfter.isEmpty &&
-                settings.format == TimerFormat.countdown;
+        final hasFixedWidth = settings.textBefore.isEmpty &&
+            settings.textAfter.isEmpty &&
+            settings.format == TimerFormat.countdown;
 
-            return Align(
-              alignment: settings.alignment.flutterAlignment,
-              child: FittedBox(
-                child: Builder(
-                  builder: (context) {
-                    Widget wid = Text.rich(
-                      buildTimerTextSpan(settings),
-                      textAlign: settings.alignment.textAlign,
-                      style: TextStyle(
-                        color: backgroundStore.foregroundColor,
-                        fontSize: settings.fontSize,
-                        fontFamily: settings.fontFamily,
-                        height: 1.4,
-                        letterSpacing: 0.2,
-                      ),
-                    );
-                    if (hasFixedWidth) {
-                      final style = TextStyle(
-                        color: backgroundStore.foregroundColor,
-                        fontSize: settings.fontSize,
-                        fontFamily: settings.fontFamily,
-                        height: 1.4,
-                        letterSpacing: 0.2,
-                      );
-                      wid = Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          for (final char in buildTime(settings).split(''))
-                            SizedBox(
-                              width: char == ':'
-                                  ? settings.fontSize * 0.3
-                                  : settings.fontSize * 0.6,
-                              child: Text(
-                                char,
-                                textAlign: settings.alignment.textAlign,
-                                style: style,
-                              ),
-                            ),
-                        ],
-                      );
-                    }
-                    return Padding(
-                      padding: const EdgeInsets.all(56),
-                      child: wid,
-                    );
-                  },
+        Widget wid = Text.rich(
+          buildTimerTextSpan(settings),
+          textAlign: settings.alignment.textAlign,
+          style: TextStyle(
+            color: backgroundStore.foregroundColor,
+            fontSize: settings.fontSize,
+            fontFamily: settings.fontFamily,
+            height: 1.4,
+            letterSpacing: 0.2,
+          ),
+        );
+        if (hasFixedWidth) {
+          final style = TextStyle(
+            color: backgroundStore.foregroundColor,
+            fontSize: settings.fontSize,
+            fontFamily: settings.fontFamily,
+            height: 1.4,
+            letterSpacing: 0.2,
+          );
+          wid = Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              for (final char in buildTime(settings).split(''))
+                SizedBox(
+                  width: char == ':'
+                      ? settings.fontSize * 0.3
+                      : settings.fontSize * 0.6,
+                  child: Text(
+                    char,
+                    textAlign: settings.alignment.textAlign,
+                    style: style,
+                  ),
                 ),
-              ),
-            );
-          },
+            ],
+          );
+        }
+
+        return Align(
+          alignment: settings.alignment.flutterAlignment,
+          child: FittedBox(
+            child: Padding(
+              padding: const EdgeInsets.all(56),
+              child: wid,
+            ),
+          ),
         );
       },
     );
@@ -118,7 +112,7 @@ class _TimerWidgetState extends State<TimerWidget>
     super.dispose();
   }
 
-  InlineSpan buildTimerTextSpan(TimerWidgetSettings settings) {
+  InlineSpan buildTimerTextSpan(TimerWidgetSettingsStore settings) {
     return TextSpan(text: settings.textBefore, children: [
       TextSpan(
         text: buildTime(settings),
@@ -131,7 +125,7 @@ class _TimerWidgetState extends State<TimerWidget>
     ]);
   }
 
-  String buildTime(TimerWidgetSettings settings) {
+  String buildTime(TimerWidgetSettingsStore settings) {
     final Duration duration = DateTime.now() >= settings.time
         ? DateTime.now().difference(settings.time)
         : settings.time.difference(DateTime.now());

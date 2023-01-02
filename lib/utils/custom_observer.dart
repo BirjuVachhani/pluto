@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:math' hide log;
 
 import 'package:flutter/foundation.dart';
@@ -33,7 +34,7 @@ class CustomObserver extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // log('Rebuilding Observer $name');
+    log('Rebuilding Observer $name');
     final color = _colors[name.hashCode % _colors.length];
     return Observer(
       name: name,
@@ -42,19 +43,21 @@ class CustomObserver extends StatelessWidget {
             DebugRender.of(context)?.debugHighlightObserverRebuild != true) {
           return builder(context);
         }
-        // log('Rebuilding $name');
+        log('Rebuilding $name');
         return TweenAnimationBuilder<double>(
           key: ValueKey(DateTime.now().second),
           tween: Tween<double>(begin: -1, end: 1),
           duration: const Duration(milliseconds: 3000),
           builder: (context, value, child) {
-            return DecoratedBox(
-              position: DecorationPosition.foreground,
-              decoration: BoxDecoration(
-                color: Colors.transparent,
-                border: Border.all(
-                  color: color
-                      .withOpacity(min(1 + value * (value > 0 ? -1 : 1), 0.5)),
+            final opacity = min(1 + value * (value > 0 ? -1 : 1), 0.5);
+
+            return Material(
+              type: MaterialType.transparency,
+              borderOnForeground: true,
+              animationDuration: Duration.zero,
+              shape: RoundedRectangleBorder(
+                side: BorderSide(
+                  color: color.withOpacity(opacity),
                   width: 4,
                 ),
               ),

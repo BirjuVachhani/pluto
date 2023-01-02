@@ -8,7 +8,7 @@ import 'package:flutter_screwdriver/flutter_screwdriver.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 
-import '../home/background_model.dart';
+import '../home/background_store.dart';
 import '../model/background_settings.dart';
 import '../resources/colors.dart';
 import '../utils/storage_manager.dart';

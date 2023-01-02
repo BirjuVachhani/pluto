@@ -5,11 +5,12 @@ import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../home/background_model.dart';
-import '../home/home.dart';
-import '../home/home_widget.dart';
+import '../home/background_store.dart';
+import '../home/home_store.dart';
+import '../home/widget_store.dart';
 import '../resources/colors.dart';
 import '../resources/storage_keys.dart';
+import '../utils/custom_observer.dart';
 import '../utils/dropdown_button3.dart';
 import '../utils/storage_manager.dart';
 import 'about.dart';
@@ -23,23 +24,27 @@ class SettingsPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<HomeModelBase>(builder: (context, model, child) {
-      if (!model.initialized || !model.isPanelVisible) {
-        return const SizedBox.shrink();
-      }
-      return Stack(
-        fit: StackFit.expand,
-        children: const [
-          _BackgroundDismissible(),
-          Positioned(
-            top: 32,
-            right: 32,
-            bottom: 32,
-            child: SettingsPanelContent(),
-          ),
-        ],
-      );
-    });
+    final store = context.read<HomeStore>();
+    return CustomObserver(
+      name: 'SettingsPanel',
+      builder: (context) {
+        if (!store.initialized || !store.isPanelVisible) {
+          return const SizedBox.shrink();
+        }
+        return Stack(
+          fit: StackFit.expand,
+          children: const [
+            _BackgroundDismissible(),
+            Positioned(
+              top: 32,
+              right: 32,
+              bottom: 32,
+              child: SettingsPanelContent(),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 
@@ -52,12 +57,16 @@ class SettingsPanelContent extends StatefulWidget {
 
 class _SettingsPanelContentState extends State<SettingsPanelContent>
     with SingleTickerProviderStateMixin {
-  late final HomeModelBase model = context.read<HomeModelBase>();
+  late final HomeStore store = context.read<HomeStore>();
 
   @override
   void initState() {
     super.initState();
-    model.tabController = TabController(length: 3, vsync: this);
+    store.tabController = TabController(
+      length: 3,
+      vsync: this,
+      initialIndex: store.currentTabIndex,
+    );
   }
 
   @override
@@ -100,7 +109,7 @@ class _SettingsPanelContentState extends State<SettingsPanelContent>
                       Material(
                         type: MaterialType.transparency,
                         child: IconButton(
-                          onPressed: () => model.hidePanel(),
+                          onPressed: () => store.hidePanel(),
                           splashRadius: 16,
                           iconSize: 18,
                           icon: const Icon(Icons.close),
@@ -126,7 +135,7 @@ class _SettingsPanelContentState extends State<SettingsPanelContent>
                     SizedBox(
                       width: 360,
                       child: TabBar(
-                        controller: model.tabController,
+                        controller: store.tabController,
                         // unselectedLabelColor: Colors.black,
                         labelColor: Theme.of(context).primaryColor,
                         isScrollable: true,
@@ -162,7 +171,7 @@ class _SettingsPanelContentState extends State<SettingsPanelContent>
                           Tab(text: 'Widget'),
                           Tab(text: 'About'),
                         ],
-                        onTap: (index) => model.currentTabIndex.value = index,
+                        onTap: (index) => store.setTabIndex(index),
                       ),
                     ),
                   ],
@@ -171,22 +180,27 @@ class _SettingsPanelContentState extends State<SettingsPanelContent>
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 4),
                     child: SingleChildScrollView(
-                      physics: const BouncingScrollPhysics(),
                       padding: const EdgeInsets.fromLTRB(20, 24, 20, 8),
-                      child: ValueListenableBuilder<int>(
-                        valueListenable: model.currentTabIndex,
-                        builder: (context, index, child) {
-                          if (model.currentTabIndex.value == 0) {
-                            return const BackgroundSettingsView();
-                          }
-                          if (model.currentTabIndex.value == 1) {
-                            return const WidgetSettings();
-                          }
-                          if (model.currentTabIndex.value == 2) {
-                            return const About();
-                          }
-                          return const SizedBox.shrink();
-                        },
+                      physics: const BouncingScrollPhysics(),
+                      child: AnimatedSize(
+                        duration: const Duration(milliseconds: 250),
+                        curve: Curves.fastOutSlowIn,
+                        alignment: Alignment.topCenter,
+                        child: CustomObserver(
+                          name: 'SettingsPanelContent',
+                          builder: (context) {
+                            switch (store.currentTabIndex) {
+                              case 0:
+                                return const BackgroundSettingsView();
+                              case 1:
+                                return const WidgetSettings();
+                              case 2:
+                                return const About();
+                              default:
+                                return const SizedBox.shrink();
+                            }
+                          },
+                        ),
                       ),
                     ),
                   ),
@@ -205,10 +219,10 @@ class _BackgroundDismissible extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.read<HomeModelBase>();
+    final store = context.read<HomeStore>();
     return Positioned.fill(
       child: GestureDetector(
-        onTap: () => model.hidePanel(),
+        onTap: () => store.hidePanel(),
         child: Container(
           color: Colors.transparent,
         ),
@@ -324,14 +338,14 @@ class MenuButton extends StatelessWidget {
 
   void onReset(BuildContext context) async {
     final BackgroundStore backgroundStore = context.read<BackgroundStore>();
-    final HomeModelBase homeModel = context.read<HomeModelBase>();
-    final WidgetModelBase widgetModel = context.read<WidgetModelBase>();
+    final HomeStore homeStore = context.read<HomeStore>();
+    final WidgetStore widgetStore = context.read<WidgetStore>();
     await GetIt.instance
         .get<LocalStorageManager>()
         .clear(except: [StorageKeys.version]);
-    homeModel.reset();
+    homeStore.reset();
     backgroundStore.reset();
-    widgetModel.reset();
+    widgetStore.reset();
   }
 }
 
