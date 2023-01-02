@@ -312,7 +312,7 @@ class _ItemState extends State<_Item> {
                 AnimatedPositioned(
                   left: 0,
                   right: 0,
-                  bottom: widget.downloadState != null ? 0 : -24,
+                  bottom: widget.downloadState != null ? 0 : -32,
                   duration: const Duration(milliseconds: 250),
                   curve: Curves.easeInOut,
                   child: _DownloadIndicator(
