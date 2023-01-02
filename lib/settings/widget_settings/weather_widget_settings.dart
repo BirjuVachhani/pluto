@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
-import '../../home/home_widget.dart';
+import '../../home/widget_store.dart';
 import '../../model/location_response.dart';
 import '../../model/widget_settings.dart';
 import '../../resources/colors.dart';
@@ -16,6 +16,7 @@ import '../../ui/alignment_control.dart';
 import '../../ui/custom_dropdown.dart';
 import '../../ui/custom_slider.dart';
 import '../../ui/text_input.dart';
+import '../../utils/custom_observer.dart';
 import '../../utils/geocoding_service.dart';
 
 class WeatherWidgetSettingsView extends StatelessWidget {
@@ -23,92 +24,106 @@ class WeatherWidgetSettingsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<WidgetModelBase>(
-      builder: (context, model, child) {
-        final settings = model.weatherSettings;
-        return Column(
-          children: [
-            const SizedBox(height: 16),
-            CustomDropdown<String>(
-              label: 'Font',
+    final settings = context.read<WidgetStore>().weatherSettings;
+    return Column(
+      children: [
+        const SizedBox(height: 16),
+        LabeledObserver(
+          label: 'Font',
+          builder: (context) {
+            return CustomDropdown<String>(
               isExpanded: true,
               value: settings.fontFamily,
               items: FontFamilies.fonts,
-              onSelected: (family) => model.updateWeatherSettings(
-                settings.copyWith(fontFamily: family),
-              ),
-            ),
-            const SizedBox(height: 16),
-            CustomSlider(
-              label: 'Font size',
+              onSelected: (family) =>
+                  settings.update(() => settings.fontFamily = family),
+            );
+          },
+        ),
+        const SizedBox(height: 16),
+        LabeledObserver(
+          label: 'Font size',
+          builder: (context) {
+            return CustomSlider(
               min: 10,
               max: 400,
               valueLabel: '${settings.fontSize.floor().toString()} px',
               value: settings.fontSize,
-              onChanged: (value) => model.updateWeatherSettings(
-                settings.copyWith(fontSize: value.floorToDouble()),
-              ),
-            ),
-            const SizedBox(height: 16),
-            AlignmentControl(
-              label: 'Position',
+              onChanged: (value) => settings
+                  .update(() => settings.fontSize = value.floorToDouble()),
+            );
+          },
+        ),
+        const SizedBox(height: 16),
+        LabeledObserver(
+          label: 'Position',
+          builder: (context) {
+            return AlignmentControl(
               alignment: settings.alignment,
-              onChanged: (alignment) => model.updateWeatherSettings(
-                settings.copyWith(alignment: alignment),
-              ),
-            ),
-            const SizedBox(height: 16),
-            CustomDropdown<WeatherFormat>(
-              label: 'Format',
+              onChanged: (alignment) =>
+                  settings.update(() => settings.alignment = alignment),
+            );
+          },
+        ),
+        const SizedBox(height: 16),
+        LabeledObserver(
+          label: 'Format',
+          builder: (context) {
+            return CustomDropdown<WeatherFormat>(
               isExpanded: true,
               value: settings.format,
               items: WeatherFormat.values,
               itemBuilder: (context, item) => Text(item.label),
-              onSelected: (format) => model.updateWeatherSettings(
-                settings.copyWith(format: format),
-              ),
-            ),
-            const SizedBox(height: 16),
-            LocationAutoCompleteField(
+              onSelected: (format) =>
+                  settings.update(() => settings.format = format),
+            );
+          },
+        ),
+        const SizedBox(height: 16),
+        LabeledObserver(
+          label: 'Location (city)',
+          builder: (context) {
+            return LocationAutoCompleteField(
               key: ValueKey(settings.location),
-              label: 'Location (city)',
               location: settings.location,
               onChanged: (location) {
                 if (location.latitude == settings.location.latitude &&
                     location.longitude == settings.location.longitude) {
                   return;
                 }
-                model.updateWeatherSettings(
-                    settings.copyWith(location: location));
+                settings.update(() => settings.location = location);
               },
-            ),
-            const SizedBox(height: 16),
-            CustomDropdown<TemperatureUnit>(
-              label: 'Temperature unit',
+            );
+          },
+        ),
+        const SizedBox(height: 16),
+        LabeledObserver(
+          label: 'Temperature unit',
+          builder: (context) {
+            return CustomDropdown<TemperatureUnit>(
               isExpanded: true,
               value: settings.temperatureUnit,
               items: TemperatureUnit.values,
               itemBuilder: (context, item) => Text(item.label),
-              onSelected: (unit) => model.updateWeatherSettings(
-                settings.copyWith(temperatureUnit: unit),
-              ),
-            ),
-            const SizedBox(height: 16),
-          ],
-        );
-      },
+              onSelected: (unit) =>
+                  settings.update(() => settings.temperatureUnit = unit),
+            );
+          },
+        ),
+        const SizedBox(height: 16),
+      ],
     );
   }
 }
 
 class LocationAutoCompleteField extends StatefulWidget {
-  final String label;
+  final String? label;
   final Location location;
   final ValueChanged<Location> onChanged;
 
   const LocationAutoCompleteField({
     super.key,
-    required this.label,
+    this.label,
     required this.location,
     required this.onChanged,
   });
@@ -133,8 +148,10 @@ class _LocationAutoCompleteFieldState extends State<LocationAutoCompleteField> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(widget.label),
-        const SizedBox(height: 10),
+        if (widget.label != null) ...[
+          Text(widget.label!),
+          const SizedBox(height: 10),
+        ],
         Autocomplete<LocationResponse>(
           initialValue: TextEditingValue(
               text: '${widget.location.name}'

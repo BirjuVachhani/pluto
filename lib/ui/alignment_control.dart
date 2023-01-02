@@ -10,7 +10,7 @@ class AlignmentControl extends StatelessWidget {
 
   const AlignmentControl({
     super.key,
-    this.label = 'Alignment',
+    this.label,
     required this.alignment,
     required this.onChanged,
   });

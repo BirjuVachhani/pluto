@@ -6,8 +6,8 @@ import 'package:provider/provider.dart';
 import '../model/background_settings.dart';
 import '../ui/gesture_detector_with_cursor.dart';
 import '../utils/custom_observer.dart';
-import 'background_model.dart';
-import 'home.dart';
+import 'background_store.dart';
+import 'home_store.dart';
 
 class BottomBar extends StatelessWidget {
   const BottomBar({super.key});
@@ -153,7 +153,7 @@ class _SettingsButtonState extends State<SettingsButton>
         if (!store.initialized) return const SizedBox.shrink();
         return GestureDetectorWithCursor(
           onTap: () {
-            context.read<HomeModelBase>().showPanel();
+            context.read<HomeStore>().showPanel();
           },
           onEnter: (_) => controller.forward(),
           onExit: (_) => controller.reverse(),

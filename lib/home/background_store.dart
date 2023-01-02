@@ -25,7 +25,7 @@ import '../utils/storage_manager.dart';
 import '../utils/universal/universal.dart';
 import '../utils/utils.dart';
 
-part 'background_model.g.dart';
+part 'background_store.g.dart';
 
 /// Most important model of all. This model is responsible for the background
 /// of the home screen. It is responsible for loading the background image
@@ -34,8 +34,7 @@ part 'background_model.g.dart';
 // ignore: library_private_types_in_public_api
 class BackgroundStore = _BackgroundStore with _$BackgroundStore;
 
-abstract class _BackgroundStore
-    with Store, ChangeNotifier, LazyInitializationMixin {
+abstract class _BackgroundStore with Store, LazyInitializationMixin {
   late final LocalStorageManager storage =
       GetIt.instance.get<LocalStorageManager>();
 
@@ -626,10 +625,8 @@ abstract class _BackgroundStore
     }
   }
 
-  @override
   void dispose() {
     _debouncer.cancel();
-    super.dispose();
   }
 
   @action

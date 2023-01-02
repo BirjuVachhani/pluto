@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:screwdriver/screwdriver.dart';
 
-import '../home/background_model.dart';
+import '../home/background_store.dart';
 import '../model/background_settings.dart';
 import '../model/color_gradient.dart';
 import '../model/flat_color.dart';

@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DebugRender(
-      debugHighlightObserverRebuild: true,
+      debugHighlightObserverRebuild: false,
       child: MaterialApp(
         title: 'Pluto',
         debugShowCheckedModeBanner: false,

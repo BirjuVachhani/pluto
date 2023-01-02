@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'background_model.dart';
+part of 'background_store.dart';
 
 // **************************************************************************
 // StoreGenerator
