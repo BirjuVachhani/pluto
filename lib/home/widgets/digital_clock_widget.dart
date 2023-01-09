@@ -25,29 +25,35 @@ class DigitalClockWidget extends StatelessWidget {
         final double round = (20 + settings.fontSize) * 0.5;
         final String format =
             buildFormatString(settings.format, settings.separator.value);
-        return Align(
-          alignment: settings.alignment.flutterAlignment,
-          child: FittedBox(
-            child: DigitalClock(
-              padding: EdgeInsets.symmetric(
-                  horizontal: paddingHorizontal, vertical: paddingVertical),
-              decoration: BoxDecoration(
-                borderRadius: settings.borderType == BorderType.rounded
-                    ? BorderRadius.circular(round)
-                    : null,
-                border: settings.borderType != BorderType.none
-                    ? Border.all(
-                        color: backgroundStore.foregroundColor,
-                        width: borderWidth,
-                      )
-                    : null,
-              ),
-              format: format,
-              style: TextStyle(
-                fontSize: settings.fontSize,
-                letterSpacing: 4,
-                fontFamily: settings.fontFamily,
-                color: backgroundStore.foregroundColor,
+        return Padding(
+          padding:
+              EdgeInsets.all(settings.borderType == BorderType.none ? 0 : 48),
+          child: Align(
+            alignment: settings.alignment.flutterAlignment,
+            child: FittedBox(
+              child: DigitalClock(
+                padding: EdgeInsets.symmetric(
+                    horizontal: paddingHorizontal, vertical: paddingVertical),
+                decoration: ShapeDecoration(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: settings.borderType == BorderType.rounded
+                        ? BorderRadius.circular(round)
+                        : BorderRadius.zero,
+                    side: settings.borderType != BorderType.none
+                        ? BorderSide(
+                            color: backgroundStore.foregroundColor,
+                            width: borderWidth,
+                          )
+                        : BorderSide.none,
+                  ),
+                ),
+                format: format,
+                style: TextStyle(
+                  fontSize: settings.fontSize,
+                  letterSpacing: 4,
+                  fontFamily: settings.fontFamily,
+                  color: backgroundStore.foregroundColor,
+                ),
               ),
             ),
           ),

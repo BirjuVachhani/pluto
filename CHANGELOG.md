@@ -3,6 +3,7 @@
 - Improve label fonts.
 - Added option to create new collections from tags.
 - Add am/pm option for digital clock format.
+- Fix spacing for digital clock with border.
 
 # 0.3.0
 
