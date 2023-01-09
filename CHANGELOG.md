@@ -1,3 +1,8 @@
+# 0.3.1 [Unpublished]
+
+- Improve label fonts.
+- Added option to create new collections from tags.
+
 # 0.3.0
 
 - Performance improvements.
