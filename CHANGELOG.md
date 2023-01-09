@@ -2,6 +2,7 @@
 
 - Improve label fonts.
 - Added option to create new collections from tags.
+- Add am/pm option for digital clock format.
 
 # 0.3.0
 

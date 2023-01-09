@@ -23,6 +23,7 @@ enum BorderType { none, solid, rounded }
 
 enum ClockFormat {
   twelveHour('12 Hours'),
+  twelveHoursWithAmPm('12 Hours with AM / PM'),
   twentyFourHour('24 Hours');
 
   const ClockFormat(this.label);

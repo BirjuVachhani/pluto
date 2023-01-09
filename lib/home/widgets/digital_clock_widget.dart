@@ -24,7 +24,7 @@ class DigitalClockWidget extends StatelessWidget {
         final double paddingVertical = (20 + settings.fontSize) * 0.4;
         final double round = (20 + settings.fontSize) * 0.5;
         final String format =
-            '${settings.format == ClockFormat.twelveHour ? 'hh' : 'HH'}${settings.separator.value}mm';
+            buildFormatString(settings.format, settings.separator.value);
         return Align(
           alignment: settings.alignment.flutterAlignment,
           child: FittedBox(
@@ -54,5 +54,16 @@ class DigitalClockWidget extends StatelessWidget {
         );
       },
     );
+  }
+
+  String buildFormatString(ClockFormat format, String separator) {
+    switch (format) {
+      case ClockFormat.twelveHour:
+        return 'hh${separator}mm';
+      case ClockFormat.twelveHoursWithAmPm:
+        return 'hh${separator}mm a';
+      case ClockFormat.twentyFourHour:
+        return 'HH${separator}mm';
+    }
   }
 }

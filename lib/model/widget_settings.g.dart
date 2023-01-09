@@ -68,6 +68,7 @@ const _$AlignmentCEnumMap = {
 
 const _$ClockFormatEnumMap = {
   ClockFormat.twelveHour: 'twelveHour',
+  ClockFormat.twelveHoursWithAmPm: 'twelveHoursWithAmPm',
   ClockFormat.twentyFourHour: 'twentyFourHour',
 };
 
