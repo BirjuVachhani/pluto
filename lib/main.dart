@@ -4,7 +4,6 @@ import 'package:get_it/get_it.dart';
 
 import 'home/home.dart';
 import 'resources/colors.dart';
-import 'utils/extensions.dart';
 import 'utils/geocoding_service.dart';
 import 'utils/storage_manager.dart';
 import 'utils/weather_service.dart';
@@ -45,14 +44,17 @@ Future<void> initialize() async {
 
 ThemeData buildTheme(BuildContext context) {
   return ThemeData(
-    backgroundColor: Colors.black,
+    colorScheme: ColorScheme.fromSeed(
+      seedColor: CupertinoColors.systemBlue,
+      brightness: Brightness.dark,
+      primary: CupertinoColors.systemBlue,
+    ),
+    useMaterial3: true,
     scaffoldBackgroundColor: Colors.black,
-    canvasColor: Colors.black,
-    cardColor: Colors.black,
+    // canvasColor: Colors.black,
+    // cardColor: Colors.black,
     brightness: Brightness.dark,
     dividerColor: AppColors.borderColor,
-    primaryColor: CupertinoColors.systemBlue.color,
-    primarySwatch: CupertinoColors.systemBlue.toMaterialColor(),
     scrollbarTheme: ScrollbarThemeData(
       thickness: MaterialStateProperty.all(4),
       thumbVisibility: MaterialStateProperty.all(true),
@@ -74,29 +76,29 @@ ThemeData buildTheme(BuildContext context) {
       ),
     ),
     textTheme: const TextTheme(
-      headline1: TextStyle(
+      displayLarge: TextStyle(
         color: AppColors.textColor,
       ),
-      headline2: TextStyle(
+      displayMedium: TextStyle(
         color: AppColors.textColor,
       ),
-      headline3: TextStyle(
+      displaySmall: TextStyle(
         color: AppColors.textColor,
       ),
-      headline4: TextStyle(
+      headlineMedium: TextStyle(
         color: AppColors.textColor,
       ),
-      headline5: TextStyle(
+      headlineSmall: TextStyle(
         color: AppColors.textColor,
       ),
-      headline6: TextStyle(
+      titleLarge: TextStyle(
         color: AppColors.textColor,
       ),
-      bodyText1: TextStyle(
+      bodyLarge: TextStyle(
         fontWeight: FontWeight.w300,
         color: AppColors.textColor,
       ),
-      bodyText2: TextStyle(
+      bodyMedium: TextStyle(
         fontWeight: FontWeight.w300,
         color: AppColors.textColor,
       ),

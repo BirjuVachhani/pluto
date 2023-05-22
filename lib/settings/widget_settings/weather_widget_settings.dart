@@ -205,7 +205,7 @@ class _LocationAutoCompleteFieldState extends State<LocationAutoCompleteField> {
                           widthFactor: 1,
                           child: CupertinoActivityIndicator(
                             radius: 8,
-                            color: Theme.of(context).primaryColor,
+                            color: Theme.of(context).colorScheme.primary,
                           ),
                         )
                       : const SizedBox.shrink();
@@ -305,7 +305,7 @@ class _LocationAutoCompleteFieldState extends State<LocationAutoCompleteField> {
                                 Colors.grey.withOpacity(0.15)),
                             child: Container(
                               color: selected
-                                  ? Theme.of(context).primaryColor
+                                  ? Theme.of(context).colorScheme.primary
                                   : Colors.transparent,
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 12, vertical: 10),
@@ -338,7 +338,7 @@ class _LocationAutoCompleteFieldState extends State<LocationAutoCompleteField> {
                                           location.name,
                                           style: Theme.of(context)
                                               .textTheme
-                                              .bodyText1!
+                                              .bodyLarge!
                                               .copyWith(
                                                 fontWeight: FontWeight.w400,
                                                 fontSize: 14,
@@ -349,7 +349,7 @@ class _LocationAutoCompleteFieldState extends State<LocationAutoCompleteField> {
                                           getDescription(location),
                                           style: Theme.of(context)
                                               .textTheme
-                                              .bodyText1!
+                                              .bodyLarge!
                                               .copyWith(
                                                 fontWeight: FontWeight.w300,
                                                 color: selected

@@ -1625,7 +1625,7 @@ class CustomDropdownButtonState<T> extends State<CustomDropdownButton<T>>
   }
 
   TextStyle? get _textStyle =>
-      widget.style ?? Theme.of(context).textTheme.subtitle1;
+      widget.style ?? Theme.of(context).textTheme.titleMedium;
 
   Rect _getRect() {
     final TextDirection? textDirection = Directionality.maybeOf(context);
@@ -1740,7 +1740,7 @@ class CustomDropdownButtonState<T> extends State<CustomDropdownButton<T>>
   double get _denseButtonHeight {
     final double textScaleFactor = MediaQuery.of(context).textScaleFactor;
     final double fontSize = _textStyle!.fontSize ??
-        Theme.of(context).textTheme.subtitle1!.fontSize!;
+        Theme.of(context).textTheme.titleMedium!.fontSize!;
     final double scaledFontSize = textScaleFactor * fontSize;
     return math.max(
         scaledFontSize, math.max(widget.iconSize, _kDenseButtonHeight));
@@ -1776,7 +1776,7 @@ class CustomDropdownButtonState<T> extends State<CustomDropdownButton<T>>
     if (result == null) {
       // If there's no MediaQuery, then use the window aspect to determine
       // orientation.
-      final Size size = WidgetsBinding.instance.window.physicalSize;
+      final Size size = View.of(context).physicalSize;
       result = size.width > size.height
           ? Orientation.landscape
           : Orientation.portrait;
@@ -2245,6 +2245,7 @@ class CustomDropdownMenuItem<T> extends StatelessWidget {
               color: hovering && hoverTextColor != null
                   ? hoverTextColor
                   : textColor,
+              fontSize: 13,
             ),
         child: child!,
       ),

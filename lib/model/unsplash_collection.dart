@@ -117,7 +117,7 @@ class UnsplashTagsSource extends UnsplashRandomSource {
   String get suffix => '/?/$tags';
 
   @override
-  final UnsplashSourceType type = UnsplashSourceType.tags;
+  UnsplashSourceType get type => UnsplashSourceType.tags;
 
   const UnsplashTagsSource({
     required this.tags,

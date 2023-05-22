@@ -44,7 +44,7 @@ class CustomSlider extends StatelessWidget {
                   value: value,
                   min: min ?? 0,
                   max: max ?? 100,
-                  activeColor: Theme.of(context).primaryColor,
+                  activeColor: Theme.of(context).colorScheme.primary,
                   inactiveColor: Colors.white.withOpacity(0.1),
                   onChanged: onChanged,
                 ),

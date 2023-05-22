@@ -81,7 +81,7 @@ class _ResizableTextInputState extends State<ResizableTextInput> {
                 expands: true,
                 maxLines: null,
                 style:
-                    const TextStyle(fontWeight: FontWeight.w300, fontSize: 14),
+                    const TextStyle(fontWeight: FontWeight.w300, fontSize: 13),
                 decoration: InputDecoration(
                   isDense: true,
                   contentPadding:
@@ -91,7 +91,7 @@ class _ResizableTextInputState extends State<ResizableTextInput> {
                   fillColor: Colors.grey.withOpacity(0.05),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: Theme.of(context).primaryColor,
+                      color: Theme.of(context).colorScheme.primary,
                       width: 1,
                     ),
                     borderRadius: BorderRadius.circular(4),

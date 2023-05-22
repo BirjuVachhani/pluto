@@ -65,10 +65,12 @@ class _LikedBackgroundsDialogState extends State<LikedBackgroundsDialog> {
                       children: [
                         Text(
                           "Photos you've liked",
-                          style:
-                              Theme.of(context).textTheme.headline5!.copyWith(
-                                    fontWeight: FontWeight.w500,
-                                  ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall!
+                              .copyWith(
+                                fontWeight: FontWeight.w500,
+                              ),
                         ),
                         if (entries.isNotEmpty)
                           Text(
@@ -265,7 +267,7 @@ class _ItemState extends State<_Item> {
         _ItemOptionButton(
           onPressed: widget.onDownload,
           tooltip: 'Download',
-          color: Theme.of(context).primaryColor,
+          color: Theme.of(context).colorScheme.primary,
           icon: const Icon(Icons.download_rounded),
         ),
         const SizedBox(width: 14),
@@ -392,7 +394,7 @@ class _DownloadIndicator extends StatelessWidget {
   Color getIconColor(BuildContext context) {
     switch (downloadState) {
       case DownloadState.downloading:
-        return Theme.of(context).primaryColor;
+        return Theme.of(context).colorScheme.primary;
       case DownloadState.downloaded:
         return Colors.greenAccent.shade700;
       case DownloadState.failed:

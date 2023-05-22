@@ -55,9 +55,10 @@ class _ChangelogDialogState extends State<ChangelogDialog> {
                   Expanded(
                     child: Text(
                       "What's new in Pluto",
-                      style: Theme.of(context).textTheme.headline5!.copyWith(
-                            fontWeight: FontWeight.w500,
-                          ),
+                      style:
+                          Theme.of(context).textTheme.headlineSmall!.copyWith(
+                                fontWeight: FontWeight.w500,
+                              ),
                     ),
                   ),
                   Material(
@@ -85,7 +86,7 @@ class _ChangelogDialogState extends State<ChangelogDialog> {
                 child: Center(
                   child: Text(
                     error!,
-                    style: Theme.of(context).textTheme.bodyText1,
+                    style: Theme.of(context).textTheme.bodyLarge,
                   ),
                 ),
               ),
@@ -104,7 +105,7 @@ class _ChangelogDialogState extends State<ChangelogDialog> {
                       Container(
                         padding: const EdgeInsets.symmetric(
                             vertical: 8, horizontal: 12),
-                        color: Theme.of(context).primaryColor,
+                        color: Theme.of(context).colorScheme.primary,
                         child: Row(
                           children: [
                             Expanded(
@@ -133,9 +134,9 @@ class _ChangelogDialogState extends State<ChangelogDialog> {
                             child: Theme(
                               data: Theme.of(context).copyWith(
                                 textTheme: Theme.of(context).textTheme.copyWith(
-                                      bodyText2: Theme.of(context)
+                                      bodyMedium: Theme.of(context)
                                           .textTheme
-                                          .bodyText2!
+                                          .bodyMedium!
                                           .copyWith(
                                             fontSize: 14,
                                             fontWeight: FontWeight.w300,
@@ -163,7 +164,7 @@ class _ChangelogDialogState extends State<ChangelogDialog> {
                     builder: (context, hovering, child) => Text(
                       'View All Changelogs',
                       style: TextStyle(
-                        color: Theme.of(context).primaryColor,
+                        color: Theme.of(context).colorScheme.primary,
                         fontWeight: FontWeight.w400,
                         fontSize: 13,
                         decoration: hovering ? TextDecoration.underline : null,

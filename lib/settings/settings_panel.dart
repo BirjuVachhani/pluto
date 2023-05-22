@@ -102,7 +102,7 @@ class _SettingsPanelContentState extends State<SettingsPanelContent>
                       Expanded(
                         child: Text(
                           'Settings',
-                          style: Theme.of(context).textTheme.headline6,
+                          style: Theme.of(context).textTheme.titleMedium,
                         ),
                       ),
                       const MenuButton(),
@@ -129,7 +129,7 @@ class _SettingsPanelContentState extends State<SettingsPanelContent>
                       child: Divider(
                         height: 0.5,
                         thickness: 0.5,
-                        color: Theme.of(context).primaryColor,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
                     SizedBox(
@@ -137,7 +137,7 @@ class _SettingsPanelContentState extends State<SettingsPanelContent>
                       child: TabBar(
                         controller: store.tabController,
                         // unselectedLabelColor: Colors.black,
-                        labelColor: Theme.of(context).primaryColor,
+                        labelColor: Theme.of(context).colorScheme.primary,
                         isScrollable: true,
                         unselectedLabelColor: AppColors.textColor,
                         labelStyle: const TextStyle(
@@ -146,18 +146,20 @@ class _SettingsPanelContentState extends State<SettingsPanelContent>
                         padding: const EdgeInsets.symmetric(horizontal: 24),
                         labelPadding:
                             const EdgeInsets.symmetric(horizontal: 24),
+                        dividerColor: Colors.transparent,
+                        indicatorSize: TabBarIndicatorSize.tab,
                         indicator: BoxDecoration(
                           border: Border(
                             top: BorderSide(
-                              color: Theme.of(context).primaryColor,
+                              color: Theme.of(context).colorScheme.primary,
                               width: 0.5,
                             ),
                             left: BorderSide(
-                              color: Theme.of(context).primaryColor,
+                              color: Theme.of(context).colorScheme.primary,
                               width: 0.5,
                             ),
                             right: BorderSide(
-                              color: Theme.of(context).primaryColor,
+                              color: Theme.of(context).colorScheme.primary,
                               width: 0.5,
                             ),
                             bottom: const BorderSide(
@@ -247,7 +249,7 @@ class MenuButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Theme(
       data: Theme.of(context).copyWith(
-        hoverColor: Theme.of(context).primaryColor,
+        hoverColor: Theme.of(context).colorScheme.primary,
       ),
       child: Material(
         type: MaterialType.transparency,
@@ -258,7 +260,7 @@ class MenuButton extends StatelessWidget {
           dropdownDirection: DropdownDirection.left,
           dropdownOverButton: false,
           scrollbarThickness: 4,
-          focusColor: Theme.of(context).primaryColor,
+          focusColor: Theme.of(context).colorScheme.primary,
           dropdownElevation: 2,
           // dropdownPadding: EdgeInsets.zero,
           itemHeight: 32,
@@ -270,7 +272,7 @@ class MenuButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(6),
             color: AppColors.dropdownOverlayColor,
           ),
-          style: Theme.of(context).textTheme.bodyText1!.copyWith(
+          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                 fontWeight: FontWeight.w400,
                 height: 1,
               ),

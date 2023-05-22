@@ -88,7 +88,7 @@ class _BackgroundOptions extends StatelessWidget {
                 child: Icon(
                   Icons.lens_blur_rounded,
                   color: store.texture
-                      ? Theme.of(context).primaryColor
+                      ? Theme.of(context).colorScheme.primary
                       : AppColors.textColor.withOpacity(0.5),
                   size: 20,
                 ),
@@ -129,7 +129,7 @@ class _ImageBackgroundOptions extends StatelessWidget {
                 child: Icon(
                   Icons.brightness_medium_rounded,
                   color: store.invert
-                      ? Theme.of(context).primaryColor
+                      ? Theme.of(context).colorScheme.primary
                       : AppColors.textColor.withOpacity(0.5),
                   size: 20,
                 ),
@@ -219,7 +219,7 @@ class BackgroundModeSelector extends StatelessWidget {
         CupertinoTheme(
           data: CupertinoThemeData(
             brightness: Brightness.dark,
-            primaryColor: Theme.of(context).primaryColor,
+            primaryColor: Theme.of(context).colorScheme.primary,
             primaryContrastingColor: AppColors.settingsPanelBackgroundColor,
           ),
           child: CustomObserver(
@@ -425,7 +425,7 @@ class UnsplashSourceSettings extends StatelessWidget {
                   child: Icon(
                     Icons.add_circle_rounded,
                     size: 18,
-                    color: Theme.of(context).primaryColor,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 );
               },
@@ -549,7 +549,7 @@ class ResolutionHelpButton extends StatelessWidget {
         child: Icon(
           Icons.info_outline_rounded,
           size: 16,
-          color: Theme.of(context).primaryColor,
+          color: Theme.of(context).colorScheme.primary,
         ),
       ),
     );

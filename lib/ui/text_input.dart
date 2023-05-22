@@ -144,7 +144,7 @@ class _TextInputState extends State<TextInput> {
               fillColor: widget.fillColor ?? Colors.grey.withOpacity(0.05),
               focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(
-                  color: Theme.of(context).primaryColor,
+                  color: Theme.of(context).colorScheme.primary,
                   width: 1,
                 ),
                 borderRadius: BorderRadius.circular(4),
