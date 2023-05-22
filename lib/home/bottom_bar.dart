@@ -25,10 +25,10 @@ class BottomBar extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               const SizedBox(height: 16),
-              Row(
+              const Row(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
+                children: [
                   ChangeBackgroundButton(),
                   SizedBox(width: 24),
                   SettingsButton(),

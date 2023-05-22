@@ -106,12 +106,12 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: SizedBox.expand(
         child: Stack(
           fit: StackFit.expand,
           alignment: Alignment.center,
-          children: const [
+          children: [
             Positioned.fill(child: RepaintBoundary(child: HomeBackground())),
             Positioned.fill(child: RepaintBoundary(child: HomeWidget())),
             Align(alignment: Alignment.bottomCenter, child: BottomBar()),

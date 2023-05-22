@@ -31,9 +31,9 @@ class SettingsPanel extends StatelessWidget {
         if (!store.initialized || !store.isPanelVisible) {
           return const SizedBox.shrink();
         }
-        return Stack(
+        return const Stack(
           fit: StackFit.expand,
-          children: const [
+          children: [
             _BackgroundDismissible(),
             Positioned(
               top: 32,
@@ -412,8 +412,8 @@ class ResetDialog extends StatelessWidget {
                             borderRadius: BorderRadius.circular(4),
                             color: Colors.red.withOpacity(0.1),
                           ),
-                          child: Row(
-                            children: const [
+                          child: const Row(
+                            children: [
                               Icon(
                                 Icons.info_outline_rounded,
                                 color: Colors.red,

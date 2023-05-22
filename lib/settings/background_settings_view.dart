@@ -452,8 +452,8 @@ class UnsplashSourceSettings extends StatelessWidget {
           },
         ),
         const SizedBox(height: 16),
-        Row(
-          children: const [
+        const Row(
+          children: [
             Expanded(child: Text('Resolution')),
             ResolutionHelpButton(),
             SizedBox(width: 4),
