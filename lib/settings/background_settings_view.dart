@@ -494,7 +494,10 @@ class UnsplashSourceSettings extends StatelessWidget {
       BuildContext context, BackgroundStore store) async {
     final String? result = await showDialog<String>(
       context: context,
-      builder: (context) => NewCollectionDialog(store: store),
+      builder: (context) => Theme(
+        data: Theme.of(context),
+        child: NewCollectionDialog(store: store),
+      ),
     );
     if (result != null) {
       store.addNewCollection(

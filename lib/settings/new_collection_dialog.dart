@@ -172,28 +172,23 @@ class _NewCollectionDialogState extends State<NewCollectionDialog> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    ElevatedButton(
+                    TextButton(
                       onPressed: () => Navigator.pop(context),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.grey.shade900,
+                      style: TextButton.styleFrom(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 16,
-                        ),
+                            horizontal: 16, vertical: 16),
                       ),
                       child: const Text('Cancel'),
                     ),
                     const SizedBox(width: 12),
-                    ElevatedButton(
+                    FilledButton(
                       onPressed: isValid == true
                           ? () =>
                               Navigator.pop(context, _controller.text.trim())
                           : null,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 16,
-                        ),
+                            horizontal: 16, vertical: 16),
                       ),
                       child: const Text('Create'),
                     ),
