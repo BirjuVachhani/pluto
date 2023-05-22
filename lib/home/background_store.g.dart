@@ -145,16 +145,17 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
   late final _$_likedBackgroundsAtom =
       Atom(name: '_BackgroundStore._likedBackgrounds', context: context);
 
-  Map<String, LikedBackground> get likedBackgrounds {
+  ObservableMap<String, LikedBackground> get likedBackgrounds {
     _$_likedBackgroundsAtom.reportRead();
     return super._likedBackgrounds;
   }
 
   @override
-  Map<String, LikedBackground> get _likedBackgrounds => likedBackgrounds;
+  ObservableMap<String, LikedBackground> get _likedBackgrounds =>
+      likedBackgrounds;
 
   @override
-  set _likedBackgrounds(Map<String, LikedBackground> value) {
+  set _likedBackgrounds(ObservableMap<String, LikedBackground> value) {
     _$_likedBackgroundsAtom.reportWrite(value, super._likedBackgrounds, () {
       super._likedBackgrounds = value;
     });
@@ -379,16 +380,16 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
   late final _$_customSourcesAtom =
       Atom(name: '_BackgroundStore._customSources', context: context);
 
-  List<UnsplashSource> get customSources {
+  ObservableList<UnsplashSource> get customSources {
     _$_customSourcesAtom.reportRead();
     return super._customSources;
   }
 
   @override
-  List<UnsplashSource> get _customSources => customSources;
+  ObservableList<UnsplashSource> get _customSources => customSources;
 
   @override
-  set _customSources(List<UnsplashSource> value) {
+  set _customSources(ObservableList<UnsplashSource> value) {
     _$_customSourcesAtom.reportWrite(value, super._customSources, () {
       super._customSources = value;
     });

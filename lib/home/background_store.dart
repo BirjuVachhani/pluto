@@ -59,7 +59,8 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
   Background? _image2;
 
   @readonly
-  Map<String, LikedBackground> _likedBackgrounds = {};
+  ObservableMap<String, LikedBackground> _likedBackgrounds =
+      ObservableMap.of({});
 
   late Future initializationFuture;
 
@@ -100,7 +101,7 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
   ImageResolution _imageResolution = ImageResolution.auto;
 
   @readonly
-  List<UnsplashSource> _customSources = [];
+  ObservableList<UnsplashSource> _customSources = ObservableList.of([]);
 
   @computed
   bool get isLiked {
@@ -144,7 +145,7 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
     _unsplashSource = settings.unsplashSource;
     _imageRefreshRate = settings.imageRefreshRate;
     _imageResolution = settings.imageResolution;
-    _customSources = [...settings.customSources];
+    _customSources = ObservableList.of(settings.customSources);
 
     // load image last updated time
     _imageIndex = await storage.getInt(StorageKeys.imageIndex) ?? 0;
@@ -231,7 +232,7 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
       likedBackgrounds[key] = background;
     }
     log('Found ${likedBackgrounds.length} liked backgrounds');
-    _likedBackgrounds = likedBackgrounds;
+    _likedBackgrounds = ObservableMap.of(likedBackgrounds);
   }
 
   /// Responsible for fetching and caching the image other than the current
@@ -617,7 +618,6 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
     } else {
       _likedBackgrounds.remove(storageKey);
     }
-    _likedBackgrounds = _likedBackgrounds;
     if (_imageSource == ImageSource.userLikes && !liked) {
       await storage.clearKey(storageKey);
       await changeBackground();
@@ -643,8 +643,6 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
   @action
   void addNewCollection(UnsplashSource source, {bool setAsCurrent = false}) {
     _customSources.add(source);
-    // Self-assigned to trigger the observer.
-    _customSources = _customSources;
     if (setAsCurrent) {
       // This internally saves the changes to storage.
       setUnsplashSource(source);
@@ -667,7 +665,6 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
   @action
   Future<void> removeLikedPhoto(String key) async {
     _likedBackgrounds.remove(key);
-    _likedBackgrounds = _likedBackgrounds;
     await storage.clearKey(key);
   }
 }
