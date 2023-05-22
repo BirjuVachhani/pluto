@@ -12,6 +12,7 @@ pack:
   - $deps
   - $update_version
   - flutter build web --release --web-renderer html --csp
+  - cp LICENSE build/web
   - cd build && zip -r pluto.zip web
 app_icons: flutter pub run flutter_launcher_icons
 codegen: flutter pub run build_runner build --delete-conflicting-outputs
