@@ -3,8 +3,8 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
-import 'widget_store.dart';
 import 'package:provider/provider.dart';
 
 import '../model/background_settings.dart';
@@ -12,12 +12,16 @@ import '../resources/storage_keys.dart';
 import '../settings/changelog_dialog.dart';
 import '../settings/settings_panel.dart';
 import '../src/version.dart';
+import '../utils/custom_observer.dart';
 import '../utils/storage_manager.dart';
 import 'background_store.dart';
 import 'bottom_bar.dart';
 import 'home_background.dart';
 import 'home_store.dart';
 import 'home_widget.dart';
+import 'widget_store.dart';
+
+const bool isDevMode = String.fromEnvironment('MODE') == 'debug';
 
 class HomeWrapper extends StatelessWidget {
   const HomeWrapper({super.key});
@@ -106,16 +110,65 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: SizedBox.expand(
         child: Stack(
           fit: StackFit.expand,
           alignment: Alignment.center,
           children: [
-            Positioned.fill(child: RepaintBoundary(child: HomeBackground())),
-            Positioned.fill(child: RepaintBoundary(child: HomeWidget())),
-            Align(alignment: Alignment.bottomCenter, child: BottomBar()),
-            RepaintBoundary(child: SettingsPanel()),
+            const Positioned.fill(
+                child: RepaintBoundary(child: HomeBackground())),
+            const Positioned.fill(child: RepaintBoundary(child: HomeWidget())),
+            const Align(alignment: Alignment.bottomCenter, child: BottomBar()),
+            const RepaintBoundary(child: SettingsPanel()),
+            if (isDevMode)
+              Positioned(
+                top: 16,
+                right: 16,
+                child: CustomObserver(
+                  name: 'Image Index',
+                  builder: (context) {
+                    return Text(
+                      store.imageIndex.toString(),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
+                    );
+                  },
+                ),
+              ),
+            if (isDevMode)
+              Positioned(
+                top: 16,
+                left: 16,
+                child: CustomObserver(
+                  name: 'Image Time',
+                  builder: (context) {
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '0: ${DateFormat('dd/MM/yyyy hh:mm a').format(store.image1Time)}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          '1: ${DateFormat('dd/MM/yyyy hh:mm a').format(store.image2Time)}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
           ],
         ),
       ),

@@ -359,6 +359,42 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
     });
   }
 
+  late final _$_image1TimeAtom =
+      Atom(name: '_BackgroundStore._image1Time', context: context);
+
+  DateTime get image1Time {
+    _$_image1TimeAtom.reportRead();
+    return super._image1Time;
+  }
+
+  @override
+  DateTime get _image1Time => image1Time;
+
+  @override
+  set _image1Time(DateTime value) {
+    _$_image1TimeAtom.reportWrite(value, super._image1Time, () {
+      super._image1Time = value;
+    });
+  }
+
+  late final _$_image2TimeAtom =
+      Atom(name: '_BackgroundStore._image2Time', context: context);
+
+  DateTime get image2Time {
+    _$_image2TimeAtom.reportRead();
+    return super._image2Time;
+  }
+
+  @override
+  DateTime get _image2Time => image2Time;
+
+  @override
+  set _image2Time(DateTime value) {
+    _$_image2TimeAtom.reportWrite(value, super._image2Time, () {
+      super._image2Time = value;
+    });
+  }
+
   late final _$_imageResolutionAtom =
       Atom(name: '_BackgroundStore._imageResolution', context: context);
 

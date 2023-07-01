@@ -98,6 +98,12 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
   int _imageIndex = 0;
 
   @readonly
+  DateTime _image1Time = DateTime.now();
+
+  @readonly
+  DateTime _image2Time = DateTime.now();
+
+  @readonly
   ImageResolution _imageResolution = ImageResolution.auto;
 
   @readonly
@@ -149,6 +155,15 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
 
     // load image last updated time
     _imageIndex = await storage.getInt(StorageKeys.imageIndex) ?? 0;
+
+    _image1Time = await storage
+        .getInt('image1Time')
+        .then((value) => DateTime.fromMillisecondsSinceEpoch(value ?? 0));
+
+    _image2Time = await storage
+        .getInt('image2Time')
+        .then((value) => DateTime.fromMillisecondsSinceEpoch(value ?? 0));
+
     backgroundLastUpdated =
         await storage.getInt(StorageKeys.backgroundLastUpdated).then((value) {
       if (value == null) return DateTime.now();
@@ -175,6 +190,8 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
           if (result == null) return;
           _image1 = result;
           storage.setJson(StorageKeys.image1, result.toJson());
+          _image1Time = DateTime.now();
+          storage.setInt('image1Time', _image1Time.millisecondsSinceEpoch);
         });
       } else {
         // If images are cached, load them.
@@ -187,6 +204,8 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
           if (result == null) return;
           _image2 = result;
           storage.setJson(StorageKeys.image2, result.toJson());
+          _image2Time = DateTime.now();
+          storage.setInt('image2Time', _image2Time.millisecondsSinceEpoch);
         });
       } else {
         // If images are cached, load them.
@@ -215,6 +234,13 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
 
       _imageIndex = _imageIndex == 0 ? 1 : 0;
       storage.setInt(StorageKeys.imageIndex, _imageIndex);
+      if (_imageIndex == 0) {
+        _image1Time = DateTime.now();
+        storage.setInt('image1Time', _image1Time.millisecondsSinceEpoch);
+      } else {
+        _image2Time = DateTime.now();
+        storage.setInt('image2Time', _image2Time.millisecondsSinceEpoch);
+      }
     }
 
     _logNextBackgroundChange();
@@ -247,9 +273,13 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
       if (_imageIndex == 0) {
         _image2 = result;
         storage.setJson(StorageKeys.image2, result.toJson());
+        _image2Time = DateTime.now();
+        storage.setInt('image2Time', _image2Time.millisecondsSinceEpoch);
       } else {
         _image1 = result;
         storage.setJson(StorageKeys.image1, result.toJson());
+        _image1Time = DateTime.now();
+        storage.setInt('image1Time', _image1Time.millisecondsSinceEpoch);
       }
     });
   }
@@ -290,9 +320,13 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
       if (_imageIndex == 0) {
         _image1 = result;
         storage.setJson(StorageKeys.image1, result.toJson());
+        _image1Time = DateTime.now();
+        storage.setInt('image1Time', _image1Time.millisecondsSinceEpoch);
       } else {
         _image2 = result;
         storage.setJson(StorageKeys.image2, result.toJson());
+        _image2Time = DateTime.now();
+        storage.setInt('image2Time', _image2Time.millisecondsSinceEpoch);
       }
     });
     if (updateAll) {
@@ -304,9 +338,13 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
         if (_imageIndex == 0) {
           _image2 = result;
           storage.setJson(StorageKeys.image2, result.toJson());
+          _image2Time = DateTime.now();
+          storage.setInt('image2Time', _image2Time.millisecondsSinceEpoch);
         } else {
           _image1 = result;
           storage.setJson(StorageKeys.image1, result.toJson());
+          _image1Time = DateTime.now();
+          storage.setInt('image1Time', _image1Time.millisecondsSinceEpoch);
         }
       });
     }
@@ -525,17 +563,24 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
     backgroundLastUpdated = DateTime.now();
 
     // Update the background image.
-    storage.setInt(StorageKeys.backgroundLastUpdated,
+    await storage.setInt(StorageKeys.backgroundLastUpdated,
         backgroundLastUpdated.millisecondsSinceEpoch);
 
     // Toggle the image index.
     _imageIndex = _imageIndex == 0 ? 1 : 0;
     storage.setInt(StorageKeys.imageIndex, _imageIndex);
+    if (_imageIndex == 0) {
+      _image1Time = DateTime.now();
+      storage.setInt('image1Time', _image1Time.millisecondsSinceEpoch);
+    } else {
+      _image2Time = DateTime.now();
+      storage.setInt('image2Time', _image2Time.millisecondsSinceEpoch);
+    }
 
     // Log next background change time.
     _logNextBackgroundChange();
 
-    await _refetchAndCacheOtherImage();
+    _refetchAndCacheOtherImage();
   }
 
   Future<void> onDownload() async {
