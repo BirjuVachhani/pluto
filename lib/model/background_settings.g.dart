@@ -26,8 +26,8 @@ BackgroundSettings _$BackgroundSettingsFromJson(Map<String, dynamic> json) =>
           : UnsplashSource.fromJson(
               json['unsplashSource'] as Map<String, dynamic>),
       imageRefreshRate: $enumDecodeNullable(
-              _$ImageRefreshRateEnumMap, json['imageRefreshRate']) ??
-          ImageRefreshRate.never,
+              _$BackgroundRefreshRateEnumMap, json['imageRefreshRate']) ??
+          BackgroundRefreshRate.never,
       imageResolution: $enumDecodeNullable(
               _$ImageResolutionEnumMap, json['imageResolution']) ??
           ImageResolution.auto,
@@ -47,7 +47,8 @@ Map<String, dynamic> _$BackgroundSettingsToJson(BackgroundSettings instance) =>
       'invert': instance.invert,
       'source': _$ImageSourceEnumMap[instance.source]!,
       'unsplashSource': instance.unsplashSource,
-      'imageRefreshRate': _$ImageRefreshRateEnumMap[instance.imageRefreshRate]!,
+      'imageRefreshRate':
+          _$BackgroundRefreshRateEnumMap[instance.imageRefreshRate]!,
       'imageResolution': _$ImageResolutionEnumMap[instance.imageResolution]!,
       'greyScale': instance.greyScale,
       'customSources': instance.customSources,
@@ -65,16 +66,16 @@ const _$ImageSourceEnumMap = {
   ImageSource.userLikes: 'userLikes',
 };
 
-const _$ImageRefreshRateEnumMap = {
-  ImageRefreshRate.never: 'never',
-  ImageRefreshRate.newTab: 'newTab',
-  ImageRefreshRate.minute: 'minute',
-  ImageRefreshRate.fiveMinute: 'fiveMinute',
-  ImageRefreshRate.fifteenMinute: 'fifteenMinute',
-  ImageRefreshRate.thirtyMinute: 'thirtyMinute',
-  ImageRefreshRate.hour: 'hour',
-  ImageRefreshRate.daily: 'daily',
-  ImageRefreshRate.weekly: 'weekly',
+const _$BackgroundRefreshRateEnumMap = {
+  BackgroundRefreshRate.never: 'never',
+  BackgroundRefreshRate.newTab: 'newTab',
+  BackgroundRefreshRate.minute: 'minute',
+  BackgroundRefreshRate.fiveMinute: 'fiveMinute',
+  BackgroundRefreshRate.fifteenMinute: 'fifteenMinute',
+  BackgroundRefreshRate.thirtyMinute: 'thirtyMinute',
+  BackgroundRefreshRate.hour: 'hour',
+  BackgroundRefreshRate.daily: 'daily',
+  BackgroundRefreshRate.weekly: 'weekly',
 };
 
 const _$ImageResolutionEnumMap = {

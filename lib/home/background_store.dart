@@ -92,7 +92,7 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
   UnsplashSource _unsplashSource = UnsplashSources.curated;
 
   @readonly
-  ImageRefreshRate _imageRefreshRate = ImageRefreshRate.newTab;
+  BackgroundRefreshRate _backgroundRefreshRate = BackgroundRefreshRate.newTab;
 
   @readonly
   int _imageIndex = 0;
@@ -149,7 +149,7 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
     _greyScale = settings.greyScale;
     _imageSource = settings.source;
     _unsplashSource = settings.unsplashSource;
-    _imageRefreshRate = settings.imageRefreshRate;
+    _backgroundRefreshRate = settings.imageRefreshRate;
     _imageResolution = settings.imageResolution;
     _customSources = ObservableList.of(settings.customSources);
 
@@ -170,10 +170,51 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
       return DateTime.fromMillisecondsSinceEpoch(value);
     });
 
-    // Initialize image data
-    initializeImages();
-
     _initialized = true;
+
+    // Initialize image data
+    await initializeImages();
+
+    if (_backgroundRefreshRate == BackgroundRefreshRate.newTab) {
+      updateBackground();
+    }
+
+    _logNextBackgroundChange();
+  }
+
+  @action
+  void updateBackground() {
+    switch (_mode) {
+      case BackgroundMode.color:
+        final int index = Random().nextInt(FlatColors.colors.length);
+        _color = FlatColors.colors.values.elementAt(index);
+        _save();
+        break;
+      case BackgroundMode.gradient:
+        final int index = Random().nextInt(ColorGradients.gradients.length);
+        _gradient = ColorGradients.gradients.values.elementAt(index);
+        _save();
+        break;
+      case BackgroundMode.image:
+        // If the refresh rate is set to new tab, then we update the image index
+        // and schedule a new image fetch for the next time so we already have
+        // an image cached when the user opens a new tab again.
+        // Fetch new images
+        log('fetch new images for new tab type');
+        _refetchAndCacheOtherImage();
+        // toggle the index and save it.
+
+        _imageIndex = _imageIndex == 0 ? 1 : 0;
+        storage.setInt(StorageKeys.imageIndex, _imageIndex);
+        if (_imageIndex == 0) {
+          _image1Time = DateTime.now();
+          storage.setInt('image1Time', _image1Time.millisecondsSinceEpoch);
+        } else {
+          _image2Time = DateTime.now();
+          storage.setInt('image2Time', _image2Time.millisecondsSinceEpoch);
+        }
+        break;
+    }
   }
 
   /// Initializes images based on the current settings.
@@ -222,28 +263,6 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
     } else if (_imageSource == ImageSource.local) {
       // TODO: support local images | load local images
     }
-
-    if (_imageRefreshRate == ImageRefreshRate.newTab) {
-      // If the refresh rate is set to new tab, then we update the image index
-      // and schedule a new image fetch for the next time so we already have
-      // an image cached when the user opens a new tab again.
-      // Fetch new images
-      log('fetch new images for new tab type');
-      _refetchAndCacheOtherImage();
-      // toggle the index and save it.
-
-      _imageIndex = _imageIndex == 0 ? 1 : 0;
-      storage.setInt(StorageKeys.imageIndex, _imageIndex);
-      if (_imageIndex == 0) {
-        _image1Time = DateTime.now();
-        storage.setInt('image1Time', _image1Time.millisecondsSinceEpoch);
-      } else {
-        _image2Time = DateTime.now();
-        storage.setInt('image2Time', _image2Time.millisecondsSinceEpoch);
-      }
-    }
-
-    _logNextBackgroundChange();
   }
 
   /// Loads the liked backgrounds from the storage.
@@ -286,10 +305,10 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
 
   /// Logs the next background change time.
   void _logNextBackgroundChange() {
-    if (!_imageRefreshRate.requiresTimer) return;
+    if (!_backgroundRefreshRate.requiresTimer) return;
 
     final DateTime? nextUpdateTime =
-        _imageRefreshRate.nextUpdateTime(backgroundLastUpdated);
+        _backgroundRefreshRate.nextUpdateTime(backgroundLastUpdated);
     if (nextUpdateTime == null) return;
 
     // ignore: avoid_print
@@ -301,52 +320,66 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
   /// If [updateAll] is set then it will also update the other cached image.
   /// This is helpful when the user changes the source of the image.
   @action
-  Future<void> changeBackground({bool updateAll = false}) async {
+  Future<void> onChangeBackground({bool updateAll = false}) async {
     if (_isLoadingImage) return;
 
-    await _loadImageFromSource(showLoadingBackground: true).then((result) {
-      if (result == null) return;
+    switch (_mode) {
+      case BackgroundMode.color:
+        final index = Random().nextInt(FlatColors.colors.length);
+        _color = FlatColors.colors.values.elementAt(index);
+        _save();
+        break;
+      case BackgroundMode.gradient:
+        final index = Random().nextInt(ColorGradients.gradients.length);
+        _gradient = ColorGradients.gradients.values.elementAt(index);
+        _save();
+        break;
+      case BackgroundMode.image:
+        await _loadImageFromSource(showLoadingBackground: true).then((result) {
+          if (result == null) return;
 
-      // Update last updated time to current time.
-      backgroundLastUpdated = DateTime.now();
-      // save updated time to storage
-      storage.setInt(StorageKeys.backgroundLastUpdated,
-          backgroundLastUpdated.millisecondsSinceEpoch);
+          // Update last updated time to current time.
+          backgroundLastUpdated = DateTime.now();
+          // save updated time to storage
+          storage.setInt(StorageKeys.backgroundLastUpdated,
+              backgroundLastUpdated.millisecondsSinceEpoch);
 
-      // Log next background change time.
-      _logNextBackgroundChange();
+          // Log next background change time.
+          _logNextBackgroundChange();
 
-      // Update the current image and cache it.
-      if (_imageIndex == 0) {
-        _image1 = result;
-        storage.setJson(StorageKeys.image1, result.toJson());
-        _image1Time = DateTime.now();
-        storage.setInt('image1Time', _image1Time.millisecondsSinceEpoch);
-      } else {
-        _image2 = result;
-        storage.setJson(StorageKeys.image2, result.toJson());
-        _image2Time = DateTime.now();
-        storage.setInt('image2Time', _image2Time.millisecondsSinceEpoch);
-      }
-    });
-    if (updateAll) {
-      // Most probably the image source changed, so we need to update the other
-      // cached image as well.
-      await _loadImageFromSource().then((result) {
-        if (result == null) return;
-        // Update the other image(not current one) and cache it.
-        if (_imageIndex == 0) {
-          _image2 = result;
-          storage.setJson(StorageKeys.image2, result.toJson());
-          _image2Time = DateTime.now();
-          storage.setInt('image2Time', _image2Time.millisecondsSinceEpoch);
-        } else {
-          _image1 = result;
-          storage.setJson(StorageKeys.image1, result.toJson());
-          _image1Time = DateTime.now();
-          storage.setInt('image1Time', _image1Time.millisecondsSinceEpoch);
+          // Update the current image and cache it.
+          if (_imageIndex == 0) {
+            _image1 = result;
+            storage.setJson(StorageKeys.image1, result.toJson());
+            _image1Time = DateTime.now();
+            storage.setInt('image1Time', _image1Time.millisecondsSinceEpoch);
+          } else {
+            _image2 = result;
+            storage.setJson(StorageKeys.image2, result.toJson());
+            _image2Time = DateTime.now();
+            storage.setInt('image2Time', _image2Time.millisecondsSinceEpoch);
+          }
+        });
+        if (updateAll) {
+          // Most probably the image source changed, so we need to update the other
+          // cached image as well.
+          await _loadImageFromSource().then((result) {
+            if (result == null) return;
+            // Update the other image(not current one) and cache it.
+            if (_imageIndex == 0) {
+              _image2 = result;
+              storage.setJson(StorageKeys.image2, result.toJson());
+              _image2Time = DateTime.now();
+              storage.setInt('image2Time', _image2Time.millisecondsSinceEpoch);
+            } else {
+              _image1 = result;
+              storage.setJson(StorageKeys.image1, result.toJson());
+              _image1Time = DateTime.now();
+              storage.setInt('image1Time', _image1Time.millisecondsSinceEpoch);
+            }
+          });
         }
-      });
+        break;
     }
   }
 
@@ -361,7 +394,7 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
       texture: _texture,
       invert: _invert,
       greyScale: _greyScale,
-      imageRefreshRate: _imageRefreshRate,
+      imageRefreshRate: _backgroundRefreshRate,
       imageResolution: _imageResolution,
       unsplashSource: _unsplashSource,
       customSources: _customSources,
@@ -413,7 +446,7 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
     _imageSource = source;
     _save();
     // Update the current image to the new source.
-    changeBackground(updateAll: true);
+    onChangeBackground(updateAll: true);
   }
 
   @action
@@ -421,12 +454,12 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
     _unsplashSource = source;
     _save();
     // Update the current image to the new source.
-    changeBackground(updateAll: true);
+    onChangeBackground(updateAll: true);
   }
 
   @action
-  void setImageRefreshRate(ImageRefreshRate rate) {
-    _imageRefreshRate = rate;
+  void setImageRefreshRate(BackgroundRefreshRate rate) {
+    _backgroundRefreshRate = rate;
     _save();
   }
 
@@ -434,7 +467,7 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
   void setImageResolution(ImageResolution resolution) {
     _imageResolution = resolution;
     _save();
-    changeBackground(updateAll: true);
+    onChangeBackground(updateAll: true);
   }
 
   @action
@@ -542,21 +575,21 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
   /// Refreshes the background image on timer callback.
   @action
   Future<void> onTimerCallback() async {
-    if (!_imageRefreshRate.requiresTimer) return;
+    if (!_backgroundRefreshRate.requiresTimer) return;
 
     // log('Auto Background refresh has been triggered');
     // Exit if it is not time to change the background based on the user
     // settings.
-    if (_imageRefreshRate
+    if (_backgroundRefreshRate
             .nextUpdateTime(backgroundLastUpdated)!
             .isAfter(DateTime.now()) ||
         _isLoadingImage) {
       // Enable this to see the remaining time in console.
 
-      // final remainingTime = backgroundLastUpdated
-      //     .add(imageRefreshRate.duration)
-      //     .difference(DateTime.now());
-      // log('[DEBUG] Next background update in ${remainingTime.inSeconds} seconds');
+      final remainingTime = backgroundLastUpdated
+          .add(_backgroundRefreshRate.duration)
+          .difference(DateTime.now());
+      log('[DEBUG] Next background update in ${remainingTime.inSeconds} seconds');
       return;
     }
 
@@ -566,21 +599,10 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
     await storage.setInt(StorageKeys.backgroundLastUpdated,
         backgroundLastUpdated.millisecondsSinceEpoch);
 
-    // Toggle the image index.
-    _imageIndex = _imageIndex == 0 ? 1 : 0;
-    storage.setInt(StorageKeys.imageIndex, _imageIndex);
-    if (_imageIndex == 0) {
-      _image1Time = DateTime.now();
-      storage.setInt('image1Time', _image1Time.millisecondsSinceEpoch);
-    } else {
-      _image2Time = DateTime.now();
-      storage.setInt('image2Time', _image2Time.millisecondsSinceEpoch);
-    }
+    updateBackground();
 
     // Log next background change time.
     _logNextBackgroundChange();
-
-    _refetchAndCacheOtherImage();
   }
 
   Future<void> onDownload() async {
@@ -665,7 +687,7 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
     }
     if (_imageSource == ImageSource.userLikes && !liked) {
       await storage.clearKey(storageKey);
-      await changeBackground();
+      await onChangeBackground();
     } else {
       _debouncer.run(() async {
         log('Saving liked background $liked');

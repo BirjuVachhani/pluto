@@ -212,11 +212,10 @@ class _ChangeBackgroundButtonState extends State<ChangeBackgroundButton>
     return CustomObserver(
       name: 'ChangeBackgroundButton',
       builder: (context) {
-        if (!store.initialized || !store.mode.isImage) {
-          return const SizedBox.shrink();
-        }
+        if (!store.initialized) return const SizedBox.shrink();
+
         return GestureDetectorWithCursor(
-          onTap: !store.isLoadingImage ? store.changeBackground : null,
+          onTap: !store.isLoadingImage ? store.onChangeBackground : null,
           onEnter: (_) => controller.forward(),
           onExit: (_) => controller.reverse(),
           tooltip: 'Change Background',

@@ -48,6 +48,20 @@ class BackgroundSettingsView extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             LabeledObserver(
+              label: 'Auto Refresh Background',
+              builder: (context) {
+                return CustomDropdown<BackgroundRefreshRate>(
+                  value: store.backgroundRefreshRate,
+                  hint: 'Select duration',
+                  isExpanded: true,
+                  items: BackgroundRefreshRate.values,
+                  itemBuilder: (context, item) => Text(item.label),
+                  onSelected: (value) => store.setImageRefreshRate(value),
+                );
+              },
+            ),
+            const SizedBox(height: 16),
+            LabeledObserver(
               label: 'Tint',
               builder: (context) => CustomSlider(
                 value: store.tint,
@@ -96,6 +110,30 @@ class _BackgroundOptions extends StatelessWidget {
             );
           },
         ),
+        if (!store.mode.isImage) ...[
+          const SizedBox(width: 16),
+          CustomObserver(
+            name: 'Change Background',
+            builder: (context) {
+              return GestureDetectorWithCursor(
+                onTap: !store.isLoadingImage ? store.onChangeBackground : null,
+                tooltip: 'Change Background',
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: ImageIcon(
+                    AssetImage(store.isLoadingImage
+                        ? 'assets/images/ic_hourglass.png'
+                        : 'assets/images/ic_fan.png'),
+                    color: store.isLoadingImage
+                        ? Colors.grey.withOpacity(0.5)
+                        : AppColors.textColor.withOpacity(0.5),
+                    size: 20,
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
         CustomObserver(
           name: 'Image background options',
           builder: (context) {
@@ -142,7 +180,7 @@ class _ImageBackgroundOptions extends StatelessWidget {
           name: 'Change Background',
           builder: (context) {
             return GestureDetectorWithCursor(
-              onTap: !store.isLoadingImage ? store.changeBackground : null,
+              onTap: !store.isLoadingImage ? store.onChangeBackground : null,
               tooltip: 'Change Background',
               child: Padding(
                 padding: const EdgeInsets.all(8),
@@ -271,21 +309,6 @@ class ImageSettings extends StatelessWidget {
             }
           },
         ),
-        // const SizedBox(height: 16),
-        LabeledObserver(
-          label: 'Auto Refresh Background',
-          builder: (context) {
-            return CustomDropdown<ImageRefreshRate>(
-              value: store.imageRefreshRate,
-              hint: 'Select duration',
-              isExpanded: true,
-              items: ImageRefreshRate.values,
-              itemBuilder: (context, item) => Text(item.label),
-              onSelected: (value) => store.setImageRefreshRate(value),
-            );
-          },
-        ),
-        const SizedBox(height: 6),
         CustomObserver(
           name: 'B&W Filter',
           builder: (context) {
@@ -485,7 +508,7 @@ class UnsplashSourceSettings extends StatelessWidget {
             );
           },
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 8),
       ],
     );
   }

@@ -40,7 +40,7 @@ enum ImageSource {
   final String label;
 }
 
-enum ImageRefreshRate {
+enum BackgroundRefreshRate {
   never('Never', Duration(days: 365)),
   newTab('Every New Tab', Duration(days: 365)),
   minute('Every Minute', Duration(minutes: 1)),
@@ -51,13 +51,14 @@ enum ImageRefreshRate {
   daily('Every Day', Duration(days: 1)),
   weekly('Every Week', Duration(days: 7));
 
-  const ImageRefreshRate(this.label, this.duration);
+  const BackgroundRefreshRate(this.label, this.duration);
 
   final String label;
   final Duration duration;
 
   bool get requiresTimer =>
-      this != ImageRefreshRate.never && this != ImageRefreshRate.newTab;
+      this != BackgroundRefreshRate.never &&
+      this != BackgroundRefreshRate.newTab;
 }
 
 enum ImageResolution {
@@ -88,7 +89,7 @@ class BackgroundSettings with EquatableMixin {
   final bool invert;
   final ImageSource source;
   final UnsplashSource unsplashSource;
-  final ImageRefreshRate imageRefreshRate;
+  final BackgroundRefreshRate imageRefreshRate;
   final ImageResolution imageResolution;
   final bool greyScale;
   final List<UnsplashSource> customSources;
@@ -102,7 +103,7 @@ class BackgroundSettings with EquatableMixin {
     this.invert = false,
     this.source = ImageSource.unsplash,
     this.unsplashSource = UnsplashSources.curated,
-    this.imageRefreshRate = ImageRefreshRate.never,
+    this.imageRefreshRate = BackgroundRefreshRate.never,
     this.imageResolution = ImageResolution.auto,
     this.greyScale = false,
     List<UnsplashSource>? customSources,
@@ -133,7 +134,7 @@ class BackgroundSettings with EquatableMixin {
     bool? invert,
     ImageSource? source,
     UnsplashSource? unsplashSource,
-    ImageRefreshRate? imageRefreshRate,
+    BackgroundRefreshRate? imageRefreshRate,
     ImageResolution? imageResolution,
     bool? greyScale,
     List<UnsplashSource>? customSources,

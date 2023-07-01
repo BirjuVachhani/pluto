@@ -323,21 +323,22 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
     });
   }
 
-  late final _$_imageRefreshRateAtom =
-      Atom(name: '_BackgroundStore._imageRefreshRate', context: context);
+  late final _$_backgroundRefreshRateAtom =
+      Atom(name: '_BackgroundStore._backgroundRefreshRate', context: context);
 
-  ImageRefreshRate get imageRefreshRate {
-    _$_imageRefreshRateAtom.reportRead();
-    return super._imageRefreshRate;
+  BackgroundRefreshRate get backgroundRefreshRate {
+    _$_backgroundRefreshRateAtom.reportRead();
+    return super._backgroundRefreshRate;
   }
 
   @override
-  ImageRefreshRate get _imageRefreshRate => imageRefreshRate;
+  BackgroundRefreshRate get _backgroundRefreshRate => backgroundRefreshRate;
 
   @override
-  set _imageRefreshRate(ImageRefreshRate value) {
-    _$_imageRefreshRateAtom.reportWrite(value, super._imageRefreshRate, () {
-      super._imageRefreshRate = value;
+  set _backgroundRefreshRate(BackgroundRefreshRate value) {
+    _$_backgroundRefreshRateAtom
+        .reportWrite(value, super._backgroundRefreshRate, () {
+      super._backgroundRefreshRate = value;
     });
   }
 
@@ -449,13 +450,13 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
         .run(() => super._refetchAndCacheOtherImage());
   }
 
-  late final _$changeBackgroundAsyncAction =
-      AsyncAction('_BackgroundStore.changeBackground', context: context);
+  late final _$onChangeBackgroundAsyncAction =
+      AsyncAction('_BackgroundStore.onChangeBackground', context: context);
 
   @override
-  Future<void> changeBackground({bool updateAll = false}) {
-    return _$changeBackgroundAsyncAction
-        .run(() => super.changeBackground(updateAll: updateAll));
+  Future<void> onChangeBackground({bool updateAll = false}) {
+    return _$onChangeBackgroundAsyncAction
+        .run(() => super.onChangeBackground(updateAll: updateAll));
   }
 
   late final _$_loadImageFromSourceAsyncAction =
@@ -502,6 +503,17 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
 
   late final _$_BackgroundStoreActionController =
       ActionController(name: '_BackgroundStore', context: context);
+
+  @override
+  void updateBackground() {
+    final _$actionInfo = _$_BackgroundStoreActionController.startAction(
+        name: '_BackgroundStore.updateBackground');
+    try {
+      return super.updateBackground();
+    } finally {
+      _$_BackgroundStoreActionController.endAction(_$actionInfo);
+    }
+  }
 
   @override
   void setMode(BackgroundMode mode) {
@@ -592,7 +604,7 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
   }
 
   @override
-  void setImageRefreshRate(ImageRefreshRate rate) {
+  void setImageRefreshRate(BackgroundRefreshRate rate) {
     final _$actionInfo = _$_BackgroundStoreActionController.startAction(
         name: '_BackgroundStore.setImageRefreshRate');
     try {

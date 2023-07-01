@@ -143,7 +143,7 @@ extension TimerFormatExt on TimerFormat {
       this == TimerFormat.countdown;
 }
 
-extension ImageRefreshRateExt on ImageRefreshRate {
+extension ImageRefreshRateExt on BackgroundRefreshRate {
   /// Calculates the next refresh time for given refresh rate and
   /// last refresh time.
   /// For daily refresh rate, it will return the next day at 00:00:00.
@@ -151,19 +151,19 @@ extension ImageRefreshRateExt on ImageRefreshRate {
   /// at 00:00:00.
   DateTime? nextUpdateTime(DateTime lastRefresh) {
     switch (this) {
-      case ImageRefreshRate.never:
-      case ImageRefreshRate.newTab:
+      case BackgroundRefreshRate.never:
+      case BackgroundRefreshRate.newTab:
         return null;
-      case ImageRefreshRate.minute:
-      case ImageRefreshRate.fiveMinute:
-      case ImageRefreshRate.fifteenMinute:
-      case ImageRefreshRate.thirtyMinute:
-      case ImageRefreshRate.hour:
+      case BackgroundRefreshRate.minute:
+      case BackgroundRefreshRate.fiveMinute:
+      case BackgroundRefreshRate.fifteenMinute:
+      case BackgroundRefreshRate.thirtyMinute:
+      case BackgroundRefreshRate.hour:
         return lastRefresh.add(duration);
-      case ImageRefreshRate.daily:
+      case BackgroundRefreshRate.daily:
         // Reset at midnight: 00:00:00
         return lastRefresh.startOfDay.add(duration);
-      case ImageRefreshRate.weekly:
+      case BackgroundRefreshRate.weekly:
         final now = DateTime.now();
         // next monday
         final DateTime nextMonday =

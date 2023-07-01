@@ -70,7 +70,7 @@ class _HomeState extends State<Home> {
     store.initializationFuture.then((_) {
       listenToEvents();
       // Start the timer for auto background refresh only if required.
-      if (!store.imageRefreshRate.requiresTimer) return;
+      if (!store.backgroundRefreshRate.requiresTimer) return;
       startTimer();
     });
     _shouldShowChangelog();
@@ -78,13 +78,13 @@ class _HomeState extends State<Home> {
 
   void listenToEvents() {
     _disposer =
-        reaction((react) => store.imageRefreshRate, onRefreshRateChanged);
+        reaction((react) => store.backgroundRefreshRate, onRefreshRateChanged);
   }
 
-  /// Start and stop timer based on the current [ImageRefreshRate] when
+  /// Start and stop timer based on the current [BackgroundRefreshRate] when
   /// changed from settings panel. Doing this allows us to avoid unnecessary
   /// timer updates.
-  void onRefreshRateChanged(ImageRefreshRate refreshRate) {
+  void onRefreshRateChanged(BackgroundRefreshRate refreshRate) {
     if (refreshRate.requiresTimer) {
       startTimer();
     } else if (!refreshRate.requiresTimer) {

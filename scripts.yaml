@@ -1,4 +1,5 @@
 deps: flutter pub get
+format: dart format --fix .
 clean:
   - flutter clean
   - $deps
