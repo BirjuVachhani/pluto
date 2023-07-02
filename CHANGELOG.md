@@ -1,9 +1,11 @@
-# 0.3.1 [Unpublished]
+# 0.4.0
 
 - Improve label fonts.
 - Added option to create new collections from tags.
 - Add am/pm option for digital clock format.
 - Fix spacing for digital clock with border.
+- Add option to import/export settings.
+- Enable auto refresh for colors and gradients.
 
 # 0.3.0
 
