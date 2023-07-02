@@ -7,7 +7,7 @@ build:
   - $deps
   - $update_version
   - flutter build web --release --web-renderer html --csp --dart-define="MODE=debug"
-  - rm -rf extension
+  - rm -rf build/extension
   - mv build/web build/extension
 pack:
   - $deps
