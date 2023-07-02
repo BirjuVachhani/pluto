@@ -65,6 +65,37 @@ abstract class _WidgetStore with Store, LazyInitializationMixin {
   }
 
   @action
+  Future<void> reload() async {
+    type = await storage.getEnum<WidgetType>(
+            StorageKeys.widgetType, WidgetType.values) ??
+        WidgetType.digitalClock;
+
+    digitalClockSettings.setFrom(
+        await storage.getSerializableObject<DigitalClockWidgetSettings>(
+            StorageKeys.digitalClockSettings,
+            DigitalClockWidgetSettings.fromJson));
+
+    analogueClockSettings.setFrom(
+        await storage.getSerializableObject<AnalogClockWidgetSettings>(
+            StorageKeys.analogueClockSettings,
+            AnalogClockWidgetSettings.fromJson));
+
+    messageSettings.setFrom(
+        await storage.getSerializableObject<MessageWidgetSettings>(
+            StorageKeys.messageSettings, MessageWidgetSettings.fromJson));
+
+    timerSettings.setFrom(
+        await storage.getSerializableObject<TimerWidgetSettings>(
+            StorageKeys.timerSettings, TimerWidgetSettings.fromJson));
+
+    weatherSettings.setFrom(
+        await storage.getSerializableObject<WeatherWidgetSettings>(
+            StorageKeys.weatherSettings, WeatherWidgetSettings.fromJson));
+
+    initialized = true;
+  }
+
+  @action
   void setType(WidgetType type) {
     this.type = type;
     storage.setEnum(StorageKeys.widgetType, type);
@@ -115,16 +146,31 @@ abstract class _DigitalClockWidgetSettingsStore with Store {
   void update(VoidCallback callback, {bool save = true}) {
     callback();
     if (save) {
-      final settings = DigitalClockWidgetSettings(
-        fontSize: fontSize,
-        separator: separator,
-        borderType: borderType,
-        fontFamily: fontFamily,
-        alignment: alignment,
-        format: format,
-      );
+      final settings = getCurrentSettings();
       storage.setJson(StorageKeys.digitalClockSettings, settings.toJson());
     }
+  }
+
+  DigitalClockWidgetSettings getCurrentSettings() {
+    return DigitalClockWidgetSettings(
+      fontSize: fontSize,
+      separator: separator,
+      borderType: borderType,
+      fontFamily: fontFamily,
+      alignment: alignment,
+      format: format,
+    );
+  }
+
+  @action
+  void setFrom(DigitalClockWidgetSettings? settings) {
+    if (settings == null) return;
+    fontSize = settings.fontSize;
+    separator = settings.separator;
+    borderType = settings.borderType;
+    fontFamily = settings.fontFamily;
+    alignment = settings.alignment;
+    format = settings.format;
   }
 }
 
@@ -159,14 +205,27 @@ abstract class _AnalogClockWidgetSettingsStore with Store {
   void update(VoidCallback callback, {bool save = true}) {
     callback();
     if (save) {
-      final settings = AnalogClockWidgetSettings(
-        radius: radius,
-        showSecondsHand: showSecondsHand,
-        coloredSecondHand: coloredSecondHand,
-        alignment: alignment,
-      );
+      final settings = getCurrentSettings();
       storage.setJson(StorageKeys.analogueClockSettings, settings.toJson());
     }
+  }
+
+  AnalogClockWidgetSettings getCurrentSettings() {
+    return AnalogClockWidgetSettings(
+      radius: radius,
+      showSecondsHand: showSecondsHand,
+      coloredSecondHand: coloredSecondHand,
+      alignment: alignment,
+    );
+  }
+
+  @action
+  void setFrom(AnalogClockWidgetSettings? settings) {
+    if (settings == null) return;
+    radius = settings.radius;
+    showSecondsHand = settings.showSecondsHand;
+    coloredSecondHand = settings.coloredSecondHand;
+    alignment = settings.alignment;
   }
 }
 
@@ -200,14 +259,27 @@ abstract class _MessageWidgetSettingsStore with Store {
   void update(VoidCallback callback, {bool save = true}) {
     callback();
     if (save) {
-      final settings = MessageWidgetSettings(
-        fontSize: fontSize,
-        fontFamily: fontFamily,
-        message: message,
-        alignment: alignment,
-      );
+      final settings = getCurrentSettings();
       storage.setJson(StorageKeys.messageSettings, settings.toJson());
     }
+  }
+
+  MessageWidgetSettings getCurrentSettings() {
+    return MessageWidgetSettings(
+      fontSize: fontSize,
+      fontFamily: fontFamily,
+      message: message,
+      alignment: alignment,
+    );
+  }
+
+  @action
+  void setFrom(MessageWidgetSettings? settings) {
+    if (settings == null) return;
+    fontSize = settings.fontSize;
+    fontFamily = settings.fontFamily;
+    message = settings.message;
+    alignment = settings.alignment;
   }
 }
 
@@ -257,17 +329,33 @@ abstract class _TimerWidgetSettingsStore with Store {
   void update(VoidCallback callback, {bool save = true}) {
     callback();
     if (save) {
-      final settings = TimerWidgetSettings(
-        fontSize: fontSize,
-        fontFamily: fontFamily,
-        textBefore: textBefore,
-        textAfter: textAfter,
-        time: time,
-        alignment: alignment,
-        format: format,
-      );
+      final settings = getCurrentSettings();
       storage.setJson(StorageKeys.timerSettings, settings.toJson());
     }
+  }
+
+  TimerWidgetSettings getCurrentSettings() {
+    return TimerWidgetSettings(
+      fontSize: fontSize,
+      fontFamily: fontFamily,
+      textBefore: textBefore,
+      textAfter: textAfter,
+      time: time,
+      alignment: alignment,
+      format: format,
+    );
+  }
+
+  @action
+  void setFrom(TimerWidgetSettings? settings) {
+    if (settings == null) return;
+    fontSize = settings.fontSize;
+    fontFamily = settings.fontFamily;
+    textBefore = settings.textBefore;
+    textAfter = settings.textAfter;
+    time = settings.time;
+    alignment = settings.alignment;
+    format = settings.format;
   }
 }
 
@@ -307,15 +395,30 @@ abstract class _WeatherWidgetSettingsStore with Store {
   void update(VoidCallback callback, {bool save = true}) {
     callback();
     if (save) {
-      final settings = WeatherWidgetSettings(
-        fontSize: fontSize,
-        fontFamily: fontFamily,
-        alignment: alignment,
-        format: format,
-        temperatureUnit: temperatureUnit,
-        location: location,
-      );
+      final settings = getCurrentSettings();
       storage.setJson(StorageKeys.weatherSettings, settings.toJson());
     }
+  }
+
+  WeatherWidgetSettings getCurrentSettings() {
+    return WeatherWidgetSettings(
+      fontSize: fontSize,
+      fontFamily: fontFamily,
+      alignment: alignment,
+      format: format,
+      temperatureUnit: temperatureUnit,
+      location: location,
+    );
+  }
+
+  @action
+  void setFrom(WeatherWidgetSettings? settings) {
+    if (settings == null) return;
+    fontSize = settings.fontSize;
+    fontFamily = settings.fontFamily;
+    alignment = settings.alignment;
+    format = settings.format;
+    temperatureUnit = settings.temperatureUnit;
+    location = settings.location;
   }
 }

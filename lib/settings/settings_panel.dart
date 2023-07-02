@@ -8,6 +8,8 @@ import 'package:url_launcher/url_launcher.dart';
 import '../home/background_store.dart';
 import '../home/home_store.dart';
 import '../home/widget_store.dart';
+import '../model/background_settings.dart';
+import '../model/export_data.dart';
 import '../resources/colors.dart';
 import '../resources/storage_keys.dart';
 import '../utils/custom_observer.dart';
@@ -237,8 +239,10 @@ class MenuButton extends StatelessWidget {
   const MenuButton({super.key});
 
   static const Map<String, String> options = {
-    'changelog': "See what's new",
     'liked_backgrounds': 'View liked photos',
+    'import': 'Import Settings',
+    'export': 'Export Settings',
+    'changelog': "See what's new",
     'donate': 'Donate',
     'sponsor': 'Become a sponsor',
     'report': 'Report an issue',
@@ -325,6 +329,12 @@ class MenuButton extends StatelessWidget {
           ),
         );
         break;
+      case 'import':
+        onImportSettings(context);
+        break;
+      case 'export':
+        onExportSettings(context);
+        break;
       case 'report':
         launchUrl(Uri.parse(
             'https://github.com/birjuvachhani/pluto/issues/new/choose'));
@@ -348,6 +358,50 @@ class MenuButton extends StatelessWidget {
     homeStore.reset();
     backgroundStore.reset();
     widgetStore.reset();
+  }
+
+  Future<void> onExportSettings(BuildContext context) async {
+    final HomeStore homeStore = context.read<HomeStore>();
+    final BackgroundStore backgroundStore = context.read<BackgroundStore>();
+    final WidgetStore widgetStore = context.read<WidgetStore>();
+
+    final BackgroundSettings settings = backgroundStore.getCurrentSettings();
+    final createdAt = DateTime.now();
+    final ExportData exportData = ExportData(
+      settings: settings,
+      likedBackgrounds: {...backgroundStore.likedBackgrounds},
+      version: settingsVersion,
+      createdAt: createdAt,
+      image1: backgroundStore.image1,
+      image2: backgroundStore.image2,
+      image1Time: backgroundStore.image1Time,
+      image2Time: backgroundStore.image2Time,
+      imageIndex: backgroundStore.imageIndex,
+      widgetSettings: WidgetsExportData(
+        type: widgetStore.type,
+        analogClock: widgetStore.analogueClockSettings.getCurrentSettings(),
+        digitalClock: widgetStore.digitalClockSettings.getCurrentSettings(),
+        message: widgetStore.messageSettings.getCurrentSettings(),
+        timer: widgetStore.timerSettings.getCurrentSettings(),
+        weather: widgetStore.weatherSettings.getCurrentSettings(),
+      ),
+    );
+
+    await homeStore.onExportSettings(exportData);
+  }
+
+  Future<void> onImportSettings(BuildContext context) async {
+    final BackgroundStore backgroundStore = context.read<BackgroundStore>();
+    final HomeStore homeStore = context.read<HomeStore>();
+    final WidgetStore widgetStore = context.read<WidgetStore>();
+
+    final bool? imported = await homeStore.onImportSettings();
+
+    if (imported == true) {
+      homeStore.reset();
+      backgroundStore.reset(clear: false);
+      widgetStore.reload();
+    }
   }
 }
 

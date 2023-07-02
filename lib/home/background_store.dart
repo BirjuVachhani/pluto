@@ -27,6 +27,11 @@ import '../utils/utils.dart';
 
 part 'background_store.g.dart';
 
+/// Version of the settings. This is exported with settings and used to
+/// determine if the settings are compatible with the current version of the
+/// app.
+const int settingsVersion = 1;
+
 /// Most important model of all. This model is responsible for the background
 /// of the home screen. It is responsible for loading the background image
 /// from the internet, cache it, manage it, and for storing the settings of
@@ -384,8 +389,14 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
   }
 
   /// Saves the current settings to storage.
-  Future<bool> _save() {
-    final settings = BackgroundSettings(
+  Future<bool> _save([BackgroundSettings? settings]) {
+    settings ??= getCurrentSettings();
+    return storage.setJson(StorageKeys.backgroundSettings, settings.toJson());
+  }
+
+  /// Constructs [BackgroundSettings] from the current settings.
+  BackgroundSettings getCurrentSettings() {
+    return BackgroundSettings(
       mode: _mode,
       color: _color,
       gradient: _gradient,
@@ -399,7 +410,6 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
       unsplashSource: _unsplashSource,
       customSources: _customSources,
     );
-    return storage.setJson(StorageKeys.backgroundSettings, settings.toJson());
   }
 
   @action
@@ -702,10 +712,6 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
     }
   }
 
-  void dispose() {
-    _debouncer.cancel();
-  }
-
   /// Adds a custom unsplash collection to the list of collections.
   @action
   void addNewCollection(UnsplashSource source, {bool setAsCurrent = false}) {
@@ -720,10 +726,12 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
   }
 
   @action
-  Future<void> reset() async {
-    _likedBackgrounds.clear();
-    _image1 = null;
-    _image2 = null;
+  Future<void> reset({bool clear = true}) async {
+    if (clear) {
+      _likedBackgrounds.clear();
+      _image1 = null;
+      _image2 = null;
+    }
     _initialized = false;
     initializationFuture = init();
     await initializationFuture;
@@ -733,5 +741,9 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
   Future<void> removeLikedPhoto(String key) async {
     _likedBackgrounds.remove(key);
     await storage.clearKey(key);
+  }
+
+  void dispose() {
+    _debouncer.cancel();
   }
 }

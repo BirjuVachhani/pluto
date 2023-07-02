@@ -12,6 +12,8 @@ import '../resources/storage_keys.dart';
 import '../settings/changelog_dialog.dart';
 import '../settings/settings_panel.dart';
 import '../src/version.dart';
+import '../ui/message_banner/message_banner.dart';
+import '../ui/message_banner/message_view.dart';
 import '../utils/custom_observer.dart';
 import '../utils/storage_manager.dart';
 import 'background_store.dart';
@@ -55,7 +57,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  late final BackgroundStore store = context.read<BackgroundStore>();
+  late final BackgroundStore backgroundStore = context.read<BackgroundStore>();
+  late final HomeStore store = context.read<HomeStore>();
 
   late final LocalStorageManager storageManager =
       GetIt.instance.get<LocalStorageManager>();
@@ -67,18 +70,18 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    store.initializationFuture.then((_) {
+    backgroundStore.initializationFuture.then((_) {
       listenToEvents();
       // Start the timer for auto background refresh only if required.
-      if (!store.backgroundRefreshRate.requiresTimer) return;
+      if (!backgroundStore.backgroundRefreshRate.requiresTimer) return;
       startTimer();
     });
     _shouldShowChangelog();
   }
 
   void listenToEvents() {
-    _disposer =
-        reaction((react) => store.backgroundRefreshRate, onRefreshRateChanged);
+    _disposer = reaction(
+        (react) => backgroundStore.backgroundRefreshRate, onRefreshRateChanged);
   }
 
   /// Start and stop timer based on the current [BackgroundRefreshRate] when
@@ -96,8 +99,8 @@ class _HomeState extends State<Home> {
   void startTimer() {
     if (_timer != null) return;
     log('Starting timer for background refresh');
-    _timer = Timer.periodic(
-        const Duration(seconds: 1), (timer) => store.onTimerCallback());
+    _timer = Timer.periodic(const Duration(seconds: 1),
+        (timer) => backgroundStore.onTimerCallback());
   }
 
   /// Stop the timer for auto background refresh.
@@ -129,7 +132,7 @@ class _HomeState extends State<Home> {
                   name: 'Image Index',
                   builder: (context) {
                     return Text(
-                      store.imageIndex.toString(),
+                      backgroundStore.imageIndex.toString(),
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16,
@@ -150,7 +153,7 @@ class _HomeState extends State<Home> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '0: ${DateFormat('dd/MM/yyyy hh:mm a').format(store.image1Time)}',
+                          '0: ${DateFormat('dd/MM/yyyy hh:mm a').format(backgroundStore.image1Time)}',
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 12,
@@ -158,7 +161,7 @@ class _HomeState extends State<Home> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          '1: ${DateFormat('dd/MM/yyyy hh:mm a').format(store.image2Time)}',
+                          '1: ${DateFormat('dd/MM/yyyy hh:mm a').format(backgroundStore.image2Time)}',
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 12,
@@ -169,6 +172,21 @@ class _HomeState extends State<Home> {
                   },
                 ),
               ),
+            Positioned(
+              bottom: 48,
+              left: 0,
+              right: 0,
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: MessageBanner(
+                  controller: store.messageBannerController,
+                  maxLines: 1,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  bannerStyle: MessageBannerStyle.solid,
+                ),
+              ),
+            ),
           ],
         ),
       ),

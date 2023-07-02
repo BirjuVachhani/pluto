@@ -489,8 +489,8 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
       AsyncAction('_BackgroundStore.reset', context: context);
 
   @override
-  Future<void> reset() {
-    return _$resetAsyncAction.run(() => super.reset());
+  Future<void> reset({bool clear = true}) {
+    return _$resetAsyncAction.run(() => super.reset(clear: clear));
   }
 
   late final _$removeLikedPhotoAsyncAction =

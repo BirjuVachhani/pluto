@@ -40,6 +40,14 @@ mixin _$WidgetStore on _WidgetStore, Store {
     });
   }
 
+  late final _$reloadAsyncAction =
+      AsyncAction('_WidgetStore.reload', context: context);
+
+  @override
+  Future<void> reload() {
+    return _$reloadAsyncAction.run(() => super.reload());
+  }
+
   late final _$resetAsyncAction =
       AsyncAction('_WidgetStore.reset', context: context);
 
@@ -186,6 +194,18 @@ mixin _$DigitalClockWidgetSettingsStore
   }
 
   @override
+  void setFrom(DigitalClockWidgetSettings? settings) {
+    final _$actionInfo = _$_DigitalClockWidgetSettingsStoreActionController
+        .startAction(name: '_DigitalClockWidgetSettingsStore.setFrom');
+    try {
+      return super.setFrom(settings);
+    } finally {
+      _$_DigitalClockWidgetSettingsStoreActionController
+          .endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 fontSize: ${fontSize},
@@ -282,6 +302,17 @@ mixin _$AnalogClockWidgetSettingsStore
   }
 
   @override
+  void setFrom(AnalogClockWidgetSettings? settings) {
+    final _$actionInfo = _$_AnalogClockWidgetSettingsStoreActionController
+        .startAction(name: '_AnalogClockWidgetSettingsStore.setFrom');
+    try {
+      return super.setFrom(settings);
+    } finally {
+      _$_AnalogClockWidgetSettingsStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 radius: ${radius},
@@ -366,6 +397,17 @@ mixin _$MessageWidgetSettingsStore on _MessageWidgetSettingsStore, Store {
         .startAction(name: '_MessageWidgetSettingsStore.update');
     try {
       return super.update(callback, save: save);
+    } finally {
+      _$_MessageWidgetSettingsStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setFrom(MessageWidgetSettings? settings) {
+    final _$actionInfo = _$_MessageWidgetSettingsStoreActionController
+        .startAction(name: '_MessageWidgetSettingsStore.setFrom');
+    try {
+      return super.setFrom(settings);
     } finally {
       _$_MessageWidgetSettingsStoreActionController.endAction(_$actionInfo);
     }
@@ -510,6 +552,17 @@ mixin _$TimerWidgetSettingsStore on _TimerWidgetSettingsStore, Store {
   }
 
   @override
+  void setFrom(TimerWidgetSettings? settings) {
+    final _$actionInfo = _$_TimerWidgetSettingsStoreActionController
+        .startAction(name: '_TimerWidgetSettingsStore.setFrom');
+    try {
+      return super.setFrom(settings);
+    } finally {
+      _$_TimerWidgetSettingsStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 fontSize: ${fontSize},
@@ -629,6 +682,17 @@ mixin _$WeatherWidgetSettingsStore on _WeatherWidgetSettingsStore, Store {
         .startAction(name: '_WeatherWidgetSettingsStore.update');
     try {
       return super.update(callback, save: save);
+    } finally {
+      _$_WeatherWidgetSettingsStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setFrom(WeatherWidgetSettings? settings) {
+    final _$actionInfo = _$_WeatherWidgetSettingsStoreActionController
+        .startAction(name: '_WeatherWidgetSettingsStore.setFrom');
+    try {
+      return super.setFrom(settings);
     } finally {
       _$_WeatherWidgetSettingsStoreActionController.endAction(_$actionInfo);
     }
