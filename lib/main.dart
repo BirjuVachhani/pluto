@@ -95,11 +95,9 @@ ThemeData buildTheme(BuildContext context) {
         color: AppColors.textColor,
       ),
       bodyLarge: TextStyle(
-        fontWeight: FontWeight.w300,
         color: AppColors.textColor,
       ),
       bodyMedium: TextStyle(
-        fontWeight: FontWeight.w300,
         color: AppColors.textColor,
       ),
     ),
