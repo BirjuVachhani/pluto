@@ -110,30 +110,36 @@ class _BackgroundOptions extends StatelessWidget {
             );
           },
         ),
-        if (!store.mode.isImage) ...[
-          const SizedBox(width: 16),
-          CustomObserver(
-            name: 'Change Background',
-            builder: (context) {
-              return GestureDetectorWithCursor(
-                onTap: !store.isLoadingImage ? store.onChangeBackground : null,
-                tooltip: 'Change Background',
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: ImageIcon(
-                    AssetImage(store.isLoadingImage
-                        ? 'assets/images/ic_hourglass.png'
-                        : 'assets/images/ic_fan.png'),
-                    color: store.isLoadingImage
-                        ? Colors.grey.withOpacity(0.5)
-                        : AppColors.textColor.withOpacity(0.5),
-                    size: 20,
+        CustomObserver(
+          name: 'Change Background',
+          builder: (context) {
+            if (store.mode.isImage) return const SizedBox.shrink();
+
+            return Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(width: 16),
+                GestureDetectorWithCursor(
+                  onTap:
+                      !store.isLoadingImage ? store.onChangeBackground : null,
+                  tooltip: 'Change Background',
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: ImageIcon(
+                      AssetImage(store.isLoadingImage
+                          ? 'assets/images/ic_hourglass.png'
+                          : 'assets/images/ic_fan.png'),
+                      color: store.isLoadingImage
+                          ? Colors.grey.withOpacity(0.5)
+                          : AppColors.textColor.withOpacity(0.5),
+                      size: 20,
+                    ),
                   ),
                 ),
-              );
-            },
-          ),
-        ],
+              ],
+            );
+          },
+        ),
         CustomObserver(
           name: 'Image background options',
           builder: (context) {
