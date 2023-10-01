@@ -7,6 +7,7 @@ import '../ui/custom_dropdown.dart';
 import '../utils/custom_observer.dart';
 import 'widget_settings/analog_clock_widget_settings.dart';
 import 'widget_settings/digital_clock_widget_settings.dart';
+import 'widget_settings/digital_date_widget_settings.dart';
 import 'widget_settings/message_widget_settings.dart';
 import 'widget_settings/timer_widget_settings.dart';
 import 'widget_settings/weather_widget_settings.dart';
@@ -53,6 +54,8 @@ class WidgetSettings extends StatelessWidget {
                     return const TimerWidgetSettingsView();
                   case WidgetType.weather:
                     return const WeatherWidgetSettingsView();
+                  case WidgetType.digitalDate:
+                    return const DigitalDateWidgetSettingsView();
                 }
               },
             )

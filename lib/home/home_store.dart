@@ -207,6 +207,9 @@ abstract class _HomeStore with Store, LazyInitializationMixin {
 
     await storage.setJson(
         StorageKeys.weatherSettings, widgetSettings.weather.toJson());
+
+    await storage.setJson(
+        StorageKeys.digitalDateSettings, widgetSettings.digitalDate.toJson());    
   }
 
   void dispose() {

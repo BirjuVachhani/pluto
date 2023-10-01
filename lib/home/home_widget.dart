@@ -6,6 +6,7 @@ import '../utils/custom_observer.dart';
 import 'widget_store.dart';
 import 'widgets/analog_clock_widget.dart';
 import 'widgets/digital_clock_widget.dart';
+import 'widgets/digital_date_widget.dart';
 import 'widgets/message_widget.dart';
 import 'widgets/timer_widget.dart';
 import 'widgets/weather_widget.dart';
@@ -39,6 +40,8 @@ class HomeWidget extends StatelessWidget {
               latitude: latitude,
               longitude: longitude,
             );
+          case WidgetType.digitalDate:
+            return const DigitalDateWidget();
         }
       },
     );

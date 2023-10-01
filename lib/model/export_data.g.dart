@@ -55,6 +55,8 @@ WidgetsExportData _$WidgetsExportDataFromJson(Map<String, dynamic> json) =>
           json['message'] as Map<String, dynamic>),
       weather: WeatherWidgetSettings.fromJson(
           json['weather'] as Map<String, dynamic>),
+      digitalDate: DigitalDateWidgetSettings.fromJson(
+          json['digitalDate'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$WidgetsExportDataToJson(WidgetsExportData instance) =>
@@ -65,6 +67,7 @@ Map<String, dynamic> _$WidgetsExportDataToJson(WidgetsExportData instance) =>
       'timer': instance.timer,
       'message': instance.message,
       'weather': instance.weather,
+      'digitalDate': instance.digitalDate,
     };
 
 const _$WidgetTypeEnumMap = {
@@ -74,4 +77,5 @@ const _$WidgetTypeEnumMap = {
   WidgetType.text: 'text',
   WidgetType.timer: 'timer',
   WidgetType.weather: 'weather',
+  WidgetType.digitalDate: 'digitalDate',
 };

@@ -32,6 +32,7 @@ abstract class _WidgetStore with Store, LazyInitializationMixin {
   late MessageWidgetSettingsStore messageSettings;
   late TimerWidgetSettingsStore timerSettings;
   late WeatherWidgetSettingsStore weatherSettings;
+  late DigitalDateWidgetSettingsStore digitalDateSettings;
 
   @override
   Future<void> init() async {
@@ -60,6 +61,10 @@ abstract class _WidgetStore with Store, LazyInitializationMixin {
     weatherSettings = WeatherWidgetSettingsStore(
         await storage.getSerializableObject<WeatherWidgetSettings>(
             StorageKeys.weatherSettings, WeatherWidgetSettings.fromJson));
+
+    digitalDateSettings = DigitalDateWidgetSettingsStore(
+      await storage.getSerializableObject<DigitalDateWidgetSettings>(
+        StorageKeys.digitalDateSettings, DigitalDateWidgetSettings.fromJson));
 
     initialized = true;
   }
@@ -91,6 +96,11 @@ abstract class _WidgetStore with Store, LazyInitializationMixin {
     weatherSettings.setFrom(
         await storage.getSerializableObject<WeatherWidgetSettings>(
             StorageKeys.weatherSettings, WeatherWidgetSettings.fromJson));
+
+    digitalDateSettings.setFrom(
+        await storage.getSerializableObject<DigitalDateWidgetSettings>(
+            StorageKeys.digitalDateSettings,
+            DigitalDateWidgetSettings.fromJson));
 
     initialized = true;
   }
@@ -420,5 +430,71 @@ abstract class _WeatherWidgetSettingsStore with Store {
     format = settings.format;
     temperatureUnit = settings.temperatureUnit;
     location = settings.location;
+  }
+}
+
+
+class DigitalDateWidgetSettingsStore = _DigitalDateWidgetSettingsStore
+    with _$DigitalDateWidgetSettingsStore;
+
+abstract class _DigitalDateWidgetSettingsStore with Store {
+  final DigitalDateWidgetSettings defaultSettings =
+      const DigitalDateWidgetSettings();
+
+  late final LocalStorageManager storage =
+      GetIt.instance.get<LocalStorageManager>();
+
+  @observable
+  late double fontSize = defaultSettings.fontSize;
+  @observable
+  late DateSeparator separator = defaultSettings.separator;
+  @observable
+  late BorderType borderType = defaultSettings.borderType;
+  @observable
+  late String fontFamily = defaultSettings.fontFamily;
+  @observable
+  late AlignmentC alignment = defaultSettings.alignment;
+  @observable
+  late DateFormat format = defaultSettings.format;
+
+  _DigitalDateWidgetSettingsStore(DigitalDateWidgetSettings? settings) {
+    if (settings == null) return;
+    fontSize = settings.fontSize;
+    separator = settings.separator;
+    borderType = settings.borderType;
+    fontFamily = settings.fontFamily;
+    alignment = settings.alignment;
+    format = settings.format;
+  }
+
+  @action
+  void update(VoidCallback callback, {bool save = true}) {
+    callback();
+    if (save) {
+      final settings = getCurrentSettings();
+      storage.setJson(StorageKeys.digitalDateSettings, settings.toJson());
+    }
+  }
+
+  DigitalDateWidgetSettings getCurrentSettings() {
+    return DigitalDateWidgetSettings(
+      fontSize: fontSize,
+      separator: separator,
+      borderType: borderType,
+      fontFamily: fontFamily,
+      alignment: alignment,
+      format: format,
+    );
+  }
+
+  @action
+  void setFrom(DigitalDateWidgetSettings? settings) {
+    if (settings == null) return;
+    fontSize = settings.fontSize;
+    separator = settings.separator;
+    borderType = settings.borderType;
+    fontFamily = settings.fontFamily;
+    alignment = settings.alignment;
+    format = settings.format;
   }
 }

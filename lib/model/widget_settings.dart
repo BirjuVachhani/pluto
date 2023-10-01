@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
-
 import '../resources/fonts.dart';
 
 part 'widget_settings.g.dart';
@@ -11,7 +10,8 @@ enum WidgetType {
   analogClock('Analog Clock'),
   text('Message'),
   timer('Timer'),
-  weather('Weather');
+  weather('Weather'),
+  digitalDate('Digital Date');
   // calendar('Calendar');
 
   const WidgetType(this.label);
@@ -31,6 +31,14 @@ enum ClockFormat {
   final String label;
 }
 
+enum DateFormat {
+  dayMonthYear,
+  monthDayYear,
+  yearMonthDay,
+  special,
+  random,
+}
+
 enum Separator {
   nothing(''),
   dot('•'),
@@ -41,6 +49,15 @@ enum Separator {
 
   const Separator(this.value);
 
+  final String value;
+}
+
+enum DateSeparator {
+  dash('-'),
+  dot('•'),
+  slash('/');
+
+  const DateSeparator(this.value);
   final String value;
 }
 
@@ -82,6 +99,8 @@ abstract class BaseWidgetSettings with EquatableMixin {
         return TimerWidgetSettings.fromJson(json);
       case WidgetType.weather:
         return WeatherWidgetSettings.fromJson(json);
+      case WidgetType.digitalDate:
+        return DigitalDateWidgetSettings.fromJson(json);
     }
   }
 
@@ -458,4 +477,61 @@ class Location with EquatableMixin {
       _$LocationFromJson(json);
 
   Map<String, dynamic> toJson() => _$LocationToJson(this);
+}
+
+@JsonSerializable()
+class DigitalDateWidgetSettings extends BaseWidgetSettings {
+  final double fontSize;
+  final DateSeparator separator;
+  final BorderType borderType;
+  final String fontFamily;
+  final AlignmentC alignment;
+  final DateFormat format;
+
+  @override
+  final WidgetType type = WidgetType.digitalDate;
+
+  const DigitalDateWidgetSettings({
+    this.fontSize = 100,
+    this.separator = DateSeparator.slash,
+    this.borderType = BorderType.none,
+    this.fontFamily = FontFamilies.product,
+    this.alignment = AlignmentC.center,
+    this.format = DateFormat.dayMonthYear,
+  });
+
+  @override
+  List<Object?> get props => [
+        fontSize,
+        separator,
+        borderType,
+        fontFamily,
+        alignment,
+        format,
+        type,
+      ];
+
+  DigitalDateWidgetSettings copyWith({
+    double? fontSize,
+    DateSeparator? separator,
+    BorderType? borderType,
+    String? fontFamily,
+    AlignmentC? alignment,
+    DateFormat? format,
+  }) {
+    return DigitalDateWidgetSettings(
+      fontSize: fontSize ?? this.fontSize,
+      separator: separator ?? this.separator,
+      borderType: borderType ?? this.borderType,
+      fontFamily: fontFamily ?? this.fontFamily,
+      alignment: alignment ?? this.alignment,
+      format: format ?? this.format,
+    );
+  }
+
+  factory DigitalDateWidgetSettings.fromJson(Map<String, dynamic> json) =>
+      _$DigitalDateWidgetSettingsFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$DigitalDateWidgetSettingsToJson(this);
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' as timer;
 import 'package:provider/provider.dart';
 
 import '../../home/widget_store.dart';
@@ -97,11 +97,11 @@ class TimerWidgetSettingsView extends StatelessWidget {
                 textInputAction: TextInputAction.next,
                 inputFormatters: [MaskedInputFormatter('00/00/0000')],
                 hintText: 'dd/mm/yyyy',
-                initialValue: DateFormat('dd/MM/yyyy').format(settings.time),
+                initialValue: timer.DateFormat('dd/MM/yyyy').format(settings.time),
                 contentPadding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
                 onSubmitted: (value) {
                   if (value.isEmpty || value.length < 10) return false;
-                  final parsed = DateFormat('dd/MM/yyyy').parse(value);
+                  final parsed = timer.DateFormat('dd/MM/yyyy').parse(value);
                   settings.update(
                     () => settings.time = settings.time.copyWith(
                       day: parsed.day,
@@ -130,7 +130,7 @@ class TimerWidgetSettingsView extends StatelessWidget {
                   )
                 ],
                 hintText: 'hh:mm aa',
-                initialValue: DateFormat('hh:mm aa').format(settings.time),
+                initialValue: timer.DateFormat('hh:mm aa').format(settings.time),
                 onSubmitted: (value) {
                   if (value.isEmpty || value.length < 5) return false;
                   final tokens = value.split(':');

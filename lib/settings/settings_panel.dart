@@ -384,6 +384,7 @@ class MenuButton extends StatelessWidget {
         message: widgetStore.messageSettings.getCurrentSettings(),
         timer: widgetStore.timerSettings.getCurrentSettings(),
         weather: widgetStore.weatherSettings.getCurrentSettings(),
+        digitalDate: widgetStore.digitalDateSettings.getCurrentSettings(),
       ),
     );
 
