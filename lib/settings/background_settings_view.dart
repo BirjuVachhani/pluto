@@ -496,7 +496,8 @@ class UnsplashSourceSettings extends StatelessWidget {
               value: store.imageResolution,
               isExpanded: true,
               hint: 'Select a resolution',
-              items: ImageResolution.values,
+              items: ImageResolution.values
+                  .except([ImageResolution.original]).toList(),
               itemBuilder: (context, item) => Text.rich(
                 TextSpan(
                   children: [

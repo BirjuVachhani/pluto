@@ -16,6 +16,7 @@ import '../utils/custom_observer.dart';
 import '../utils/dropdown_button3.dart';
 import '../utils/storage_manager.dart';
 import 'about.dart';
+import 'adavanced_settings_dialog.dart';
 import 'background_settings_view.dart';
 import 'changelog_dialog.dart';
 import 'liked_backgrounds_dialog.dart';
@@ -242,6 +243,7 @@ class MenuButton extends StatelessWidget {
     'liked_backgrounds': 'View liked photos',
     'import': 'Import Settings',
     'export': 'Export Settings',
+    'advanced': 'Advanced Settings',
     'changelog': "See what's new",
     'donate': 'Donate',
     'sponsor': 'Become a sponsor',
@@ -310,7 +312,6 @@ class MenuButton extends StatelessWidget {
           barrierDismissible: true,
           builder: (context) => const ChangelogDialog(),
         );
-        break;
       case 'liked_backgrounds':
         showDialog(
           context: context,
@@ -319,7 +320,12 @@ class MenuButton extends StatelessWidget {
             store: context.read<BackgroundStore>(),
           ),
         );
-        break;
+      case 'advanced':
+        showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (context) => const AdvancedSettingsDialog(),
+        );
       case 'reset':
         showDialog(
           context: context,
@@ -328,23 +334,17 @@ class MenuButton extends StatelessWidget {
             onReset: () => onReset(context),
           ),
         );
-        break;
       case 'import':
         onImportSettings(context);
-        break;
       case 'export':
         onExportSettings(context);
-        break;
       case 'report':
         launchUrl(Uri.parse(
             'https://github.com/birjuvachhani/pluto/issues/new/choose'));
-        break;
       case 'donate':
         launchUrl(Uri.parse('https://www.buymeacoffee.com/birjuvachhani'));
-        break;
       case 'sponsor':
         launchUrl(Uri.parse('https://github.com/sponsors/BirjuVachhani'));
-        break;
     }
   }
 

@@ -84,6 +84,7 @@ extension ImageResolutionExt on ImageResolution {
   Size? toSize() {
     switch (this) {
       case ImageResolution.auto:
+      case ImageResolution.original:
         return null;
       case ImageResolution.hd:
         return const Size(1280, 720);

@@ -1,9 +1,11 @@
 import 'dart:ui';
 
+import '../model/background_settings.dart';
 import '../model/color_gradient.dart';
 import '../model/flat_color.dart';
 import '../resources/color_gradients.dart';
 import '../resources/flat_colors.dart';
+import 'extensions.dart';
 
 /// Finds a [ColorGradient] by its [name] from the [ColorGradients] list.
 ColorGradient? findGradientByName(String name) =>
@@ -65,4 +67,31 @@ ColorFilter greyscale([double value = 1]) {
     value,
     0,
   ]);
+}
+
+Uri applyResolutionOnUrl(String url, ImageResolution? resolution) {
+  final Size? size =
+      resolution == ImageResolution.original ? null : resolution?.toSize();
+
+  final uri = Uri.parse(url);
+  if (resolution == ImageResolution.original) {
+    return Uri(
+      scheme: uri.scheme,
+      host: uri.host,
+      path: uri.path,
+    );
+  }
+  return Uri(
+    scheme: uri.scheme,
+    host: uri.host,
+    path: uri.path,
+    queryParameters: {
+      ...uri.queryParameters,
+      if (size != null) ...{
+        'q': '100',
+        'w': size.width.toStringAsFixed(0),
+        'h': size.height.toStringAsFixed(0),
+      },
+    },
+  );
 }

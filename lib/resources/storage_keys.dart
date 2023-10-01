@@ -17,6 +17,7 @@ class StorageKeys {
   static const String liked = 'liked';
   static const String version = 'version';
   static const String imageIndex = 'image_index';
+  static const String imageDownloadQuality = 'image_download_quality';
 
   static String likedBackground(String id) => 'liked:$id';
 }
