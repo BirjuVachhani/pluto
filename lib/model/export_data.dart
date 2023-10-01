@@ -51,6 +51,7 @@ class WidgetsExportData with SerializableMixin {
   final TimerWidgetSettings timer;
   final MessageWidgetSettings message;
   final WeatherWidgetSettings weather;
+  final DigitalDateWidgetSettings digitalDate;
 
   WidgetsExportData({
     required this.type,
@@ -59,6 +60,7 @@ class WidgetsExportData with SerializableMixin {
     required this.timer,
     required this.message,
     required this.weather,
+    required this.digitalDate,
   });
 
   factory WidgetsExportData.fromJson(JsonMap json) =>

@@ -204,3 +204,45 @@ Map<String, dynamic> _$LocationToJson(Location instance) => <String, dynamic>{
       'country': instance.country,
       'countryCode': instance.countryCode,
     };
+
+DigitalDateWidgetSettings _$DigitalDateWidgetSettingsFromJson(
+        Map<String, dynamic> json) =>
+    DigitalDateWidgetSettings(
+      fontSize: (json['fontSize'] as num?)?.toDouble() ?? 100,
+      separator:
+          $enumDecodeNullable(_$DateSeparatorEnumMap, json['separator']) ??
+              DateSeparator.slash,
+      borderType:
+          $enumDecodeNullable(_$BorderTypeEnumMap, json['borderType']) ??
+              BorderType.none,
+      fontFamily: json['fontFamily'] as String? ?? FontFamilies.product,
+      alignment: $enumDecodeNullable(_$AlignmentCEnumMap, json['alignment']) ??
+          AlignmentC.center,
+      format: $enumDecodeNullable(_$DateFormatEnumMap, json['format']) ??
+          DateFormat.dayMonthYear,
+    );
+
+Map<String, dynamic> _$DigitalDateWidgetSettingsToJson(
+        DigitalDateWidgetSettings instance) =>
+    <String, dynamic>{
+      'fontSize': instance.fontSize,
+      'separator': _$DateSeparatorEnumMap[instance.separator]!,
+      'borderType': _$BorderTypeEnumMap[instance.borderType]!,
+      'fontFamily': instance.fontFamily,
+      'alignment': _$AlignmentCEnumMap[instance.alignment]!,
+      'format': _$DateFormatEnumMap[instance.format]!,
+    };
+
+const _$DateSeparatorEnumMap = {
+  DateSeparator.dash: 'dash',
+  DateSeparator.dot: 'dot',
+  DateSeparator.slash: 'slash',
+};
+
+const _$DateFormatEnumMap = {
+  DateFormat.dayMonthYear: 'dayMonthYear',
+  DateFormat.monthDayYear: 'monthDayYear',
+  DateFormat.yearMonthDay: 'yearMonthDay',
+  DateFormat.special: 'special',
+  DateFormat.random: 'random',
+};

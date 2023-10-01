@@ -4,6 +4,7 @@ class StorageKeys {
   static const String backgroundSettings = 'background_settings';
   static const String widgetSettings = 'widget_settings';
   static const String digitalClockSettings = 'digital_clock_settings';
+   static const String digitalDateSettings = 'digital_date_settings';
   static const String analogueClockSettings = 'analogue_clock_settings';
   static const String messageSettings = 'message_settings';
   static const String timerSettings = 'timer_settings';

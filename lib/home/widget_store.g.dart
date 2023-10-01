@@ -710,3 +710,140 @@ location: ${location}
     ''';
   }
 }
+
+mixin _$DigitalDateWidgetSettingsStore
+    on _DigitalDateWidgetSettingsStore, Store {
+  late final _$fontSizeAtom =
+      Atom(name: '_DigitalDateWidgetSettingsStore.fontSize', context: context);
+
+  @override
+  double get fontSize {
+    _$fontSizeAtom.reportRead();
+    return super.fontSize;
+  }
+
+  @override
+  set fontSize(double value) {
+    _$fontSizeAtom.reportWrite(value, super.fontSize, () {
+      super.fontSize = value;
+    });
+  }
+
+  late final _$separatorAtom =
+      Atom(name: '_DigitalDateWidgetSettingsStore.separator', context: context);
+
+  @override
+  DateSeparator get separator {
+    _$separatorAtom.reportRead();
+    return super.separator;
+  }
+
+  @override
+  set separator(DateSeparator value) {
+    _$separatorAtom.reportWrite(value, super.separator, () {
+      super.separator = value;
+    });
+  }
+
+  late final _$borderTypeAtom = Atom(
+      name: '_DigitalDateWidgetSettingsStore.borderType', context: context);
+
+  @override
+  BorderType get borderType {
+    _$borderTypeAtom.reportRead();
+    return super.borderType;
+  }
+
+  @override
+  set borderType(BorderType value) {
+    _$borderTypeAtom.reportWrite(value, super.borderType, () {
+      super.borderType = value;
+    });
+  }
+
+  late final _$fontFamilyAtom = Atom(
+      name: '_DigitalDateWidgetSettingsStore.fontFamily', context: context);
+
+  @override
+  String get fontFamily {
+    _$fontFamilyAtom.reportRead();
+    return super.fontFamily;
+  }
+
+  @override
+  set fontFamily(String value) {
+    _$fontFamilyAtom.reportWrite(value, super.fontFamily, () {
+      super.fontFamily = value;
+    });
+  }
+
+  late final _$alignmentAtom =
+      Atom(name: '_DigitalDateWidgetSettingsStore.alignment', context: context);
+
+  @override
+  AlignmentC get alignment {
+    _$alignmentAtom.reportRead();
+    return super.alignment;
+  }
+
+  @override
+  set alignment(AlignmentC value) {
+    _$alignmentAtom.reportWrite(value, super.alignment, () {
+      super.alignment = value;
+    });
+  }
+
+  late final _$formatAtom =
+      Atom(name: '_DigitalDateWidgetSettingsStore.format', context: context);
+
+  @override
+  DateFormat get format {
+    _$formatAtom.reportRead();
+    return super.format;
+  }
+
+  @override
+  set format(DateFormat value) {
+    _$formatAtom.reportWrite(value, super.format, () {
+      super.format = value;
+    });
+  }
+
+  late final _$_DigitalDateWidgetSettingsStoreActionController =
+      ActionController(
+          name: '_DigitalDateWidgetSettingsStore', context: context);
+
+  @override
+  void update(VoidCallback callback, {bool save = true}) {
+    final _$actionInfo = _$_DigitalDateWidgetSettingsStoreActionController
+        .startAction(name: '_DigitalDateWidgetSettingsStore.update');
+    try {
+      return super.update(callback, save: save);
+    } finally {
+      _$_DigitalDateWidgetSettingsStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setFrom(DigitalDateWidgetSettings? settings) {
+    final _$actionInfo = _$_DigitalDateWidgetSettingsStoreActionController
+        .startAction(name: '_DigitalDateWidgetSettingsStore.setFrom');
+    try {
+      return super.setFrom(settings);
+    } finally {
+      _$_DigitalDateWidgetSettingsStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  String toString() {
+    return '''
+fontSize: ${fontSize},
+separator: ${separator},
+borderType: ${borderType},
+fontFamily: ${fontFamily},
+alignment: ${alignment},
+format: ${format}
+    ''';
+  }
+}
