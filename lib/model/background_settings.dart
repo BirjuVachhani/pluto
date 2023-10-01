@@ -63,6 +63,7 @@ enum BackgroundRefreshRate {
 
 enum ImageResolution {
   auto('Auto'),
+  original('Original'),
   hd('HD'),
   fullHd('FHD'),
   quadHD('2K'),

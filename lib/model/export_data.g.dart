@@ -26,6 +26,9 @@ ExportData _$ExportDataFromJson(Map<String, dynamic> json) => ExportData(
       image2Time: dateTimeFromJson(json['image2Time'] as int),
       widgetSettings: WidgetsExportData.fromJson(
           json['widgetSettings'] as Map<String, dynamic>),
+      imageDownloadQuality: $enumDecodeNullable(
+              _$ImageResolutionEnumMap, json['imageDownloadQuality']) ??
+          ImageResolution.auto,
     );
 
 Map<String, dynamic> _$ExportDataToJson(ExportData instance) =>
@@ -40,7 +43,20 @@ Map<String, dynamic> _$ExportDataToJson(ExportData instance) =>
       'image2Time': dateTimeToJson(instance.image2Time),
       'version': instance.version,
       'widgetSettings': instance.widgetSettings,
+      'imageDownloadQuality':
+          _$ImageResolutionEnumMap[instance.imageDownloadQuality]!,
     };
+
+const _$ImageResolutionEnumMap = {
+  ImageResolution.auto: 'auto',
+  ImageResolution.original: 'original',
+  ImageResolution.hd: 'hd',
+  ImageResolution.fullHd: 'fullHd',
+  ImageResolution.quadHD: 'quadHD',
+  ImageResolution.ultraHD: 'ultraHD',
+  ImageResolution.fiveK: 'fiveK',
+  ImageResolution.eightK: 'eightK',
+};
 
 WidgetsExportData _$WidgetsExportDataFromJson(Map<String, dynamic> json) =>
     WidgetsExportData(

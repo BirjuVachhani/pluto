@@ -80,6 +80,7 @@ const _$BackgroundRefreshRateEnumMap = {
 
 const _$ImageResolutionEnumMap = {
   ImageResolution.auto: 'auto',
+  ImageResolution.original: 'original',
   ImageResolution.hd: 'hd',
   ImageResolution.fullHd: 'fullHd',
   ImageResolution.quadHD: 'quadHD',

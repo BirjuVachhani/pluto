@@ -21,6 +21,7 @@ class ExportData with SerializableMixin {
   final DateTime image2Time;
   final int version;
   final WidgetsExportData widgetSettings;
+  final ImageResolution imageDownloadQuality;
 
   ExportData({
     required this.settings,
@@ -33,6 +34,7 @@ class ExportData with SerializableMixin {
     required this.image1Time,
     required this.image2Time,
     required this.widgetSettings,
+    this.imageDownloadQuality = ImageResolution.auto,
   });
 
   @override

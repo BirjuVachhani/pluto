@@ -622,8 +622,17 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
     final fileName =
         'background_${DateTime.now().millisecondsSinceEpoch ~/ 1000}.jpg';
 
+    final resolution = await storage.getEnum(
+        StorageKeys.imageDownloadQuality, ImageResolution.values);
+
+    Uri uri = applyResolutionOnUrl(image.url, resolution);
+
+    final response = await http.get(uri);
+    final imageBytes =
+        response.statusCode == 200 ? response.bodyBytes : image.bytes;
+
     if (kIsWeb) {
-      return downloadImage(image.bytes, fileName);
+      return downloadImage(imageBytes, fileName);
     }
 
     /// Show native save file dialog on desktop.
@@ -634,7 +643,7 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
     );
     if (path == null) return;
 
-    downloadImage(image.bytes, path);
+    downloadImage(imageBytes, path);
   }
 
   Future<void> onOpenImage([BackgroundBase? image]) async {
@@ -646,21 +655,12 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
       return;
     }
 
-    Uri uri = Uri.parse(image.url);
-    final updatedUri = uri;
-    // TODO: enable this for high quality images.
-    // final updatedUri = Uri(
-    //   scheme: uri.scheme,
-    //   host: uri.host,
-    //   path: uri.path,
-    //   queryParameters: {
-    //     // 'ixid': uri.queryParameters['ixid'],
-    //     ...uri.queryParameters,
-    //     'q': '100',
-    //   },
-    // );
+    final resolution = await storage.getEnum(
+        StorageKeys.imageDownloadQuality, ImageResolution.values);
 
-    await launchUrl(updatedUri);
+    Uri uri = applyResolutionOnUrl(image.url, resolution);
+
+    await launchUrl(uri);
   }
 
   Future<String> _getImageUrlFromSource() async {
