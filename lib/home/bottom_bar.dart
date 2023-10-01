@@ -151,6 +151,8 @@ class _SettingsButtonState extends State<SettingsButton>
       name: 'SettingsButton',
       builder: (context) {
         if (!store.initialized) return const SizedBox.shrink();
+
+        final color = store.foregroundColor;
         return GestureDetectorWithCursor(
           onTap: () {
             context.read<HomeStore>().showPanel();
@@ -168,8 +170,7 @@ class _SettingsButtonState extends State<SettingsButton>
                 angle: controller.value * pi / pi,
                 child: Icon(
                   Icons.settings,
-                  color: store.foregroundColor
-                      .withOpacity(max(0.2, controller.value)),
+                  color: color.withOpacity(max(0.2, controller.value)),
                 ),
               );
             },
@@ -214,6 +215,7 @@ class _ChangeBackgroundButtonState extends State<ChangeBackgroundButton>
       builder: (context) {
         if (!store.initialized) return const SizedBox.shrink();
 
+        final color = store.foregroundColor;
         return GestureDetectorWithCursor(
           onTap: !store.isLoadingImage ? store.onChangeBackground : null,
           onEnter: (_) => controller.forward(),
@@ -229,8 +231,7 @@ class _ChangeBackgroundButtonState extends State<ChangeBackgroundButton>
                 AssetImage(store.isLoadingImage
                     ? 'assets/images/ic_hourglass.png'
                     : 'assets/images/ic_fan.png'),
-                color: store.foregroundColor
-                    .withOpacity(max(0.2, controller.value)),
+                color: color.withOpacity(max(0.2, controller.value)),
               );
             },
           ),
@@ -279,6 +280,8 @@ class _LikeBackgroundButtonState extends State<LikeBackgroundButton>
             store.likedBackgrounds.length <= 1) {
           return const SizedBox.shrink();
         }
+
+        final color = store.foregroundColor;
         return GestureDetectorWithCursor(
           onTap: !store.showLoadingBackground
               ? () => store.onToggleLike(!store.isLiked)
@@ -296,8 +299,7 @@ class _LikeBackgroundButtonState extends State<LikeBackgroundButton>
                 store.isLiked
                     ? Icons.favorite_rounded
                     : Icons.favorite_border_rounded,
-                color: store.foregroundColor
-                    .withOpacity(max(0.2, controller.value)),
+                color: color.withOpacity(max(0.2, controller.value)),
               );
             },
           ),
