@@ -36,7 +36,6 @@ enum DateFormat {
   monthDayYear,
   yearMonthDay,
   special,
-  random,
 }
 
 enum Separator {

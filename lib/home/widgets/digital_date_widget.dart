@@ -1,4 +1,4 @@
-import 'dart:math';
+// import 'dart:math';
 
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
@@ -65,7 +65,7 @@ class DigitalDateWidget extends StatelessWidget {
   }
 
   String buildFormatString(DateFormat format, String separator) {
-    final random = Random();
+    // final random = Random();
 
     switch (format) {
       case DateFormat.dayMonthYear:
@@ -76,9 +76,9 @@ class DigitalDateWidget extends StatelessWidget {
         return 'yyyy${separator}MM${separator}dd';
       case DateFormat.special:
         return 'dd $separator MMMM $separator yyyy';
-      case DateFormat.random:
-        final components = ['dd', 'MM', 'yyyy']..shuffle(random);
-        return components.join(separator);
+      // case DateFormat.random:
+      //   final components = ['dd', 'MM', 'yyyy']..shuffle(random);
+      //   return components.join(separator);
       default:
         return 'dd${separator}MM${separator}yyyy'; // Default to a format
     }
