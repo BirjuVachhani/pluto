@@ -244,5 +244,4 @@ const _$DateFormatEnumMap = {
   DateFormat.monthDayYear: 'monthDayYear',
   DateFormat.yearMonthDay: 'yearMonthDay',
   DateFormat.special: 'special',
-  DateFormat.random: 'random',
 };
