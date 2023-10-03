@@ -401,7 +401,7 @@ class _LocationAutoCompleteFieldState extends State<LocationAutoCompleteField> {
   }
 
   String getFlagUrl(String countryCode) {
-    return 'https://countryflagsapi.com/png/$countryCode';
+    return 'https://flagsapi.com/$countryCode/flat/64.png';
   }
 }
 
