@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 
@@ -63,8 +64,9 @@ abstract class _WidgetStore with Store, LazyInitializationMixin {
             StorageKeys.weatherSettings, WeatherWidgetSettings.fromJson));
 
     digitalDateSettings = DigitalDateWidgetSettingsStore(
-      await storage.getSerializableObject<DigitalDateWidgetSettings>(
-        StorageKeys.digitalDateSettings, DigitalDateWidgetSettings.fromJson));
+        await storage.getSerializableObject<DigitalDateWidgetSettings>(
+            StorageKeys.digitalDateSettings,
+            DigitalDateWidgetSettings.fromJson));
 
     initialized = true;
   }
@@ -433,7 +435,6 @@ abstract class _WeatherWidgetSettingsStore with Store {
   }
 }
 
-
 class DigitalDateWidgetSettingsStore = _DigitalDateWidgetSettingsStore
     with _$DigitalDateWidgetSettingsStore;
 
@@ -456,6 +457,8 @@ abstract class _DigitalDateWidgetSettingsStore with Store {
   late AlignmentC alignment = defaultSettings.alignment;
   @observable
   late DateFormat format = defaultSettings.format;
+  @observable
+  late String customFormat = 'MMMM dd, yyyy';
 
   _DigitalDateWidgetSettingsStore(DigitalDateWidgetSettings? settings) {
     if (settings == null) return;
@@ -465,6 +468,7 @@ abstract class _DigitalDateWidgetSettingsStore with Store {
     fontFamily = settings.fontFamily;
     alignment = settings.alignment;
     format = settings.format;
+    customFormat = settings.customFormat;
   }
 
   @action

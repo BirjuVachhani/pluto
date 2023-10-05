@@ -35,8 +35,19 @@ enum DateFormat {
   dayMonthYear,
   monthDayYear,
   yearMonthDay,
-  special,
+  custom,
 }
+
+// enum DateFormat {
+//   dayMonthYear('dd/mm/yyyy'),
+//   monthDayYear('mm/dd/yyyy'),
+//   yearMonthDay('yyyy/mm/dd'),
+//   special('Custom');
+
+//   const DateFormat(this.label);
+
+//   final String label;
+// }
 
 enum Separator {
   nothing(''),
@@ -486,6 +497,7 @@ class DigitalDateWidgetSettings extends BaseWidgetSettings {
   final String fontFamily;
   final AlignmentC alignment;
   final DateFormat format;
+  final String customFormat;
 
   @override
   final WidgetType type = WidgetType.digitalDate;
@@ -497,6 +509,7 @@ class DigitalDateWidgetSettings extends BaseWidgetSettings {
     this.fontFamily = FontFamilies.product,
     this.alignment = AlignmentC.center,
     this.format = DateFormat.dayMonthYear,
+    this.customFormat = 'MMMM dd, yyyy',
   });
 
   @override

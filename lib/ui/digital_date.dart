@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' as intl;
+import 'package:provider/provider.dart';
+import '../home/widget_store.dart';
+import '../model/widget_settings.dart';
+import 'digital_clock.dart';
 
 class DigitalDate extends StatefulWidget {
   final TextStyle? style;
@@ -30,6 +34,8 @@ class _DigitalDateState extends State<DigitalDate>
   void initState() {
     super.initState();
     _initialDate = _now = DateTime.now();
+
+
     _ticker = createTicker((elapsed) {
       final newDate = _initialDate.add(elapsed);
       // Rebuild only if the date changes instead of every frame
@@ -48,6 +54,7 @@ class _DigitalDateState extends State<DigitalDate>
 
   @override
   Widget build(BuildContext context) {
+    final settings = context.read<WidgetStore>().digitalDateSettings;
     return _DigitalDateRenderer(
       date: _now,
       style: widget.style,
@@ -72,25 +79,45 @@ class _DigitalDateRenderer extends StatelessWidget {
   final String format;
 
   const _DigitalDateRenderer({
+    Key? key,
     required this.date,
     this.style,
     this.decoration,
     this.padding,
     this.format = 'MMMM dd, yyyy',
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final dateString = DateFormat(format).format(date);
+    final settings = context.read<WidgetStore>().digitalDateSettings;
+    final dateString = intl.DateFormat(format).format(date);
+    final customDateString = intl.DateFormat(format).format(date);
+    final double paddingHorizontal = (20 + settings.fontSize) * 0.5;
+
     return DecoratedBox(
       decoration: decoration ?? const BoxDecoration(),
       child: Padding(
         padding: padding ?? EdgeInsets.zero,
-        child: Text(
-          dateString,
-          textAlign: TextAlign.center,
-          style: style,
-        ),
+        child: settings.format != DateFormat.custom
+            ? Row(
+                children: [
+                  Text(
+                    dateString,
+                    textAlign: TextAlign.center,
+                    style: style,
+                  ),
+                  SizedBox(width: paddingHorizontal),
+                  DigitalClock(
+                    style: style,
+                    format: 'hh:mm a',
+                  ),
+                ],
+              )
+            : Text(
+                customDateString,
+                textAlign: TextAlign.center,
+                style: style,
+              ),
       ),
     );
   }
