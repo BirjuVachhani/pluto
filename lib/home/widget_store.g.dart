@@ -809,6 +809,22 @@ mixin _$DigitalDateWidgetSettingsStore
     });
   }
 
+  late final _$customFormatAtom = Atom(
+      name: '_DigitalDateWidgetSettingsStore.customFormat', context: context);
+
+  @override
+  String get customFormat {
+    _$customFormatAtom.reportRead();
+    return super.customFormat;
+  }
+
+  @override
+  set customFormat(String value) {
+    _$customFormatAtom.reportWrite(value, super.customFormat, () {
+      super.customFormat = value;
+    });
+  }
+
   late final _$_DigitalDateWidgetSettingsStoreActionController =
       ActionController(
           name: '_DigitalDateWidgetSettingsStore', context: context);
@@ -843,7 +859,8 @@ separator: ${separator},
 borderType: ${borderType},
 fontFamily: ${fontFamily},
 alignment: ${alignment},
-format: ${format}
+format: ${format},
+customFormat: ${customFormat}
     ''';
   }
 }

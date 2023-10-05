@@ -220,6 +220,7 @@ DigitalDateWidgetSettings _$DigitalDateWidgetSettingsFromJson(
           AlignmentC.center,
       format: $enumDecodeNullable(_$DateFormatEnumMap, json['format']) ??
           DateFormat.dayMonthYear,
+      customFormat: json['customFormat'] as String? ?? 'MMMM dd, yyyy',
     );
 
 Map<String, dynamic> _$DigitalDateWidgetSettingsToJson(
@@ -231,6 +232,7 @@ Map<String, dynamic> _$DigitalDateWidgetSettingsToJson(
       'fontFamily': instance.fontFamily,
       'alignment': _$AlignmentCEnumMap[instance.alignment]!,
       'format': _$DateFormatEnumMap[instance.format]!,
+      'customFormat': instance.customFormat,
     };
 
 const _$DateSeparatorEnumMap = {
@@ -243,5 +245,5 @@ const _$DateFormatEnumMap = {
   DateFormat.dayMonthYear: 'dayMonthYear',
   DateFormat.monthDayYear: 'monthDayYear',
   DateFormat.yearMonthDay: 'yearMonthDay',
-  DateFormat.special: 'special',
+  DateFormat.custom: 'custom',
 };
