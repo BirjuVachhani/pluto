@@ -1,3 +1,13 @@
+# 0.5.0
+
+- A new widget: Date & Time with support for custom date and time formats.
+- Fix country flags not loading up in location autocomplete input.
+- Fix bottom bar icon color updates when color/gradient is changed.
+- Add image download quality selection under advanced settings.
+- Add option to manage custom collection sources under advanced settings.
+- Show visual cue for custom collection sources in the collections dropdown.
+- Fahrenheit unit now shows F as suffix for temperature on weather widget.
+
 # 0.4.0
 
 - Improve label fonts.
