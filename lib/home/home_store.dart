@@ -83,7 +83,7 @@ abstract class _HomeStore with Store, LazyInitializationMixin {
 
       if (kIsWeb) {
         const String mimeType = 'application/json';
-        final Uint8List bytes = utf8.encode(dataString) as Uint8List;
+        final Uint8List bytes = utf8.encode(dataString);
         final html.Blob blob = html.Blob([bytes], mimeType);
         final html.AnchorElement anchorElement =
             html.AnchorElement(href: html.Url.createObjectUrlFromBlob(blob));
@@ -209,7 +209,7 @@ abstract class _HomeStore with Store, LazyInitializationMixin {
         StorageKeys.weatherSettings, widgetSettings.weather.toJson());
 
     await storage.setJson(
-        StorageKeys.digitalDateSettings, widgetSettings.digitalDate.toJson());    
+        StorageKeys.digitalDateSettings, widgetSettings.digitalDate.toJson());
   }
 
   void dispose() {

@@ -35,7 +35,6 @@ class _DigitalDateState extends State<DigitalDate>
     super.initState();
     _initialDate = _now = DateTime.now();
 
-
     _ticker = createTicker((elapsed) {
       final newDate = _initialDate.add(elapsed);
       // Rebuild only if the date changes instead of every frame
@@ -54,7 +53,6 @@ class _DigitalDateState extends State<DigitalDate>
 
   @override
   Widget build(BuildContext context) {
-    final settings = context.read<WidgetStore>().digitalDateSettings;
     return _DigitalDateRenderer(
       date: _now,
       style: widget.style,
@@ -79,13 +77,13 @@ class _DigitalDateRenderer extends StatelessWidget {
   final String format;
 
   const _DigitalDateRenderer({
-    Key? key,
+    super.key,
     required this.date,
     this.style,
     this.decoration,
     this.padding,
     this.format = 'MMMM dd, yyyy',
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

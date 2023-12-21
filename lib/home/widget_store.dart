@@ -435,6 +435,7 @@ abstract class _WeatherWidgetSettingsStore with Store {
   }
 }
 
+// ignore: library_private_types_in_public_api
 class DigitalDateWidgetSettingsStore = _DigitalDateWidgetSettingsStore
     with _$DigitalDateWidgetSettingsStore;
 

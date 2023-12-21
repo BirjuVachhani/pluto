@@ -97,7 +97,8 @@ class TimerWidgetSettingsView extends StatelessWidget {
                 textInputAction: TextInputAction.next,
                 inputFormatters: [MaskedInputFormatter('00/00/0000')],
                 hintText: 'dd/mm/yyyy',
-                initialValue: timer.DateFormat('dd/MM/yyyy').format(settings.time),
+                initialValue:
+                    timer.DateFormat('dd/MM/yyyy').format(settings.time),
                 contentPadding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
                 onSubmitted: (value) {
                   if (value.isEmpty || value.length < 10) return false;
@@ -130,7 +131,8 @@ class TimerWidgetSettingsView extends StatelessWidget {
                   )
                 ],
                 hintText: 'hh:mm aa',
-                initialValue: timer.DateFormat('hh:mm aa').format(settings.time),
+                initialValue:
+                    timer.DateFormat('hh:mm aa').format(settings.time),
                 onSubmitted: (value) {
                   if (value.isEmpty || value.length < 5) return false;
                   final tokens = value.split(':');

@@ -7,7 +7,6 @@ import '../../resources/fonts.dart';
 import '../../ui/alignment_control.dart';
 import '../../ui/custom_dropdown.dart';
 import '../../ui/custom_slider.dart';
-import '../../ui/resizable_text_input.dart';
 import '../../ui/text_input.dart';
 import '../../utils/custom_observer.dart';
 import '../../utils/extensions.dart';
