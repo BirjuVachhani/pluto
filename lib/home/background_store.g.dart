@@ -648,6 +648,17 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
   }
 
   @override
+  void removeCustomCollection(UnsplashSource source) {
+    final _$actionInfo = _$_BackgroundStoreActionController.startAction(
+        name: '_BackgroundStore.removeCustomCollection');
+    try {
+      return super.removeCustomCollection(source);
+    } finally {
+      _$_BackgroundStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 isLiked: ${isLiked},
