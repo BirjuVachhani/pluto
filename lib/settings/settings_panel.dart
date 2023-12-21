@@ -143,6 +143,7 @@ class _SettingsPanelContentState extends State<SettingsPanelContent>
                         labelColor: Theme.of(context).colorScheme.primary,
                         isScrollable: true,
                         unselectedLabelColor: AppColors.textColor,
+                        tabAlignment: TabAlignment.start,
                         labelStyle: const TextStyle(
                           fontWeight: FontWeight.w300,
                         ),
