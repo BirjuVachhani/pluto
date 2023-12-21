@@ -236,7 +236,7 @@ class _WeatherWidgetState extends State<WeatherWidget>
     if (settings.temperatureUnit == TemperatureUnit.celsius) {
       temperature = '${weatherInfo.temperature.round()}°';
     } else {
-      temperature = '${(weatherInfo.temperature * 9 / 5 + 32).round()}°';
+      temperature = '${(weatherInfo.temperature * 9 / 5 + 32).round()}°F';
     }
     switch (settings.format) {
       case WeatherFormat.temperature:
