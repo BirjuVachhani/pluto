@@ -8,6 +8,7 @@ import '../../ui/alignment_control.dart';
 import '../../ui/custom_dropdown.dart';
 import '../../ui/custom_slider.dart';
 import '../../ui/resizable_text_input.dart';
+import '../../ui/text_input.dart';
 import '../../utils/custom_observer.dart';
 import '../../utils/extensions.dart';
 
@@ -105,6 +106,7 @@ class _DigitalDateWidgetSettingsViewState
               itemBuilder: (context, type) => Text(type.name.capitalize()),
               onSelected: (value) {
                 settings.update(() => settings.separator = value);
+                setState(() {});
               },
             );
           },
@@ -121,24 +123,24 @@ class _DigitalDateWidgetSettingsViewState
                   value: settings.format,
                   items: DateFormat.values,
                   itemBuilder: (context, type) =>
-                      Text(type.toString().split('.').last),
+                      Text(type.prettify(settings.separator.value)),
                   onSelected: (value) =>
                       settings.update(() => settings.format = value),
                 ),
-                if (settings.format == DateFormat.custom)
-                  Padding(
-                    padding: EdgeInsets.only(top: 10.0),
-                    child: ResizableTextInput(
-                      initialHeight: 40,
-                      initialValue: settings.customFormat,
-                      onChanged: (value) => settings.update(
-                        save: true,
-                        () => setState(() {
-                          settings.customFormat = value;
-                        }),
-                      ),
+                if (settings.format == DateFormat.custom) ...[
+                  const SizedBox(height: 16),
+                  const Text('Template'),
+                  const SizedBox(height: 10),
+                  TextInput(
+                    initialValue: settings.customFormat,
+                    onChanged: (value) => settings.update(
+                      save: true,
+                      () => setState(() {
+                        settings.customFormat = value;
+                      }),
                     ),
                   ),
+                ],
               ],
             );
           },

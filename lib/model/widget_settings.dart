@@ -11,7 +11,7 @@ enum WidgetType {
   text('Message'),
   timer('Timer'),
   weather('Weather'),
-  digitalDate('Digital Date');
+  digitalDate('Date & Time');
   // calendar('Calendar');
 
   const WidgetType(this.label);
@@ -35,7 +35,16 @@ enum DateFormat {
   dayMonthYear,
   monthDayYear,
   yearMonthDay,
-  custom,
+  custom;
+
+  String prettify(String separator) {
+    return switch (this) {
+      dayMonthYear => 'dd${separator}mm${separator}yyyy',
+      monthDayYear => 'mm${separator}dd${separator}yyyy',
+      yearMonthDay => 'yyyy${separator}mm${separator}dd',
+      custom => 'Custom',
+    };
+  }
 }
 
 // enum DateFormat {
@@ -68,6 +77,7 @@ enum DateSeparator {
   slash('/');
 
   const DateSeparator(this.value);
+
   final String value;
 }
 
