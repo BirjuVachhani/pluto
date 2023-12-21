@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screwdriver/flutter_screwdriver.dart';
 import 'package:provider/provider.dart';
 import 'package:screwdriver/screwdriver.dart';
 
@@ -474,7 +475,20 @@ class UnsplashSourceSettings extends StatelessWidget {
                 if (item == UnsplashSources.christmas) {
                   return Text('🎄${item.name}');
                 }
-                return Text(item.name);
+                return Row(
+                  children: [
+                    Expanded(child: Text(item.name)),
+                    if (store.customSources.contains(item))
+                      Tooltip(
+                        message: 'Custom Collection',
+                        child: Icon(
+                          Icons.explicit,
+                          size: 16,
+                          color: context.colorScheme.onSurface.withOpacity(0.7),
+                        ),
+                      ),
+                  ],
+                );
               },
               onSelected: (value) => store.setUnsplashSource(value),
             );
