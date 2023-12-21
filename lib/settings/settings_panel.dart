@@ -322,10 +322,14 @@ class MenuButton extends StatelessWidget {
           ),
         );
       case 'advanced':
+        final backgroundStore = context.read<BackgroundStore>();
         showDialog(
           context: context,
           barrierDismissible: true,
-          builder: (context) => const AdvancedSettingsDialog(),
+          builder: (context) => Provider<BackgroundStore>.value(
+            value: backgroundStore,
+            child: const AdvancedSettingsDialog(),
+          ),
         );
       case 'reset':
         showDialog(

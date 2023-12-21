@@ -725,6 +725,14 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
     }
   }
 
+  /// Adds a custom unsplash collection to the list of collections.
+  @action
+  void removeCustomCollection(UnsplashSource source) {
+    _customSources.remove(source);
+    // Explicitly save the changes to storage.
+    _save();
+  }
+
   @action
   Future<void> reset({bool clear = true}) async {
     if (clear) {
