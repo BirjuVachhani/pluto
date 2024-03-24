@@ -3,8 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../main.dart';
 import '../resources/fonts.dart';
-import '../src/version.dart';
 import '../ui/gesture_detector_with_cursor.dart';
 
 class About extends StatelessWidget {
@@ -33,7 +33,7 @@ class About extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         Text(
-          'v$packageVersion'.toUpperCase(),
+          'v${packageInfo.version}'.toUpperCase(),
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 10,

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import 'home/home.dart';
 import 'resources/colors.dart';
@@ -14,6 +15,11 @@ void main() async {
   await initialize();
   runApp(const MyApp());
 }
+
+late PackageInfo packageInfo;
+
+Future<void> loadPackageInfo() async =>
+    packageInfo = await PackageInfo.fromPlatform();
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -40,6 +46,8 @@ Future<void> initialize() async {
   GetIt.instance.registerSingleton<WeatherService>(OpenMeteoWeatherService());
   GetIt.instance
       .registerSingleton<GeocodingService>(OpenMeteoGeocodingService());
+
+  await loadPackageInfo();
 }
 
 ThemeData buildTheme(BuildContext context) {

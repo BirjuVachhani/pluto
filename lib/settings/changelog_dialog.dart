@@ -10,8 +10,8 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../main.dart';
 import '../resources/colors.dart';
-import '../src/version.dart';
 import '../ui/gesture_detector_with_cursor.dart';
 
 class ChangelogDialog extends StatefulWidget {
@@ -185,7 +185,7 @@ class _ChangelogDialogState extends State<ChangelogDialog> {
     isLoading = true;
     if (mounted) setState(() {});
     try {
-      version = packageVersion;
+      version = packageInfo.version;
       final response = await http.get(Uri.parse(
           'https://raw.githubusercontent.com/BirjuVachhani/pluto/$version/CHANGELOG.md'));
 

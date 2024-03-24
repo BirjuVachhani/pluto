@@ -7,11 +7,11 @@ import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 
+import '../main.dart';
 import '../model/background_settings.dart';
 import '../resources/storage_keys.dart';
 import '../settings/changelog_dialog.dart';
 import '../settings/settings_panel.dart';
-import '../src/version.dart';
 import '../ui/message_banner/message_banner.dart';
 import '../ui/message_banner/message_view.dart';
 import '../utils/custom_observer.dart';
@@ -203,9 +203,9 @@ class _HomeState extends State<Home> {
   Future<void> _shouldShowChangelog() async {
     final String? storedVersion =
         await storageManager.getString(StorageKeys.version);
-    if (storedVersion == null || storedVersion != packageVersion) {
+    if (storedVersion == null || storedVersion != packageInfo.version) {
       log('Showing changelog dialog');
-      await storageManager.setString(StorageKeys.version, packageVersion);
+      await storageManager.setString(StorageKeys.version, packageInfo.version);
       await Future.delayed(const Duration(seconds: 1));
       if (!mounted) return;
       showDialog(

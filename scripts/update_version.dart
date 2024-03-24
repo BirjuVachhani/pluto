@@ -19,10 +19,10 @@ void main(List<String> args) {
       .writeAsStringSync(const JsonEncoder.withIndent('  ').convert(manifest));
   stdout.writeln('Updated manifest version to $version');
 
-  final File versionFile = File('lib/src/version.dart');
-  versionFile.createSync(recursive: true);
+  // final File versionFile = File('lib/src/version.dart');
+  // versionFile.createSync(recursive: true);
 
-  versionFile.writeAsStringSync('const String packageVersion = \'$version\';');
+  // versionFile.writeAsStringSync('const String packageVersion = \'$version\';');
   stdout.writeln('Updated version.dart to $version');
   exit(0);
 }
