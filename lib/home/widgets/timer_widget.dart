@@ -284,7 +284,7 @@ class _TimerWidgetState extends State<TimerWidget>
         ),
       ),
       maxLines: 1,
-      textScaleFactor: MediaQuery.of(context).textScaleFactor,
+      textScaler: MediaQuery.of(context).textScaler,
       textDirection: TextDirection.ltr,
       // textAlign: settings.alignment.textAlign,
     );

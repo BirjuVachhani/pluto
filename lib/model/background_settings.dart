@@ -3,6 +3,8 @@ import 'dart:typed_data';
 
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:shared/shared.dart';
+import 'package:unsplash_client/unsplash_client.dart';
 
 import '../resources/color_gradients.dart';
 import '../resources/flat_colors.dart';
@@ -10,7 +12,6 @@ import '../resources/unsplash_sources.dart';
 import '../utils/utils.dart';
 import 'color_gradient.dart';
 import 'flat_color.dart';
-import 'unsplash_collection.dart';
 
 part 'background_settings.g.dart';
 
@@ -173,6 +174,61 @@ String flatColorToJson(FlatColor color) => color.name;
 String colorGradientToJson(ColorGradient gradient) => gradient.name;
 
 @JsonSerializable()
+class UnsplashLikedBackground extends LikedBackground implements UnsplashPhoto {
+  @override
+  final Photo photo;
+
+  @override
+  String get url => photo.urls.raw.toString();
+
+  UnsplashLikedBackground({
+    required super.id,
+    required this.photo,
+  }) : super(url: '');
+
+  factory UnsplashLikedBackground.fromJson(Map<String, dynamic> json) =>
+      _$UnsplashLikedBackgroundFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$UnsplashLikedBackgroundToJson(this);
+
+  @override
+  List<Object?> get props => [...super.props, photo];
+}
+
+abstract interface class UnsplashPhoto {
+  abstract final Photo photo;
+}
+
+@JsonSerializable()
+class UnsplashPhotoBackground extends Background implements UnsplashPhoto {
+  @override
+  final Photo photo;
+
+  @override
+  String get url => photo.urls.raw.toString();
+
+  UnsplashPhotoBackground({
+    required super.id,
+    required super.bytes,
+    required this.photo,
+  }) : super(url: '');
+
+  factory UnsplashPhotoBackground.fromJson(Map<String, dynamic> json) =>
+      _$UnsplashPhotoBackgroundFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => _$UnsplashPhotoBackgroundToJson(this);
+
+  @override
+  UnsplashLikedBackground toLikedBackground() =>
+      UnsplashLikedBackground(id: id, photo: photo);
+
+  @override
+  List<Object?> get props => [...super.props, photo];
+}
+
+@JsonSerializable()
 class Background extends BackgroundBase {
   @JsonKey(toJson: base64Encode, fromJson: base64Decode)
   final Uint8List bytes;
@@ -183,30 +239,32 @@ class Background extends BackgroundBase {
     required this.bytes,
   });
 
-  factory Background.fromJson(Map<String, dynamic> json) =>
-      _$BackgroundFromJson(json);
+  factory Background.fromJson(Map<String, dynamic> json) {
+    if (json.containsKey('photo')) {
+      return UnsplashPhotoBackground.fromJson(json);
+    }
+    return _$BackgroundFromJson(json);
+  }
 
   @override
   Map<String, dynamic> toJson() => _$BackgroundToJson(this);
 
   LikedBackground toLikedBackground() => LikedBackground(url: url, id: id);
-
-  @override
-  List<Object?> get props => [url, id];
 }
 
 @JsonSerializable()
 class LikedBackground extends BackgroundBase {
   LikedBackground({required super.id, required super.url});
 
-  factory LikedBackground.fromJson(Map<String, dynamic> json) =>
-      _$LikedBackgroundFromJson(json);
+  factory LikedBackground.fromJson(Map<String, dynamic> json) {
+    if (json.containsKey('photo')) {
+      return UnsplashLikedBackground.fromJson(json);
+    }
+    return _$LikedBackgroundFromJson(json);
+  }
 
   @override
   Map<String, dynamic> toJson() => _$LikedBackgroundToJson(this);
-
-  @override
-  List<Object?> get props => [id, url];
 }
 
 abstract class BackgroundBase with EquatableMixin {
@@ -216,4 +274,7 @@ abstract class BackgroundBase with EquatableMixin {
   BackgroundBase({required this.id, required this.url});
 
   Map<String, dynamic> toJson();
+
+  @override
+  List<Object?> get props => [url, id];
 }

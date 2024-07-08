@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:math' hide log;
 
+import 'package:celest_backend/client.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -10,12 +11,13 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'package:screwdriver/screwdriver.dart';
+import 'package:shared/shared.dart';
+import 'package:unsplash_client/unsplash_client.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../model/background_settings.dart';
 import '../model/color_gradient.dart';
 import '../model/flat_color.dart';
-import '../model/unsplash_collection.dart';
 import '../resources/color_gradients.dart';
 import '../resources/flat_colors.dart';
 import '../resources/storage_keys.dart';
@@ -535,32 +537,8 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
 
     try {
       // Fetch the image from unsplash.
-      final String actualImageUrl = await _getImageUrlFromSource();
-      log('actualUrl: $actualImageUrl');
-      final http.Response response = await http.get(Uri.parse(actualImageUrl));
-      _isLoadingImage = false;
-      _showLoadingBackground = false;
-      if (response.statusCode == 200) {
-        log('loadUnsplashImage success');
-        // Return the image bytes.
-        // try {
-        //   log('pre-caching downloaded image');
-        //   if(context != null) {
-        //     precacheImage(Image.memory(response.bodyBytes).image, context!);
-        //   }
-        // }catch(e){
-        //   return response.bodyBytes;
-        // }
-        return Background(
-          id: Uri.parse(actualImageUrl).pathSegments.last,
-          url: actualImageUrl,
-          bytes: response.bodyBytes,
-        );
-      }
-      log('loadUnsplashImage failed ${response.statusCode}');
-      // Received some error.
-      log('Error: ${response.body}');
-      return null;
+      final Background background = await _getImageUrlFromSource();
+      return background;
     } catch (error, stacktrace) {
       log(error.toString());
       log(stacktrace.toString());
@@ -569,17 +547,6 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
       _showLoadingBackground = false;
       return null;
     }
-  }
-
-  /// Constructs an image URL of Unsplash based on the current settings.
-  String buildUnsplashImageURL(UnsplashSource source) {
-    final Size size = _imageResolution.toSize() ?? windowSize;
-    String url =
-        'https://source.unsplash.com${source.getPath()}/${size.width.toInt()}x${size.height.toInt()}';
-    if (source is UnsplashTagsSource) {
-      url += source.suffix;
-    }
-    return url;
   }
 
   /// Refreshes the background image on timer callback.
@@ -663,27 +630,76 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
     await launchUrl(uri);
   }
 
-  Future<String> _getImageUrlFromSource() async {
+  Future<Background> _getImageUrlFromSource() async {
+    final Size size = _imageResolution.toSize() ?? windowSize;
     switch (_imageSource) {
       case ImageSource.unsplash:
-        final String randomImageUrl = buildUnsplashImageURL(_unsplashSource);
-        log('randomImageUrl: $randomImageUrl');
-        final redirectionUrl = await retrieveRedirectionUrl(randomImageUrl);
-        if (redirectionUrl != null) {
-          return redirectionUrl;
-        } else {
-          return randomImageUrl;
+        final Photo? photo =
+            await celest.functions.unsplash.randomUnsplashImage(
+          source: _unsplashSource,
+          orientation:
+              UnsplashPhotoOrientation.fromAspectRatio(size.aspectRatio),
+        );
+        if (photo == null) {
+          throw Exception('Failed to fetch image from unsplash');
         }
+
+        final url = photo.urls.rawWith(size: size);
+        final bytes = await getImageBytesFromUrl(url);
+        return UnsplashPhotoBackground(
+          id: photo.urls.raw.pathSegments.last,
+          photo: photo,
+          bytes: bytes,
+        );
       case ImageSource.userLikes:
         assert(_likedBackgrounds.isNotEmpty, 'No liked backgrounds found');
         final LikedBackground background = _likedBackgrounds.values
             .elementAt(Random().nextInt(_likedBackgrounds.length));
         log('liked background url: ${background.url}');
-        return background.url;
+        final url = background is UnsplashLikedBackground
+            ? background.photo.urls.rawWith(size: size)
+            : background.url;
+        final bytes = await getImageBytesFromUrl(url);
+        if (background is UnsplashLikedBackground) {
+          return UnsplashPhotoBackground(
+            id: background.photo.urls.raw.pathSegments.last,
+            photo: background.photo,
+            bytes: bytes,
+          );
+        }
+        return Background(
+          url: url,
+          id: Uri.parse(url).pathSegments.last,
+          bytes: bytes,
+        );
+
       case ImageSource.local:
         // TODO: Handle this case.
         throw UnsupportedError('Unsupported background source');
     }
+  }
+
+  Future<Uint8List> getImageBytesFromUrl(String url) async {
+    final http.Response response = await http.get(Uri.parse(url));
+    _isLoadingImage = false;
+    _showLoadingBackground = false;
+    if (response.statusCode == 200) {
+      log('loadUnsplashImage success');
+      // Return the image bytes.
+      // try {
+      //   log('pre-caching downloaded image');
+      //   if(context != null) {
+      //     precacheImage(Image.memory(response.bodyBytes).image, context!);
+      //   }
+      // }catch(e){
+      //   return response.bodyBytes;
+      // }
+      return response.bodyBytes;
+    }
+    log('loadUnsplashImage failed ${response.statusCode}');
+    // Received some error.
+    log('Error: ${response.body}');
+    throw Exception(response.body);
   }
 
   @action

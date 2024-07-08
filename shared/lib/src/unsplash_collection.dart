@@ -5,7 +5,20 @@ part 'unsplash_collection.g.dart';
 
 enum UnsplashSourceType { random, collection, likes, tags }
 
-abstract class UnsplashSource with EquatableMixin {
+enum UnsplashPhotoOrientation {
+  landscape,
+  portrait,
+  squarish;
+
+  static UnsplashPhotoOrientation fromAspectRatio(double aspectRatio) =>
+      aspectRatio > 1.0
+          ? UnsplashPhotoOrientation.landscape
+          : aspectRatio < 1.0
+              ? UnsplashPhotoOrientation.portrait
+              : UnsplashPhotoOrientation.squarish;
+}
+
+sealed class UnsplashSource with EquatableMixin {
   final String name;
   abstract final UnsplashSourceType type;
 
@@ -53,7 +66,7 @@ class UnsplashRandomSource extends UnsplashSource {
   List<Object?> get props => [type, name];
 }
 
-abstract class UnsplashIdentifiableSource extends UnsplashSource {
+sealed class UnsplashIdentifiableSource extends UnsplashSource {
   final String id;
 
   const UnsplashIdentifiableSource({required this.id, required super.name});

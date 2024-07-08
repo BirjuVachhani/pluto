@@ -89,6 +89,36 @@ const _$ImageResolutionEnumMap = {
   ImageResolution.eightK: 'eightK',
 };
 
+UnsplashLikedBackground _$UnsplashLikedBackgroundFromJson(
+        Map<String, dynamic> json) =>
+    UnsplashLikedBackground(
+      id: json['id'] as String,
+      photo: Photo.fromJson(json['photo'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$UnsplashLikedBackgroundToJson(
+        UnsplashLikedBackground instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'photo': instance.photo,
+    };
+
+UnsplashPhotoBackground _$UnsplashPhotoBackgroundFromJson(
+        Map<String, dynamic> json) =>
+    UnsplashPhotoBackground(
+      id: json['id'] as String,
+      bytes: base64Decode(json['bytes'] as String),
+      photo: Photo.fromJson(json['photo'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$UnsplashPhotoBackgroundToJson(
+        UnsplashPhotoBackground instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'bytes': base64Encode(instance.bytes),
+      'photo': instance.photo,
+    };
+
 Background _$BackgroundFromJson(Map<String, dynamic> json) => Background(
       url: json['url'] as String,
       id: json['id'] as String,

@@ -1,4 +1,9 @@
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 import 'dart:ui';
+
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 
 import '../model/background_settings.dart';
 import '../model/color_gradient.dart';
@@ -94,4 +99,48 @@ Uri applyResolutionOnUrl(String url, ImageResolution? resolution) {
       },
     },
   );
+}
+
+Future<Uint8List> takeScreenshot(
+  GlobalKey widgetKey, {
+  double devicePixelRatio = 1,
+  ui.ImageByteFormat format = ui.ImageByteFormat.png,
+}) async {
+  try {
+    final RenderObject renderObject =
+        widgetKey.currentContext?.findRenderObject() ??
+            (throw ScreenshotException('No RenderObject found'));
+    if (renderObject is! RenderRepaintBoundary) {
+      throw ScreenshotException('RenderObject is not a RenderRepaintBoundary');
+    }
+
+    final ui.Image image =
+        await renderObject.toImage(pixelRatio: devicePixelRatio);
+    // image to Uint8List
+    final ByteData? byteData = await image.toByteData(format: format);
+    if (byteData == null) {
+      throw ScreenshotException(
+          'Error while taking screenshot: byteData is null');
+    }
+    final Uint8List pngBytes = byteData.buffer.asUint8List();
+
+    return pngBytes;
+  } on ScreenshotException {
+    rethrow;
+  } catch (error) {
+    throw ScreenshotException('Error while taking screenshot: $error');
+  }
+}
+
+class ScreenshotException implements Exception {
+  final String? message;
+
+  ScreenshotException([this.message]);
+
+  @override
+  String toString() {
+    Object? message = this.message;
+    if (message == null) return 'Exception';
+    return 'ScreenshotException: $message';
+  }
 }

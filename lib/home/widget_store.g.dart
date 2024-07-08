@@ -90,10 +90,14 @@ mixin _$DigitalClockWidgetSettingsStore
     return super.fontSize;
   }
 
+  bool _fontSizeIsInitialized = false;
+
   @override
   set fontSize(double value) {
-    _$fontSizeAtom.reportWrite(value, super.fontSize, () {
+    _$fontSizeAtom
+        .reportWrite(value, _fontSizeIsInitialized ? super.fontSize : null, () {
       super.fontSize = value;
+      _fontSizeIsInitialized = true;
     });
   }
 
@@ -106,10 +110,14 @@ mixin _$DigitalClockWidgetSettingsStore
     return super.separator;
   }
 
+  bool _separatorIsInitialized = false;
+
   @override
   set separator(Separator value) {
-    _$separatorAtom.reportWrite(value, super.separator, () {
+    _$separatorAtom.reportWrite(
+        value, _separatorIsInitialized ? super.separator : null, () {
       super.separator = value;
+      _separatorIsInitialized = true;
     });
   }
 
@@ -122,10 +130,14 @@ mixin _$DigitalClockWidgetSettingsStore
     return super.borderType;
   }
 
+  bool _borderTypeIsInitialized = false;
+
   @override
   set borderType(BorderType value) {
-    _$borderTypeAtom.reportWrite(value, super.borderType, () {
+    _$borderTypeAtom.reportWrite(
+        value, _borderTypeIsInitialized ? super.borderType : null, () {
       super.borderType = value;
+      _borderTypeIsInitialized = true;
     });
   }
 
@@ -138,10 +150,14 @@ mixin _$DigitalClockWidgetSettingsStore
     return super.fontFamily;
   }
 
+  bool _fontFamilyIsInitialized = false;
+
   @override
   set fontFamily(String value) {
-    _$fontFamilyAtom.reportWrite(value, super.fontFamily, () {
+    _$fontFamilyAtom.reportWrite(
+        value, _fontFamilyIsInitialized ? super.fontFamily : null, () {
       super.fontFamily = value;
+      _fontFamilyIsInitialized = true;
     });
   }
 
@@ -154,10 +170,14 @@ mixin _$DigitalClockWidgetSettingsStore
     return super.alignment;
   }
 
+  bool _alignmentIsInitialized = false;
+
   @override
   set alignment(AlignmentC value) {
-    _$alignmentAtom.reportWrite(value, super.alignment, () {
+    _$alignmentAtom.reportWrite(
+        value, _alignmentIsInitialized ? super.alignment : null, () {
       super.alignment = value;
+      _alignmentIsInitialized = true;
     });
   }
 
@@ -170,10 +190,14 @@ mixin _$DigitalClockWidgetSettingsStore
     return super.format;
   }
 
+  bool _formatIsInitialized = false;
+
   @override
   set format(ClockFormat value) {
-    _$formatAtom.reportWrite(value, super.format, () {
+    _$formatAtom.reportWrite(value, _formatIsInitialized ? super.format : null,
+        () {
       super.format = value;
+      _formatIsInitialized = true;
     });
   }
 
@@ -229,10 +253,14 @@ mixin _$AnalogClockWidgetSettingsStore
     return super.radius;
   }
 
+  bool _radiusIsInitialized = false;
+
   @override
   set radius(double value) {
-    _$radiusAtom.reportWrite(value, super.radius, () {
+    _$radiusAtom.reportWrite(value, _radiusIsInitialized ? super.radius : null,
+        () {
       super.radius = value;
+      _radiusIsInitialized = true;
     });
   }
 
@@ -246,10 +274,15 @@ mixin _$AnalogClockWidgetSettingsStore
     return super.showSecondsHand;
   }
 
+  bool _showSecondsHandIsInitialized = false;
+
   @override
   set showSecondsHand(bool value) {
-    _$showSecondsHandAtom.reportWrite(value, super.showSecondsHand, () {
+    _$showSecondsHandAtom.reportWrite(
+        value, _showSecondsHandIsInitialized ? super.showSecondsHand : null,
+        () {
       super.showSecondsHand = value;
+      _showSecondsHandIsInitialized = true;
     });
   }
 
@@ -263,10 +296,15 @@ mixin _$AnalogClockWidgetSettingsStore
     return super.coloredSecondHand;
   }
 
+  bool _coloredSecondHandIsInitialized = false;
+
   @override
   set coloredSecondHand(bool value) {
-    _$coloredSecondHandAtom.reportWrite(value, super.coloredSecondHand, () {
+    _$coloredSecondHandAtom.reportWrite(
+        value, _coloredSecondHandIsInitialized ? super.coloredSecondHand : null,
+        () {
       super.coloredSecondHand = value;
+      _coloredSecondHandIsInitialized = true;
     });
   }
 
@@ -279,10 +317,14 @@ mixin _$AnalogClockWidgetSettingsStore
     return super.alignment;
   }
 
+  bool _alignmentIsInitialized = false;
+
   @override
   set alignment(AlignmentC value) {
-    _$alignmentAtom.reportWrite(value, super.alignment, () {
+    _$alignmentAtom.reportWrite(
+        value, _alignmentIsInitialized ? super.alignment : null, () {
       super.alignment = value;
+      _alignmentIsInitialized = true;
     });
   }
 
@@ -333,10 +375,14 @@ mixin _$MessageWidgetSettingsStore on _MessageWidgetSettingsStore, Store {
     return super.fontSize;
   }
 
+  bool _fontSizeIsInitialized = false;
+
   @override
   set fontSize(double value) {
-    _$fontSizeAtom.reportWrite(value, super.fontSize, () {
+    _$fontSizeAtom
+        .reportWrite(value, _fontSizeIsInitialized ? super.fontSize : null, () {
       super.fontSize = value;
+      _fontSizeIsInitialized = true;
     });
   }
 
@@ -349,10 +395,14 @@ mixin _$MessageWidgetSettingsStore on _MessageWidgetSettingsStore, Store {
     return super.fontFamily;
   }
 
+  bool _fontFamilyIsInitialized = false;
+
   @override
   set fontFamily(String value) {
-    _$fontFamilyAtom.reportWrite(value, super.fontFamily, () {
+    _$fontFamilyAtom.reportWrite(
+        value, _fontFamilyIsInitialized ? super.fontFamily : null, () {
       super.fontFamily = value;
+      _fontFamilyIsInitialized = true;
     });
   }
 
@@ -365,10 +415,14 @@ mixin _$MessageWidgetSettingsStore on _MessageWidgetSettingsStore, Store {
     return super.message;
   }
 
+  bool _messageIsInitialized = false;
+
   @override
   set message(String value) {
-    _$messageAtom.reportWrite(value, super.message, () {
+    _$messageAtom
+        .reportWrite(value, _messageIsInitialized ? super.message : null, () {
       super.message = value;
+      _messageIsInitialized = true;
     });
   }
 
@@ -381,10 +435,14 @@ mixin _$MessageWidgetSettingsStore on _MessageWidgetSettingsStore, Store {
     return super.alignment;
   }
 
+  bool _alignmentIsInitialized = false;
+
   @override
   set alignment(AlignmentC value) {
-    _$alignmentAtom.reportWrite(value, super.alignment, () {
+    _$alignmentAtom.reportWrite(
+        value, _alignmentIsInitialized ? super.alignment : null, () {
       super.alignment = value;
+      _alignmentIsInitialized = true;
     });
   }
 
@@ -434,10 +492,14 @@ mixin _$TimerWidgetSettingsStore on _TimerWidgetSettingsStore, Store {
     return super.fontSize;
   }
 
+  bool _fontSizeIsInitialized = false;
+
   @override
   set fontSize(double value) {
-    _$fontSizeAtom.reportWrite(value, super.fontSize, () {
+    _$fontSizeAtom
+        .reportWrite(value, _fontSizeIsInitialized ? super.fontSize : null, () {
       super.fontSize = value;
+      _fontSizeIsInitialized = true;
     });
   }
 
@@ -450,10 +512,14 @@ mixin _$TimerWidgetSettingsStore on _TimerWidgetSettingsStore, Store {
     return super.fontFamily;
   }
 
+  bool _fontFamilyIsInitialized = false;
+
   @override
   set fontFamily(String value) {
-    _$fontFamilyAtom.reportWrite(value, super.fontFamily, () {
+    _$fontFamilyAtom.reportWrite(
+        value, _fontFamilyIsInitialized ? super.fontFamily : null, () {
       super.fontFamily = value;
+      _fontFamilyIsInitialized = true;
     });
   }
 
@@ -466,10 +532,14 @@ mixin _$TimerWidgetSettingsStore on _TimerWidgetSettingsStore, Store {
     return super.textBefore;
   }
 
+  bool _textBeforeIsInitialized = false;
+
   @override
   set textBefore(String value) {
-    _$textBeforeAtom.reportWrite(value, super.textBefore, () {
+    _$textBeforeAtom.reportWrite(
+        value, _textBeforeIsInitialized ? super.textBefore : null, () {
       super.textBefore = value;
+      _textBeforeIsInitialized = true;
     });
   }
 
@@ -482,10 +552,14 @@ mixin _$TimerWidgetSettingsStore on _TimerWidgetSettingsStore, Store {
     return super.textAfter;
   }
 
+  bool _textAfterIsInitialized = false;
+
   @override
   set textAfter(String value) {
-    _$textAfterAtom.reportWrite(value, super.textAfter, () {
+    _$textAfterAtom.reportWrite(
+        value, _textAfterIsInitialized ? super.textAfter : null, () {
       super.textAfter = value;
+      _textAfterIsInitialized = true;
     });
   }
 
@@ -498,10 +572,13 @@ mixin _$TimerWidgetSettingsStore on _TimerWidgetSettingsStore, Store {
     return super.time;
   }
 
+  bool _timeIsInitialized = false;
+
   @override
   set time(DateTime value) {
-    _$timeAtom.reportWrite(value, super.time, () {
+    _$timeAtom.reportWrite(value, _timeIsInitialized ? super.time : null, () {
       super.time = value;
+      _timeIsInitialized = true;
     });
   }
 
@@ -514,10 +591,14 @@ mixin _$TimerWidgetSettingsStore on _TimerWidgetSettingsStore, Store {
     return super.alignment;
   }
 
+  bool _alignmentIsInitialized = false;
+
   @override
   set alignment(AlignmentC value) {
-    _$alignmentAtom.reportWrite(value, super.alignment, () {
+    _$alignmentAtom.reportWrite(
+        value, _alignmentIsInitialized ? super.alignment : null, () {
       super.alignment = value;
+      _alignmentIsInitialized = true;
     });
   }
 
@@ -530,10 +611,14 @@ mixin _$TimerWidgetSettingsStore on _TimerWidgetSettingsStore, Store {
     return super.format;
   }
 
+  bool _formatIsInitialized = false;
+
   @override
   set format(TimerFormat value) {
-    _$formatAtom.reportWrite(value, super.format, () {
+    _$formatAtom.reportWrite(value, _formatIsInitialized ? super.format : null,
+        () {
       super.format = value;
+      _formatIsInitialized = true;
     });
   }
 
@@ -586,10 +671,14 @@ mixin _$WeatherWidgetSettingsStore on _WeatherWidgetSettingsStore, Store {
     return super.fontSize;
   }
 
+  bool _fontSizeIsInitialized = false;
+
   @override
   set fontSize(double value) {
-    _$fontSizeAtom.reportWrite(value, super.fontSize, () {
+    _$fontSizeAtom
+        .reportWrite(value, _fontSizeIsInitialized ? super.fontSize : null, () {
       super.fontSize = value;
+      _fontSizeIsInitialized = true;
     });
   }
 
@@ -602,10 +691,14 @@ mixin _$WeatherWidgetSettingsStore on _WeatherWidgetSettingsStore, Store {
     return super.fontFamily;
   }
 
+  bool _fontFamilyIsInitialized = false;
+
   @override
   set fontFamily(String value) {
-    _$fontFamilyAtom.reportWrite(value, super.fontFamily, () {
+    _$fontFamilyAtom.reportWrite(
+        value, _fontFamilyIsInitialized ? super.fontFamily : null, () {
       super.fontFamily = value;
+      _fontFamilyIsInitialized = true;
     });
   }
 
@@ -618,10 +711,14 @@ mixin _$WeatherWidgetSettingsStore on _WeatherWidgetSettingsStore, Store {
     return super.alignment;
   }
 
+  bool _alignmentIsInitialized = false;
+
   @override
   set alignment(AlignmentC value) {
-    _$alignmentAtom.reportWrite(value, super.alignment, () {
+    _$alignmentAtom.reportWrite(
+        value, _alignmentIsInitialized ? super.alignment : null, () {
       super.alignment = value;
+      _alignmentIsInitialized = true;
     });
   }
 
@@ -634,10 +731,14 @@ mixin _$WeatherWidgetSettingsStore on _WeatherWidgetSettingsStore, Store {
     return super.format;
   }
 
+  bool _formatIsInitialized = false;
+
   @override
   set format(WeatherFormat value) {
-    _$formatAtom.reportWrite(value, super.format, () {
+    _$formatAtom.reportWrite(value, _formatIsInitialized ? super.format : null,
+        () {
       super.format = value;
+      _formatIsInitialized = true;
     });
   }
 
@@ -650,10 +751,15 @@ mixin _$WeatherWidgetSettingsStore on _WeatherWidgetSettingsStore, Store {
     return super.temperatureUnit;
   }
 
+  bool _temperatureUnitIsInitialized = false;
+
   @override
   set temperatureUnit(TemperatureUnit value) {
-    _$temperatureUnitAtom.reportWrite(value, super.temperatureUnit, () {
+    _$temperatureUnitAtom.reportWrite(
+        value, _temperatureUnitIsInitialized ? super.temperatureUnit : null,
+        () {
       super.temperatureUnit = value;
+      _temperatureUnitIsInitialized = true;
     });
   }
 
@@ -666,10 +772,14 @@ mixin _$WeatherWidgetSettingsStore on _WeatherWidgetSettingsStore, Store {
     return super.location;
   }
 
+  bool _locationIsInitialized = false;
+
   @override
   set location(Location value) {
-    _$locationAtom.reportWrite(value, super.location, () {
+    _$locationAtom
+        .reportWrite(value, _locationIsInitialized ? super.location : null, () {
       super.location = value;
+      _locationIsInitialized = true;
     });
   }
 
@@ -722,10 +832,14 @@ mixin _$DigitalDateWidgetSettingsStore
     return super.fontSize;
   }
 
+  bool _fontSizeIsInitialized = false;
+
   @override
   set fontSize(double value) {
-    _$fontSizeAtom.reportWrite(value, super.fontSize, () {
+    _$fontSizeAtom
+        .reportWrite(value, _fontSizeIsInitialized ? super.fontSize : null, () {
       super.fontSize = value;
+      _fontSizeIsInitialized = true;
     });
   }
 
@@ -738,10 +852,14 @@ mixin _$DigitalDateWidgetSettingsStore
     return super.separator;
   }
 
+  bool _separatorIsInitialized = false;
+
   @override
   set separator(DateSeparator value) {
-    _$separatorAtom.reportWrite(value, super.separator, () {
+    _$separatorAtom.reportWrite(
+        value, _separatorIsInitialized ? super.separator : null, () {
       super.separator = value;
+      _separatorIsInitialized = true;
     });
   }
 
@@ -754,10 +872,14 @@ mixin _$DigitalDateWidgetSettingsStore
     return super.borderType;
   }
 
+  bool _borderTypeIsInitialized = false;
+
   @override
   set borderType(BorderType value) {
-    _$borderTypeAtom.reportWrite(value, super.borderType, () {
+    _$borderTypeAtom.reportWrite(
+        value, _borderTypeIsInitialized ? super.borderType : null, () {
       super.borderType = value;
+      _borderTypeIsInitialized = true;
     });
   }
 
@@ -770,10 +892,14 @@ mixin _$DigitalDateWidgetSettingsStore
     return super.fontFamily;
   }
 
+  bool _fontFamilyIsInitialized = false;
+
   @override
   set fontFamily(String value) {
-    _$fontFamilyAtom.reportWrite(value, super.fontFamily, () {
+    _$fontFamilyAtom.reportWrite(
+        value, _fontFamilyIsInitialized ? super.fontFamily : null, () {
       super.fontFamily = value;
+      _fontFamilyIsInitialized = true;
     });
   }
 
@@ -786,10 +912,14 @@ mixin _$DigitalDateWidgetSettingsStore
     return super.alignment;
   }
 
+  bool _alignmentIsInitialized = false;
+
   @override
   set alignment(AlignmentC value) {
-    _$alignmentAtom.reportWrite(value, super.alignment, () {
+    _$alignmentAtom.reportWrite(
+        value, _alignmentIsInitialized ? super.alignment : null, () {
       super.alignment = value;
+      _alignmentIsInitialized = true;
     });
   }
 
@@ -802,10 +932,14 @@ mixin _$DigitalDateWidgetSettingsStore
     return super.format;
   }
 
+  bool _formatIsInitialized = false;
+
   @override
   set format(DateFormat value) {
-    _$formatAtom.reportWrite(value, super.format, () {
+    _$formatAtom.reportWrite(value, _formatIsInitialized ? super.format : null,
+        () {
       super.format = value;
+      _formatIsInitialized = true;
     });
   }
 
@@ -818,10 +952,14 @@ mixin _$DigitalDateWidgetSettingsStore
     return super.customFormat;
   }
 
+  bool _customFormatIsInitialized = false;
+
   @override
   set customFormat(String value) {
-    _$customFormatAtom.reportWrite(value, super.customFormat, () {
+    _$customFormatAtom.reportWrite(
+        value, _customFormatIsInitialized ? super.customFormat : null, () {
       super.customFormat = value;
+      _customFormatIsInitialized = true;
     });
   }
 

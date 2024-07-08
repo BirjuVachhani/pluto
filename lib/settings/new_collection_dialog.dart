@@ -2,13 +2,14 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:math' hide log;
 
+import 'package:celest_backend/client.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:rxdart/rxdart.dart';
+import 'package:shared/shared.dart';
+import 'package:unsplash_client/unsplash_client.dart';
 
 import '../home/background_store.dart';
-import '../model/unsplash_collection.dart';
 import '../resources/colors.dart';
 import '../ui/text_input.dart';
 
@@ -211,16 +212,9 @@ class _NewCollectionDialogState extends State<NewCollectionDialog> {
     if (mounted) setState(() => isValid = null);
     try {
       final source = UnsplashTagsSource(tags: value);
-      final String url = widget.store.buildUnsplashImageURL(source);
-      final String? redirectionUrl =
-          await widget.store.retrieveRedirectionUrl(url);
-      if (redirectionUrl != null && redirectionUrl.contains('source-404')) {
-        isValid = false;
-      } else {
-        final http.Response response =
-            await http.get(Uri.parse(redirectionUrl ?? url));
-        isValid = response.statusCode != 302;
-      }
+      final Photo? photo =
+          await celest.functions.unsplash.randomUnsplashImage(source: source);
+      isValid = photo != null;
     } catch (error, stacktrace) {
       log(error.toString());
       log(stacktrace.toString());

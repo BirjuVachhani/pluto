@@ -301,7 +301,7 @@ class _LocationAutoCompleteFieldState extends State<LocationAutoCompleteField> {
                             onTap: () {
                               onSelected(location);
                             },
-                            overlayColor: MaterialStateProperty.all(
+                            overlayColor: WidgetStateProperty.all(
                                 Colors.grey.withOpacity(0.15)),
                             child: Container(
                               color: selected

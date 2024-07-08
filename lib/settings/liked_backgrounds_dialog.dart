@@ -446,7 +446,7 @@ class _ItemOptionButton extends StatelessWidget {
           child: InkWell(
             onTap: onPressed,
             customBorder: const CircleBorder(),
-            overlayColor: MaterialStateProperty.all(
+            overlayColor: WidgetStateProperty.all(
               color.withOpacity(0.1),
             ),
             child: Padding(

@@ -5,10 +5,10 @@ import 'package:flutter_screwdriver/flutter_screwdriver.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:screwdriver/screwdriver.dart';
+import 'package:shared/shared.dart';
 
 import '../home/background_store.dart';
 import '../model/background_settings.dart';
-import '../model/unsplash_collection.dart';
 import '../resources/colors.dart';
 import '../resources/storage_keys.dart';
 import '../ui/custom_dropdown.dart';

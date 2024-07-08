@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:celest_backend/client.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -11,7 +14,9 @@ import 'utils/weather_service.dart';
 
 void main() async {
   final binding = WidgetsFlutterBinding.ensureInitialized();
-  binding.renderView.automaticSystemUiAdjustment = false;
+  for (var view in binding.renderViews) {
+    view.automaticSystemUiAdjustment = false;
+  }
   await initialize();
   runApp(const MyApp());
 }
@@ -41,6 +46,20 @@ class MyApp extends StatelessWidget {
 }
 
 Future<void> initialize() async {
+  // Initialize Celest at the start of your app
+  bool celestInitialized = false;
+
+  if (useLocalServer) {
+    log('Initializing Celest with local server');
+    celest.init(environment: CelestEnvironment.local);
+    celestInitialized = true;
+  }
+
+  if (!celestInitialized) {
+    log('Initializing Celest with production server');
+    celest.init(environment: CelestEnvironment.production);
+  }
+
   final storage = await SharedPreferencesStorageManager.create();
   GetIt.instance.registerSingleton<LocalStorageManager>(storage);
   GetIt.instance.registerSingleton<WeatherService>(OpenMeteoWeatherService());
@@ -64,8 +83,8 @@ ThemeData buildTheme(BuildContext context) {
     brightness: Brightness.dark,
     dividerColor: AppColors.borderColor,
     scrollbarTheme: ScrollbarThemeData(
-      thickness: MaterialStateProperty.all(4),
-      thumbVisibility: MaterialStateProperty.all(true),
+      thickness: WidgetStateProperty.all(4),
+      thumbVisibility: WidgetStateProperty.all(true),
     ),
     // fontFamily: FontFamilies.product,
     tooltipTheme: TooltipThemeData(

@@ -116,7 +116,7 @@ TimerWidgetSettings _$TimerWidgetSettingsFromJson(Map<String, dynamic> json) =>
       fontFamily: json['fontFamily'] as String? ?? FontFamilies.product,
       textBefore: json['textBefore'] as String? ?? '',
       textAfter: json['textAfter'] as String? ?? '',
-      time: dateTimeFromJson(json['time'] as int),
+      time: dateTimeFromJson((json['time'] as num).toInt()),
       alignment: $enumDecodeNullable(_$AlignmentCEnumMap, json['alignment']) ??
           AlignmentC.center,
       format: $enumDecodeNullable(_$TimerFormatEnumMap, json['format']) ??

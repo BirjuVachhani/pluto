@@ -11,7 +11,7 @@ WeatherInfo _$WeatherInfoFromJson(Map<String, dynamic> json) => WeatherInfo(
       longitude: (json['longitude'] as num).toDouble(),
       temperature: (json['temperature'] as num).toDouble(),
       weatherCode: $enumDecode(_$WeatherCodeEnumMap, json['weatherCode']),
-      timestamp: dateTimeFromJson(json['timestamp'] as int),
+      timestamp: dateTimeFromJson((json['timestamp'] as num).toInt()),
     );
 
 Map<String, dynamic> _$WeatherInfoToJson(WeatherInfo instance) =>

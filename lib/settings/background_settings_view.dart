@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screwdriver/flutter_screwdriver.dart';
 import 'package:provider/provider.dart';
 import 'package:screwdriver/screwdriver.dart';
+import 'package:shared/shared.dart';
 
 import '../home/background_store.dart';
 import '../model/background_settings.dart';
 import '../model/color_gradient.dart';
 import '../model/flat_color.dart';
-import '../model/unsplash_collection.dart';
 import '../resources/color_gradients.dart';
 import '../resources/colors.dart';
 import '../resources/flat_colors.dart';

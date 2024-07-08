@@ -11,7 +11,7 @@ OpenMeteoWeatherResponse _$OpenMeteoWeatherResponseFromJson(
     OpenMeteoWeatherResponse(
       latitude: (json['latitude'] as num).toDouble(),
       longitude: (json['longitude'] as num).toDouble(),
-      utcOffsetSeconds: json['utc_offset_seconds'] as int,
+      utcOffsetSeconds: (json['utc_offset_seconds'] as num).toInt(),
       timezone: json['timezone'] as String,
       timezoneAbbr: json['timezone_abbreviation'] as String,
       elevation: (json['elevation'] as num).toDouble(),
@@ -36,7 +36,7 @@ CurrentWeatherData _$CurrentWeatherDataFromJson(Map<String, dynamic> json) =>
       temperature: (json['temperature'] as num).toDouble(),
       windSpeed: (json['windspeed'] as num).toDouble(),
       windDirection: (json['winddirection'] as num).toDouble(),
-      weatherCode: json['weathercode'] as int,
+      weatherCode: (json['weathercode'] as num).toInt(),
       time: CurrentWeatherData.timeFromJson(json['time'] as String),
     );
 

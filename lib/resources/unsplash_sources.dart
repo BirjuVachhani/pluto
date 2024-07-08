@@ -1,11 +1,14 @@
-import '../model/unsplash_collection.dart';
+import 'package:shared/shared.dart';
 
 class UnsplashSources {
   const UnsplashSources._();
 
   static const UnsplashRandomSource random = UnsplashRandomSource();
-  static const UnsplashUserLikesSource curated =
-      UnsplashUserLikesSource(name: 'Curated by Pluto', id: 'birjuvachhani');
+
+  // static const UnsplashUserLikesSource curated =
+  //     UnsplashUserLikesSource(name: 'Curated by Pluto', id: 'birjuvachhani');
+  static const UnsplashCollectionSource curated =
+      UnsplashCollectionSource(name: 'Curated by Pluto', id: 'wRzsGAB4Jcg');
   static const UnsplashCollectionSource christmas =
       UnsplashCollectionSource(name: 'Christmas', id: '2340020');
   static const UnsplashCollectionSource nature =

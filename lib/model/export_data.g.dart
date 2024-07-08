@@ -19,11 +19,11 @@ ExportData _$ExportDataFromJson(Map<String, dynamic> json) => ExportData(
         (k, e) =>
             MapEntry(k, LikedBackground.fromJson(e as Map<String, dynamic>)),
       ),
-      createdAt: dateTimeFromJson(json['createdAt'] as int),
-      version: json['version'] as int,
-      imageIndex: json['imageIndex'] as int,
-      image1Time: dateTimeFromJson(json['image1Time'] as int),
-      image2Time: dateTimeFromJson(json['image2Time'] as int),
+      createdAt: dateTimeFromJson((json['createdAt'] as num).toInt()),
+      version: (json['version'] as num).toInt(),
+      imageIndex: (json['imageIndex'] as num).toInt(),
+      image1Time: dateTimeFromJson((json['image1Time'] as num).toInt()),
+      image2Time: dateTimeFromJson((json['image2Time'] as num).toInt()),
       widgetSettings: WidgetsExportData.fromJson(
           json['widgetSettings'] as Map<String, dynamic>),
       imageDownloadQuality: $enumDecodeNullable(

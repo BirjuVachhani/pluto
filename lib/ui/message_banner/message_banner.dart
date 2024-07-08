@@ -124,7 +124,7 @@ class _MessageBannerState extends State<MessageBanner> {
           : Tween<double>(begin: 1, end: 0),
       onEnd: widget.controller._onAnimationEnd,
       builder: (_, value, child) =>
-          widget.animationBuilder?.call(_, value, child) ??
+          widget.animationBuilder?.call(context, value, child) ??
           Transform.translate(
             offset: Offset(0, (1 - value) * 20 * animationDirection),
             child: Opacity(
@@ -287,7 +287,7 @@ class MessageBannerController extends ChangeNotifier {
 
   MessageType get type => _type;
 
-  bool _animate = true;
+  final bool _animate;
 
   bool get animate => _animate;
 

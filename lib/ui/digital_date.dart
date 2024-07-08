@@ -77,7 +77,6 @@ class _DigitalDateRenderer extends StatelessWidget {
   final String format;
 
   const _DigitalDateRenderer({
-    super.key,
     required this.date,
     this.style,
     this.decoration,

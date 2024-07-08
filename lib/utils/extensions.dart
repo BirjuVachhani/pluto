@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:unsplash_client/unsplash_client.dart';
 
 import '../model/background_settings.dart';
 import '../model/color_gradient.dart';
@@ -172,4 +173,39 @@ extension ImageRefreshRateExt on BackgroundRefreshRate {
         return nextMonday;
     }
   }
+}
+
+extension PhotoUrlsExt on PhotoUrls {
+  String rawWith({
+    Size? size,
+    double? devicePixelRatio,
+    String fit = 'crop',
+    String crop = 'entropy',
+  }) =>
+      raw.replace(queryParameters: {
+        ...raw.queryParameters,
+        'crop': crop,
+        'fit': fit,
+        if (size != null) ...{
+          'w': size.width.toStringAsFixed(0),
+          'h': size.height.toStringAsFixed(0),
+        },
+        if (devicePixelRatio != null)
+          'dpr': devicePixelRatio.toStringAsFixed(1),
+      }).toString();
+}
+
+extension PhotoExt on Photo {
+  String rawWith({
+    Size? size,
+    double? devicePixelRatio,
+    String fit = 'crop',
+    String crop = 'entropy',
+  }) =>
+      urls.rawWith(
+        size: size,
+        devicePixelRatio: devicePixelRatio,
+        fit: fit,
+        crop: crop,
+      );
 }
