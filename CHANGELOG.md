@@ -1,3 +1,9 @@
+# 0.6.0
+
+- Fix images not loading.
+- Bottom bar redesign.
+- Show image attribution in the bottom bar.
+
 # 0.5.0
 
 - A new widget: Date & Time with support for custom date and time formats.
