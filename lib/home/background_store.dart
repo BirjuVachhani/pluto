@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:math' hide log;
 
-import 'package:celest_backend/client.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +14,7 @@ import 'package:shared/shared.dart';
 import 'package:unsplash_client/unsplash_client.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../backend/backend_service.dart';
 import '../model/background_settings.dart';
 import '../model/color_gradient.dart';
 import '../model/flat_color.dart';
@@ -115,6 +115,8 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
 
   @readonly
   ObservableList<UnsplashSource> _customSources = ObservableList.of([]);
+
+  final BackendService backendService = GetIt.instance.get<BackendService>();
 
   @computed
   bool get isLiked {
@@ -634,8 +636,7 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
     final Size size = _imageResolution.toSize() ?? windowSize;
     switch (_imageSource) {
       case ImageSource.unsplash:
-        final Photo? photo =
-            await celest.functions.unsplash.randomUnsplashImage(
+        final Photo? photo = await backendService.randomUnsplashImage(
           source: _unsplashSource,
           orientation:
               UnsplashPhotoOrientation.fromAspectRatio(size.aspectRatio),

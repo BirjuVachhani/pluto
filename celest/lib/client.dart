@@ -23,7 +23,7 @@ enum CelestEnvironment {
         local => kIsWeb || !_$io.Platform.isAndroid
             ? Uri.parse('http://localhost:7777')
             : Uri.parse('http://10.0.2.2:7777'),
-        production => Uri.parse('https://pluto-7e6b20-v76lntiq7q-el.a.run.app'),
+        production => Uri.parse('https://pluto-fd3a2f-d4nrgles6q-el.a.run.app'),
       };
 }
 

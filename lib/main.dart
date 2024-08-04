@@ -1,11 +1,10 @@
-import 'dart:developer';
-
-import 'package:celest_backend/client.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
+import 'backend/backend_service.dart';
+import 'backend/celest_backend_service.dart';
 import 'home/home.dart';
 import 'resources/colors.dart';
 import 'utils/geocoding_service.dart';
@@ -46,19 +45,7 @@ class MyApp extends StatelessWidget {
 }
 
 Future<void> initialize() async {
-  // Initialize Celest at the start of your app
-  bool celestInitialized = false;
-
-  if (useLocalServer) {
-    log('Initializing Celest with local server');
-    celest.init(environment: CelestEnvironment.local);
-    celestInitialized = true;
-  }
-
-  if (!celestInitialized) {
-    log('Initializing Celest with production server');
-    celest.init(environment: CelestEnvironment.production);
-  }
+  await initializeBackend();
 
   final storage = await SharedPreferencesStorageManager.create();
   GetIt.instance.registerSingleton<LocalStorageManager>(storage);
@@ -66,8 +53,20 @@ Future<void> initialize() async {
   GetIt.instance
       .registerSingleton<GeocodingService>(OpenMeteoGeocodingService());
 
+  await GetIt.instance.allReady();
   await loadPackageInfo();
 }
+
+Future<void> initializeBackend() async {
+  // Initialize Celest
+  final BackendService service = await getBackend();
+
+  await service.init(local: useLocalServer);
+
+  GetIt.instance.registerSingleton<BackendService>(service);
+}
+
+BackendService getBackend() => CelestBackendService();
 
 ThemeData buildTheme(BuildContext context) {
   return ThemeData(
