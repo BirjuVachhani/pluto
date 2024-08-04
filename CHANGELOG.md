@@ -1,3 +1,7 @@
+# 0.6.1
+
+- Fix image loading.
+
 # 0.6.0
 
 - Fix images not loading.
