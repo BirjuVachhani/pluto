@@ -4,7 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import 'backend/backend_service.dart';
-import 'backend/celest_backend_service.dart';
+import 'backend/rest_backend_service.dart';
 import 'home/home.dart';
 import 'resources/colors.dart';
 import 'utils/geocoding_service.dart';
@@ -66,7 +66,7 @@ Future<void> initializeBackend() async {
   GetIt.instance.registerSingleton<BackendService>(service);
 }
 
-BackendService getBackend() => CelestBackendService();
+Future<BackendService> getBackend() async => RestBackendService();
 
 ThemeData buildTheme(BuildContext context) {
   return ThemeData(

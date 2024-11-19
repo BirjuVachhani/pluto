@@ -1,18 +1,20 @@
 // Cloud functions are top-level Dart functions defined in the `functions/`
 // folder of your Celest project.
 
-import 'package:celest/celest.dart';
+import 'package:dotenv/dotenv.dart';
 import 'package:shared/shared.dart';
 import 'package:unsplash_client/unsplash_client.dart';
 
-import '../generated/resources.dart';
+final DotEnv env = DotEnv(includePlatformEnvironment: true)..load();
 
-@cloud
 Future<Photo?> randomUnsplashImage({
   required UnsplashSource source,
   UnsplashPhotoOrientation? orientation = UnsplashPhotoOrientation.landscape,
-  @env.unsplashAccessKey required String unsplashAccessKey,
 }) async {
+  final String? unsplashAccessKey = env['UNSPLASH_ACCESS_KEY'];
+  if (unsplashAccessKey == null) {
+    throw StateError('UNSPLASH_ACCESS_KEY is missing.');
+  }
   final client = UnsplashClient(
     settings: ClientSettings(
       credentials: AppCredentials(accessKey: unsplashAccessKey),

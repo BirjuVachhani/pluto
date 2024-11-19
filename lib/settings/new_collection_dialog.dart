@@ -2,13 +2,14 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:math' hide log;
 
-import 'package:celest_backend/client.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared/shared.dart';
 import 'package:unsplash_client/unsplash_client.dart';
 
+import '../backend/backend_service.dart';
 import '../home/background_store.dart';
 import '../resources/colors.dart';
 import '../ui/text_input.dart';
@@ -210,10 +211,11 @@ class _NewCollectionDialogState extends State<NewCollectionDialog> {
   Future<void> onTextChanged(String value) async {
     value = value.trim();
     if (mounted) setState(() => isValid = null);
+    final BackendService backendService = GetIt.instance.get<BackendService>();
     try {
       final source = UnsplashTagsSource(tags: value);
-      final Photo? photo =
-          await celest.functions.unsplash.randomUnsplashImage(source: source);
+      final Photo? photo = await backendService.randomUnsplashImage(
+          source: source, orientation: UnsplashPhotoOrientation.landscape);
       isValid = photo != null;
     } catch (error, stacktrace) {
       log(error.toString());
