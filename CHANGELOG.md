@@ -1,3 +1,7 @@
+# 0.6.2
+
+- Migrate & fix server.
+
 # 0.6.1
 
 - Fix image loading.

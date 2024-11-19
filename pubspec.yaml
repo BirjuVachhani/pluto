@@ -3,7 +3,7 @@ description: A beautiful new tab for your browser built with love in Flutter.
 
 publish_to: 'none'
 
-version: 0.6.1
+version: 0.6.2
 
 environment:
   sdk: '>=3.4.0 <4.0.0'
