@@ -10,6 +10,8 @@ import 'backend_service.dart';
 
 const String globeBackendUrl =
     'https://pluto-server-cn2xut2-birjuvachhani.globeapp.dev/';
+const String cloudRunUrl =
+    'https://pluto-510516922464.asia-south1.run.app';
 
 class RestBackendService extends BackendService {
   String baseUrl = '';
@@ -21,7 +23,7 @@ class RestBackendService extends BackendService {
       baseUrl = 'http://localhost:8000';
     } else {
       log('Initializing backend with production server');
-      baseUrl = globeBackendUrl;
+      baseUrl = cloudRunUrl;
     }
   }
 
