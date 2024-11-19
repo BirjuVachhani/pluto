@@ -3,12 +3,11 @@ FROM dart:stable AS build
 
 # Resolve app dependencies.
 WORKDIR /app
-COPY /server/pubspec.* ./server/
-RUN dart pub get
-RUN dart pub get --directory=server
 
 # Copy app source code (except anything in .dockerignore) and AOT compile app.
 COPY . .
+RUN dart pub get
+RUN dart pub get --directory=server
 RUN dart compile exe server/bin/server.dart -o server/bin/server
 
 # Build minimal serving image from AOT-compiled `/server`
