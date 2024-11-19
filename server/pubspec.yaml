@@ -7,7 +7,7 @@ publish_to: none
 # repository: https://github.com/my_org/my_repo
 
 environment:
-  sdk: ^3.6.0-334.3.beta
+  sdk: ">=3.4.0 <4.0.0"
 
 dependencies:
   shelf: ^1.4.2
