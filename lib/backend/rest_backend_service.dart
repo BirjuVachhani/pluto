@@ -8,6 +8,9 @@ import 'package:unsplash_client/unsplash_client.dart';
 
 import 'backend_service.dart';
 
+const String globeBackendUrl =
+    'https://pluto-server-cn2xut2-birjuvachhani.globeapp.dev/';
+
 class RestBackendService extends BackendService {
   String baseUrl = '';
 
@@ -18,7 +21,7 @@ class RestBackendService extends BackendService {
       baseUrl = 'http://localhost:8000';
     } else {
       log('Initializing backend with production server');
-      baseUrl = 'https://pluto.globe.dev';
+      baseUrl = globeBackendUrl;
     }
   }
 
