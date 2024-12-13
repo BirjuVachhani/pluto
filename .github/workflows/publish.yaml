@@ -21,7 +21,7 @@ jobs:
       - name: Update version
         run: dart scripts/update_version.dart
       - name: Build
-        run: flutter build web --release --web-renderer html --csp
+        run: flutter build web --release --web-renderer=canvaskit --csp --no-web-resources-cdn
       - name: Add LICENSE
         run: cp LICENSE build/web
       - name: Install ZIP tool
