@@ -21,7 +21,7 @@ dependencies:
   dotenv: ^4.2.0
 
 dev_dependencies:
-  lints: ^5.1.0
+  lints: ^5.1.1
   test: ^1.25.12
-  build_runner: ^2.4.13
+  build_runner: ^2.4.14
   json_serializable: ^6.9.0
