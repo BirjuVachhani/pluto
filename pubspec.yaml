@@ -18,10 +18,10 @@ dependencies:
   get_it: ^8.0.3
   json_annotation: ^4.9.0
   collection: ^1.19.0
-  intl: ^0.19.0
+  intl: ^0.20.1
   http: ^1.2.2
 #  dropdown_button2: ^1.9.2
-  file_picker: ^8.1.5
+  file_picker: ^8.1.7
   screwdriver: ^5.8.0
   flutter_multi_formatter: ^2.13.0
   url_launcher: ^6.3.1
@@ -50,7 +50,7 @@ dev_dependencies:
   mobx_codegen: ^2.7.0
 
 dependency_overrides:
-  watcher: ^1.1.0
+  watcher: ^1.1.1
 
 flutter:
   uses-material-design: true
