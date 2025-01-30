@@ -20,7 +20,7 @@ dependencies:
   collection: ^1.19.0
   intl: ^0.20.1
   http: ^1.2.2
-#  dropdown_button2: ^1.9.2
+  #  dropdown_button2: ^1.9.2
   file_picker: ^8.1.7
   screwdriver: ^5.8.0
   flutter_multi_formatter: ^2.13.0
@@ -78,6 +78,3 @@ flutter:
         - asset: assets/fonts/Renner-Medium.otf
 
 scripts: scripts.
-
-workspace:
-  - shared
