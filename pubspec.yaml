@@ -13,39 +13,40 @@ dependencies:
   flutter:
     sdk: flutter
   equatable: ^2.0.7
-  shared_preferences: ^2.3.4
-  provider: ^6.1.2
+  shared_preferences: ^2.5.3
+  provider: ^6.1.5
   get_it: ^8.0.3
   json_annotation: ^4.9.0
-  collection: ^1.19.0
+  collection: ^1.19.1
   intl: ^0.20.1
-  http: ^1.2.2
+  http: ^1.4.0
   #  dropdown_button2: ^1.9.2
-  file_picker: ^8.1.7
-  screwdriver: ^5.8.0
-  flutter_multi_formatter: ^2.13.0
+  file_picker: ^10.1.8
+  screwdriver: ^5.10.0
+  flutter_multi_formatter: ^2.13.7
   url_launcher: ^6.3.1
-  package_info_plus: ^8.1.2
+  package_info_plus: ^8.3.0
   flutter_screwdriver: ^3.2.0
-  flutter_markdown: ^0.7.4+3
+  flutter_markdown: ^0.7.7+1
   mobx: ^2.5.0
   flutter_mobx: ^2.3.0
   rxdart: ^0.28.0
   universal_html: ^2.2.4
   universal_io: ^2.2.2
-  unsplash_client: ^2.2.0
+  unsplash_client: ^3.0.0
   shared:
     path: shared
+  web: ^1.1.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  build_runner: ^2.4.14
+  build_runner: ^2.4.15
   flutter_lints: ^5.0.0
-  characters: ^1.3.0
+  characters: ^1.4.0
   dart_style: ^2.3.7
   json_serializable: ^6.9.0
-  flutter_launcher_icons: ^0.14.2
+  flutter_launcher_icons: ^0.14.3
   yaml: ^3.1.3
   mobx_codegen: ^2.7.0
 
