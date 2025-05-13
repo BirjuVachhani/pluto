@@ -28,7 +28,7 @@ jobs:
       - name: Update version
         run: dart scripts/update_version.dart
       - name: Build
-        run: flutter build web --release --web-renderer=canvaskit --csp --no-web-resources-cdn
+        run: flutter build web --release --csp --no-web-resources-cdn
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
