@@ -510,12 +510,6 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
     return image;
   }
 
-  /// This retrieves the original url for unsplash image as Unsplash source API
-  /// redirects to the original image url.
-  Future<String?> retrieveRedirectionUrl(String url) async {
-    return getRedirectionUrl(url);
-  }
-
   /// Responsible for fetching a new image from unsplash.
   /// [showLoadingBackground] param is used to show a loading
   /// background (grey scale) while the image is being fetched when true.

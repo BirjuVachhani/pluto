@@ -49,3 +49,4 @@ app.*.map.json
 **/Podfile.lock
 
 .env
+**/**.zip

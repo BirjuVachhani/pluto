@@ -78,4 +78,4 @@ flutter:
       fonts:
         - asset: assets/fonts/Renner-Medium.otf
 
-scripts: scripts.
+scripts: scripts.yaml

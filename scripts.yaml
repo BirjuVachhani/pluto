@@ -15,6 +15,7 @@ pack:
   - flutter build web --csp --no-web-resources-cdn
   - cp LICENSE build/web
   - cd build && zip -r pluto.zip web
+  - cp build/pluto.zip pluto.zip
 app_icons: flutter pub run flutter_launcher_icons
 codegen: flutter pub run build_runner build --delete-conflicting-outputs
 generate_colors: dart scripts/generators/colors_generator.dart scripts/generators/colors.json lib/resources/flat_colors.dart
