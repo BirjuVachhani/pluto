@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:dart_style/dart_style.dart';
 import 'package:characters/characters.dart';
 
-/// Run command: dart color_generator.dart <input.json> <output.dart>
+/// Run command: dart color_generator.dart [input.json] [output.dart]
 /// Full command to run from project root:
 ///
 /// dart scripts/generators/colors_generator.dart scripts/generators/colors.json lib/resources/flat_colors.dart

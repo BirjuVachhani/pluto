@@ -45,7 +45,7 @@ class CustomSlider extends StatelessWidget {
                   min: min ?? 0,
                   max: max ?? 100,
                   activeColor: Theme.of(context).colorScheme.primary,
-                  inactiveColor: Colors.white.withOpacity(0.1),
+                  inactiveColor: Colors.white.withValues(alpha: 0.1),
                   onChanged: onChanged,
                 ),
               ),
@@ -56,7 +56,7 @@ class CustomSlider extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: AppColors.borderColor.withOpacity(0.5),
+                  color: AppColors.borderColor.withValues(alpha: 0.5),
                   borderRadius: BorderRadius.circular(4),
                   // border: Border.all(color: Colors.grey.shade300),
                 ),

@@ -185,9 +185,10 @@ class CustomCollectionsSettings extends StatelessWidget {
                   builder: (context, hovering, child) {
                     return Container(
                       color: selected
-                          ? context.colorScheme.primary.withOpacity(0.1)
+                          ? context.colorScheme.primary.withValues(alpha: 0.1)
                           : hovering
-                              ? context.colorScheme.onSurface.withOpacity(0.05)
+                              ? context.colorScheme.onSurface
+                                  .withValues(alpha: 0.05)
                               : null,
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 6),

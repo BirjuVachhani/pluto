@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -239,7 +238,7 @@ class _LocationAutoCompleteFieldState extends State<LocationAutoCompleteField> {
                     borderRadius: BorderRadius.circular(6),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
+                        color: Colors.black.withValues(alpha: 0.1),
                         blurRadius: 10,
                         offset: const Offset(0, 4),
                       ),
@@ -302,7 +301,7 @@ class _LocationAutoCompleteFieldState extends State<LocationAutoCompleteField> {
                               onSelected(location);
                             },
                             overlayColor: WidgetStateProperty.all(
-                                Colors.grey.withOpacity(0.15)),
+                                Colors.grey.withValues(alpha: 0.15)),
                             child: Container(
                               color: selected
                                   ? Theme.of(context).colorScheme.primary
@@ -316,7 +315,8 @@ class _LocationAutoCompleteFieldState extends State<LocationAutoCompleteField> {
                                     decoration: BoxDecoration(
                                       boxShadow: [
                                         BoxShadow(
-                                          color: Colors.black.withOpacity(0.1),
+                                          color: Colors.black
+                                              .withValues(alpha: 0.1),
                                           blurRadius: 10,
                                           offset: const Offset(0, 4),
                                         ),
@@ -395,7 +395,7 @@ class _LocationAutoCompleteFieldState extends State<LocationAutoCompleteField> {
       location.description2,
       location.description1,
       location.country,
-    ].whereNotNull().where((element) => element.isNotEmpty).toList();
+    ].nonNulls.where((element) => element.isNotEmpty).toList();
 
     return components.join(', ');
   }

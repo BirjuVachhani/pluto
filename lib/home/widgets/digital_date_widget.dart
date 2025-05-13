@@ -80,20 +80,11 @@ class DigitalDateWidget extends StatelessWidget {
   String buildFormatString(DateFormat format, String separator) {
     // final random = Random();
 
-    switch (format) {
-      case DateFormat.dayMonthYear:
-        return 'dd${separator}MM${separator}yyyy';
-      case DateFormat.monthDayYear:
-        return 'MM${separator}dd${separator}yyyy';
-      case DateFormat.yearMonthDay:
-        return 'yyyy${separator}MM${separator}dd';
-      case DateFormat.custom:
-        return 'dd $separator MMMM $separator yyyy';
-      // case DateFormat.random:
-      //   final components = ['dd', 'MM', 'yyyy']..shuffle(random);
-      //   return components.join(separator);
-      default:
-        return 'dd${separator}MM${separator}yyyy'; // Default to a format
-    }
+    return switch (format) {
+      DateFormat.dayMonthYear => 'dd${separator}MM${separator}yyyy',
+      DateFormat.monthDayYear => 'MM${separator}dd${separator}yyyy',
+      DateFormat.yearMonthDay => 'yyyy${separator}MM${separator}dd',
+      DateFormat.custom => 'dd $separator MMMM $separator yyyy'
+    };
   }
 }

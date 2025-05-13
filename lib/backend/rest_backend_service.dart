@@ -10,8 +10,7 @@ import 'backend_service.dart';
 
 const String globeBackendUrl =
     'https://pluto-server-cn2xut2-birjuvachhani.globeapp.dev/';
-const String cloudRunUrl =
-    'https://pluto-510516922464.asia-south1.run.app';
+const String cloudRunUrl = 'https://pluto-510516922464.asia-south1.run.app';
 
 class RestBackendService extends BackendService {
   String baseUrl = '';
@@ -46,7 +45,7 @@ class RestBackendService extends BackendService {
       final Map<String, dynamic> json = jsonDecode(result.body);
       return Photo.fromJson(json);
     }
-    print(result.body);
+    log(result.body);
     throw HttpException(result.body);
   }
 }

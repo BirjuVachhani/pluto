@@ -159,7 +159,7 @@ class MessageBannerView extends StatelessWidget {
       case MessageBannerStyle.transparent:
         return null;
       case MessageBannerStyle.semiTransparent:
-        return type.color.withOpacity(0.1);
+        return type.color.withValues(alpha: 0.1);
       case MessageBannerStyle.solid:
         return type.color;
     }

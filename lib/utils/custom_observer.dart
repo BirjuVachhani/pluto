@@ -63,7 +63,7 @@ class CustomObserver extends StatelessWidget {
               animationDuration: Duration.zero,
               shape: RoundedRectangleBorder(
                 side: BorderSide(
-                  color: color.withOpacity(opacity),
+                  color: color.withValues(alpha: opacity),
                   width: 4,
                 ),
               ),

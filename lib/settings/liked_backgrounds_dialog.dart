@@ -304,7 +304,7 @@ class _ItemState extends State<_Item> {
                     curve: Curves.easeInOut,
                     child: Container(
                       color: hovering
-                          ? Colors.black.withOpacity(0.8)
+                          ? Colors.black.withValues(alpha: 0.8)
                           : Colors.transparent,
                       child: Center(
                         child: options,
@@ -344,7 +344,7 @@ class _DownloadIndicator extends StatelessWidget {
     return Container(
       height: 29,
       alignment: Alignment.centerLeft,
-      color: Colors.black.withOpacity(0.95),
+      color: Colors.black.withValues(alpha: 0.95),
       padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Row(
         children: [
@@ -440,14 +440,14 @@ class _ItemOptionButton extends StatelessWidget {
       ),
       child: Material(
         type: MaterialType.circle,
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         child: Tooltip(
           message: tooltip ?? '',
           child: InkWell(
             onTap: onPressed,
             customBorder: const CircleBorder(),
             overlayColor: WidgetStateProperty.all(
-              color.withOpacity(0.1),
+              color.withValues(alpha: 0.1),
             ),
             child: Padding(
               padding: const EdgeInsets.all(8),
@@ -470,19 +470,19 @@ class _NetworkImageWithStates extends StatelessWidget {
   final double? height;
 
   const _NetworkImageWithStates({
-    // ignore: unused_element
+    // ignore: unused_element_parameter
     super.key,
     required this.url,
     this.fit,
-    // ignore: unused_element
+    // ignore: unused_element_parameter
     this.alignment = Alignment.center,
-    // ignore: unused_element
+    // ignore: unused_element_parameter
     this.opacity,
-    // ignore: unused_element
+    // ignore: unused_element_parameter
     this.scale = 1,
-    // ignore: unused_element
+    // ignore: unused_element_parameter
     this.width,
-    // ignore: unused_element
+    // ignore: unused_element_parameter
     this.height,
   });
 
@@ -549,7 +549,8 @@ class CircularProgressPainter extends CustomPainter {
 
     final double angle = value * 360;
     final angleInRadians = angle * pi / 180;
-    canvas.drawCircle(center, radius, Paint()..color = color.withOpacity(0.1));
+    canvas.drawCircle(
+        center, radius, Paint()..color = color.withValues(alpha: 0.1));
     canvas.drawArc(
       Rect.fromCenter(
         center: center,

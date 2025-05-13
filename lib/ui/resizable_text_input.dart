@@ -88,7 +88,7 @@ class _ResizableTextInputState extends State<ResizableTextInput> {
                       const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
                   filled: true,
                   isCollapsed: true,
-                  fillColor: Colors.grey.withOpacity(0.05),
+                  fillColor: Colors.grey.withValues(alpha: 0.05),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(
                       color: Theme.of(context).colorScheme.primary,
@@ -98,14 +98,14 @@ class _ResizableTextInputState extends State<ResizableTextInput> {
                   ),
                   border: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: Colors.grey.withOpacity(0.2),
+                      color: Colors.grey.withValues(alpha: 0.2),
                       width: 1,
                     ),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(
-                      color: Colors.grey.withOpacity(0.15),
+                      color: Colors.grey.withValues(alpha: 0.15),
                       width: 1,
                     ),
                     borderRadius: BorderRadius.circular(4),
@@ -132,7 +132,7 @@ class _ResizableTextInputState extends State<ResizableTextInput> {
                       angle: pi / 180 * -45,
                       child: Icon(
                         Icons.filter_list,
-                        color: Colors.grey.withOpacity(0.3),
+                        color: Colors.grey.withValues(alpha: 0.3),
                         size: 18,
                       ),
                     ),

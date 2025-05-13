@@ -52,7 +52,7 @@ class CustomMaterialDropdown<T> extends StatelessWidget {
             decoration: InputDecoration(
               border: InputBorder.none,
               filled: true,
-              fillColor: Colors.grey.withOpacity(0.15),
+              fillColor: Colors.grey.withValues(alpha: 0.15),
               contentPadding: const EdgeInsets.symmetric(horizontal: 16),
             ),
             menuMaxHeight: 700,
@@ -156,7 +156,7 @@ class CustomDropdown<T> extends StatelessWidget {
                 height: 1,
               ),
           buttonDecoration: BoxDecoration(
-            color: AppColors.borderColor.withOpacity(0.25),
+            color: AppColors.borderColor.withValues(alpha: 0.25),
             borderRadius: BorderRadius.circular(4),
           ),
           dropdownDecoration: BoxDecoration(
@@ -211,7 +211,7 @@ class SearchBar extends StatelessWidget {
         // color: Colors.white,
         border: Border(
           bottom: BorderSide(
-            color: Colors.grey.withOpacity(0.5),
+            color: Colors.grey.withValues(alpha: 0.5),
             width: 0.5,
           ),
         ),
@@ -227,16 +227,16 @@ class SearchBar extends StatelessWidget {
           hintText: 'Search',
           filled: true,
           prefixIcon: const Icon(Icons.search_rounded),
-          fillColor: AppColors.borderColor.withOpacity(0.25),
+          fillColor: AppColors.borderColor.withValues(alpha: 0.25),
           hintStyle: const TextStyle(fontSize: 13, height: 1.2),
           enabledBorder: OutlineInputBorder(
-            borderSide:
-                BorderSide(color: Colors.grey.withOpacity(0.3), width: 0.5),
+            borderSide: BorderSide(
+                color: Colors.grey.withValues(alpha: 0.3), width: 0.5),
             borderRadius: BorderRadius.circular(4),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide:
-                BorderSide(color: Colors.grey.withOpacity(0.3), width: 0.5),
+            borderSide: BorderSide(
+                color: Colors.grey.withValues(alpha: 0.3), width: 0.5),
             borderRadius: BorderRadius.circular(4),
           ),
           border: OutlineInputBorder(

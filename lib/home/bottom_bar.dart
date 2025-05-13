@@ -37,11 +37,13 @@ class BottomBar extends StatelessWidget {
                         curve: Curves.easeInOut,
                         style: DefaultTextStyle.of(context).style.copyWith(
                               color: hovering
-                                  ? store.foregroundColor.withOpacity(0.8)
-                                  : store.foregroundColor.withOpacity(0.2),
+                                  ? store.foregroundColor.withValues(alpha: 0.8)
+                                  : store.foregroundColor
+                                      .withValues(alpha: 0.2),
                               decorationColor: hovering
-                                  ? store.foregroundColor.withOpacity(0.8)
-                                  : store.foregroundColor.withOpacity(0.2),
+                                  ? store.foregroundColor.withValues(alpha: 0.8)
+                                  : store.foregroundColor
+                                      .withValues(alpha: 0.2),
                               fontWeight: FontWeight.w300,
                             ),
                         child: Wrap(
@@ -104,7 +106,7 @@ class BottomBar extends StatelessWidget {
                                       minHeight: 4,
                                       borderRadius: BorderRadius.circular(100),
                                       backgroundColor: store.foregroundColor
-                                          .withOpacity(0.3),
+                                          .withValues(alpha: 0.3),
                                     ),
                                   ),
                                 ),
@@ -180,8 +182,8 @@ class _RadialHorizonState extends State<RadialHorizon> {
                 decoration: BoxDecoration(
                   gradient: RadialGradient(
                     colors: [
-                      (widget.color ?? Colors.white).withOpacity(1),
-                      (widget.color ?? Colors.white).withOpacity(0.7),
+                      (widget.color ?? Colors.white).withValues(alpha: 1),
+                      (widget.color ?? Colors.white).withValues(alpha: 0.7),
                       Colors.transparent,
                     ],
                     stops: const [0.25, 0.3, 0.35],
@@ -249,11 +251,11 @@ class LinearHorizon extends StatelessWidget {
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            // (color ?? Colors.black).withOpacity(1),
-                            // (color ?? Colors.black).withOpacity(0.7),
-                            color.withOpacity(0.8),
-                            color.withOpacity(0.4),
-                            color.withOpacity(0),
+                            // (color ?? Colors.black).withValues(alpha:1),
+                            // (color ?? Colors.black).withValues(alpha:0.7),
+                            color.withValues(alpha: 0.8),
+                            color.withValues(alpha: 0.4),
+                            color.withValues(alpha: 0),
                           ],
                           begin: Alignment.bottomCenter,
                           end: Alignment.topCenter,
@@ -325,7 +327,7 @@ class _SettingsButtonState extends State<SettingsButton>
                 angle: controller.value * pi / pi,
                 child: Icon(
                   Icons.settings,
-                  color: color.withOpacity(max(0.2, controller.value)),
+                  color: color.withValues(alpha: max(0.2, controller.value)),
                 ),
               );
             },
@@ -386,7 +388,7 @@ class _ChangeBackgroundButtonState extends State<ChangeBackgroundButton>
                 AssetImage(store.isLoadingImage
                     ? 'assets/images/ic_hourglass.png'
                     : 'assets/images/ic_fan.png'),
-                color: color.withOpacity(max(0.2, controller.value)),
+                color: color.withValues(alpha: max(0.2, controller.value)),
               );
             },
           ),
@@ -456,7 +458,7 @@ class _LikeBackgroundButtonState extends State<LikeBackgroundButton>
                   store.isLiked
                       ? Icons.favorite_rounded
                       : Icons.favorite_border_rounded,
-                  color: color.withOpacity(max(0.2, controller.value)),
+                  color: color.withValues(alpha: max(0.2, controller.value)),
                 );
               },
             ),

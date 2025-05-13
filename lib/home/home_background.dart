@@ -50,7 +50,7 @@ class _HomeBackgroundState extends State<HomeBackground> {
           ),
           // foregroundDecoration: BoxDecoration(
           //   color: (store.invert ? Colors.white : AppColors.tint)
-          //       .withOpacity(store.tint / 100),
+          //       .withValues(alpha:store.tint / 100),
           // ),
           child: Stack(
             fit: StackFit.expand,
@@ -84,7 +84,7 @@ class _HomeBackgroundState extends State<HomeBackground> {
                       curve: Curves.easeOut,
                       decoration: BoxDecoration(
                         color: (store.invert ? Colors.white : AppColors.tint)
-                            .withOpacity(store.tint / 100),
+                            .withValues(alpha: store.tint / 100),
                       ),
                     );
                   },
@@ -97,7 +97,7 @@ class _HomeBackgroundState extends State<HomeBackground> {
                     if (!store.texture) return const SizedBox.shrink();
                     return CustomPaint(
                       painter: TexturePainter(
-                        color: store.foregroundColor.withOpacity(0.4),
+                        color: store.foregroundColor.withValues(alpha: 0.4),
                       ),
                     );
                   },

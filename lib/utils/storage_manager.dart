@@ -118,7 +118,7 @@ class SharedPreferencesStorageManager extends LocalStorageManager {
 
   @override
   Future<void> clear({Iterable<String> except = const []}) async {
-    final Iterable<String> keys = prefs.getKeys().except(except);
+    final Iterable<String> keys = prefs.getKeys().exceptAll(except);
     for (final key in keys) {
       await prefs.remove(key);
     }

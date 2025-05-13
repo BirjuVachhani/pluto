@@ -70,14 +70,14 @@ extension ColorFS on Color {
     }
     for (final strength in strengths) {
       final ds = 0.5 - strength;
-      swatch[(strength * 1000).round()] = Color.fromRGBO(
-        red + ((ds < 0 ? red : (255 - red)) * ds).round(),
-        green + ((ds < 0 ? green : (255 - green)) * ds).round(),
-        blue + ((ds < 0 ? blue : (255 - blue)) * ds).round(),
-        1,
+      swatch[(strength * 1000).round()] = Color.from(
+        red: r + ((ds < 0 ? r : (1 - r)) * ds).round(),
+        green: g + ((ds < 0 ? g : (1 - g)) * ds).round(),
+        blue: b + ((ds < 0 ? b : (1 - b)) * ds).round(),
+        alpha: 1,
       );
     }
-    return MaterialColor(value, swatch);
+    return MaterialColor(toARGB32(), swatch);
   }
 }
 

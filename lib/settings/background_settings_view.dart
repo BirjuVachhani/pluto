@@ -104,7 +104,7 @@ class _BackgroundOptions extends StatelessWidget {
                   Icons.lens_blur_rounded,
                   color: store.texture
                       ? Theme.of(context).colorScheme.primary
-                      : AppColors.textColor.withOpacity(0.5),
+                      : AppColors.textColor.withValues(alpha: 0.5),
                   size: 20,
                 ),
               ),
@@ -131,8 +131,8 @@ class _BackgroundOptions extends StatelessWidget {
                           ? 'assets/images/ic_hourglass.png'
                           : 'assets/images/ic_fan.png'),
                       color: store.isLoadingImage
-                          ? Colors.grey.withOpacity(0.5)
-                          : AppColors.textColor.withOpacity(0.5),
+                          ? Colors.grey.withValues(alpha: 0.5)
+                          : AppColors.textColor.withValues(alpha: 0.5),
                       size: 20,
                     ),
                   ),
@@ -175,7 +175,7 @@ class _ImageBackgroundOptions extends StatelessWidget {
                   Icons.brightness_medium_rounded,
                   color: store.invert
                       ? Theme.of(context).colorScheme.primary
-                      : AppColors.textColor.withOpacity(0.5),
+                      : AppColors.textColor.withValues(alpha: 0.5),
                   size: 20,
                 ),
               ),
@@ -196,8 +196,8 @@ class _ImageBackgroundOptions extends StatelessWidget {
                       ? 'assets/images/ic_hourglass.png'
                       : 'assets/images/ic_fan.png'),
                   color: store.isLoadingImage
-                      ? Colors.grey.withOpacity(0.5)
-                      : AppColors.textColor.withOpacity(0.5),
+                      ? Colors.grey.withValues(alpha: 0.5)
+                      : AppColors.textColor.withValues(alpha: 0.5),
                   size: 20,
                 ),
               ),
@@ -216,8 +216,8 @@ class _ImageBackgroundOptions extends StatelessWidget {
                 child: Icon(
                   Icons.download_rounded,
                   color: store.isLoadingImage || store.currentImage == null
-                      ? Colors.grey.withOpacity(0.5)
-                      : AppColors.textColor.withOpacity(0.5),
+                      ? Colors.grey.withValues(alpha: 0.5)
+                      : AppColors.textColor.withValues(alpha: 0.5),
                   size: 20,
                 ),
               ),
@@ -236,8 +236,8 @@ class _ImageBackgroundOptions extends StatelessWidget {
                 child: Icon(
                   Icons.open_in_new_rounded,
                   color: store.isLoadingImage || store.currentImage == null
-                      ? Colors.grey.withOpacity(0.5)
-                      : AppColors.textColor.withOpacity(0.5),
+                      ? Colors.grey.withValues(alpha: 0.5)
+                      : AppColors.textColor.withValues(alpha: 0.5),
                   size: 20,
                 ),
               ),
@@ -396,7 +396,7 @@ class _ImageSourceSelectorState extends State<_ImageSourceSelector> {
               // label: 'Source',
               hint: 'Select source',
               isExpanded: true,
-              items: ImageSource.values.except([ImageSource.local]).toList(),
+              items: ImageSource.values.except(ImageSource.local).toList(),
               itemBuilder: (context, item) => Text(
                 item.label,
                 style: TextStyle(
@@ -484,7 +484,8 @@ class UnsplashSourceSettings extends StatelessWidget {
                         child: Icon(
                           Icons.explicit,
                           size: 16,
-                          color: context.colorScheme.onSurface.withOpacity(0.7),
+                          color: context.colorScheme.onSurface
+                              .withValues(alpha: 0.7),
                         ),
                       ),
                   ],
@@ -511,7 +512,8 @@ class UnsplashSourceSettings extends StatelessWidget {
               isExpanded: true,
               hint: 'Select a resolution',
               items: ImageResolution.values
-                  .except([ImageResolution.original]).toList(),
+                  .except(ImageResolution.original)
+                  .toList(),
               itemBuilder: (context, item) => Text.rich(
                 TextSpan(
                   children: [

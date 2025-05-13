@@ -6,13 +6,13 @@ clean:
 build:
   - $deps
   - $update_version
-  - flutter build web --web-renderer=canvaskit --csp --no-web-resources-cdn --dart-define="MODE=debug"
+  - flutter build web --csp --no-web-resources-cdn --dart-define="MODE=debug"
   - rm -rf build/extension
   - mv build/web build/extension
 pack:
   - $deps
   - $update_version
-  - flutter build web -web-renderer=canvaskit --csp --no-web-resources-cdn
+  - flutter build web --csp --no-web-resources-cdn
   - cp LICENSE build/web
   - cd build && zip -r pluto.zip web
 app_icons: flutter pub run flutter_launcher_icons
