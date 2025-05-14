@@ -3,7 +3,7 @@ description: A beautiful new tab for your browser built with love in Flutter.
 
 publish_to: 'none'
 
-version: 0.6.2
+version: 0.6.3
 
 environment:
   sdk: '>=3.6.0 <4.0.0'
@@ -21,7 +21,7 @@ dependencies:
   intl: ^0.20.1
   http: ^1.4.0
   #  dropdown_button2: ^1.9.2
-  file_picker: ^10.1.8
+  file_picker: ^10.1.9
   screwdriver: ^5.10.0
   flutter_multi_formatter: ^2.13.7
   url_launcher: ^6.3.1

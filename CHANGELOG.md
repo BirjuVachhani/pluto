@@ -1,3 +1,7 @@
+# 0.6.3
+
+- Bug fixes and performance improvements.
+
 # 0.6.2
 
 - Migrate & fix server.
