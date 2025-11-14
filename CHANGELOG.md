@@ -1,3 +1,7 @@
+# 0.6.4
+
+- Fix clock not updating correctly when tab is inactive for long.
+
 # 0.6.3
 
 - Bug fixes and performance improvements.
