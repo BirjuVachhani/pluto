@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 import 'package:screwdriver/screwdriver.dart';
-import 'package:universal_html/html.dart' as html;
 import 'package:universal_io/io.dart' as io;
+import 'package:universal_web/web.dart' as web;
 
 import '../model/export_data.dart';
 import '../model/widget_settings.dart';
@@ -24,8 +24,7 @@ part 'home_store.g.dart';
 class HomeStore = _HomeStore with _$HomeStore;
 
 abstract class _HomeStore with Store, LazyInitializationMixin {
-  late final MessageBannerController messageBannerController =
-      MessageBannerController();
+  late final MessageBannerController messageBannerController = MessageBannerController();
 
   _HomeStore() {
     init();
@@ -75,20 +74,17 @@ abstract class _HomeStore with Store, LazyInitializationMixin {
   /// Exports the current settings to a json file.
   Future<bool?> onExportSettings(ExportData data) async {
     try {
-      final String dataString =
-          const JsonEncoder.withIndent('  ').convert(data.toJson());
+      final String dataString = const JsonEncoder.withIndent('  ').convert(data.toJson());
 
-      final String fileName =
-          'pluto-settings-${data.createdAt.millisecondsSinceEpoch}.json';
+      final String fileName = 'pluto-settings-${data.createdAt.millisecondsSinceEpoch}.json';
 
       if (kIsWeb) {
-        const String mimeType = 'application/json';
         final Uint8List bytes = utf8.encode(dataString);
-        final html.Blob blob = html.Blob([bytes], mimeType);
-        final html.AnchorElement anchorElement =
-            html.AnchorElement(href: html.Url.createObjectUrlFromBlob(blob));
-        anchorElement.download = fileName;
-        anchorElement.click();
+        web.HTMLAnchorElement()
+          ..href = UriData.fromBytes(bytes, mimeType: 'application/json').toString()
+          ..setAttribute('download', fileName)
+          ..click()
+          ..remove();
       } else {
         final String? path = await FilePicker.platform.saveFile(
           type: FileType.custom,
@@ -104,10 +100,7 @@ abstract class _HomeStore with Store, LazyInitializationMixin {
         await file.writeAsString(dataString);
       }
 
-      messageBannerController.showNeutral(
-        'Settings exported!',
-        icon: const Icon(Icons.done),
-      );
+      messageBannerController.showNeutral('Settings exported!', icon: const Icon(Icons.done));
 
       return true;
     } catch (error, stackTrace) {
@@ -143,17 +136,15 @@ abstract class _HomeStore with Store, LazyInitializationMixin {
 
       if (data.version != settingsVersion) {
         messageBannerController.showError(
-            'Settings file contains a version that is not supported by this '
-            'version of Pluto.');
+          'Settings file contains a version that is not supported by this '
+          'version of Pluto.',
+        );
         return false;
       }
 
       await importDataToStorage(data);
 
-      messageBannerController.showNeutral(
-        'Settings imported!',
-        icon: const Icon(Icons.done),
-      );
+      messageBannerController.showNeutral('Settings imported!', icon: const Icon(Icons.done));
 
       return true;
     } catch (error, stackTrace) {
@@ -165,12 +156,10 @@ abstract class _HomeStore with Store, LazyInitializationMixin {
   }
 
   Future<void> importDataToStorage(ExportData data) async {
-    final LocalStorageManager storage =
-        GetIt.instance.get<LocalStorageManager>();
+    final LocalStorageManager storage = GetIt.instance.get<LocalStorageManager>();
 
     // background settings
-    await storage.setJson(
-        StorageKeys.backgroundSettings, data.settings.toJson());
+    await storage.setJson(StorageKeys.backgroundSettings, data.settings.toJson());
 
     // cached images
     await storage.setInt(StorageKeys.imageIndex, data.imageIndex);
@@ -190,26 +179,19 @@ abstract class _HomeStore with Store, LazyInitializationMixin {
 
     // widget settings
     final widgetSettings = data.widgetSettings;
-    await storage.setEnum<WidgetType>(
-        StorageKeys.widgetType, widgetSettings.type);
+    await storage.setEnum<WidgetType>(StorageKeys.widgetType, widgetSettings.type);
 
-    await storage.setJson(
-        StorageKeys.digitalClockSettings, widgetSettings.digitalClock.toJson());
+    await storage.setJson(StorageKeys.digitalClockSettings, widgetSettings.digitalClock.toJson());
 
-    await storage.setJson(
-        StorageKeys.analogueClockSettings, widgetSettings.analogClock.toJson());
+    await storage.setJson(StorageKeys.analogueClockSettings, widgetSettings.analogClock.toJson());
 
-    await storage.setJson(
-        StorageKeys.messageSettings, widgetSettings.message.toJson());
+    await storage.setJson(StorageKeys.messageSettings, widgetSettings.message.toJson());
 
-    await storage.setJson(
-        StorageKeys.timerSettings, widgetSettings.timer.toJson());
+    await storage.setJson(StorageKeys.timerSettings, widgetSettings.timer.toJson());
 
-    await storage.setJson(
-        StorageKeys.weatherSettings, widgetSettings.weather.toJson());
+    await storage.setJson(StorageKeys.weatherSettings, widgetSettings.weather.toJson());
 
-    await storage.setJson(
-        StorageKeys.digitalDateSettings, widgetSettings.digitalDate.toJson());
+    await storage.setJson(StorageKeys.digitalDateSettings, widgetSettings.digitalDate.toJson());
   }
 
   void dispose() {

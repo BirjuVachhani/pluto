@@ -12,7 +12,7 @@ environment:
 dependencies:
   shelf: ^1.4.2
   shelf_router: ^1.1.4
-  http: ^1.4.0
+  http: ^1.6.0
   unsplash_client: ^3.0.0
   equatable: ^2.0.7
   json_annotation: ^4.9.0
@@ -21,7 +21,7 @@ dependencies:
   dotenv: ^4.2.0
 
 dev_dependencies:
-  lints: ^5.1.1
-  test: ^1.26.0
-  build_runner: ^2.4.15
-  json_serializable: ^6.9.0
+  lints: ^6.0.0
+  test: ^1.27.0
+  build_runner: ^2.10.2
+  json_serializable: ^6.11.1

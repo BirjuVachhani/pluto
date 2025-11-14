@@ -12,47 +12,51 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
   Computed<bool>? _$isLikedComputed;
 
   @override
-  bool get isLiked => (_$isLikedComputed ??=
-          Computed<bool>(() => super.isLiked, name: '_BackgroundStore.isLiked'))
-      .value;
+  bool get isLiked => (_$isLikedComputed ??= Computed<bool>(
+    () => super.isLiked,
+    name: '_BackgroundStore.isLiked',
+  )).value;
   Computed<bool>? _$isColorModeComputed;
 
   @override
-  bool get isColorMode =>
-      (_$isColorModeComputed ??= Computed<bool>(() => super.isColorMode,
-              name: '_BackgroundStore.isColorMode'))
-          .value;
+  bool get isColorMode => (_$isColorModeComputed ??= Computed<bool>(
+    () => super.isColorMode,
+    name: '_BackgroundStore.isColorMode',
+  )).value;
   Computed<bool>? _$isGradientModeComputed;
 
   @override
-  bool get isGradientMode =>
-      (_$isGradientModeComputed ??= Computed<bool>(() => super.isGradientMode,
-              name: '_BackgroundStore.isGradientMode'))
-          .value;
+  bool get isGradientMode => (_$isGradientModeComputed ??= Computed<bool>(
+    () => super.isGradientMode,
+    name: '_BackgroundStore.isGradientMode',
+  )).value;
   Computed<bool>? _$isImageModeComputed;
 
   @override
-  bool get isImageMode =>
-      (_$isImageModeComputed ??= Computed<bool>(() => super.isImageMode,
-              name: '_BackgroundStore.isImageMode'))
-          .value;
+  bool get isImageMode => (_$isImageModeComputed ??= Computed<bool>(
+    () => super.isImageMode,
+    name: '_BackgroundStore.isImageMode',
+  )).value;
   Computed<Color>? _$foregroundColorComputed;
 
   @override
   Color get foregroundColor => (_$foregroundColorComputed ??= Computed<Color>(
-          () => super.foregroundColor,
-          name: '_BackgroundStore.foregroundColor'))
-      .value;
+    () => super.foregroundColor,
+    name: '_BackgroundStore.foregroundColor',
+  )).value;
   Computed<Background?>? _$currentImageComputed;
 
   @override
-  Background? get currentImage => (_$currentImageComputed ??=
-          Computed<Background?>(() => super.currentImage,
-              name: '_BackgroundStore.currentImage'))
-      .value;
+  Background? get currentImage =>
+      (_$currentImageComputed ??= Computed<Background?>(
+        () => super.currentImage,
+        name: '_BackgroundStore.currentImage',
+      )).value;
 
-  late final _$_isLoadingImageAtom =
-      Atom(name: '_BackgroundStore._isLoadingImage', context: context);
+  late final _$_isLoadingImageAtom = Atom(
+    name: '_BackgroundStore._isLoadingImage',
+    context: context,
+  );
 
   bool get isLoadingImage {
     _$_isLoadingImageAtom.reportRead();
@@ -69,8 +73,10 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
     });
   }
 
-  late final _$_showLoadingBackgroundAtom =
-      Atom(name: '_BackgroundStore._showLoadingBackground', context: context);
+  late final _$_showLoadingBackgroundAtom = Atom(
+    name: '_BackgroundStore._showLoadingBackground',
+    context: context,
+  );
 
   bool get showLoadingBackground {
     _$_showLoadingBackgroundAtom.reportRead();
@@ -82,14 +88,19 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
 
   @override
   set _showLoadingBackground(bool value) {
-    _$_showLoadingBackgroundAtom
-        .reportWrite(value, super._showLoadingBackground, () {
-      super._showLoadingBackground = value;
-    });
+    _$_showLoadingBackgroundAtom.reportWrite(
+      value,
+      super._showLoadingBackground,
+      () {
+        super._showLoadingBackground = value;
+      },
+    );
   }
 
-  late final _$_initializedAtom =
-      Atom(name: '_BackgroundStore._initialized', context: context);
+  late final _$_initializedAtom = Atom(
+    name: '_BackgroundStore._initialized',
+    context: context,
+  );
 
   bool get initialized {
     _$_initializedAtom.reportRead();
@@ -106,8 +117,10 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
     });
   }
 
-  late final _$_image1Atom =
-      Atom(name: '_BackgroundStore._image1', context: context);
+  late final _$_image1Atom = Atom(
+    name: '_BackgroundStore._image1',
+    context: context,
+  );
 
   Background? get image1 {
     _$_image1Atom.reportRead();
@@ -124,8 +137,10 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
     });
   }
 
-  late final _$_image2Atom =
-      Atom(name: '_BackgroundStore._image2', context: context);
+  late final _$_image2Atom = Atom(
+    name: '_BackgroundStore._image2',
+    context: context,
+  );
 
   Background? get image2 {
     _$_image2Atom.reportRead();
@@ -142,8 +157,10 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
     });
   }
 
-  late final _$_likedBackgroundsAtom =
-      Atom(name: '_BackgroundStore._likedBackgrounds', context: context);
+  late final _$_likedBackgroundsAtom = Atom(
+    name: '_BackgroundStore._likedBackgrounds',
+    context: context,
+  );
 
   ObservableMap<String, LikedBackground> get likedBackgrounds {
     _$_likedBackgroundsAtom.reportRead();
@@ -161,8 +178,10 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
     });
   }
 
-  late final _$_modeAtom =
-      Atom(name: '_BackgroundStore._mode', context: context);
+  late final _$_modeAtom = Atom(
+    name: '_BackgroundStore._mode',
+    context: context,
+  );
 
   BackgroundMode get mode {
     _$_modeAtom.reportRead();
@@ -179,8 +198,10 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
     });
   }
 
-  late final _$_colorAtom =
-      Atom(name: '_BackgroundStore._color', context: context);
+  late final _$_colorAtom = Atom(
+    name: '_BackgroundStore._color',
+    context: context,
+  );
 
   FlatColor get color {
     _$_colorAtom.reportRead();
@@ -197,8 +218,10 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
     });
   }
 
-  late final _$_gradientAtom =
-      Atom(name: '_BackgroundStore._gradient', context: context);
+  late final _$_gradientAtom = Atom(
+    name: '_BackgroundStore._gradient',
+    context: context,
+  );
 
   ColorGradient get gradient {
     _$_gradientAtom.reportRead();
@@ -215,8 +238,10 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
     });
   }
 
-  late final _$_tintAtom =
-      Atom(name: '_BackgroundStore._tint', context: context);
+  late final _$_tintAtom = Atom(
+    name: '_BackgroundStore._tint',
+    context: context,
+  );
 
   double get tint {
     _$_tintAtom.reportRead();
@@ -233,8 +258,10 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
     });
   }
 
-  late final _$_textureAtom =
-      Atom(name: '_BackgroundStore._texture', context: context);
+  late final _$_textureAtom = Atom(
+    name: '_BackgroundStore._texture',
+    context: context,
+  );
 
   bool get texture {
     _$_textureAtom.reportRead();
@@ -251,8 +278,10 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
     });
   }
 
-  late final _$_invertAtom =
-      Atom(name: '_BackgroundStore._invert', context: context);
+  late final _$_invertAtom = Atom(
+    name: '_BackgroundStore._invert',
+    context: context,
+  );
 
   bool get invert {
     _$_invertAtom.reportRead();
@@ -269,8 +298,10 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
     });
   }
 
-  late final _$_greyScaleAtom =
-      Atom(name: '_BackgroundStore._greyScale', context: context);
+  late final _$_greyScaleAtom = Atom(
+    name: '_BackgroundStore._greyScale',
+    context: context,
+  );
 
   bool get greyScale {
     _$_greyScaleAtom.reportRead();
@@ -287,8 +318,10 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
     });
   }
 
-  late final _$_imageSourceAtom =
-      Atom(name: '_BackgroundStore._imageSource', context: context);
+  late final _$_imageSourceAtom = Atom(
+    name: '_BackgroundStore._imageSource',
+    context: context,
+  );
 
   ImageSource get imageSource {
     _$_imageSourceAtom.reportRead();
@@ -305,8 +338,10 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
     });
   }
 
-  late final _$_unsplashSourceAtom =
-      Atom(name: '_BackgroundStore._unsplashSource', context: context);
+  late final _$_unsplashSourceAtom = Atom(
+    name: '_BackgroundStore._unsplashSource',
+    context: context,
+  );
 
   UnsplashSource get unsplashSource {
     _$_unsplashSourceAtom.reportRead();
@@ -323,8 +358,10 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
     });
   }
 
-  late final _$_backgroundRefreshRateAtom =
-      Atom(name: '_BackgroundStore._backgroundRefreshRate', context: context);
+  late final _$_backgroundRefreshRateAtom = Atom(
+    name: '_BackgroundStore._backgroundRefreshRate',
+    context: context,
+  );
 
   BackgroundRefreshRate get backgroundRefreshRate {
     _$_backgroundRefreshRateAtom.reportRead();
@@ -336,14 +373,19 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
 
   @override
   set _backgroundRefreshRate(BackgroundRefreshRate value) {
-    _$_backgroundRefreshRateAtom
-        .reportWrite(value, super._backgroundRefreshRate, () {
-      super._backgroundRefreshRate = value;
-    });
+    _$_backgroundRefreshRateAtom.reportWrite(
+      value,
+      super._backgroundRefreshRate,
+      () {
+        super._backgroundRefreshRate = value;
+      },
+    );
   }
 
-  late final _$_imageIndexAtom =
-      Atom(name: '_BackgroundStore._imageIndex', context: context);
+  late final _$_imageIndexAtom = Atom(
+    name: '_BackgroundStore._imageIndex',
+    context: context,
+  );
 
   int get imageIndex {
     _$_imageIndexAtom.reportRead();
@@ -360,8 +402,10 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
     });
   }
 
-  late final _$_image1TimeAtom =
-      Atom(name: '_BackgroundStore._image1Time', context: context);
+  late final _$_image1TimeAtom = Atom(
+    name: '_BackgroundStore._image1Time',
+    context: context,
+  );
 
   DateTime get image1Time {
     _$_image1TimeAtom.reportRead();
@@ -378,8 +422,10 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
     });
   }
 
-  late final _$_image2TimeAtom =
-      Atom(name: '_BackgroundStore._image2Time', context: context);
+  late final _$_image2TimeAtom = Atom(
+    name: '_BackgroundStore._image2Time',
+    context: context,
+  );
 
   DateTime get image2Time {
     _$_image2TimeAtom.reportRead();
@@ -396,8 +442,10 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
     });
   }
 
-  late final _$_imageResolutionAtom =
-      Atom(name: '_BackgroundStore._imageResolution', context: context);
+  late final _$_imageResolutionAtom = Atom(
+    name: '_BackgroundStore._imageResolution',
+    context: context,
+  );
 
   ImageResolution get imageResolution {
     _$_imageResolutionAtom.reportRead();
@@ -414,8 +462,10 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
     });
   }
 
-  late final _$_customSourcesAtom =
-      Atom(name: '_BackgroundStore._customSources', context: context);
+  late final _$_customSourcesAtom = Atom(
+    name: '_BackgroundStore._customSources',
+    context: context,
+  );
 
   ObservableList<UnsplashSource> get customSources {
     _$_customSourcesAtom.reportRead();
@@ -432,8 +482,10 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
     });
   }
 
-  late final _$initializeImagesAsyncAction =
-      AsyncAction('_BackgroundStore.initializeImages', context: context);
+  late final _$initializeImagesAsyncAction = AsyncAction(
+    '_BackgroundStore.initializeImages',
+    context: context,
+  );
 
   @override
   Future<void> initializeImages() {
@@ -441,73 +493,95 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
   }
 
   late final _$_refetchAndCacheOtherImageAsyncAction = AsyncAction(
-      '_BackgroundStore._refetchAndCacheOtherImage',
-      context: context);
+    '_BackgroundStore._refetchAndCacheOtherImage',
+    context: context,
+  );
 
   @override
   Future<void> _refetchAndCacheOtherImage() {
-    return _$_refetchAndCacheOtherImageAsyncAction
-        .run(() => super._refetchAndCacheOtherImage());
+    return _$_refetchAndCacheOtherImageAsyncAction.run(
+      () => super._refetchAndCacheOtherImage(),
+    );
   }
 
-  late final _$onChangeBackgroundAsyncAction =
-      AsyncAction('_BackgroundStore.onChangeBackground', context: context);
+  late final _$onChangeBackgroundAsyncAction = AsyncAction(
+    '_BackgroundStore.onChangeBackground',
+    context: context,
+  );
 
   @override
   Future<void> onChangeBackground({bool updateAll = false}) {
-    return _$onChangeBackgroundAsyncAction
-        .run(() => super.onChangeBackground(updateAll: updateAll));
+    return _$onChangeBackgroundAsyncAction.run(
+      () => super.onChangeBackground(updateAll: updateAll),
+    );
   }
 
-  late final _$_loadImageFromSourceAsyncAction =
-      AsyncAction('_BackgroundStore._loadImageFromSource', context: context);
+  late final _$_loadImageFromSourceAsyncAction = AsyncAction(
+    '_BackgroundStore._loadImageFromSource',
+    context: context,
+  );
 
   @override
-  Future<Background?> _loadImageFromSource(
-      {bool showLoadingBackground = false}) {
-    return _$_loadImageFromSourceAsyncAction.run(() => super
-        ._loadImageFromSource(showLoadingBackground: showLoadingBackground));
+  Future<Background?> _loadImageFromSource({
+    bool showLoadingBackground = false,
+  }) {
+    return _$_loadImageFromSourceAsyncAction.run(
+      () => super._loadImageFromSource(
+        showLoadingBackground: showLoadingBackground,
+      ),
+    );
   }
 
-  late final _$onTimerCallbackAsyncAction =
-      AsyncAction('_BackgroundStore.onTimerCallback', context: context);
+  late final _$onTimerCallbackAsyncAction = AsyncAction(
+    '_BackgroundStore.onTimerCallback',
+    context: context,
+  );
 
   @override
   Future<void> onTimerCallback() {
     return _$onTimerCallbackAsyncAction.run(() => super.onTimerCallback());
   }
 
-  late final _$onToggleLikeAsyncAction =
-      AsyncAction('_BackgroundStore.onToggleLike', context: context);
+  late final _$onToggleLikeAsyncAction = AsyncAction(
+    '_BackgroundStore.onToggleLike',
+    context: context,
+  );
 
   @override
   Future<void> onToggleLike(bool liked) {
     return _$onToggleLikeAsyncAction.run(() => super.onToggleLike(liked));
   }
 
-  late final _$resetAsyncAction =
-      AsyncAction('_BackgroundStore.reset', context: context);
+  late final _$resetAsyncAction = AsyncAction(
+    '_BackgroundStore.reset',
+    context: context,
+  );
 
   @override
   Future<void> reset({bool clear = true}) {
     return _$resetAsyncAction.run(() => super.reset(clear: clear));
   }
 
-  late final _$removeLikedPhotoAsyncAction =
-      AsyncAction('_BackgroundStore.removeLikedPhoto', context: context);
+  late final _$removeLikedPhotoAsyncAction = AsyncAction(
+    '_BackgroundStore.removeLikedPhoto',
+    context: context,
+  );
 
   @override
   Future<void> removeLikedPhoto(String key) {
     return _$removeLikedPhotoAsyncAction.run(() => super.removeLikedPhoto(key));
   }
 
-  late final _$_BackgroundStoreActionController =
-      ActionController(name: '_BackgroundStore', context: context);
+  late final _$_BackgroundStoreActionController = ActionController(
+    name: '_BackgroundStore',
+    context: context,
+  );
 
   @override
   void updateBackground() {
     final _$actionInfo = _$_BackgroundStoreActionController.startAction(
-        name: '_BackgroundStore.updateBackground');
+      name: '_BackgroundStore.updateBackground',
+    );
     try {
       return super.updateBackground();
     } finally {
@@ -518,7 +592,8 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
   @override
   void setMode(BackgroundMode mode) {
     final _$actionInfo = _$_BackgroundStoreActionController.startAction(
-        name: '_BackgroundStore.setMode');
+      name: '_BackgroundStore.setMode',
+    );
     try {
       return super.setMode(mode);
     } finally {
@@ -529,7 +604,8 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
   @override
   void setColor(FlatColor color) {
     final _$actionInfo = _$_BackgroundStoreActionController.startAction(
-        name: '_BackgroundStore.setColor');
+      name: '_BackgroundStore.setColor',
+    );
     try {
       return super.setColor(color);
     } finally {
@@ -540,7 +616,8 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
   @override
   void setGradient(ColorGradient gradient) {
     final _$actionInfo = _$_BackgroundStoreActionController.startAction(
-        name: '_BackgroundStore.setGradient');
+      name: '_BackgroundStore.setGradient',
+    );
     try {
       return super.setGradient(gradient);
     } finally {
@@ -551,7 +628,8 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
   @override
   void setTint(double tint) {
     final _$actionInfo = _$_BackgroundStoreActionController.startAction(
-        name: '_BackgroundStore.setTint');
+      name: '_BackgroundStore.setTint',
+    );
     try {
       return super.setTint(tint);
     } finally {
@@ -562,7 +640,8 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
   @override
   void setTexture(bool texture) {
     final _$actionInfo = _$_BackgroundStoreActionController.startAction(
-        name: '_BackgroundStore.setTexture');
+      name: '_BackgroundStore.setTexture',
+    );
     try {
       return super.setTexture(texture);
     } finally {
@@ -573,7 +652,8 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
   @override
   void setInvert(bool invert) {
     final _$actionInfo = _$_BackgroundStoreActionController.startAction(
-        name: '_BackgroundStore.setInvert');
+      name: '_BackgroundStore.setInvert',
+    );
     try {
       return super.setInvert(invert);
     } finally {
@@ -584,7 +664,8 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
   @override
   void setImageSource(ImageSource source) {
     final _$actionInfo = _$_BackgroundStoreActionController.startAction(
-        name: '_BackgroundStore.setImageSource');
+      name: '_BackgroundStore.setImageSource',
+    );
     try {
       return super.setImageSource(source);
     } finally {
@@ -595,7 +676,8 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
   @override
   void setUnsplashSource(UnsplashSource source) {
     final _$actionInfo = _$_BackgroundStoreActionController.startAction(
-        name: '_BackgroundStore.setUnsplashSource');
+      name: '_BackgroundStore.setUnsplashSource',
+    );
     try {
       return super.setUnsplashSource(source);
     } finally {
@@ -606,7 +688,8 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
   @override
   void setImageRefreshRate(BackgroundRefreshRate rate) {
     final _$actionInfo = _$_BackgroundStoreActionController.startAction(
-        name: '_BackgroundStore.setImageRefreshRate');
+      name: '_BackgroundStore.setImageRefreshRate',
+    );
     try {
       return super.setImageRefreshRate(rate);
     } finally {
@@ -617,7 +700,8 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
   @override
   void setImageResolution(ImageResolution resolution) {
     final _$actionInfo = _$_BackgroundStoreActionController.startAction(
-        name: '_BackgroundStore.setImageResolution');
+      name: '_BackgroundStore.setImageResolution',
+    );
     try {
       return super.setImageResolution(resolution);
     } finally {
@@ -628,7 +712,8 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
   @override
   void setGreyScale(bool greyScale) {
     final _$actionInfo = _$_BackgroundStoreActionController.startAction(
-        name: '_BackgroundStore.setGreyScale');
+      name: '_BackgroundStore.setGreyScale',
+    );
     try {
       return super.setGreyScale(greyScale);
     } finally {
@@ -639,7 +724,8 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
   @override
   void addNewCollection(UnsplashSource source, {bool setAsCurrent = false}) {
     final _$actionInfo = _$_BackgroundStoreActionController.startAction(
-        name: '_BackgroundStore.addNewCollection');
+      name: '_BackgroundStore.addNewCollection',
+    );
     try {
       return super.addNewCollection(source, setAsCurrent: setAsCurrent);
     } finally {
@@ -650,7 +736,8 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
   @override
   void removeCustomCollection(UnsplashSource source) {
     final _$actionInfo = _$_BackgroundStoreActionController.startAction(
-        name: '_BackgroundStore.removeCustomCollection');
+      name: '_BackgroundStore.removeCustomCollection',
+    );
     try {
       return super.removeCustomCollection(source);
     } finally {

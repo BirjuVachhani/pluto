@@ -53,7 +53,9 @@ void main(List<String> args) {
   stringBuffer.writeln('}');
 
   // Format
-  final String output = DartFormatter().format(stringBuffer.toString());
+  final String output =
+      DartFormatter(languageVersion: DartFormatter.latestLanguageVersion)
+          .format(stringBuffer.toString());
 
   // print to console
   stdout.writeln(output);

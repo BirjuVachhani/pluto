@@ -24,8 +24,10 @@ mixin _$WidgetStore on _WidgetStore, Store {
     });
   }
 
-  late final _$initializedAtom =
-      Atom(name: '_WidgetStore.initialized', context: context);
+  late final _$initializedAtom = Atom(
+    name: '_WidgetStore.initialized',
+    context: context,
+  );
 
   @override
   bool get initialized {
@@ -40,29 +42,36 @@ mixin _$WidgetStore on _WidgetStore, Store {
     });
   }
 
-  late final _$reloadAsyncAction =
-      AsyncAction('_WidgetStore.reload', context: context);
+  late final _$reloadAsyncAction = AsyncAction(
+    '_WidgetStore.reload',
+    context: context,
+  );
 
   @override
   Future<void> reload() {
     return _$reloadAsyncAction.run(() => super.reload());
   }
 
-  late final _$resetAsyncAction =
-      AsyncAction('_WidgetStore.reset', context: context);
+  late final _$resetAsyncAction = AsyncAction(
+    '_WidgetStore.reset',
+    context: context,
+  );
 
   @override
   Future<void> reset() {
     return _$resetAsyncAction.run(() => super.reset());
   }
 
-  late final _$_WidgetStoreActionController =
-      ActionController(name: '_WidgetStore', context: context);
+  late final _$_WidgetStoreActionController = ActionController(
+    name: '_WidgetStore',
+    context: context,
+  );
 
   @override
   void setType(WidgetType type) {
     final _$actionInfo = _$_WidgetStoreActionController.startAction(
-        name: '_WidgetStore.setType');
+      name: '_WidgetStore.setType',
+    );
     try {
       return super.setType(type);
     } finally {
@@ -81,8 +90,10 @@ initialized: ${initialized}
 
 mixin _$DigitalClockWidgetSettingsStore
     on _DigitalClockWidgetSettingsStore, Store {
-  late final _$fontSizeAtom =
-      Atom(name: '_DigitalClockWidgetSettingsStore.fontSize', context: context);
+  late final _$fontSizeAtom = Atom(
+    name: '_DigitalClockWidgetSettingsStore.fontSize',
+    context: context,
+  );
 
   @override
   double get fontSize {
@@ -94,15 +105,20 @@ mixin _$DigitalClockWidgetSettingsStore
 
   @override
   set fontSize(double value) {
-    _$fontSizeAtom
-        .reportWrite(value, _fontSizeIsInitialized ? super.fontSize : null, () {
-      super.fontSize = value;
-      _fontSizeIsInitialized = true;
-    });
+    _$fontSizeAtom.reportWrite(
+      value,
+      _fontSizeIsInitialized ? super.fontSize : null,
+      () {
+        super.fontSize = value;
+        _fontSizeIsInitialized = true;
+      },
+    );
   }
 
   late final _$separatorAtom = Atom(
-      name: '_DigitalClockWidgetSettingsStore.separator', context: context);
+    name: '_DigitalClockWidgetSettingsStore.separator',
+    context: context,
+  );
 
   @override
   Separator get separator {
@@ -115,14 +131,19 @@ mixin _$DigitalClockWidgetSettingsStore
   @override
   set separator(Separator value) {
     _$separatorAtom.reportWrite(
-        value, _separatorIsInitialized ? super.separator : null, () {
-      super.separator = value;
-      _separatorIsInitialized = true;
-    });
+      value,
+      _separatorIsInitialized ? super.separator : null,
+      () {
+        super.separator = value;
+        _separatorIsInitialized = true;
+      },
+    );
   }
 
   late final _$borderTypeAtom = Atom(
-      name: '_DigitalClockWidgetSettingsStore.borderType', context: context);
+    name: '_DigitalClockWidgetSettingsStore.borderType',
+    context: context,
+  );
 
   @override
   BorderType get borderType {
@@ -135,14 +156,19 @@ mixin _$DigitalClockWidgetSettingsStore
   @override
   set borderType(BorderType value) {
     _$borderTypeAtom.reportWrite(
-        value, _borderTypeIsInitialized ? super.borderType : null, () {
-      super.borderType = value;
-      _borderTypeIsInitialized = true;
-    });
+      value,
+      _borderTypeIsInitialized ? super.borderType : null,
+      () {
+        super.borderType = value;
+        _borderTypeIsInitialized = true;
+      },
+    );
   }
 
   late final _$fontFamilyAtom = Atom(
-      name: '_DigitalClockWidgetSettingsStore.fontFamily', context: context);
+    name: '_DigitalClockWidgetSettingsStore.fontFamily',
+    context: context,
+  );
 
   @override
   String get fontFamily {
@@ -155,14 +181,19 @@ mixin _$DigitalClockWidgetSettingsStore
   @override
   set fontFamily(String value) {
     _$fontFamilyAtom.reportWrite(
-        value, _fontFamilyIsInitialized ? super.fontFamily : null, () {
-      super.fontFamily = value;
-      _fontFamilyIsInitialized = true;
-    });
+      value,
+      _fontFamilyIsInitialized ? super.fontFamily : null,
+      () {
+        super.fontFamily = value;
+        _fontFamilyIsInitialized = true;
+      },
+    );
   }
 
   late final _$alignmentAtom = Atom(
-      name: '_DigitalClockWidgetSettingsStore.alignment', context: context);
+    name: '_DigitalClockWidgetSettingsStore.alignment',
+    context: context,
+  );
 
   @override
   AlignmentC get alignment {
@@ -175,14 +206,19 @@ mixin _$DigitalClockWidgetSettingsStore
   @override
   set alignment(AlignmentC value) {
     _$alignmentAtom.reportWrite(
-        value, _alignmentIsInitialized ? super.alignment : null, () {
-      super.alignment = value;
-      _alignmentIsInitialized = true;
-    });
+      value,
+      _alignmentIsInitialized ? super.alignment : null,
+      () {
+        super.alignment = value;
+        _alignmentIsInitialized = true;
+      },
+    );
   }
 
-  late final _$formatAtom =
-      Atom(name: '_DigitalClockWidgetSettingsStore.format', context: context);
+  late final _$formatAtom = Atom(
+    name: '_DigitalClockWidgetSettingsStore.format',
+    context: context,
+  );
 
   @override
   ClockFormat get format {
@@ -194,16 +230,21 @@ mixin _$DigitalClockWidgetSettingsStore
 
   @override
   set format(ClockFormat value) {
-    _$formatAtom.reportWrite(value, _formatIsInitialized ? super.format : null,
-        () {
-      super.format = value;
-      _formatIsInitialized = true;
-    });
+    _$formatAtom.reportWrite(
+      value,
+      _formatIsInitialized ? super.format : null,
+      () {
+        super.format = value;
+        _formatIsInitialized = true;
+      },
+    );
   }
 
   late final _$_DigitalClockWidgetSettingsStoreActionController =
       ActionController(
-          name: '_DigitalClockWidgetSettingsStore', context: context);
+        name: '_DigitalClockWidgetSettingsStore',
+        context: context,
+      );
 
   @override
   void update(VoidCallback callback, {bool save = true}) {
@@ -212,8 +253,9 @@ mixin _$DigitalClockWidgetSettingsStore
     try {
       return super.update(callback, save: save);
     } finally {
-      _$_DigitalClockWidgetSettingsStoreActionController
-          .endAction(_$actionInfo);
+      _$_DigitalClockWidgetSettingsStoreActionController.endAction(
+        _$actionInfo,
+      );
     }
   }
 
@@ -224,8 +266,9 @@ mixin _$DigitalClockWidgetSettingsStore
     try {
       return super.setFrom(settings);
     } finally {
-      _$_DigitalClockWidgetSettingsStoreActionController
-          .endAction(_$actionInfo);
+      _$_DigitalClockWidgetSettingsStoreActionController.endAction(
+        _$actionInfo,
+      );
     }
   }
 
@@ -244,8 +287,10 @@ format: ${format}
 
 mixin _$AnalogClockWidgetSettingsStore
     on _AnalogClockWidgetSettingsStore, Store {
-  late final _$radiusAtom =
-      Atom(name: '_AnalogClockWidgetSettingsStore.radius', context: context);
+  late final _$radiusAtom = Atom(
+    name: '_AnalogClockWidgetSettingsStore.radius',
+    context: context,
+  );
 
   @override
   double get radius {
@@ -257,16 +302,20 @@ mixin _$AnalogClockWidgetSettingsStore
 
   @override
   set radius(double value) {
-    _$radiusAtom.reportWrite(value, _radiusIsInitialized ? super.radius : null,
-        () {
-      super.radius = value;
-      _radiusIsInitialized = true;
-    });
+    _$radiusAtom.reportWrite(
+      value,
+      _radiusIsInitialized ? super.radius : null,
+      () {
+        super.radius = value;
+        _radiusIsInitialized = true;
+      },
+    );
   }
 
   late final _$showSecondsHandAtom = Atom(
-      name: '_AnalogClockWidgetSettingsStore.showSecondsHand',
-      context: context);
+    name: '_AnalogClockWidgetSettingsStore.showSecondsHand',
+    context: context,
+  );
 
   @override
   bool get showSecondsHand {
@@ -279,16 +328,19 @@ mixin _$AnalogClockWidgetSettingsStore
   @override
   set showSecondsHand(bool value) {
     _$showSecondsHandAtom.reportWrite(
-        value, _showSecondsHandIsInitialized ? super.showSecondsHand : null,
-        () {
-      super.showSecondsHand = value;
-      _showSecondsHandIsInitialized = true;
-    });
+      value,
+      _showSecondsHandIsInitialized ? super.showSecondsHand : null,
+      () {
+        super.showSecondsHand = value;
+        _showSecondsHandIsInitialized = true;
+      },
+    );
   }
 
   late final _$coloredSecondHandAtom = Atom(
-      name: '_AnalogClockWidgetSettingsStore.coloredSecondHand',
-      context: context);
+    name: '_AnalogClockWidgetSettingsStore.coloredSecondHand',
+    context: context,
+  );
 
   @override
   bool get coloredSecondHand {
@@ -301,15 +353,19 @@ mixin _$AnalogClockWidgetSettingsStore
   @override
   set coloredSecondHand(bool value) {
     _$coloredSecondHandAtom.reportWrite(
-        value, _coloredSecondHandIsInitialized ? super.coloredSecondHand : null,
-        () {
-      super.coloredSecondHand = value;
-      _coloredSecondHandIsInitialized = true;
-    });
+      value,
+      _coloredSecondHandIsInitialized ? super.coloredSecondHand : null,
+      () {
+        super.coloredSecondHand = value;
+        _coloredSecondHandIsInitialized = true;
+      },
+    );
   }
 
-  late final _$alignmentAtom =
-      Atom(name: '_AnalogClockWidgetSettingsStore.alignment', context: context);
+  late final _$alignmentAtom = Atom(
+    name: '_AnalogClockWidgetSettingsStore.alignment',
+    context: context,
+  );
 
   @override
   AlignmentC get alignment {
@@ -322,15 +378,20 @@ mixin _$AnalogClockWidgetSettingsStore
   @override
   set alignment(AlignmentC value) {
     _$alignmentAtom.reportWrite(
-        value, _alignmentIsInitialized ? super.alignment : null, () {
-      super.alignment = value;
-      _alignmentIsInitialized = true;
-    });
+      value,
+      _alignmentIsInitialized ? super.alignment : null,
+      () {
+        super.alignment = value;
+        _alignmentIsInitialized = true;
+      },
+    );
   }
 
   late final _$_AnalogClockWidgetSettingsStoreActionController =
       ActionController(
-          name: '_AnalogClockWidgetSettingsStore', context: context);
+        name: '_AnalogClockWidgetSettingsStore',
+        context: context,
+      );
 
   @override
   void update(VoidCallback callback, {bool save = true}) {
@@ -366,8 +427,10 @@ alignment: ${alignment}
 }
 
 mixin _$MessageWidgetSettingsStore on _MessageWidgetSettingsStore, Store {
-  late final _$fontSizeAtom =
-      Atom(name: '_MessageWidgetSettingsStore.fontSize', context: context);
+  late final _$fontSizeAtom = Atom(
+    name: '_MessageWidgetSettingsStore.fontSize',
+    context: context,
+  );
 
   @override
   double get fontSize {
@@ -379,15 +442,20 @@ mixin _$MessageWidgetSettingsStore on _MessageWidgetSettingsStore, Store {
 
   @override
   set fontSize(double value) {
-    _$fontSizeAtom
-        .reportWrite(value, _fontSizeIsInitialized ? super.fontSize : null, () {
-      super.fontSize = value;
-      _fontSizeIsInitialized = true;
-    });
+    _$fontSizeAtom.reportWrite(
+      value,
+      _fontSizeIsInitialized ? super.fontSize : null,
+      () {
+        super.fontSize = value;
+        _fontSizeIsInitialized = true;
+      },
+    );
   }
 
-  late final _$fontFamilyAtom =
-      Atom(name: '_MessageWidgetSettingsStore.fontFamily', context: context);
+  late final _$fontFamilyAtom = Atom(
+    name: '_MessageWidgetSettingsStore.fontFamily',
+    context: context,
+  );
 
   @override
   String get fontFamily {
@@ -400,14 +468,19 @@ mixin _$MessageWidgetSettingsStore on _MessageWidgetSettingsStore, Store {
   @override
   set fontFamily(String value) {
     _$fontFamilyAtom.reportWrite(
-        value, _fontFamilyIsInitialized ? super.fontFamily : null, () {
-      super.fontFamily = value;
-      _fontFamilyIsInitialized = true;
-    });
+      value,
+      _fontFamilyIsInitialized ? super.fontFamily : null,
+      () {
+        super.fontFamily = value;
+        _fontFamilyIsInitialized = true;
+      },
+    );
   }
 
-  late final _$messageAtom =
-      Atom(name: '_MessageWidgetSettingsStore.message', context: context);
+  late final _$messageAtom = Atom(
+    name: '_MessageWidgetSettingsStore.message',
+    context: context,
+  );
 
   @override
   String get message {
@@ -419,15 +492,20 @@ mixin _$MessageWidgetSettingsStore on _MessageWidgetSettingsStore, Store {
 
   @override
   set message(String value) {
-    _$messageAtom
-        .reportWrite(value, _messageIsInitialized ? super.message : null, () {
-      super.message = value;
-      _messageIsInitialized = true;
-    });
+    _$messageAtom.reportWrite(
+      value,
+      _messageIsInitialized ? super.message : null,
+      () {
+        super.message = value;
+        _messageIsInitialized = true;
+      },
+    );
   }
 
-  late final _$alignmentAtom =
-      Atom(name: '_MessageWidgetSettingsStore.alignment', context: context);
+  late final _$alignmentAtom = Atom(
+    name: '_MessageWidgetSettingsStore.alignment',
+    context: context,
+  );
 
   @override
   AlignmentC get alignment {
@@ -440,14 +518,19 @@ mixin _$MessageWidgetSettingsStore on _MessageWidgetSettingsStore, Store {
   @override
   set alignment(AlignmentC value) {
     _$alignmentAtom.reportWrite(
-        value, _alignmentIsInitialized ? super.alignment : null, () {
-      super.alignment = value;
-      _alignmentIsInitialized = true;
-    });
+      value,
+      _alignmentIsInitialized ? super.alignment : null,
+      () {
+        super.alignment = value;
+        _alignmentIsInitialized = true;
+      },
+    );
   }
 
-  late final _$_MessageWidgetSettingsStoreActionController =
-      ActionController(name: '_MessageWidgetSettingsStore', context: context);
+  late final _$_MessageWidgetSettingsStoreActionController = ActionController(
+    name: '_MessageWidgetSettingsStore',
+    context: context,
+  );
 
   @override
   void update(VoidCallback callback, {bool save = true}) {
@@ -483,8 +566,10 @@ alignment: ${alignment}
 }
 
 mixin _$TimerWidgetSettingsStore on _TimerWidgetSettingsStore, Store {
-  late final _$fontSizeAtom =
-      Atom(name: '_TimerWidgetSettingsStore.fontSize', context: context);
+  late final _$fontSizeAtom = Atom(
+    name: '_TimerWidgetSettingsStore.fontSize',
+    context: context,
+  );
 
   @override
   double get fontSize {
@@ -496,15 +581,20 @@ mixin _$TimerWidgetSettingsStore on _TimerWidgetSettingsStore, Store {
 
   @override
   set fontSize(double value) {
-    _$fontSizeAtom
-        .reportWrite(value, _fontSizeIsInitialized ? super.fontSize : null, () {
-      super.fontSize = value;
-      _fontSizeIsInitialized = true;
-    });
+    _$fontSizeAtom.reportWrite(
+      value,
+      _fontSizeIsInitialized ? super.fontSize : null,
+      () {
+        super.fontSize = value;
+        _fontSizeIsInitialized = true;
+      },
+    );
   }
 
-  late final _$fontFamilyAtom =
-      Atom(name: '_TimerWidgetSettingsStore.fontFamily', context: context);
+  late final _$fontFamilyAtom = Atom(
+    name: '_TimerWidgetSettingsStore.fontFamily',
+    context: context,
+  );
 
   @override
   String get fontFamily {
@@ -517,14 +607,19 @@ mixin _$TimerWidgetSettingsStore on _TimerWidgetSettingsStore, Store {
   @override
   set fontFamily(String value) {
     _$fontFamilyAtom.reportWrite(
-        value, _fontFamilyIsInitialized ? super.fontFamily : null, () {
-      super.fontFamily = value;
-      _fontFamilyIsInitialized = true;
-    });
+      value,
+      _fontFamilyIsInitialized ? super.fontFamily : null,
+      () {
+        super.fontFamily = value;
+        _fontFamilyIsInitialized = true;
+      },
+    );
   }
 
-  late final _$textBeforeAtom =
-      Atom(name: '_TimerWidgetSettingsStore.textBefore', context: context);
+  late final _$textBeforeAtom = Atom(
+    name: '_TimerWidgetSettingsStore.textBefore',
+    context: context,
+  );
 
   @override
   String get textBefore {
@@ -537,14 +632,19 @@ mixin _$TimerWidgetSettingsStore on _TimerWidgetSettingsStore, Store {
   @override
   set textBefore(String value) {
     _$textBeforeAtom.reportWrite(
-        value, _textBeforeIsInitialized ? super.textBefore : null, () {
-      super.textBefore = value;
-      _textBeforeIsInitialized = true;
-    });
+      value,
+      _textBeforeIsInitialized ? super.textBefore : null,
+      () {
+        super.textBefore = value;
+        _textBeforeIsInitialized = true;
+      },
+    );
   }
 
-  late final _$textAfterAtom =
-      Atom(name: '_TimerWidgetSettingsStore.textAfter', context: context);
+  late final _$textAfterAtom = Atom(
+    name: '_TimerWidgetSettingsStore.textAfter',
+    context: context,
+  );
 
   @override
   String get textAfter {
@@ -557,14 +657,19 @@ mixin _$TimerWidgetSettingsStore on _TimerWidgetSettingsStore, Store {
   @override
   set textAfter(String value) {
     _$textAfterAtom.reportWrite(
-        value, _textAfterIsInitialized ? super.textAfter : null, () {
-      super.textAfter = value;
-      _textAfterIsInitialized = true;
-    });
+      value,
+      _textAfterIsInitialized ? super.textAfter : null,
+      () {
+        super.textAfter = value;
+        _textAfterIsInitialized = true;
+      },
+    );
   }
 
-  late final _$timeAtom =
-      Atom(name: '_TimerWidgetSettingsStore.time', context: context);
+  late final _$timeAtom = Atom(
+    name: '_TimerWidgetSettingsStore.time',
+    context: context,
+  );
 
   @override
   DateTime get time {
@@ -582,8 +687,10 @@ mixin _$TimerWidgetSettingsStore on _TimerWidgetSettingsStore, Store {
     });
   }
 
-  late final _$alignmentAtom =
-      Atom(name: '_TimerWidgetSettingsStore.alignment', context: context);
+  late final _$alignmentAtom = Atom(
+    name: '_TimerWidgetSettingsStore.alignment',
+    context: context,
+  );
 
   @override
   AlignmentC get alignment {
@@ -596,14 +703,19 @@ mixin _$TimerWidgetSettingsStore on _TimerWidgetSettingsStore, Store {
   @override
   set alignment(AlignmentC value) {
     _$alignmentAtom.reportWrite(
-        value, _alignmentIsInitialized ? super.alignment : null, () {
-      super.alignment = value;
-      _alignmentIsInitialized = true;
-    });
+      value,
+      _alignmentIsInitialized ? super.alignment : null,
+      () {
+        super.alignment = value;
+        _alignmentIsInitialized = true;
+      },
+    );
   }
 
-  late final _$formatAtom =
-      Atom(name: '_TimerWidgetSettingsStore.format', context: context);
+  late final _$formatAtom = Atom(
+    name: '_TimerWidgetSettingsStore.format',
+    context: context,
+  );
 
   @override
   TimerFormat get format {
@@ -615,15 +727,20 @@ mixin _$TimerWidgetSettingsStore on _TimerWidgetSettingsStore, Store {
 
   @override
   set format(TimerFormat value) {
-    _$formatAtom.reportWrite(value, _formatIsInitialized ? super.format : null,
-        () {
-      super.format = value;
-      _formatIsInitialized = true;
-    });
+    _$formatAtom.reportWrite(
+      value,
+      _formatIsInitialized ? super.format : null,
+      () {
+        super.format = value;
+        _formatIsInitialized = true;
+      },
+    );
   }
 
-  late final _$_TimerWidgetSettingsStoreActionController =
-      ActionController(name: '_TimerWidgetSettingsStore', context: context);
+  late final _$_TimerWidgetSettingsStoreActionController = ActionController(
+    name: '_TimerWidgetSettingsStore',
+    context: context,
+  );
 
   @override
   void update(VoidCallback callback, {bool save = true}) {
@@ -662,8 +779,10 @@ format: ${format}
 }
 
 mixin _$WeatherWidgetSettingsStore on _WeatherWidgetSettingsStore, Store {
-  late final _$fontSizeAtom =
-      Atom(name: '_WeatherWidgetSettingsStore.fontSize', context: context);
+  late final _$fontSizeAtom = Atom(
+    name: '_WeatherWidgetSettingsStore.fontSize',
+    context: context,
+  );
 
   @override
   double get fontSize {
@@ -675,15 +794,20 @@ mixin _$WeatherWidgetSettingsStore on _WeatherWidgetSettingsStore, Store {
 
   @override
   set fontSize(double value) {
-    _$fontSizeAtom
-        .reportWrite(value, _fontSizeIsInitialized ? super.fontSize : null, () {
-      super.fontSize = value;
-      _fontSizeIsInitialized = true;
-    });
+    _$fontSizeAtom.reportWrite(
+      value,
+      _fontSizeIsInitialized ? super.fontSize : null,
+      () {
+        super.fontSize = value;
+        _fontSizeIsInitialized = true;
+      },
+    );
   }
 
-  late final _$fontFamilyAtom =
-      Atom(name: '_WeatherWidgetSettingsStore.fontFamily', context: context);
+  late final _$fontFamilyAtom = Atom(
+    name: '_WeatherWidgetSettingsStore.fontFamily',
+    context: context,
+  );
 
   @override
   String get fontFamily {
@@ -696,14 +820,19 @@ mixin _$WeatherWidgetSettingsStore on _WeatherWidgetSettingsStore, Store {
   @override
   set fontFamily(String value) {
     _$fontFamilyAtom.reportWrite(
-        value, _fontFamilyIsInitialized ? super.fontFamily : null, () {
-      super.fontFamily = value;
-      _fontFamilyIsInitialized = true;
-    });
+      value,
+      _fontFamilyIsInitialized ? super.fontFamily : null,
+      () {
+        super.fontFamily = value;
+        _fontFamilyIsInitialized = true;
+      },
+    );
   }
 
-  late final _$alignmentAtom =
-      Atom(name: '_WeatherWidgetSettingsStore.alignment', context: context);
+  late final _$alignmentAtom = Atom(
+    name: '_WeatherWidgetSettingsStore.alignment',
+    context: context,
+  );
 
   @override
   AlignmentC get alignment {
@@ -716,14 +845,19 @@ mixin _$WeatherWidgetSettingsStore on _WeatherWidgetSettingsStore, Store {
   @override
   set alignment(AlignmentC value) {
     _$alignmentAtom.reportWrite(
-        value, _alignmentIsInitialized ? super.alignment : null, () {
-      super.alignment = value;
-      _alignmentIsInitialized = true;
-    });
+      value,
+      _alignmentIsInitialized ? super.alignment : null,
+      () {
+        super.alignment = value;
+        _alignmentIsInitialized = true;
+      },
+    );
   }
 
-  late final _$formatAtom =
-      Atom(name: '_WeatherWidgetSettingsStore.format', context: context);
+  late final _$formatAtom = Atom(
+    name: '_WeatherWidgetSettingsStore.format',
+    context: context,
+  );
 
   @override
   WeatherFormat get format {
@@ -735,15 +869,20 @@ mixin _$WeatherWidgetSettingsStore on _WeatherWidgetSettingsStore, Store {
 
   @override
   set format(WeatherFormat value) {
-    _$formatAtom.reportWrite(value, _formatIsInitialized ? super.format : null,
-        () {
-      super.format = value;
-      _formatIsInitialized = true;
-    });
+    _$formatAtom.reportWrite(
+      value,
+      _formatIsInitialized ? super.format : null,
+      () {
+        super.format = value;
+        _formatIsInitialized = true;
+      },
+    );
   }
 
   late final _$temperatureUnitAtom = Atom(
-      name: '_WeatherWidgetSettingsStore.temperatureUnit', context: context);
+    name: '_WeatherWidgetSettingsStore.temperatureUnit',
+    context: context,
+  );
 
   @override
   TemperatureUnit get temperatureUnit {
@@ -756,15 +895,19 @@ mixin _$WeatherWidgetSettingsStore on _WeatherWidgetSettingsStore, Store {
   @override
   set temperatureUnit(TemperatureUnit value) {
     _$temperatureUnitAtom.reportWrite(
-        value, _temperatureUnitIsInitialized ? super.temperatureUnit : null,
-        () {
-      super.temperatureUnit = value;
-      _temperatureUnitIsInitialized = true;
-    });
+      value,
+      _temperatureUnitIsInitialized ? super.temperatureUnit : null,
+      () {
+        super.temperatureUnit = value;
+        _temperatureUnitIsInitialized = true;
+      },
+    );
   }
 
-  late final _$locationAtom =
-      Atom(name: '_WeatherWidgetSettingsStore.location', context: context);
+  late final _$locationAtom = Atom(
+    name: '_WeatherWidgetSettingsStore.location',
+    context: context,
+  );
 
   @override
   Location get location {
@@ -776,15 +919,20 @@ mixin _$WeatherWidgetSettingsStore on _WeatherWidgetSettingsStore, Store {
 
   @override
   set location(Location value) {
-    _$locationAtom
-        .reportWrite(value, _locationIsInitialized ? super.location : null, () {
-      super.location = value;
-      _locationIsInitialized = true;
-    });
+    _$locationAtom.reportWrite(
+      value,
+      _locationIsInitialized ? super.location : null,
+      () {
+        super.location = value;
+        _locationIsInitialized = true;
+      },
+    );
   }
 
-  late final _$_WeatherWidgetSettingsStoreActionController =
-      ActionController(name: '_WeatherWidgetSettingsStore', context: context);
+  late final _$_WeatherWidgetSettingsStoreActionController = ActionController(
+    name: '_WeatherWidgetSettingsStore',
+    context: context,
+  );
 
   @override
   void update(VoidCallback callback, {bool save = true}) {
@@ -823,8 +971,10 @@ location: ${location}
 
 mixin _$DigitalDateWidgetSettingsStore
     on _DigitalDateWidgetSettingsStore, Store {
-  late final _$fontSizeAtom =
-      Atom(name: '_DigitalDateWidgetSettingsStore.fontSize', context: context);
+  late final _$fontSizeAtom = Atom(
+    name: '_DigitalDateWidgetSettingsStore.fontSize',
+    context: context,
+  );
 
   @override
   double get fontSize {
@@ -836,15 +986,20 @@ mixin _$DigitalDateWidgetSettingsStore
 
   @override
   set fontSize(double value) {
-    _$fontSizeAtom
-        .reportWrite(value, _fontSizeIsInitialized ? super.fontSize : null, () {
-      super.fontSize = value;
-      _fontSizeIsInitialized = true;
-    });
+    _$fontSizeAtom.reportWrite(
+      value,
+      _fontSizeIsInitialized ? super.fontSize : null,
+      () {
+        super.fontSize = value;
+        _fontSizeIsInitialized = true;
+      },
+    );
   }
 
-  late final _$separatorAtom =
-      Atom(name: '_DigitalDateWidgetSettingsStore.separator', context: context);
+  late final _$separatorAtom = Atom(
+    name: '_DigitalDateWidgetSettingsStore.separator',
+    context: context,
+  );
 
   @override
   DateSeparator get separator {
@@ -857,14 +1012,19 @@ mixin _$DigitalDateWidgetSettingsStore
   @override
   set separator(DateSeparator value) {
     _$separatorAtom.reportWrite(
-        value, _separatorIsInitialized ? super.separator : null, () {
-      super.separator = value;
-      _separatorIsInitialized = true;
-    });
+      value,
+      _separatorIsInitialized ? super.separator : null,
+      () {
+        super.separator = value;
+        _separatorIsInitialized = true;
+      },
+    );
   }
 
   late final _$borderTypeAtom = Atom(
-      name: '_DigitalDateWidgetSettingsStore.borderType', context: context);
+    name: '_DigitalDateWidgetSettingsStore.borderType',
+    context: context,
+  );
 
   @override
   BorderType get borderType {
@@ -877,14 +1037,19 @@ mixin _$DigitalDateWidgetSettingsStore
   @override
   set borderType(BorderType value) {
     _$borderTypeAtom.reportWrite(
-        value, _borderTypeIsInitialized ? super.borderType : null, () {
-      super.borderType = value;
-      _borderTypeIsInitialized = true;
-    });
+      value,
+      _borderTypeIsInitialized ? super.borderType : null,
+      () {
+        super.borderType = value;
+        _borderTypeIsInitialized = true;
+      },
+    );
   }
 
   late final _$fontFamilyAtom = Atom(
-      name: '_DigitalDateWidgetSettingsStore.fontFamily', context: context);
+    name: '_DigitalDateWidgetSettingsStore.fontFamily',
+    context: context,
+  );
 
   @override
   String get fontFamily {
@@ -897,14 +1062,19 @@ mixin _$DigitalDateWidgetSettingsStore
   @override
   set fontFamily(String value) {
     _$fontFamilyAtom.reportWrite(
-        value, _fontFamilyIsInitialized ? super.fontFamily : null, () {
-      super.fontFamily = value;
-      _fontFamilyIsInitialized = true;
-    });
+      value,
+      _fontFamilyIsInitialized ? super.fontFamily : null,
+      () {
+        super.fontFamily = value;
+        _fontFamilyIsInitialized = true;
+      },
+    );
   }
 
-  late final _$alignmentAtom =
-      Atom(name: '_DigitalDateWidgetSettingsStore.alignment', context: context);
+  late final _$alignmentAtom = Atom(
+    name: '_DigitalDateWidgetSettingsStore.alignment',
+    context: context,
+  );
 
   @override
   AlignmentC get alignment {
@@ -917,14 +1087,19 @@ mixin _$DigitalDateWidgetSettingsStore
   @override
   set alignment(AlignmentC value) {
     _$alignmentAtom.reportWrite(
-        value, _alignmentIsInitialized ? super.alignment : null, () {
-      super.alignment = value;
-      _alignmentIsInitialized = true;
-    });
+      value,
+      _alignmentIsInitialized ? super.alignment : null,
+      () {
+        super.alignment = value;
+        _alignmentIsInitialized = true;
+      },
+    );
   }
 
-  late final _$formatAtom =
-      Atom(name: '_DigitalDateWidgetSettingsStore.format', context: context);
+  late final _$formatAtom = Atom(
+    name: '_DigitalDateWidgetSettingsStore.format',
+    context: context,
+  );
 
   @override
   DateFormat get format {
@@ -936,15 +1111,20 @@ mixin _$DigitalDateWidgetSettingsStore
 
   @override
   set format(DateFormat value) {
-    _$formatAtom.reportWrite(value, _formatIsInitialized ? super.format : null,
-        () {
-      super.format = value;
-      _formatIsInitialized = true;
-    });
+    _$formatAtom.reportWrite(
+      value,
+      _formatIsInitialized ? super.format : null,
+      () {
+        super.format = value;
+        _formatIsInitialized = true;
+      },
+    );
   }
 
   late final _$customFormatAtom = Atom(
-      name: '_DigitalDateWidgetSettingsStore.customFormat', context: context);
+    name: '_DigitalDateWidgetSettingsStore.customFormat',
+    context: context,
+  );
 
   @override
   String get customFormat {
@@ -957,15 +1137,20 @@ mixin _$DigitalDateWidgetSettingsStore
   @override
   set customFormat(String value) {
     _$customFormatAtom.reportWrite(
-        value, _customFormatIsInitialized ? super.customFormat : null, () {
-      super.customFormat = value;
-      _customFormatIsInitialized = true;
-    });
+      value,
+      _customFormatIsInitialized ? super.customFormat : null,
+      () {
+        super.customFormat = value;
+        _customFormatIsInitialized = true;
+      },
+    );
   }
 
   late final _$_DigitalDateWidgetSettingsStoreActionController =
       ActionController(
-          name: '_DigitalDateWidgetSettingsStore', context: context);
+        name: '_DigitalDateWidgetSettingsStore',
+        context: context,
+      );
 
   @override
   void update(VoidCallback callback, {bool save = true}) {

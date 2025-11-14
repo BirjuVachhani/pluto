@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:dart_style/dart_style.dart';
+
 import 'package:characters/characters.dart';
+import 'package:dart_style/dart_style.dart';
 
 /// Run command: dart color_generator.dart [input.json] [output.dart]
 /// Full command to run from project root:
@@ -61,7 +62,9 @@ void main(List<String> args) {
   stringBuffer.writeln('}');
 
   // Format
-  final String output = DartFormatter().format(stringBuffer.toString());
+  final String output =
+      DartFormatter(languageVersion: DartFormatter.latestLanguageVersion)
+          .format(stringBuffer.toString());
 
   // print to console
   stdout.writeln(output);

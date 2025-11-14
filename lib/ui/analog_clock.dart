@@ -1,9 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
+import 'package:ticking_widget/ticking_widget.dart';
 
-class AnalogClock extends StatefulWidget {
+class AnalogClock extends StatelessWidget {
   final double radius;
   final Color? color;
   final bool showSecondsHand;
@@ -18,50 +18,23 @@ class AnalogClock extends StatefulWidget {
   });
 
   @override
-  State<AnalogClock> createState() => _AnalogClockState();
-}
-
-class _AnalogClockState extends State<AnalogClock>
-    with SingleTickerProviderStateMixin {
-  late Ticker _ticker;
-  late DateTime _initialTime;
-  late DateTime _now;
-
-  @override
-  void initState() {
-    super.initState();
-    _initialTime = _now = DateTime.now();
-    _ticker = createTicker((elapsed) {
-      final newTime = _initialTime.add(elapsed);
-      // rebuild only if seconds changes instead of every frame
-      if (_now.second != newTime.second && widget.showSecondsHand) {
-        setState(() => _now = newTime);
-      } else if (_now.minute != newTime.minute) {
-        setState(() => _now = newTime);
-      }
-    });
-    _ticker.start();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return SizedBox.square(
-      dimension: widget.radius * 2,
-      child: CustomPaint(
-        painter: AnalogClockPainter(
-          time: _now,
-          color: widget.color,
-          secondHandColor: widget.secondHandColor,
-          showSecondHand: widget.showSecondsHand,
-        ),
-      ),
+    return TickingWidget(
+      mode: TickingMode.second,
+      builder: (context, now, child) {
+        return SizedBox.square(
+          dimension: radius * 2,
+          child: CustomPaint(
+            painter: AnalogClockPainter(
+              time: now,
+              color: color,
+              secondHandColor: secondHandColor,
+              showSecondHand: showSecondsHand,
+            ),
+          ),
+        );
+      },
     );
-  }
-
-  @override
-  void dispose() {
-    _ticker.dispose();
-    super.dispose();
   }
 }
 

@@ -40,7 +40,7 @@ class CustomMaterialDropdown<T> extends StatelessWidget {
         SizedBox(
           height: itemHeight,
           child: DropdownButtonFormField<T?>(
-            value: items.contains(value) ? value : null,
+            initialValue: items.contains(value) ? value : null,
             isExpanded: isExpanded,
             hint: hint != null ? Text(hint!) : null,
             style: Theme.of(context)
