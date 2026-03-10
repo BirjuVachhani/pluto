@@ -8,8 +8,6 @@ import 'package:unsplash_client/unsplash_client.dart';
 
 import 'backend_service.dart';
 
-const String globeBackendUrl =
-    'https://pluto-server-cn2xut2-birjuvachhani.globeapp.dev/';
 const String cloudRunUrl = 'https://pluto-510516922464.asia-south1.run.app';
 
 class RestBackendService extends BackendService {
