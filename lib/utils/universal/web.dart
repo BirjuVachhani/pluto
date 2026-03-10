@@ -1,5 +1,5 @@
 import 'dart:typed_data';
-import 'package:web/web.dart';
+import 'package:universal_web/web.dart';
 
 /// Web implementation for downloading image.
 Future<void> downloadImage(Uint8List bytes, String path) async {

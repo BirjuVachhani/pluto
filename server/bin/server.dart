@@ -8,8 +8,12 @@ import 'package:shelf/shelf_io.dart';
 import 'package:shelf_router/shelf_router.dart';
 import 'package:unsplash_client/unsplash_client.dart' show Photo;
 
-final String unsplashApiKey = Platform.environment['UNSPLASH_ACCESS_KEY'] ??
-    String.fromEnvironment('UNSPLASH_ACCESS_KEY');
+final String unsplashApiKey =
+    Platform.environment['UNSPLASH_ACCESS_KEY'] ?? String.fromEnvironment('UNSPLASH_ACCESS_KEY');
+
+final String? apiKey = env['PLUTO_API_KEY'];
+
+final bool enforceApiKey = bool.tryParse(Platform.environment['ENFORCE_API_KEY'] ?? 'false') == true;
 
 // Configure routes.
 final _router = Router()
@@ -33,11 +37,9 @@ Future<Response> _unsplashRandomImageHandler(Request request) async {
     final UnsplashSource source = UnsplashSource.fromJson(sourceJson['source']);
     final Photo? photo = await randomUnsplashImage(source: source);
     if (photo == null) {
-      return Response.internalServerError(
-          body: 'Could not get a photo from Unsplash.');
+      return Response.internalServerError(body: 'Could not get a photo from Unsplash.');
     }
-    return Response.ok(jsonEncode(photo.toJson()),
-        headers: {'Content-Type': 'application/json'});
+    return Response.ok(jsonEncode(photo.toJson()), headers: {'Content-Type': 'application/json'});
   } catch (error, stacktrace) {
     return Response.internalServerError(body: 'Error: $error\n$stacktrace\n');
   }
@@ -49,13 +51,23 @@ void main(List<String> args) async {
     exit(1);
   }
 
+  if (enforceApiKey && env['PLUTO_API_KEY'] == null) {
+    print('PLUTO_API_KEY is missing but ENFORCE_API_KEY is true.');
+    exit(1);
+  }
+
   // Use any available host or container IP (usually `0.0.0.0`).
   final ip = InternetAddress.anyIPv4;
+
+  if (apiKey == null || apiKey!.trim().isEmpty) {
+    throw StateError('PLUTO_API_KEY is missing or empty. Please set the PLUTO_API_KEY environment variable.');
+  }
 
   // Configure a pipeline that logs requests.
   final handler = Pipeline()
       .addMiddleware(logRequests())
       .addMiddleware(enableCors())
+      .addMiddleware(requireApiKey(apiKey!, enforce: enforceApiKey))
       .addHandler(_router.call);
 
   // For running in containers, we respect the PORT environment variable.
@@ -64,31 +76,45 @@ void main(List<String> args) async {
   print('Server listening on port ${server.port}');
 }
 
+Middleware requireApiKey(String apiKey, {required bool enforce}) {
+  return (Handler handler) {
+    return (Request request) async {
+      // Skip validation for preflight and health check.
+      if (request.method == 'OPTIONS' || request.requestedUri.path == '/') {
+        return handler(request);
+      }
+      final key = request.headers['X-API-Key'] ?? request.headers['x-api-key'];
+      if (key != apiKey) {
+        if (enforce) {
+          return Response.forbidden('Invalid or missing API key.');
+        }
+        print('WARNING: Request without valid API key: ${request.requestedUri.path}');
+      }
+      return handler(request);
+    };
+  };
+}
+
+const _allowedOrigins = {'chrome-extension://cjhgdglialdlkabijejcpddhjjagdkio', 'http://localhost:5500'};
+
 Middleware enableCors() {
   return (Handler handler) {
     return (Request request) async {
-      // Handle preflight request (OPTIONS)
+      final origin = request.headers['origin'] ?? '';
+      final isAllowed = _allowedOrigins.contains(origin);
+      final corsHeaders = {
+        'Access-Control-Allow-Origin': isAllowed ? origin : '',
+        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Origin, Content-Type, X-API-Key',
+        'Vary': 'Origin',
+      };
+
       if (request.method == 'OPTIONS') {
-        return Response.ok(
-          '',
-          headers: {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-            'Access-Control-Allow-Headers':
-                'Origin, Content-Type, Authorization',
-          },
-        );
+        return Response.ok('', headers: corsHeaders);
       }
 
-      // Forward request and add CORS headers
       final response = await handler(request);
-      return response.change(
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-          'Access-Control-Allow-Headers': 'Origin, Content-Type, Authorization',
-        },
-      );
+      return response.change(headers: corsHeaders);
     };
   };
 }
