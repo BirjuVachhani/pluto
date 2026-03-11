@@ -10,6 +10,13 @@ build:
   - flutter build web --csp --no-web-resources-cdn --dart-define="PLUTO_API_KEY=${PLUTO_API_KEY}"
   - rm -rf build/extension
   - mv build/web build/extension
+build-wasm:
+  - $deps
+  - $update_version
+  #  - flutter build web --csp --no-web-resources-cdn --dart-define="MODE=debug"
+  - flutter build web --csp --wasm --no-web-resources-cdn --dart-define="PLUTO_API_KEY=${PLUTO_API_KEY}"
+  - rm -rf build/extension
+  - mv build/web build/extension
 pack:
   - $deps
   - $update_version

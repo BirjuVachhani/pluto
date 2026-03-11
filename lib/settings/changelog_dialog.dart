@@ -4,7 +4,7 @@ import 'dart:math' hide log;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:flutter_screwdriver/flutter_screwdriver.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -55,10 +55,9 @@ class _ChangelogDialogState extends State<ChangelogDialog> {
                   Expanded(
                     child: Text(
                       "What's new in Pluto",
-                      style:
-                          Theme.of(context).textTheme.headlineSmall!.copyWith(
-                                fontWeight: FontWeight.w500,
-                              ),
+                      style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                   Material(
@@ -103,17 +102,14 @@ class _ChangelogDialogState extends State<ChangelogDialog> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 8, horizontal: 12),
+                        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
                         color: Theme.of(context).colorScheme.primary,
                         child: Row(
                           children: [
                             Expanded(
                               child: Text(
                                 'v$version',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    letterSpacing: 2),
+                                style: const TextStyle(fontWeight: FontWeight.w400, letterSpacing: 2),
                               ),
                             ),
                             Text(
@@ -129,23 +125,17 @@ class _ChangelogDialogState extends State<ChangelogDialog> {
                       Expanded(
                         child: SingleChildScrollView(
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 20),
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 20),
                             child: Theme(
                               data: Theme.of(context).copyWith(
                                 textTheme: Theme.of(context).textTheme.copyWith(
-                                      bodyMedium: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!
-                                          .copyWith(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w300,
-                                          ),
-                                    ),
+                                  bodyMedium: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w300,
+                                  ),
+                                ),
                               ),
-                              child: MarkdownBody(
-                                data: changelog!,
-                              ),
+                              child: MarkdownBody(data: changelog!),
                             ),
                           ),
                         ),
@@ -158,8 +148,7 @@ class _ChangelogDialogState extends State<ChangelogDialog> {
               Padding(
                 padding: const EdgeInsets.only(left: 24),
                 child: GestureDetectorWithCursor(
-                  onTap: () => launchUrl(Uri.parse(
-                      'https://github.com/BirjuVachhani/pluto/blob/main/CHANGELOG.md')),
+                  onTap: () => launchUrl(Uri.parse('https://github.com/BirjuVachhani/pluto/blob/main/CHANGELOG.md')),
                   child: Hoverable(
                     builder: (context, hovering, child) => Text(
                       'View All Changelogs',
@@ -186,11 +175,13 @@ class _ChangelogDialogState extends State<ChangelogDialog> {
     if (mounted) setState(() {});
     try {
       version = packageInfo.version;
-      final response = await http.get(Uri.parse(
-          'https://raw.githubusercontent.com/BirjuVachhani/pluto/$version/CHANGELOG.md'));
+      final response = await http.get(
+        Uri.parse('https://raw.githubusercontent.com/BirjuVachhani/pluto/$version/CHANGELOG.md'),
+      );
 
-      final releaseResponse = await http.get(Uri.parse(
-          'https://api.github.com/repos/BirjuVachhani/pluto/releases/tags/$version'));
+      final releaseResponse = await http.get(
+        Uri.parse('https://api.github.com/repos/BirjuVachhani/pluto/releases/tags/$version'),
+      );
       isLoading = false;
       if (response.statusCode != 200 || releaseResponse.statusCode != 200) {
         throw Exception(response.body);
