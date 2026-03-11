@@ -113,13 +113,12 @@ Middleware requireApiKey(String apiKey, {required bool enforce}) {
   };
 }
 
-const _allowedOrigins = {'chrome-extension://cjhgdglialdlkabijejcpddhjjagdkio', 'http://localhost:5500'};
-
 Middleware enableCors() {
   return (Handler handler) {
     return (Request request) async {
       final origin = request.headers['origin'] ?? '';
-      final isAllowed = _allowedOrigins.contains(origin);
+      final isAllowed = origin.startsWith('chrome-extension://') ||
+          origin == 'http://localhost:5500';
       final corsHeaders = {
         'Access-Control-Allow-Origin': isAllowed ? origin : '',
         'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
