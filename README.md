@@ -41,7 +41,7 @@ See live demo [here](https://birjuvachhani.github.io/pluto/).
 
 1. Clone the repo
 2. Install dependencies with `flutter pub get`
-3. Run `flutter build web --release --web-renderer html --csp`
+3. Run `flutter build web --release --csp`
 4. Load the `build/web` directory to your browser
 
 ## Credits
