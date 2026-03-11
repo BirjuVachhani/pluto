@@ -239,7 +239,7 @@ class CustomCollectionsSettings extends StatelessWidget {
       context: context,
       builder: (context) => Theme(
         data: Theme.of(context),
-        child: NewCollectionDialog(store: store),
+        child: NewCollectionDialog(store: store, imageSource: ImageSource.unsplash),
       ),
     );
     if (result != null) {

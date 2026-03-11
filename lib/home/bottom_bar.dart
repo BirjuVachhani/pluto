@@ -78,6 +78,35 @@ class BottomBar extends StatelessWidget {
                                   ),
                                 ),
                               ),
+                            ] else if (store.currentImage
+                                case PexelsPhoto background) ...[
+                              const Text('Photo by '),
+                              GestureDetectorWithCursor(
+                                onTap: () => onPexelsUserLinkTap(background),
+                                child: Text(
+                                  background.pexelsPhoto.photographer,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    decoration: hovering
+                                        ? TextDecoration.underline
+                                        : TextDecoration.none,
+                                  ),
+                                ),
+                              ),
+                              const Text(' on '),
+                              GestureDetectorWithCursor(
+                                onTap: () =>
+                                    launchUrlString('https://www.pexels.com'),
+                                child: Text(
+                                  'Pexels',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    decoration: hovering
+                                        ? TextDecoration.underline
+                                        : TextDecoration.none,
+                                  ),
+                                ),
+                              ),
                             ],
                           ],
                         ),
@@ -142,6 +171,10 @@ class BottomBar extends StatelessWidget {
       },
     );
     launchUrlString(uri.toString());
+  }
+
+  void onPexelsUserLinkTap(PexelsPhoto background) {
+    launchUrlString(background.pexelsPhoto.photographerUrl);
   }
 }
 

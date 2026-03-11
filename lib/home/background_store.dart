@@ -10,6 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'package:screwdriver/screwdriver.dart';
+import 'package:pexels/pexels.dart' as pexels;
 import 'package:shared/shared.dart';
 import 'package:unsplash_client/unsplash_client.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -116,6 +117,12 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
   @readonly
   ObservableList<UnsplashSource> _customSources = ObservableList.of([]);
 
+  @readonly
+  PexelsSource _pexelsSource = const PexelsRandomSource();
+
+  @readonly
+  ObservableList<PexelsSource> _pexelsCustomSources = ObservableList.of([]);
+
   final BackendService backendService = GetIt.instance.get<BackendService>();
 
   @computed
@@ -161,6 +168,8 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
     _backgroundRefreshRate = settings.imageRefreshRate;
     _imageResolution = settings.imageResolution;
     _customSources = ObservableList.of(settings.customSources);
+    _pexelsSource = settings.pexelsSource;
+    _pexelsCustomSources = ObservableList.of(settings.pexelsCustomSources);
 
     // load image last updated time
     _imageIndex = await storage.getInt(StorageKeys.imageIndex) ?? 0;
@@ -233,6 +242,7 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
   @action
   Future<void> initializeImages() async {
     if (_imageSource == ImageSource.unsplash ||
+        _imageSource == ImageSource.pexels ||
         _imageSource == ImageSource.userLikes) {
       if (!await storage.containsKey(StorageKeys.image1)) {
         // If no images are cached, fetch new ones now and cache them.
@@ -412,7 +422,9 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
       imageRefreshRate: _backgroundRefreshRate,
       imageResolution: _imageResolution,
       unsplashSource: _unsplashSource,
+      pexelsSource: _pexelsSource,
       customSources: _customSources,
+      pexelsCustomSources: _pexelsCustomSources,
     );
   }
 
@@ -469,6 +481,29 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
     _save();
     // Update the current image to the new source.
     onChangeBackground(updateAll: true);
+  }
+
+  @action
+  void setPexelsSource(PexelsSource source) {
+    _pexelsSource = source;
+    _save();
+    onChangeBackground(updateAll: true);
+  }
+
+  @action
+  void addNewPexelsCollection(PexelsSource source, {bool setAsCurrent = false}) {
+    _pexelsCustomSources.add(source);
+    if (setAsCurrent) {
+      setPexelsSource(source);
+    } else {
+      _save();
+    }
+  }
+
+  @action
+  void removeCustomPexelsCollection(PexelsSource source) {
+    _pexelsCustomSources.remove(source);
+    _save();
   }
 
   @action
@@ -585,10 +620,14 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
     final fileName =
         'background_${DateTime.now().millisecondsSinceEpoch ~/ 1000}.jpg';
 
-    final resolution = await storage.getEnum(
-        StorageKeys.imageDownloadQuality, ImageResolution.values);
-
-    Uri uri = applyResolutionOnUrl(image.url, resolution);
+    final Uri uri;
+    if (image is PexelsPhoto) {
+      uri = Uri.parse(image.url);
+    } else {
+      final resolution = await storage.getEnum(
+          StorageKeys.imageDownloadQuality, ImageResolution.values);
+      uri = applyResolutionOnUrl(image.url, resolution);
+    }
 
     final response = await http.get(uri);
     final imageBytes =
@@ -618,10 +657,14 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
       return;
     }
 
-    final resolution = await storage.getEnum(
-        StorageKeys.imageDownloadQuality, ImageResolution.values);
-
-    Uri uri = applyResolutionOnUrl(image.url, resolution);
+    final Uri uri;
+    if (image is PexelsPhoto) {
+      uri = Uri.parse(image.url);
+    } else {
+      final resolution = await storage.getEnum(
+          StorageKeys.imageDownloadQuality, ImageResolution.values);
+      uri = applyResolutionOnUrl(image.url, resolution);
+    }
 
     await launchUrl(uri);
   }
@@ -646,19 +689,46 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
           photo: photo,
           bytes: bytes,
         );
+      case ImageSource.pexels:
+        final pexels.Photo? photo = await backendService.randomPexelsImage(
+          source: _pexelsSource,
+        );
+        if (photo == null) {
+          throw Exception('Failed to fetch image from pexels');
+        }
+
+        final url = photo.src.original;
+        final bytes = await getImageBytesFromUrl(url);
+        return PexelsPhotoBackground(
+          id: photo.id.toString(),
+          pexelsPhoto: photo,
+          bytes: bytes,
+        );
       case ImageSource.userLikes:
         assert(_likedBackgrounds.isNotEmpty, 'No liked backgrounds found');
         final LikedBackground background = _likedBackgrounds.values
             .elementAt(Random().nextInt(_likedBackgrounds.length));
         log('liked background url: ${background.url}');
-        final url = background is UnsplashLikedBackground
-            ? background.photo.urls.rawWith(size: size)
-            : background.url;
+        final String url;
+        if (background is UnsplashLikedBackground) {
+          url = background.photo.urls.rawWith(size: size);
+        } else if (background is PexelsLikedBackground) {
+          url = background.pexelsPhoto.src.original;
+        } else {
+          url = background.url;
+        }
         final bytes = await getImageBytesFromUrl(url);
         if (background is UnsplashLikedBackground) {
           return UnsplashPhotoBackground(
             id: background.photo.urls.raw.pathSegments.last,
             photo: background.photo,
+            bytes: bytes,
+          );
+        }
+        if (background is PexelsLikedBackground) {
+          return PexelsPhotoBackground(
+            id: background.pexelsPhoto.id.toString(),
+            pexelsPhoto: background.pexelsPhoto,
             bytes: bytes,
           );
         }

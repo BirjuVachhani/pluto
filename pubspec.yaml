@@ -35,6 +35,8 @@ dependencies:
   unsplash_client: ^3.0.0
   shared:
     path: shared
+  pexels:
+    path: packages/pexels
   ticking_widget: ^1.0.0
   universal_web: ^1.1.1+1
   http_interceptor: ^2.0.0

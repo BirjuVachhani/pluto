@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_interceptor/http_interceptor.dart';
+import 'package:pexels/pexels.dart' as pexels;
 import 'package:shared/shared.dart';
 import 'package:unsplash_client/unsplash_client.dart';
 
@@ -49,6 +50,23 @@ class RestBackendService extends BackendService {
     if (result.statusCode == 200) {
       final Map<String, dynamic> json = jsonDecode(result.body);
       return Photo.fromJson(json);
+    }
+    log(result.body);
+    throw HttpException(result.body);
+  }
+
+  @override
+  Future<pexels.Photo?> randomPexelsImage({
+    required PexelsSource source,
+  }) async {
+    final result = await client.post(
+      Uri.parse('$baseUrl/pexels/randomImage'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'source': source.toJson()}),
+    );
+    if (result.statusCode == 200) {
+      final Map<String, dynamic> json = jsonDecode(result.body);
+      return pexels.Photo.fromJson(json);
     }
     log(result.body);
     throw HttpException(result.body);

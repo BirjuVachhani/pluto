@@ -27,6 +27,9 @@ BackgroundSettings _$BackgroundSettingsFromJson(
   unsplashSource: json['unsplashSource'] == null
       ? UnsplashSources.curated
       : UnsplashSource.fromJson(json['unsplashSource'] as Map<String, dynamic>),
+  pexelsSource: json['pexelsSource'] == null
+      ? const PexelsRandomSource()
+      : PexelsSource.fromJson(json['pexelsSource'] as Map<String, dynamic>),
   imageRefreshRate:
       $enumDecodeNullable(
         _$BackgroundRefreshRateEnumMap,
@@ -40,6 +43,9 @@ BackgroundSettings _$BackgroundSettingsFromJson(
   customSources: (json['customSources'] as List<dynamic>?)
       ?.map((e) => UnsplashSource.fromJson(e as Map<String, dynamic>))
       .toList(),
+  pexelsCustomSources: (json['pexelsCustomSources'] as List<dynamic>?)
+      ?.map((e) => PexelsSource.fromJson(e as Map<String, dynamic>))
+      .toList(),
 );
 
 Map<String, dynamic> _$BackgroundSettingsToJson(BackgroundSettings instance) =>
@@ -52,11 +58,13 @@ Map<String, dynamic> _$BackgroundSettingsToJson(BackgroundSettings instance) =>
       'invert': instance.invert,
       'source': _$ImageSourceEnumMap[instance.source]!,
       'unsplashSource': instance.unsplashSource,
+      'pexelsSource': instance.pexelsSource,
       'imageRefreshRate':
           _$BackgroundRefreshRateEnumMap[instance.imageRefreshRate]!,
       'imageResolution': _$ImageResolutionEnumMap[instance.imageResolution]!,
       'greyScale': instance.greyScale,
       'customSources': instance.customSources,
+      'pexelsCustomSources': instance.pexelsCustomSources,
     };
 
 const _$BackgroundModeEnumMap = {
@@ -67,6 +75,7 @@ const _$BackgroundModeEnumMap = {
 
 const _$ImageSourceEnumMap = {
   ImageSource.unsplash: 'unsplash',
+  ImageSource.pexels: 'pexels',
   ImageSource.local: 'local',
   ImageSource.userLikes: 'userLikes',
 };
@@ -119,6 +128,40 @@ Map<String, dynamic> _$UnsplashPhotoBackgroundToJson(
   'id': instance.id,
   'bytes': base64Encode(instance.bytes),
   'photo': instance.photo,
+};
+
+PexelsPhotoBackground _$PexelsPhotoBackgroundFromJson(
+  Map<String, dynamic> json,
+) => PexelsPhotoBackground(
+  id: json['id'] as String,
+  bytes: base64Decode(json['bytes'] as String),
+  pexelsPhoto: _pexelsPhotoFromJson(
+    json['pexelsPhoto'] as Map<String, dynamic>,
+  ),
+);
+
+Map<String, dynamic> _$PexelsPhotoBackgroundToJson(
+  PexelsPhotoBackground instance,
+) => <String, dynamic>{
+  'id': instance.id,
+  'bytes': base64Encode(instance.bytes),
+  'pexelsPhoto': _pexelsPhotoToJson(instance.pexelsPhoto),
+};
+
+PexelsLikedBackground _$PexelsLikedBackgroundFromJson(
+  Map<String, dynamic> json,
+) => PexelsLikedBackground(
+  id: json['id'] as String,
+  pexelsPhoto: _pexelsPhotoFromJson(
+    json['pexelsPhoto'] as Map<String, dynamic>,
+  ),
+);
+
+Map<String, dynamic> _$PexelsLikedBackgroundToJson(
+  PexelsLikedBackground instance,
+) => <String, dynamic>{
+  'id': instance.id,
+  'pexelsPhoto': _pexelsPhotoToJson(instance.pexelsPhoto),
 };
 
 Background _$BackgroundFromJson(Map<String, dynamic> json) => Background(

@@ -16,6 +16,8 @@ dependencies:
   json_annotation: ^4.11.0
   shared:
     path: ../shared
+  pexels:
+    path: ../packages/pexels
   dotenv: ^4.2.0
 
 dev_dependencies:

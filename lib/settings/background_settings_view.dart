@@ -12,6 +12,7 @@ import '../model/flat_color.dart';
 import '../resources/color_gradients.dart';
 import '../resources/colors.dart';
 import '../resources/flat_colors.dart';
+import '../resources/pexels_sources.dart';
 import '../resources/unsplash_sources.dart';
 import '../ui/custom_dropdown.dart';
 import '../ui/custom_slider.dart';
@@ -309,6 +310,8 @@ class ImageSettings extends StatelessWidget {
             switch (store.imageSource) {
               case ImageSource.unsplash:
                 return const UnsplashSourceSettings();
+              case ImageSource.pexels:
+                return const PexelsSourceSettings();
               case ImageSource.local:
                 return const SizedBox.shrink();
               case ImageSource.userLikes:
@@ -542,13 +545,113 @@ class UnsplashSourceSettings extends StatelessWidget {
       context: context,
       builder: (context) => Theme(
         data: Theme.of(context),
-        child: NewCollectionDialog(store: store),
+        child: NewCollectionDialog(
+          store: store,
+          imageSource: ImageSource.unsplash,
+        ),
       ),
     );
     if (result != null) {
       store.addNewCollection(
           UnsplashTagsSource(tags: result.trim().capitalized),
           setAsCurrent: true);
+    }
+  }
+}
+
+class PexelsSourceSettings extends StatelessWidget {
+  const PexelsSourceSettings({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final BackgroundStore store = context.read<BackgroundStore>();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Row(
+          children: [
+            const Text('Background Collection', style: TextStyle(height: 1)),
+            const SizedBox(width: 6),
+            CustomObserver(
+              name: 'Add Pexels Collection',
+              builder: (context) {
+                if (store.imageSource != ImageSource.pexels) {
+                  return const SizedBox.shrink();
+                }
+                return GestureDetectorWithCursor(
+                  onTap: () => onCreateNewCollection(context, store),
+                  child: Icon(
+                    Icons.add_circle_rounded,
+                    size: 18,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        CustomObserver(
+          name: 'Pexels Background Collection',
+          builder: (context) {
+            return CustomDropdown<PexelsSource>(
+              value: store.pexelsSource,
+              hint: 'Select a collection',
+              isExpanded: true,
+              items: [
+                ...store.pexelsCustomSources,
+                ...PexelsSources.sources,
+              ],
+              itemBuilder: (context, item) {
+                if (item == PexelsSources.christmas) {
+                  return Text('🎄${item.name}');
+                }
+                return Row(
+                  children: [
+                    Expanded(child: Text(item.name)),
+                    if (store.pexelsCustomSources.contains(item))
+                      Tooltip(
+                        message: 'Custom Collection',
+                        child: Icon(
+                          Icons.explicit,
+                          size: 16,
+                          color: context.colorScheme.onSurface
+                              .withValues(alpha: 0.7),
+                        ),
+                      ),
+                  ],
+                );
+              },
+              onSelected: (value) => store.setPexelsSource(value),
+            );
+          },
+        ),
+        const SizedBox(height: 8),
+      ],
+    );
+  }
+
+  Future<void> onCreateNewCollection(
+      BuildContext context, BackgroundStore store) async {
+    final String? result = await showDialog<String>(
+      context: context,
+      builder: (context) => Theme(
+        data: Theme.of(context),
+        child: NewCollectionDialog(
+          store: store,
+          imageSource: ImageSource.pexels,
+        ),
+      ),
+    );
+    if (result != null) {
+      store.addNewPexelsCollection(
+        PexelsSearchSource(
+          name: result.trim(),
+          query: result.trim().toLowerCase(),
+        ),
+        setAsCurrent: true,
+      );
     }
   }
 }

@@ -11,13 +11,19 @@ import 'package:unsplash_client/unsplash_client.dart';
 
 import '../backend/backend_service.dart';
 import '../home/background_store.dart';
+import '../model/background_settings.dart';
 import '../resources/colors.dart';
 import '../ui/text_input.dart';
 
 class NewCollectionDialog extends StatefulWidget {
   final BackgroundStore store;
+  final ImageSource imageSource;
 
-  const NewCollectionDialog({super.key, required this.store});
+  const NewCollectionDialog({
+    super.key,
+    required this.store,
+    required this.imageSource,
+  });
 
   @override
   State<NewCollectionDialog> createState() => _NewCollectionDialogState();
@@ -204,19 +210,27 @@ class _NewCollectionDialogState extends State<NewCollectionDialog> {
     );
   }
 
-  /// This indirectly checks if the unsplash URL with the given keywords
-  /// returns a 404 image URL or not. While this might not be the best way to
-  /// check if the collection is valid or not, it is the only way I could find
-  /// to do so with the Unsplash source API.
+  /// Validates the given keywords against the appropriate image API
+  /// to check if images are available for the given query.
   Future<void> onTextChanged(String value) async {
     value = value.trim();
     if (mounted) setState(() => isValid = null);
     final BackendService backendService = GetIt.instance.get<BackendService>();
     try {
-      final source = UnsplashTagsSource(tags: value);
-      final Photo? photo = await backendService.randomUnsplashImage(
-          source: source, orientation: UnsplashPhotoOrientation.landscape);
-      isValid = photo != null;
+      if (widget.imageSource == ImageSource.pexels) {
+        final source = PexelsSearchSource(
+          name: value,
+          query: value.toLowerCase(),
+        );
+        final photo =
+            await backendService.randomPexelsImage(source: source);
+        isValid = photo != null;
+      } else {
+        final source = UnsplashTagsSource(tags: value);
+        final Photo? photo = await backendService.randomUnsplashImage(
+            source: source, orientation: UnsplashPhotoOrientation.landscape);
+        isValid = photo != null;
+      }
     } catch (error, stacktrace) {
       log(error.toString());
       log(stacktrace.toString());

@@ -482,6 +482,50 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
     });
   }
 
+  late final _$_pexelsSourceAtom = Atom(
+    name: '_BackgroundStore._pexelsSource',
+    context: context,
+  );
+
+  PexelsSource get pexelsSource {
+    _$_pexelsSourceAtom.reportRead();
+    return super._pexelsSource;
+  }
+
+  @override
+  PexelsSource get _pexelsSource => pexelsSource;
+
+  @override
+  set _pexelsSource(PexelsSource value) {
+    _$_pexelsSourceAtom.reportWrite(value, super._pexelsSource, () {
+      super._pexelsSource = value;
+    });
+  }
+
+  late final _$_pexelsCustomSourcesAtom = Atom(
+    name: '_BackgroundStore._pexelsCustomSources',
+    context: context,
+  );
+
+  ObservableList<PexelsSource> get pexelsCustomSources {
+    _$_pexelsCustomSourcesAtom.reportRead();
+    return super._pexelsCustomSources;
+  }
+
+  @override
+  ObservableList<PexelsSource> get _pexelsCustomSources => pexelsCustomSources;
+
+  @override
+  set _pexelsCustomSources(ObservableList<PexelsSource> value) {
+    _$_pexelsCustomSourcesAtom.reportWrite(
+      value,
+      super._pexelsCustomSources,
+      () {
+        super._pexelsCustomSources = value;
+      },
+    );
+  }
+
   late final _$initializeImagesAsyncAction = AsyncAction(
     '_BackgroundStore.initializeImages',
     context: context,
@@ -680,6 +724,45 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
     );
     try {
       return super.setUnsplashSource(source);
+    } finally {
+      _$_BackgroundStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setPexelsSource(PexelsSource source) {
+    final _$actionInfo = _$_BackgroundStoreActionController.startAction(
+      name: '_BackgroundStore.setPexelsSource',
+    );
+    try {
+      return super.setPexelsSource(source);
+    } finally {
+      _$_BackgroundStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void addNewPexelsCollection(
+    PexelsSource source, {
+    bool setAsCurrent = false,
+  }) {
+    final _$actionInfo = _$_BackgroundStoreActionController.startAction(
+      name: '_BackgroundStore.addNewPexelsCollection',
+    );
+    try {
+      return super.addNewPexelsCollection(source, setAsCurrent: setAsCurrent);
+    } finally {
+      _$_BackgroundStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void removeCustomPexelsCollection(PexelsSource source) {
+    final _$actionInfo = _$_BackgroundStoreActionController.startAction(
+      name: '_BackgroundStore.removeCustomPexelsCollection',
+    );
+    try {
+      return super.removeCustomPexelsCollection(source);
     } finally {
       _$_BackgroundStoreActionController.endAction(_$actionInfo);
     }

@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:pexels/pexels.dart' as pexels;
+import 'package:server/pexels.dart' as pexels_service;
 import 'package:server/unsplash.dart';
 import 'package:shared/shared.dart';
 import 'package:shelf/shelf.dart';
@@ -19,7 +21,8 @@ final bool enforceApiKey = bool.tryParse(Platform.environment['ENFORCE_API_KEY']
 final _router = Router()
   ..get('/', _rootHandler)
   ..get('/echo/<message>', _echoHandler)
-  ..post('/unsplash/randomImage', _unsplashRandomImageHandler);
+  ..post('/unsplash/randomImage', _unsplashRandomImageHandler)
+  ..post('/pexels/randomImage', _pexelsRandomImageHandler);
 
 Response _rootHandler(Request req) {
   return Response.ok('Hello, World!\n');
@@ -38,6 +41,21 @@ Future<Response> _unsplashRandomImageHandler(Request request) async {
     final Photo? photo = await randomUnsplashImage(source: source);
     if (photo == null) {
       return Response.internalServerError(body: 'Could not get a photo from Unsplash.');
+    }
+    return Response.ok(jsonEncode(photo.toJson()), headers: {'Content-Type': 'application/json'});
+  } catch (error, stacktrace) {
+    return Response.internalServerError(body: 'Error: $error\n$stacktrace\n');
+  }
+}
+
+Future<Response> _pexelsRandomImageHandler(Request request) async {
+  try {
+    final String payload = await request.readAsString();
+    final Map<String, dynamic> sourceJson = jsonDecode(payload);
+    final PexelsSource source = PexelsSource.fromJson(sourceJson['source']);
+    final pexels.Photo? photo = await pexels_service.randomPexelsImage(source: source);
+    if (photo == null) {
+      return Response.internalServerError(body: 'Could not get a photo from Pexels.');
     }
     return Response.ok(jsonEncode(photo.toJson()), headers: {'Content-Type': 'application/json'});
   } catch (error, stacktrace) {
