@@ -1,3 +1,7 @@
+# 0.7.0
+
+- Add pexels as a new image source.
+
 # 0.6.4
 
 - Fix clock not updating correctly when tab is inactive for long.
