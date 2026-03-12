@@ -120,7 +120,7 @@ Middleware enableCors() {
       final isAllowed = origin.startsWith('chrome-extension://') ||
           origin == 'http://localhost:5500';
       final corsHeaders = {
-        'Access-Control-Allow-Origin': isAllowed ? origin : '',
+        if (isAllowed) 'Access-Control-Allow-Origin': origin,
         'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
         'Access-Control-Allow-Headers': 'Origin, Content-Type, X-API-Key',
         'Vary': 'Origin',

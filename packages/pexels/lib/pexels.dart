@@ -17,3 +17,4 @@ export 'src/models/photo.dart';
 export 'src/models/video.dart';
 export 'src/pexels_client.dart';
 export 'src/pexels_exception.dart';
+export 'src/rate_limit_info.dart';

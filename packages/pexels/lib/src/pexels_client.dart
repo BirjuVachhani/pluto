@@ -8,6 +8,7 @@ import 'models/media.dart';
 import 'models/photo.dart';
 import 'models/video.dart';
 import 'pexels_exception.dart';
+import 'rate_limit_info.dart';
 
 /// A client for interacting with the Pexels API.
 ///
@@ -32,8 +33,14 @@ class PexelsClient {
   /// The API key used for authentication.
   final String apiKey;
 
+  /// Maximum number of retries for rate-limited or server error responses.
+  final int maxRetries;
+
   final http.Client _client;
   final bool _ownsClient;
+
+  /// The most recent rate limit info from the API, if available.
+  RateLimitInfo? rateLimitInfo;
 
   /// Creates a new [PexelsClient] with the given [apiKey].
   ///
@@ -41,9 +48,12 @@ class PexelsClient {
   /// This is useful for testing or when using an intercepted client
   /// (e.g., from `package:http_interceptor`).
   ///
+  /// [maxRetries] controls how many times to retry on 429/503 responses
+  /// (default: 3).
+  ///
   /// If no [client] is provided, a default [http.Client] is created
   /// and will be closed when [close] is called.
-  PexelsClient({required this.apiKey, http.Client? client})
+  PexelsClient({required this.apiKey, http.Client? client, this.maxRetries = 3})
       : _client = client ?? http.Client(),
         _ownsClient = client == null;
 
@@ -266,6 +276,8 @@ class PexelsClient {
     };
   }
 
+  static const _retryableStatusCodes = {429, 503};
+
   Future<Map<String, dynamic>> _get(
     String baseUrl,
     String path,
@@ -274,9 +286,25 @@ class PexelsClient {
     final uri = Uri.parse('$baseUrl$path').replace(
       queryParameters: params.isNotEmpty ? params : null,
     );
-    final response = await _client.get(uri, headers: _headers);
 
-    if (response.statusCode < 200 || response.statusCode >= 300) {
+    for (var attempt = 0; attempt <= maxRetries; attempt++) {
+      final response = await _client.get(uri, headers: _headers);
+
+      // Update rate limit info from response headers.
+      rateLimitInfo = RateLimitInfo.fromHeaders(response.headers);
+
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        return jsonDecode(response.body) as Map<String, dynamic>;
+      }
+
+      // Retry on rate limit (429) or service unavailable (503).
+      if (_retryableStatusCodes.contains(response.statusCode) &&
+          attempt < maxRetries) {
+        final delay = Duration(seconds: pow(2, attempt).toInt());
+        await Future<void>.delayed(delay);
+        continue;
+      }
+
       String message = response.reasonPhrase ?? 'Unknown error';
       try {
         final body = jsonDecode(response.body) as Map<String, dynamic>;
@@ -292,7 +320,11 @@ class PexelsClient {
       );
     }
 
-    return jsonDecode(response.body) as Map<String, dynamic>;
+    // Should not be reached, but just in case.
+    throw PexelsException(
+      statusCode: 503,
+      message: 'Max retries exceeded',
+    );
   }
 
   /// Closes the underlying HTTP client.

@@ -16,43 +16,40 @@ Future<Photo?> randomUnsplashImage({
     throw StateError('UNSPLASH_ACCESS_KEY is missing.');
   }
   final client = UnsplashClient(
-    settings: ClientSettings(
-      credentials: AppCredentials(accessKey: unsplashAccessKey),
-    ),
+    settings: ClientSettings(credentials: AppCredentials(accessKey: unsplashAccessKey)),
   );
 
-  switch (source) {
-    case UnsplashCollectionSource source:
-      final List<Photo> result = await client.photos.random(
-        count: 1,
-        orientation: PhotoOrientation.landscape,
-        collections: [source.id],
-      ).goAndGet();
-      return result.firstOrNull;
-    case UnsplashTagsSource source:
-      final List<Photo> result = await client.photos
-          .random(
-            count: 1,
-            orientation: PhotoOrientation.landscape,
-            query: source.tags,
-          )
-          .goAndGet();
-      return result.firstOrNull;
-    case UnsplashRandomSource():
-    case UnsplashUserLikesSource():
-      final List<Photo> result = await client.photos
-          .random(
-            count: 1,
-            orientation: PhotoOrientation.landscape,
-          )
-          .goAndGet();
-      return result.firstOrNull;
-    // case UnsplashUserLikesSource source:
-    //   final List<Photo> result = await client.photos.random(
-    //     count: 1,
-    //     orientation: PhotoOrientation.landscape,
-    //     username: source.id,
-    //   ).goAndGet();
-    //   return result.firstOrNull;
+  try {
+    switch (source) {
+      case UnsplashCollectionSource source:
+        final List<Photo> result = await client.photos
+            .random(count: 1, orientation: PhotoOrientation.landscape, collections: [source.id])
+            .goAndGet();
+        return result.firstOrNull;
+      case UnsplashTagsSource source:
+        final List<Photo> result = await client.photos
+            .random(count: 1, orientation: PhotoOrientation.landscape, query: source.tags)
+            .goAndGet();
+        return result.firstOrNull;
+      case UnsplashRandomSource():
+      case UnsplashUserLikesSource():
+        final List<Photo> result = await client.photos
+            .random(count: 1, orientation: PhotoOrientation.landscape)
+            .goAndGet();
+        return result.firstOrNull;
+      // case UnsplashUserLikesSource source:
+      //   final List<Photo> result = await client.photos.random(
+      //     count: 1,
+      //     orientation: PhotoOrientation.landscape,
+      //     username: source.id,
+      //   ).goAndGet();
+      //   return result.firstOrNull;
+    }
+  } catch (error, stacktrace) {
+    print('Error fetching Unsplash image: $error');
+    print(stacktrace);
+    return null;
+  } finally {
+    client.close();
   }
 }
