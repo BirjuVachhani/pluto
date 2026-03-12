@@ -84,7 +84,7 @@ void main(List<String> args) async {
   // Configure a pipeline that logs requests.
   final handler = Pipeline()
       .addMiddleware(logRequests())
-      .addMiddleware(enableCors())
+      // .addMiddleware(enableCors())
       .addMiddleware(requireApiKey(apiKey!, enforce: enforceApiKey))
       .addHandler(_router.call);
 
