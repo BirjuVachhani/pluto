@@ -84,7 +84,7 @@ void main(List<String> args) async {
   // Configure a pipeline that logs requests.
   final handler = Pipeline()
       .addMiddleware(logRequests())
-      // .addMiddleware(enableCors())
+      .addMiddleware(enableCors())
       .addMiddleware(requireApiKey(apiKey!, enforce: enforceApiKey))
       .addHandler(_router.call);
 
@@ -116,11 +116,9 @@ Middleware requireApiKey(String apiKey, {required bool enforce}) {
 Middleware enableCors() {
   return (Handler handler) {
     return (Request request) async {
-      final origin = request.headers['origin'] ?? '';
-      final isAllowed = origin.startsWith('chrome-extension://') ||
-          origin == 'http://localhost:5500';
+      final origin = request.headers['origin'] ?? '*';
       final corsHeaders = {
-        if (isAllowed) 'Access-Control-Allow-Origin': origin,
+        'Access-Control-Allow-Origin': origin,
         'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
         'Access-Control-Allow-Headers': 'Origin, Content-Type, X-API-Key',
         'Vary': 'Origin',
