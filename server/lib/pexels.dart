@@ -1,6 +1,8 @@
 import 'dart:math';
 
+import 'package:http_interceptor/http_interceptor.dart';
 import 'package:pexels/pexels.dart' as pexels;
+import 'package:server/utils.dart';
 import 'package:shared/shared.dart';
 
 import 'unsplash.dart' show env;
@@ -10,7 +12,10 @@ Future<pexels.Photo?> randomPexelsImage({required PexelsSource source}) async {
   if (pexelsApiKey == null) {
     throw StateError('PEXLES_API_KEY is missing.');
   }
-  final client = pexels.PexelsClient(apiKey: pexelsApiKey);
+  final client = pexels.PexelsClient(
+    apiKey: pexelsApiKey,
+    client: InterceptedClient.build(interceptors: [LoggerInterceptor()]),
+  );
 
   try {
     switch (source) {

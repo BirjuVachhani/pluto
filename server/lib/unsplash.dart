@@ -2,8 +2,11 @@
 // folder of your Celest project.
 
 import 'package:dotenv/dotenv.dart';
+import 'package:http_interceptor/http_interceptor.dart';
 import 'package:shared/shared.dart';
 import 'package:unsplash_client/unsplash_client.dart';
+
+import 'utils.dart';
 
 final DotEnv env = DotEnv(includePlatformEnvironment: true)..load();
 
@@ -16,7 +19,10 @@ Future<Photo?> randomUnsplashImage({
     throw StateError('UNSPLASH_ACCESS_KEY is missing.');
   }
   final client = UnsplashClient(
-    settings: ClientSettings(credentials: AppCredentials(accessKey: unsplashAccessKey)),
+    settings: ClientSettings(
+      credentials: AppCredentials(accessKey: unsplashAccessKey),
+    ),
+    httpClient: InterceptedClient.build(interceptors: [LoggerInterceptor()]),
   );
 
   try {
