@@ -1,14 +1,12 @@
 // Cloud functions are top-level Dart functions defined in the `functions/`
 // folder of your Celest project.
 
-import 'package:dotenv/dotenv.dart';
 import 'package:http_interceptor/http_interceptor.dart';
 import 'package:shared/shared.dart';
 import 'package:unsplash_client/unsplash_client.dart';
 
+import 'base/env.dart';
 import 'utils.dart';
-
-final DotEnv env = DotEnv(includePlatformEnvironment: true)..load();
 
 Future<Photo?> randomUnsplashImage({
   required UnsplashSource source,
