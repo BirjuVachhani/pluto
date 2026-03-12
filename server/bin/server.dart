@@ -117,8 +117,9 @@ Middleware enableCors() {
   return (Handler handler) {
     return (Request request) async {
       final origin = request.headers['origin'] ?? '*';
+      final isAllowed = origin.startsWith('chrome-extension://') || origin == 'http://localhost:5500';
       final corsHeaders = {
-        'Access-Control-Allow-Origin': origin,
+        if (isAllowed) 'Access-Control-Allow-Origin': origin,
         'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
         'Access-Control-Allow-Headers': 'Origin, Content-Type, X-API-Key',
         'Vary': 'Origin',
