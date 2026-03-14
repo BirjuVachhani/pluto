@@ -98,6 +98,7 @@ enum AlignmentC {
 }
 
 abstract class BaseWidgetSettings with EquatableMixin {
+  @JsonKey(includeToJson: true)
   abstract final WidgetType type;
 
   const BaseWidgetSettings();

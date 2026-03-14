@@ -1,6 +1,10 @@
+import 'dart:convert';
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_screwdriver/flutter_screwdriver.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -10,6 +14,7 @@ import '../home/home_store.dart';
 import '../home/widget_store.dart';
 import '../model/background_settings.dart';
 import '../model/export_data.dart';
+import '../model/widget_settings.dart';
 import '../resources/colors.dart';
 import '../resources/storage_keys.dart';
 import '../utils/custom_observer.dart';
@@ -58,8 +63,7 @@ class SettingsPanelContent extends StatefulWidget {
   State<SettingsPanelContent> createState() => _SettingsPanelContentState();
 }
 
-class _SettingsPanelContentState extends State<SettingsPanelContent>
-    with SingleTickerProviderStateMixin {
+class _SettingsPanelContentState extends State<SettingsPanelContent> with SingleTickerProviderStateMixin {
   late final HomeStore store = context.read<HomeStore>();
 
   @override
@@ -108,6 +112,16 @@ class _SettingsPanelContentState extends State<SettingsPanelContent>
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                       ),
+                      if (kDebugMode)
+                        Material(
+                          type: MaterialType.transparency,
+                          child: IconButton(
+                            onPressed: onCopySettings,
+                            splashRadius: 16,
+                            iconSize: 18,
+                            icon: const Icon(Icons.copy_rounded),
+                          ),
+                        ),
                       const MenuButton(),
                       Material(
                         type: MaterialType.transparency,
@@ -148,8 +162,7 @@ class _SettingsPanelContentState extends State<SettingsPanelContent>
                           fontWeight: FontWeight.w300,
                         ),
                         padding: const EdgeInsets.symmetric(horizontal: 24),
-                        labelPadding:
-                            const EdgeInsets.symmetric(horizontal: 24),
+                        labelPadding: const EdgeInsets.symmetric(horizontal: 24),
                         dividerColor: Colors.transparent,
                         indicatorSize: TabBarIndicatorSize.tab,
                         indicator: BoxDecoration(
@@ -218,6 +231,43 @@ class _SettingsPanelContentState extends State<SettingsPanelContent>
       ],
     );
   }
+
+  void onCopySettings() {
+    final BackgroundStore backgroundStore = context.read<BackgroundStore>();
+    final WidgetStore widgetStore = context.read<WidgetStore>();
+    final json = <String, dynamic>{
+      'background': {
+        'mode': backgroundStore.mode.name,
+        ...switch (backgroundStore.mode) {
+          .color => backgroundStore.color.toJson(),
+          .gradient => backgroundStore.gradient.toJson(),
+          .image => {
+            'url': backgroundStore.currentImage!.url,
+          },
+        },
+      },
+      'widget': {
+        'type': widgetStore.type.name,
+        ...switch (widgetStore.type) {
+          .analogClock => widgetStore.analogueClockSettings.getCurrentSettings().toJson(),
+          .digitalClock => widgetStore.digitalClockSettings.getCurrentSettings().toJson(),
+          .text => widgetStore.messageSettings.getCurrentSettings().toJson(),
+          .timer => widgetStore.timerSettings.getCurrentSettings().toJson(),
+          .weather => widgetStore.weatherSettings.getCurrentSettings().toJson(),
+          .digitalDate => widgetStore.digitalDateSettings.getCurrentSettings().toJson(),
+          WidgetType.none => {},
+        },
+      },
+      'backgroundEffects': {
+        'tint': backgroundStore.tint,
+        'tintColor': backgroundStore.invert ? Colors.white.hexString : AppColors.tint.hexString,
+        'texture': backgroundStore.texture,
+        'greyScale': backgroundStore.greyScale,
+      },
+    };
+    final String jsonString = JsonEncoder.withIndent('  ').convert(json);
+    Clipboard.setData(ClipboardData(text: jsonString));
+  }
 }
 
 class _BackgroundDismissible extends StatelessWidget {
@@ -280,11 +330,10 @@ class MenuButton extends StatelessWidget {
             color: AppColors.dropdownOverlayColor,
           ),
           style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                fontWeight: FontWeight.w400,
-                height: 1,
-              ),
-          itemBuilder: (context, item) =>
-              CustomDropdownMenuItem<MapEntry<String, String>>(
+            fontWeight: FontWeight.w400,
+            height: 1,
+          ),
+          itemBuilder: (context, item) => CustomDropdownMenuItem<MapEntry<String, String>>(
             value: item,
             hoverBackgroundColor: item.key == 'reset' ? Colors.red : null,
             hoverTextColor: item.key == 'reset' ? Colors.white : null,
@@ -344,8 +393,7 @@ class MenuButton extends StatelessWidget {
       case 'export':
         onExportSettings(context);
       case 'report':
-        launchUrl(Uri.parse(
-            'https://github.com/birjuvachhani/pluto/issues/new/choose'));
+        launchUrl(Uri.parse('https://github.com/birjuvachhani/pluto/issues/new/choose'));
       case 'donate':
         launchUrl(Uri.parse('https://www.buymeacoffee.com/birjuvachhani'));
       case 'sponsor':
@@ -357,9 +405,7 @@ class MenuButton extends StatelessWidget {
     final BackgroundStore backgroundStore = context.read<BackgroundStore>();
     final HomeStore homeStore = context.read<HomeStore>();
     final WidgetStore widgetStore = context.read<WidgetStore>();
-    await GetIt.instance
-        .get<LocalStorageManager>()
-        .clear(except: [StorageKeys.version]);
+    await GetIt.instance.get<LocalStorageManager>().clear(except: [StorageKeys.version]);
     homeStore.reset();
     backgroundStore.reset();
     widgetStore.reset();
