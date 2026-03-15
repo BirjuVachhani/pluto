@@ -165,6 +165,8 @@ class _SettingsPanelContentState extends State<SettingsPanelContent> with Single
                         labelPadding: const EdgeInsets.symmetric(horizontal: 24),
                         dividerColor: Colors.transparent,
                         indicatorSize: TabBarIndicatorSize.tab,
+                        splashFactory: NoSplash.splashFactory,
+                        overlayColor: WidgetStatePropertyAll(Colors.transparent),
                         indicator: BoxDecoration(
                           border: Border(
                             top: BorderSide(
