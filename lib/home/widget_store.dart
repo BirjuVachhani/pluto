@@ -11,6 +11,32 @@ import '../utils/utils.dart';
 
 part 'widget_store.g.dart';
 
+/// Interface for accessing common widget settings properties
+/// shared across all widget types.
+abstract class CommonWidgetSettingsAccessor {
+  WidgetDecoration get decoration;
+
+  set decoration(WidgetDecoration value);
+
+  double get horizontalPadding;
+
+  set horizontalPadding(double value);
+
+  double get verticalPadding;
+
+  set verticalPadding(double value);
+
+  double get horizontalMargin;
+
+  set horizontalMargin(double value);
+
+  double get verticalMargin;
+
+  set verticalMargin(double value);
+
+  void update(VoidCallback callback, {bool save = true});
+}
+
 // ignore: library_private_types_in_public_api
 class WidgetStore = _WidgetStore with _$WidgetStore;
 
@@ -137,12 +163,48 @@ abstract class _WidgetStore with Store, LazyInitializationMixin {
     initialized = false;
     await init();
   }
+
+  /// Called when background image palette colors change.
+  /// Updates any widget decoration that has a bound [imageColorId].
+  @action
+  void syncDecorationColors(Map<String, Color> imageColors) {
+    if (imageColors.isEmpty) return;
+    for (final store in <CommonWidgetSettingsAccessor>[
+      digitalClockSettings,
+      analogueClockSettings,
+      messageSettings,
+      timerSettings,
+      weatherSettings,
+      digitalDateSettings,
+    ]) {
+      final id = store.decoration.imageColorId;
+      if (id == null) continue;
+      final newColor = imageColors[id];
+      if (newColor == null) continue;
+      store.update(() {
+        store.decoration = store.decoration.withColor(newColor);
+      });
+    }
+  }
+
+  /// Returns the active widget settings store as a [CommonWidgetSettingsAccessor].
+  CommonWidgetSettingsAccessor? get activeSettings {
+    return switch (type) {
+      WidgetType.none => null,
+      WidgetType.digitalClock => digitalClockSettings,
+      WidgetType.analogClock => analogueClockSettings,
+      WidgetType.text => messageSettings,
+      WidgetType.timer => timerSettings,
+      WidgetType.weather => weatherSettings,
+      WidgetType.digitalDate => digitalDateSettings,
+    };
+  }
 }
 
 // ignore: library_private_types_in_public_api
 class DigitalClockWidgetSettingsStore = _DigitalClockWidgetSettingsStore with _$DigitalClockWidgetSettingsStore;
 
-abstract class _DigitalClockWidgetSettingsStore with Store {
+abstract class _DigitalClockWidgetSettingsStore with Store implements CommonWidgetSettingsAccessor {
   final DigitalClockWidgetSettings defaultSettings = const DigitalClockWidgetSettings();
 
   late final LocalStorageManager storage = GetIt.instance.get<LocalStorageManager>();
@@ -152,22 +214,34 @@ abstract class _DigitalClockWidgetSettingsStore with Store {
   @observable
   late Separator separator = defaultSettings.separator;
   @observable
-  late BorderType borderType = defaultSettings.borderType;
-  @observable
   late String fontFamily = defaultSettings.fontFamily;
   @observable
   late AlignmentC alignment = defaultSettings.alignment;
   @observable
   late ClockFormat format = defaultSettings.format;
+  @observable
+  late WidgetDecoration decoration = defaultSettings.decoration;
+  @observable
+  late double horizontalPadding = defaultSettings.horizontalPadding;
+  @observable
+  late double verticalPadding = defaultSettings.verticalPadding;
+  @observable
+  late double horizontalMargin = defaultSettings.horizontalMargin;
+  @observable
+  late double verticalMargin = defaultSettings.verticalMargin;
 
   _DigitalClockWidgetSettingsStore(DigitalClockWidgetSettings? settings) {
     if (settings == null) return;
     fontSize = settings.fontSize;
     separator = settings.separator;
-    borderType = settings.borderType;
     fontFamily = settings.fontFamily;
     alignment = settings.alignment;
     format = settings.format;
+    decoration = settings.decoration;
+    horizontalPadding = settings.horizontalPadding;
+    verticalPadding = settings.verticalPadding;
+    horizontalMargin = settings.horizontalMargin;
+    verticalMargin = settings.verticalMargin;
   }
 
   @action
@@ -183,10 +257,14 @@ abstract class _DigitalClockWidgetSettingsStore with Store {
     return DigitalClockWidgetSettings(
       fontSize: fontSize,
       separator: separator,
-      borderType: borderType,
       fontFamily: fontFamily,
       alignment: alignment,
       format: format,
+      decoration: decoration,
+      horizontalPadding: horizontalPadding,
+      verticalPadding: verticalPadding,
+      horizontalMargin: horizontalMargin,
+      verticalMargin: verticalMargin,
     );
   }
 
@@ -195,17 +273,21 @@ abstract class _DigitalClockWidgetSettingsStore with Store {
     if (settings == null) return;
     fontSize = settings.fontSize;
     separator = settings.separator;
-    borderType = settings.borderType;
     fontFamily = settings.fontFamily;
     alignment = settings.alignment;
     format = settings.format;
+    decoration = settings.decoration;
+    horizontalPadding = settings.horizontalPadding;
+    verticalPadding = settings.verticalPadding;
+    horizontalMargin = settings.horizontalMargin;
+    verticalMargin = settings.verticalMargin;
   }
 }
 
 // ignore: library_private_types_in_public_api
 class AnalogClockWidgetSettingsStore = _AnalogClockWidgetSettingsStore with _$AnalogClockWidgetSettingsStore;
 
-abstract class _AnalogClockWidgetSettingsStore with Store {
+abstract class _AnalogClockWidgetSettingsStore with Store implements CommonWidgetSettingsAccessor {
   final AnalogClockWidgetSettings defaultSettings = const AnalogClockWidgetSettings();
 
   final LocalStorageManager storage = GetIt.instance.get<LocalStorageManager>();
@@ -218,6 +300,16 @@ abstract class _AnalogClockWidgetSettingsStore with Store {
   late bool coloredSecondHand = defaultSettings.coloredSecondHand;
   @observable
   late AlignmentC alignment = defaultSettings.alignment;
+  @observable
+  late WidgetDecoration decoration = defaultSettings.decoration;
+  @observable
+  late double horizontalPadding = defaultSettings.horizontalPadding;
+  @observable
+  late double verticalPadding = defaultSettings.verticalPadding;
+  @observable
+  late double horizontalMargin = defaultSettings.horizontalMargin;
+  @observable
+  late double verticalMargin = defaultSettings.verticalMargin;
 
   _AnalogClockWidgetSettingsStore(AnalogClockWidgetSettings? settings) {
     if (settings == null) return;
@@ -225,6 +317,11 @@ abstract class _AnalogClockWidgetSettingsStore with Store {
     showSecondsHand = settings.showSecondsHand;
     coloredSecondHand = settings.coloredSecondHand;
     alignment = settings.alignment;
+    decoration = settings.decoration;
+    horizontalPadding = settings.horizontalPadding;
+    verticalPadding = settings.verticalPadding;
+    horizontalMargin = settings.horizontalMargin;
+    verticalMargin = settings.verticalMargin;
   }
 
   @action
@@ -242,6 +339,11 @@ abstract class _AnalogClockWidgetSettingsStore with Store {
       showSecondsHand: showSecondsHand,
       coloredSecondHand: coloredSecondHand,
       alignment: alignment,
+      decoration: decoration,
+      horizontalPadding: horizontalPadding,
+      verticalPadding: verticalPadding,
+      horizontalMargin: horizontalMargin,
+      verticalMargin: verticalMargin,
     );
   }
 
@@ -252,13 +354,18 @@ abstract class _AnalogClockWidgetSettingsStore with Store {
     showSecondsHand = settings.showSecondsHand;
     coloredSecondHand = settings.coloredSecondHand;
     alignment = settings.alignment;
+    decoration = settings.decoration;
+    horizontalPadding = settings.horizontalPadding;
+    verticalPadding = settings.verticalPadding;
+    horizontalMargin = settings.horizontalMargin;
+    verticalMargin = settings.verticalMargin;
   }
 }
 
 // ignore: library_private_types_in_public_api
 class MessageWidgetSettingsStore = _MessageWidgetSettingsStore with _$MessageWidgetSettingsStore;
 
-abstract class _MessageWidgetSettingsStore with Store {
+abstract class _MessageWidgetSettingsStore with Store implements CommonWidgetSettingsAccessor {
   final MessageWidgetSettings defaultSettings = const MessageWidgetSettings();
 
   final LocalStorageManager storage = GetIt.instance.get<LocalStorageManager>();
@@ -271,6 +378,16 @@ abstract class _MessageWidgetSettingsStore with Store {
   late String message = defaultSettings.message;
   @observable
   late AlignmentC alignment = defaultSettings.alignment;
+  @observable
+  late WidgetDecoration decoration = defaultSettings.decoration;
+  @observable
+  late double horizontalPadding = defaultSettings.horizontalPadding;
+  @observable
+  late double verticalPadding = defaultSettings.verticalPadding;
+  @observable
+  late double horizontalMargin = defaultSettings.horizontalMargin;
+  @observable
+  late double verticalMargin = defaultSettings.verticalMargin;
 
   _MessageWidgetSettingsStore(MessageWidgetSettings? settings) {
     if (settings == null) return;
@@ -278,6 +395,11 @@ abstract class _MessageWidgetSettingsStore with Store {
     fontFamily = settings.fontFamily;
     message = settings.message;
     alignment = settings.alignment;
+    decoration = settings.decoration;
+    horizontalPadding = settings.horizontalPadding;
+    verticalPadding = settings.verticalPadding;
+    horizontalMargin = settings.horizontalMargin;
+    verticalMargin = settings.verticalMargin;
   }
 
   @action
@@ -295,6 +417,11 @@ abstract class _MessageWidgetSettingsStore with Store {
       fontFamily: fontFamily,
       message: message,
       alignment: alignment,
+      decoration: decoration,
+      horizontalPadding: horizontalPadding,
+      verticalPadding: verticalPadding,
+      horizontalMargin: horizontalMargin,
+      verticalMargin: verticalMargin,
     );
   }
 
@@ -305,13 +432,18 @@ abstract class _MessageWidgetSettingsStore with Store {
     fontFamily = settings.fontFamily;
     message = settings.message;
     alignment = settings.alignment;
+    decoration = settings.decoration;
+    horizontalPadding = settings.horizontalPadding;
+    verticalPadding = settings.verticalPadding;
+    horizontalMargin = settings.horizontalMargin;
+    verticalMargin = settings.verticalMargin;
   }
 }
 
 // ignore: library_private_types_in_public_api
 class TimerWidgetSettingsStore = _TimerWidgetSettingsStore with _$TimerWidgetSettingsStore;
 
-abstract class _TimerWidgetSettingsStore with Store {
+abstract class _TimerWidgetSettingsStore with Store implements CommonWidgetSettingsAccessor {
   final TimerWidgetSettings defaultSettings = TimerWidgetSettings(
     fontSize: 24,
     textBefore: 'It has been ',
@@ -337,6 +469,16 @@ abstract class _TimerWidgetSettingsStore with Store {
   late AlignmentC alignment = defaultSettings.alignment;
   @observable
   late TimerFormat format = defaultSettings.format;
+  @observable
+  late WidgetDecoration decoration = defaultSettings.decoration;
+  @observable
+  late double horizontalPadding = defaultSettings.horizontalPadding;
+  @observable
+  late double verticalPadding = defaultSettings.verticalPadding;
+  @observable
+  late double horizontalMargin = defaultSettings.horizontalMargin;
+  @observable
+  late double verticalMargin = defaultSettings.verticalMargin;
 
   _TimerWidgetSettingsStore(TimerWidgetSettings? settings) {
     if (settings == null) return;
@@ -347,6 +489,11 @@ abstract class _TimerWidgetSettingsStore with Store {
     time = settings.time;
     alignment = settings.alignment;
     format = settings.format;
+    decoration = settings.decoration;
+    horizontalPadding = settings.horizontalPadding;
+    verticalPadding = settings.verticalPadding;
+    horizontalMargin = settings.horizontalMargin;
+    verticalMargin = settings.verticalMargin;
   }
 
   @action
@@ -367,6 +514,11 @@ abstract class _TimerWidgetSettingsStore with Store {
       time: time,
       alignment: alignment,
       format: format,
+      decoration: decoration,
+      horizontalPadding: horizontalPadding,
+      verticalPadding: verticalPadding,
+      horizontalMargin: horizontalMargin,
+      verticalMargin: verticalMargin,
     );
   }
 
@@ -380,13 +532,18 @@ abstract class _TimerWidgetSettingsStore with Store {
     time = settings.time;
     alignment = settings.alignment;
     format = settings.format;
+    decoration = settings.decoration;
+    horizontalPadding = settings.horizontalPadding;
+    verticalPadding = settings.verticalPadding;
+    horizontalMargin = settings.horizontalMargin;
+    verticalMargin = settings.verticalMargin;
   }
 }
 
 // ignore: library_private_types_in_public_api
 class WeatherWidgetSettingsStore = _WeatherWidgetSettingsStore with _$WeatherWidgetSettingsStore;
 
-abstract class _WeatherWidgetSettingsStore with Store {
+abstract class _WeatherWidgetSettingsStore with Store implements CommonWidgetSettingsAccessor {
   final WeatherWidgetSettings defaultSettings = WeatherWidgetSettings();
 
   final LocalStorageManager storage = GetIt.instance.get<LocalStorageManager>();
@@ -403,6 +560,16 @@ abstract class _WeatherWidgetSettingsStore with Store {
   late TemperatureUnit temperatureUnit = defaultSettings.temperatureUnit;
   @observable
   late Location location = defaultSettings.location;
+  @observable
+  late WidgetDecoration decoration = defaultSettings.decoration;
+  @observable
+  late double horizontalPadding = defaultSettings.horizontalPadding;
+  @observable
+  late double verticalPadding = defaultSettings.verticalPadding;
+  @observable
+  late double horizontalMargin = defaultSettings.horizontalMargin;
+  @observable
+  late double verticalMargin = defaultSettings.verticalMargin;
 
   _WeatherWidgetSettingsStore(WeatherWidgetSettings? settings) {
     if (settings == null) return;
@@ -412,6 +579,11 @@ abstract class _WeatherWidgetSettingsStore with Store {
     format = settings.format;
     temperatureUnit = settings.temperatureUnit;
     location = settings.location;
+    decoration = settings.decoration;
+    horizontalPadding = settings.horizontalPadding;
+    verticalPadding = settings.verticalPadding;
+    horizontalMargin = settings.horizontalMargin;
+    verticalMargin = settings.verticalMargin;
   }
 
   @action
@@ -431,6 +603,11 @@ abstract class _WeatherWidgetSettingsStore with Store {
       format: format,
       temperatureUnit: temperatureUnit,
       location: location,
+      decoration: decoration,
+      horizontalPadding: horizontalPadding,
+      verticalPadding: verticalPadding,
+      horizontalMargin: horizontalMargin,
+      verticalMargin: verticalMargin,
     );
   }
 
@@ -443,13 +620,18 @@ abstract class _WeatherWidgetSettingsStore with Store {
     format = settings.format;
     temperatureUnit = settings.temperatureUnit;
     location = settings.location;
+    decoration = settings.decoration;
+    horizontalPadding = settings.horizontalPadding;
+    verticalPadding = settings.verticalPadding;
+    horizontalMargin = settings.horizontalMargin;
+    verticalMargin = settings.verticalMargin;
   }
 }
 
 // ignore: library_private_types_in_public_api
 class DigitalDateWidgetSettingsStore = _DigitalDateWidgetSettingsStore with _$DigitalDateWidgetSettingsStore;
 
-abstract class _DigitalDateWidgetSettingsStore with Store {
+abstract class _DigitalDateWidgetSettingsStore with Store implements CommonWidgetSettingsAccessor {
   final DigitalDateWidgetSettings defaultSettings = const DigitalDateWidgetSettings();
 
   late final LocalStorageManager storage = GetIt.instance.get<LocalStorageManager>();
@@ -459,8 +641,6 @@ abstract class _DigitalDateWidgetSettingsStore with Store {
   @observable
   late DateSeparator separator = defaultSettings.separator;
   @observable
-  late BorderType borderType = defaultSettings.borderType;
-  @observable
   late String fontFamily = defaultSettings.fontFamily;
   @observable
   late AlignmentC alignment = defaultSettings.alignment;
@@ -468,16 +648,30 @@ abstract class _DigitalDateWidgetSettingsStore with Store {
   late DateFormat format = defaultSettings.format;
   @observable
   late String customFormat = 'MMMM dd, yyyy';
+  @observable
+  late WidgetDecoration decoration = defaultSettings.decoration;
+  @observable
+  late double horizontalPadding = defaultSettings.horizontalPadding;
+  @observable
+  late double verticalPadding = defaultSettings.verticalPadding;
+  @observable
+  late double horizontalMargin = defaultSettings.horizontalMargin;
+  @observable
+  late double verticalMargin = defaultSettings.verticalMargin;
 
   _DigitalDateWidgetSettingsStore(DigitalDateWidgetSettings? settings) {
     if (settings == null) return;
     fontSize = settings.fontSize;
     separator = settings.separator;
-    borderType = settings.borderType;
     fontFamily = settings.fontFamily;
     alignment = settings.alignment;
     format = settings.format;
     customFormat = settings.customFormat;
+    decoration = settings.decoration;
+    horizontalPadding = settings.horizontalPadding;
+    verticalPadding = settings.verticalPadding;
+    horizontalMargin = settings.horizontalMargin;
+    verticalMargin = settings.verticalMargin;
   }
 
   @action
@@ -493,10 +687,14 @@ abstract class _DigitalDateWidgetSettingsStore with Store {
     return DigitalDateWidgetSettings(
       fontSize: fontSize,
       separator: separator,
-      borderType: borderType,
       fontFamily: fontFamily,
       alignment: alignment,
       format: format,
+      decoration: decoration,
+      horizontalPadding: horizontalPadding,
+      verticalPadding: verticalPadding,
+      horizontalMargin: horizontalMargin,
+      verticalMargin: verticalMargin,
     );
   }
 
@@ -505,9 +703,13 @@ abstract class _DigitalDateWidgetSettingsStore with Store {
     if (settings == null) return;
     fontSize = settings.fontSize;
     separator = settings.separator;
-    borderType = settings.borderType;
     fontFamily = settings.fontFamily;
     alignment = settings.alignment;
     format = settings.format;
+    decoration = settings.decoration;
+    horizontalPadding = settings.horizontalPadding;
+    verticalPadding = settings.verticalPadding;
+    horizontalMargin = settings.horizontalMargin;
+    verticalMargin = settings.verticalMargin;
   }
 }

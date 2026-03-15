@@ -59,19 +59,6 @@ class DigitalClockWidgetSettingsView extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         LabeledObserver(
-          label: 'Border',
-          builder: (context) {
-            return CustomDropdown<BorderType>(
-              isExpanded: true,
-              value: settings.borderType,
-              items: BorderType.values,
-              itemBuilder: (context, type) => Text(type.name.capitalize()),
-              onSelected: (value) => settings.update(() => settings.borderType = value),
-            );
-          },
-        ),
-        const SizedBox(height: 16),
-        LabeledObserver(
           label: 'Separator',
           builder: (context) {
             return CustomDropdown<Separator>(

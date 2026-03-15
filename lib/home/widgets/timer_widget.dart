@@ -9,6 +9,7 @@ import '../../utils/custom_observer.dart';
 import '../../utils/extensions.dart';
 import '../background_store.dart';
 import '../widget_store.dart';
+import 'widget_decoration_wrapper.dart';
 
 class TimerWidget extends StatefulWidget {
   const TimerWidget({super.key});
@@ -89,8 +90,12 @@ class _TimerWidgetState extends State<TimerWidget> with SingleTickerProviderStat
         return Align(
           alignment: settings.alignment.flutterAlignment,
           child: FittedBox(
-            child: Padding(
-              padding: const EdgeInsets.all(56),
+            child: WidgetDecorationWrapper(
+              decoration: settings.decoration,
+              horizontalPadding: settings.horizontalPadding,
+              verticalPadding: settings.verticalPadding,
+              horizontalMargin: settings.horizontalMargin,
+              verticalMargin: settings.verticalMargin,
               child: wid,
             ),
           ),

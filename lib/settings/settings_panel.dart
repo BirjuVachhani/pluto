@@ -559,10 +559,8 @@ class ResetDialog extends StatelessWidget {
                     onPressed: () => Navigator.pop(context),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.grey.shade900,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 16,
-                      ),
+                      foregroundColor: Colors.grey,
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                     ),
                     child: const Text('Cancel'),
                   ),
@@ -574,10 +572,8 @@ class ResetDialog extends StatelessWidget {
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 16,
-                      ),
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                     ),
                     child: const Text('Yes, Reset!'),
                   ),

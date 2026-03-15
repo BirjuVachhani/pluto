@@ -7,6 +7,7 @@ import '../../utils/custom_observer.dart';
 import '../../utils/extensions.dart';
 import '../background_store.dart';
 import '../widget_store.dart';
+import 'widget_decoration_wrapper.dart';
 
 class DigitalClockWidget extends StatelessWidget {
   const DigitalClockWidget({super.key});
@@ -19,31 +20,17 @@ class DigitalClockWidget extends StatelessWidget {
     return CustomObserver(
       name: 'DigitalClockWidget',
       builder: (context) {
-        final double borderWidth = (10 + settings.fontSize) * 0.15;
-        final double paddingHorizontal = (20 + settings.fontSize) * 0.5;
-        final double paddingVertical = (20 + settings.fontSize) * 0.4;
-        final double round = (20 + settings.fontSize) * 0.5;
         final String format = buildFormatString(settings.format, settings.separator.value);
-        return Padding(
-          padding: EdgeInsets.all(settings.borderType == BorderType.none ? 0 : 48),
-          child: Align(
-            alignment: settings.alignment.flutterAlignment,
-            child: FittedBox(
+        return Align(
+          alignment: settings.alignment.flutterAlignment,
+          child: FittedBox(
+            child: WidgetDecorationWrapper(
+              decoration: settings.decoration,
+              horizontalPadding: settings.horizontalPadding,
+              verticalPadding: settings.verticalPadding,
+              horizontalMargin: settings.horizontalMargin,
+              verticalMargin: settings.verticalMargin,
               child: DigitalClock(
-                padding: EdgeInsets.symmetric(horizontal: paddingHorizontal, vertical: paddingVertical),
-                decoration: ShapeDecoration(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: settings.borderType == BorderType.rounded
-                        ? BorderRadius.circular(round)
-                        : BorderRadius.zero,
-                    side: settings.borderType != BorderType.none
-                        ? BorderSide(
-                            color: backgroundStore.foregroundColor,
-                            width: borderWidth,
-                          )
-                        : BorderSide.none,
-                  ),
-                ),
                 format: format,
                 style: TextStyle(
                   fontSize: settings.fontSize,

@@ -6,6 +6,7 @@ import '../model/widget_settings.dart';
 import '../ui/custom_dropdown.dart';
 import '../utils/custom_observer.dart';
 import 'widget_settings/analog_clock_widget_settings.dart';
+import 'widget_settings/common_widget_decoration_settings.dart';
 import 'widget_settings/digital_clock_widget_settings.dart';
 import 'widget_settings/digital_date_widget_settings.dart';
 import 'widget_settings/message_widget_settings.dart';
@@ -57,6 +58,16 @@ class WidgetSettings extends StatelessWidget {
                   case WidgetType.digitalDate:
                     return const DigitalDateWidgetSettingsView();
                 }
+              },
+            ),
+            CustomObserver(
+              name: '_CommonSettings',
+              builder: (context) {
+                final activeSettings = store.activeSettings;
+                if (activeSettings == null) return const SizedBox.shrink();
+                return CommonWidgetDecorationSettings(
+                  settings: activeSettings,
+                );
               },
             ),
           ],

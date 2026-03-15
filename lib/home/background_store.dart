@@ -9,8 +9,9 @@ import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
-import 'package:screwdriver/screwdriver.dart';
+import 'package:palette_generator_master/palette_generator_master.dart';
 import 'package:pexels/pexels.dart' as pexels;
+import 'package:screwdriver/screwdriver.dart';
 import 'package:shared/shared.dart';
 import 'package:unsplash_client/unsplash_client.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -125,6 +126,21 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
   @readonly
   String? _localImageFileName;
 
+  /// Colors extracted from the current background image via palette generator.
+  /// Keyed by a stable ID (e.g. "dominant", "vibrant", "palette_3") so that
+  /// widget decorations can bind to a specific palette slot and auto-update
+  /// when the background image changes.
+  @readonly
+  ObservableMap<String, Color> _imageColors = ObservableMap.of({});
+
+  /// Whether palette extraction is currently in progress.
+  @readonly
+  bool _extractingPalette = false;
+
+  /// Tracks which image ID was used for the last palette extraction
+  /// to avoid redundant work.
+  String? _lastPaletteImageId;
+
   final BackendService backendService = GetIt.instance.get<BackendService>();
 
   @computed
@@ -148,6 +164,8 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
 
   _BackgroundStore() {
     initializationFuture = init();
+    // Re-extract palette colors whenever the current image changes.
+    reaction((_) => currentImage?.id, (String? _) => extractPaletteColors());
   }
 
   @override
@@ -548,6 +566,107 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
     if (!_mode.isImage) return null;
     final image = _imageIndex == 0 ? _image1 : _image2;
     return image;
+  }
+
+  /// Forces re-extraction of palette colors from the current image.
+  void refreshPaletteColors() {
+    _lastPaletteImageId = null;
+    extractPaletteColors();
+  }
+
+  /// Extracts dominant colors from the current background image.
+  /// Called when the background image changes.
+  @action
+  Future<void> extractPaletteColors() async {
+    final image = currentImage;
+    if (image == null) {
+      _imageColors = ObservableMap.of({});
+      _lastPaletteImageId = null;
+      return;
+    }
+
+    // Skip if we already extracted colors for this image.
+    if (_lastPaletteImageId == image.id) return;
+    _lastPaletteImageId = image.id;
+    _extractingPalette = true;
+
+    final provider = MemoryImage(image.bytes);
+
+    await Future.delayed(Duration(seconds: 2));
+
+    final ColorScheme colorScheme = await ColorScheme.fromImageProvider(provider: provider);
+
+    try {
+      final palette = await PaletteGeneratorMaster.fromImageProvider(
+        provider,
+        maximumColorCount: 32,
+        size: const Size(256, 256),
+      );
+
+      final result = <String, Color>{};
+      final addedColors = <Color>[];
+
+      void addIfDistinct(String id, Color color, {double minDistance = 15}) {
+        if (!addedColors.any((c) => _colorDistance(c, color) < minDistance)) {
+          result[id] = color;
+          addedColors.add(color);
+        } else {
+          // result[id] = color;
+          // addedColors.add(color);
+        }
+      }
+
+      // Named swatches with stable IDs.
+      final namedSwatches = <String, Color>{
+        'primary': colorScheme.primary,
+        'secondary': colorScheme.secondary,
+        'tertiary': colorScheme.tertiary,
+        'surface': colorScheme.surfaceTint,
+        'outline': colorScheme.outline,
+        'primaryContainer': colorScheme.primaryContainer,
+        'primaryFixed': colorScheme.primaryFixed,
+        'primaryFixedDim': colorScheme.primaryFixedDim,
+        'inversePrimary': colorScheme.inversePrimary,
+        'secondaryContainer': colorScheme.secondaryContainer,
+        'secondaryInverse': colorScheme.onSecondaryFixedVariant,
+        'dominant': ?palette.dominantColor?.color,
+        'vibrant': ?palette.vibrantColor?.color,
+        'darkVibrant': ?palette.darkVibrantColor?.color,
+        'lightVibrant': ?palette.lightVibrantColor?.color,
+        'muted': ?palette.mutedColor?.color,
+        'darkMuted': ?palette.darkMutedColor?.color,
+        'lightMuted': ?palette.lightMutedColor?.color,
+        for (final harmony in palette.harmonyColors)
+          for (final color in harmony.colors) 'harmony_${harmony.type}_${harmony.colors.indexOf(color)}': color,
+      };
+
+      for (final MapEntry(:key, :value) in namedSwatches.entries) {
+        addIfDistinct(key, value);
+      }
+
+      // Fill remaining slots from the full palette, sorted by population.
+      int paletteIndex = 0;
+      for (final pc in palette.paletteColors) {
+        if (result.length >= 12) break;
+        addIfDistinct('palette_$paletteIndex', pc.color);
+        paletteIndex++;
+      }
+
+      _imageColors = ObservableMap.of(result);
+      _extractingPalette = false;
+    } catch (e) {
+      log('Failed to extract palette: $e');
+      _imageColors = ObservableMap.of({});
+      _extractingPalette = false;
+    }
+  }
+
+  /// Euclidean distance between two colors in RGB space.
+  static double _colorDistance(Color a, Color b) {
+    final dr = (a.r - b.r) * 255;
+    final dg = (a.g - b.g) * 255;
+    final db = (a.b - b.b) * 255;
+    return sqrt(dr * dr + dg * dg + db * db);
   }
 
   /// Responsible for fetching a new image from unsplash.

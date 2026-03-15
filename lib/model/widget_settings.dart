@@ -1,6 +1,11 @@
+import 'dart:ui';
+
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:screwdriver/screwdriver.dart';
+
 import '../resources/fonts.dart';
+import 'color_gradient.dart';
 
 part 'widget_settings.g.dart';
 
@@ -19,8 +24,6 @@ enum WidgetType {
 
   final String label;
 }
-
-enum BorderType { none, solid, rounded }
 
 enum ClockFormat {
   twelveHour('12 Hours'),
@@ -103,11 +106,223 @@ enum AlignmentC {
   final String label;
 }
 
-abstract class BaseWidgetSettings with EquatableMixin {
-  @JsonKey(includeToJson: true)
-  abstract final WidgetType type;
+enum WidgetBackgroundType {
+  none('None'),
+  color('Color'),
+  glass('Glass'),
+  border('Border')
+  ;
 
-  const BaseWidgetSettings();
+  const WidgetBackgroundType(this.label);
+
+  final String label;
+}
+
+sealed class WidgetDecoration with SerializableMixin, EquatableMixin {
+  @JsonKey(includeToJson: true)
+  final WidgetBackgroundType type;
+  final double borderRadius;
+
+  /// When non-null, this decoration's color is bound to an image palette
+  /// color identified by this key (e.g. "dominant", "vibrant", "palette_3").
+  /// When the background image changes, the color is automatically updated
+  /// to match the same palette slot in the new image.
+  final String? imageColorId;
+
+  const WidgetDecoration({
+    required this.type,
+    this.borderRadius = 0,
+    this.imageColorId,
+  });
+
+  factory WidgetDecoration.fromJson(Map<String, dynamic> json) {
+    final WidgetBackgroundType type = json['type'] != null
+        ? WidgetBackgroundType.values.byName(json['type'])
+        : WidgetBackgroundType.none;
+    switch (type) {
+      case WidgetBackgroundType.none:
+        return NoDecoration.fromJson(json);
+      case WidgetBackgroundType.color:
+        return ColorDecoration.fromJson(json);
+      case WidgetBackgroundType.glass:
+        return GlassDecoration.fromJson(json);
+      case WidgetBackgroundType.border:
+        return BorderDecoration.fromJson(json);
+    }
+  }
+
+  /// Returns a copy of this decoration with the given [imageColorId].
+  WidgetDecoration withImageColorId(String? imageColorId);
+
+  /// Returns a copy of this decoration with the given [color], preserving
+  /// all other properties.
+  WidgetDecoration withColor(Color color);
+
+  @override
+  List<Object?> get props => [type, borderRadius, imageColorId];
+}
+
+@JsonSerializable()
+final class NoDecoration extends WidgetDecoration {
+  const NoDecoration() : super(type: WidgetBackgroundType.none);
+
+  factory NoDecoration.fromJson(Map<String, dynamic> json) => _$NoDecorationFromJson(json);
+
+  @override
+  JsonMap toJson() => _$NoDecorationToJson(this);
+
+  @override
+  NoDecoration withImageColorId(String? imageColorId) => const NoDecoration();
+
+  @override
+  NoDecoration withColor(Color color) => const NoDecoration();
+}
+
+@JsonSerializable()
+final class ColorDecoration extends WidgetDecoration {
+  @ColorConverter()
+  final Color color;
+  final double opacity;
+
+  const ColorDecoration({
+    required this.color,
+    this.opacity = 1,
+    super.borderRadius,
+    super.imageColorId,
+  }) : super(type: WidgetBackgroundType.color);
+
+  static const ColorDecoration dark = ColorDecoration(color: Color(0xFF000000), opacity: 1);
+
+  static const ColorDecoration light = ColorDecoration(color: Color(0xFFFFFFFF), opacity: 1);
+
+  factory ColorDecoration.fromJson(Map<String, dynamic> json) => _$ColorDecorationFromJson(json);
+
+  @override
+  JsonMap toJson() => _$ColorDecorationToJson(this);
+
+  @override
+  ColorDecoration withImageColorId(String? imageColorId) => ColorDecoration(
+    color: color,
+    opacity: opacity,
+    borderRadius: borderRadius,
+    imageColorId: imageColorId,
+  );
+
+  @override
+  ColorDecoration withColor(Color color) => ColorDecoration(
+    color: color,
+    opacity: opacity,
+    borderRadius: borderRadius,
+    imageColorId: imageColorId,
+  );
+
+  @override
+  List<Object?> get props => [...super.props, color, opacity];
+}
+
+@JsonSerializable()
+final class GlassDecoration extends WidgetDecoration {
+  @ColorConverter()
+  final Color tint;
+  final double tintOpacity;
+  final double blur;
+
+  const GlassDecoration({
+    this.tint = const Color(0x80FFFFFF),
+    this.tintOpacity = 1,
+    this.blur = 20,
+    super.borderRadius,
+    super.imageColorId,
+  }) : super(type: WidgetBackgroundType.glass);
+
+  factory GlassDecoration.fromJson(Map<String, dynamic> json) => _$GlassDecorationFromJson(json);
+
+  @override
+  JsonMap toJson() => _$GlassDecorationToJson(this);
+
+  @override
+  GlassDecoration withImageColorId(String? imageColorId) => GlassDecoration(
+    tint: tint,
+    tintOpacity: tintOpacity,
+    blur: blur,
+    borderRadius: borderRadius,
+    imageColorId: imageColorId,
+  );
+
+  @override
+  GlassDecoration withColor(Color color) => GlassDecoration(
+    tint: color,
+    tintOpacity: tintOpacity,
+    blur: blur,
+    borderRadius: borderRadius,
+    imageColorId: imageColorId,
+  );
+
+  @override
+  List<Object?> get props => [...super.props, tint, tintOpacity, blur];
+}
+
+@JsonSerializable()
+final class BorderDecoration extends WidgetDecoration {
+  @ColorConverter()
+  final Color color;
+  final double opacity;
+  final double thickness;
+
+  const BorderDecoration({
+    this.color = const Color(0xFFFFFFFF),
+    this.opacity = 1,
+    this.thickness = 1,
+    super.borderRadius,
+    super.imageColorId,
+  }) : super(type: WidgetBackgroundType.border);
+
+  factory BorderDecoration.fromJson(Map<String, dynamic> json) => _$BorderDecorationFromJson(json);
+
+  @override
+  JsonMap toJson() => _$BorderDecorationToJson(this);
+
+  @override
+  BorderDecoration withImageColorId(String? imageColorId) => BorderDecoration(
+    color: color,
+    opacity: opacity,
+    thickness: thickness,
+    borderRadius: borderRadius,
+    imageColorId: imageColorId,
+  );
+
+  @override
+  BorderDecoration withColor(Color color) => BorderDecoration(
+    color: color,
+    opacity: opacity,
+    thickness: thickness,
+    borderRadius: borderRadius,
+    imageColorId: imageColorId,
+  );
+
+  @override
+  List<Object?> get props => [...super.props, color, opacity, thickness];
+}
+
+sealed class BaseWidgetSettings with SerializableMixin, EquatableMixin {
+  @JsonKey(includeToJson: true)
+  final WidgetType type;
+  final WidgetDecoration decoration;
+
+  final double horizontalPadding;
+  final double verticalPadding;
+
+  final double horizontalMargin;
+  final double verticalMargin;
+
+  const BaseWidgetSettings({
+    required this.type,
+    this.decoration = const NoDecoration(),
+    this.horizontalPadding = 16,
+    this.verticalPadding = 16,
+    this.horizontalMargin = 56,
+    this.verticalMargin = 56,
+  });
 
   static BaseWidgetSettings fromJson(Map<String, dynamic> json) {
     final WidgetType type = json['type'] != null ? WidgetType.values.byName(json['type']) : WidgetType.none;
@@ -129,15 +344,28 @@ abstract class BaseWidgetSettings with EquatableMixin {
     }
   }
 
-  Map<String, dynamic> toJson();
+  BaseWidgetSettings copyWith({
+    WidgetDecoration? decoration,
+    double? horizontalPadding,
+    double? verticalPadding,
+    double? horizontalMargin,
+    double? verticalMargin,
+  });
+
+  @override
+  List<Object?> get props => [
+    type,
+    decoration,
+    horizontalPadding,
+    verticalPadding,
+    horizontalMargin,
+    verticalMargin,
+  ];
 }
 
 @JsonSerializable()
-class NoneWidgetSettings extends BaseWidgetSettings {
-  @override
-  final WidgetType type = WidgetType.digitalClock;
-
-  NoneWidgetSettings();
+final class NoneWidgetSettings extends BaseWidgetSettings {
+  NoneWidgetSettings() : super(type: WidgetType.none);
 
   factory NoneWidgetSettings.fromJson(Map<String, dynamic> json) => _$NoneWidgetSettingsFromJson(json);
 
@@ -145,149 +373,198 @@ class NoneWidgetSettings extends BaseWidgetSettings {
   Map<String, dynamic> toJson() => _$NoneWidgetSettingsToJson(this);
 
   @override
-  List<Object?> get props => [type];
+  NoneWidgetSettings copyWith({
+    WidgetDecoration? decoration,
+    double? horizontalPadding,
+    double? verticalPadding,
+    double? horizontalMargin,
+    double? verticalMargin,
+  }) => NoneWidgetSettings();
 }
 
 @JsonSerializable()
-class DigitalClockWidgetSettings extends BaseWidgetSettings {
+final class DigitalClockWidgetSettings extends BaseWidgetSettings {
   final double fontSize;
   final Separator separator;
-  final BorderType borderType;
   final String fontFamily;
   final AlignmentC alignment;
   final ClockFormat format;
 
-  @override
-  final WidgetType type = WidgetType.digitalClock;
-
   const DigitalClockWidgetSettings({
     this.fontSize = 100,
     this.separator = Separator.colon,
-    this.borderType = BorderType.none,
     this.fontFamily = FontFamilies.product,
     this.alignment = AlignmentC.center,
     this.format = ClockFormat.twelveHour,
-  });
-
-  @override
-  List<Object?> get props => [
-    fontSize,
-    separator,
-    borderType,
-    fontFamily,
-    alignment,
-    format,
-    type,
-  ];
-
-  DigitalClockWidgetSettings copyWith({
-    double? fontSize,
-    Separator? separator,
-    BorderType? borderType,
-    String? fontFamily,
-    AlignmentC? alignment,
-    ClockFormat? format,
-  }) {
-    return DigitalClockWidgetSettings(
-      fontSize: fontSize ?? this.fontSize,
-      separator: separator ?? this.separator,
-      borderType: borderType ?? this.borderType,
-      fontFamily: fontFamily ?? this.fontFamily,
-      alignment: alignment ?? this.alignment,
-      format: format ?? this.format,
-    );
-  }
+    super.decoration,
+    super.horizontalMargin,
+    super.verticalMargin,
+    super.horizontalPadding,
+    super.verticalPadding,
+  }) : super(type: WidgetType.digitalClock);
 
   factory DigitalClockWidgetSettings.fromJson(Map<String, dynamic> json) => _$DigitalClockWidgetSettingsFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$DigitalClockWidgetSettingsToJson(this);
+
+  @override
+  DigitalClockWidgetSettings copyWith({
+    double? fontSize,
+    Separator? separator,
+    String? fontFamily,
+    AlignmentC? alignment,
+    ClockFormat? format,
+    double? horizontalMargin,
+    double? verticalMargin,
+    double? horizontalPadding,
+    double? verticalPadding,
+    WidgetDecoration? decoration,
+  }) {
+    return DigitalClockWidgetSettings(
+      fontSize: fontSize ?? this.fontSize,
+      separator: separator ?? this.separator,
+      fontFamily: fontFamily ?? this.fontFamily,
+      alignment: alignment ?? this.alignment,
+      format: format ?? this.format,
+      decoration: decoration ?? this.decoration,
+      horizontalMargin: horizontalMargin ?? this.horizontalMargin,
+      verticalMargin: verticalMargin ?? this.verticalMargin,
+      horizontalPadding: horizontalPadding ?? this.horizontalPadding,
+      verticalPadding: verticalPadding ?? this.verticalPadding,
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+    ...super.props,
+    fontSize,
+    separator,
+    fontFamily,
+    alignment,
+    format,
+    type,
+  ];
 }
 
 @JsonSerializable()
-class AnalogClockWidgetSettings extends BaseWidgetSettings {
+final class AnalogClockWidgetSettings extends BaseWidgetSettings {
   final double radius;
   final bool showSecondsHand;
   final bool coloredSecondHand;
   final AlignmentC alignment;
-
-  @override
-  final WidgetType type = WidgetType.digitalClock;
 
   const AnalogClockWidgetSettings({
     this.radius = 100,
     this.showSecondsHand = true,
     this.coloredSecondHand = false,
     this.alignment = AlignmentC.center,
-  });
+    super.decoration,
+    super.horizontalMargin,
+    super.verticalMargin,
+    super.horizontalPadding,
+    super.verticalPadding,
+  }) : super(type: WidgetType.analogClock);
+
+  factory AnalogClockWidgetSettings.fromJson(Map<String, dynamic> json) => _$AnalogClockWidgetSettingsFromJson(json);
 
   @override
-  List<Object?> get props => [radius, showSecondsHand, coloredSecondHand, type, alignment];
+  Map<String, dynamic> toJson() => _$AnalogClockWidgetSettingsToJson(this);
 
+  @override
   AnalogClockWidgetSettings copyWith({
     double? radius,
     bool? showSecondsHand,
     bool? coloredSecondHand,
     AlignmentC? alignment,
+    WidgetDecoration? decoration,
+    double? horizontalMargin,
+    double? verticalMargin,
+    double? horizontalPadding,
+    double? verticalPadding,
   }) {
     return AnalogClockWidgetSettings(
       radius: radius ?? this.radius,
       showSecondsHand: showSecondsHand ?? this.showSecondsHand,
       coloredSecondHand: coloredSecondHand ?? this.coloredSecondHand,
       alignment: alignment ?? this.alignment,
+      decoration: decoration ?? this.decoration,
+      horizontalMargin: horizontalMargin ?? this.horizontalMargin,
+      verticalMargin: verticalMargin ?? this.verticalMargin,
+      horizontalPadding: horizontalPadding ?? this.horizontalPadding,
+      verticalPadding: verticalPadding ?? this.verticalPadding,
     );
   }
 
-  factory AnalogClockWidgetSettings.fromJson(Map<String, dynamic> json) => _$AnalogClockWidgetSettingsFromJson(json);
-
   @override
-  Map<String, dynamic> toJson() => _$AnalogClockWidgetSettingsToJson(this);
+  List<Object?> get props => [
+    ...super.props,
+    radius,
+    showSecondsHand,
+    coloredSecondHand,
+    type,
+    alignment,
+  ];
 }
 
 @JsonSerializable()
-class MessageWidgetSettings extends BaseWidgetSettings {
+final class MessageWidgetSettings extends BaseWidgetSettings {
   final double fontSize;
   final String fontFamily;
   final String message;
   final AlignmentC alignment;
-
-  @override
-  final WidgetType type = WidgetType.text;
 
   const MessageWidgetSettings({
     this.fontSize = 100,
     this.fontFamily = FontFamilies.product,
     this.message = 'Hello World!',
     this.alignment = AlignmentC.center,
-  });
+    super.decoration,
+    super.horizontalMargin,
+    super.verticalMargin,
+    super.horizontalPadding,
+    super.verticalPadding,
+  }) : super(type: WidgetType.text);
+
+  factory MessageWidgetSettings.fromJson(Map<String, dynamic> json) => _$MessageWidgetSettingsFromJson(json);
 
   @override
-  List<Object?> get props => [
-    fontSize,
-    fontFamily,
-    message,
-    type,
-    alignment,
-  ];
+  Map<String, dynamic> toJson() => _$MessageWidgetSettingsToJson(this);
 
+  @override
   MessageWidgetSettings copyWith({
     double? fontSize,
     String? fontFamily,
     String? message,
     AlignmentC? alignment,
+    WidgetDecoration? decoration,
+    double? horizontalMargin,
+    double? verticalMargin,
+    double? horizontalPadding,
+    double? verticalPadding,
   }) {
     return MessageWidgetSettings(
       fontSize: fontSize ?? this.fontSize,
       fontFamily: fontFamily ?? this.fontFamily,
       message: message ?? this.message,
       alignment: alignment ?? this.alignment,
+      decoration: decoration ?? this.decoration,
+      horizontalMargin: horizontalMargin ?? this.horizontalMargin,
+      verticalMargin: verticalMargin ?? this.verticalMargin,
+      horizontalPadding: horizontalPadding ?? this.horizontalPadding,
+      verticalPadding: verticalPadding ?? this.verticalPadding,
     );
   }
 
-  factory MessageWidgetSettings.fromJson(Map<String, dynamic> json) => _$MessageWidgetSettingsFromJson(json);
-
   @override
-  Map<String, dynamic> toJson() => _$MessageWidgetSettingsToJson(this);
+  List<Object?> get props => [
+    ...super.props,
+    fontSize,
+    fontFamily,
+    message,
+    type,
+    alignment,
+  ];
 }
 
 enum TimerFormat {
@@ -307,7 +584,7 @@ enum TimerFormat {
 }
 
 @JsonSerializable()
-class TimerWidgetSettings extends BaseWidgetSettings {
+final class TimerWidgetSettings extends BaseWidgetSettings {
   final double fontSize;
   final String fontFamily;
   final String textBefore;
@@ -317,9 +594,6 @@ class TimerWidgetSettings extends BaseWidgetSettings {
   final AlignmentC alignment;
   final TimerFormat format;
 
-  @override
-  final WidgetType type = WidgetType.timer;
-
   TimerWidgetSettings({
     this.fontSize = 100,
     this.fontFamily = FontFamilies.product,
@@ -328,20 +602,20 @@ class TimerWidgetSettings extends BaseWidgetSettings {
     DateTime? time,
     this.alignment = AlignmentC.center,
     this.format = TimerFormat.descriptive,
-  }) : time = time ?? DateTime.now();
+    super.decoration,
+    super.horizontalMargin,
+    super.verticalMargin,
+    super.horizontalPadding,
+    super.verticalPadding,
+  }) : time = time ?? DateTime.now(),
+       super(type: WidgetType.timer);
+
+  factory TimerWidgetSettings.fromJson(Map<String, dynamic> json) => _$TimerWidgetSettingsFromJson(json);
 
   @override
-  List<Object?> get props => [
-    fontSize,
-    fontFamily,
-    textBefore,
-    textAfter,
-    time,
-    type,
-    alignment,
-    format,
-  ];
+  Map<String, dynamic> toJson() => _$TimerWidgetSettingsToJson(this);
 
+  @override
   TimerWidgetSettings copyWith({
     double? fontSize,
     String? fontFamily,
@@ -350,6 +624,11 @@ class TimerWidgetSettings extends BaseWidgetSettings {
     DateTime? time,
     AlignmentC? alignment,
     TimerFormat? format,
+    WidgetDecoration? decoration,
+    double? horizontalMargin,
+    double? verticalMargin,
+    double? horizontalPadding,
+    double? verticalPadding,
   }) {
     return TimerWidgetSettings(
       fontSize: fontSize ?? this.fontSize,
@@ -359,13 +638,26 @@ class TimerWidgetSettings extends BaseWidgetSettings {
       time: time ?? this.time,
       alignment: alignment ?? this.alignment,
       format: format ?? this.format,
+      decoration: decoration ?? this.decoration,
+      horizontalMargin: horizontalMargin ?? this.horizontalMargin,
+      verticalMargin: verticalMargin ?? this.verticalMargin,
+      horizontalPadding: horizontalPadding ?? this.horizontalPadding,
+      verticalPadding: verticalPadding ?? this.verticalPadding,
     );
   }
 
-  factory TimerWidgetSettings.fromJson(Map<String, dynamic> json) => _$TimerWidgetSettingsFromJson(json);
-
   @override
-  Map<String, dynamic> toJson() => _$TimerWidgetSettingsToJson(this);
+  List<Object?> get props => [
+    ...super.props,
+    fontSize,
+    fontFamily,
+    textBefore,
+    textAfter,
+    time,
+    type,
+    alignment,
+    format,
+  ];
 }
 
 DateTime dateTimeFromJson(int millis) => DateTime.fromMillisecondsSinceEpoch(millis);
@@ -393,16 +685,13 @@ enum TemperatureUnit {
 }
 
 @JsonSerializable()
-class WeatherWidgetSettings extends BaseWidgetSettings {
+final class WeatherWidgetSettings extends BaseWidgetSettings {
   final double fontSize;
   final String fontFamily;
   final AlignmentC alignment;
   final WeatherFormat format;
   final TemperatureUnit temperatureUnit;
   final Location location;
-
-  @override
-  final WidgetType type = WidgetType.weather;
 
   WeatherWidgetSettings({
     this.fontSize = 100,
@@ -417,19 +706,19 @@ class WeatherWidgetSettings extends BaseWidgetSettings {
       country: 'Japan',
       countryCode: 'JP',
     ),
-  });
+    super.decoration,
+    super.horizontalMargin,
+    super.verticalMargin,
+    super.horizontalPadding,
+    super.verticalPadding,
+  }) : super(type: WidgetType.weather);
+
+  factory WeatherWidgetSettings.fromJson(Map<String, dynamic> json) => _$WeatherWidgetSettingsFromJson(json);
 
   @override
-  List<Object?> get props => [
-    fontSize,
-    fontFamily,
-    type,
-    alignment,
-    format,
-    temperatureUnit,
-    location,
-  ];
+  Map<String, dynamic> toJson() => _$WeatherWidgetSettingsToJson(this);
 
+  @override
   WeatherWidgetSettings copyWith({
     double? fontSize,
     String? fontFamily,
@@ -437,6 +726,11 @@ class WeatherWidgetSettings extends BaseWidgetSettings {
     WeatherFormat? format,
     TemperatureUnit? temperatureUnit,
     Location? location,
+    WidgetDecoration? decoration,
+    double? horizontalMargin,
+    double? verticalMargin,
+    double? horizontalPadding,
+    double? verticalPadding,
   }) {
     return WeatherWidgetSettings(
       fontSize: fontSize ?? this.fontSize,
@@ -445,13 +739,25 @@ class WeatherWidgetSettings extends BaseWidgetSettings {
       format: format ?? this.format,
       temperatureUnit: temperatureUnit ?? this.temperatureUnit,
       location: location ?? this.location,
+      decoration: decoration ?? this.decoration,
+      horizontalMargin: horizontalMargin ?? this.horizontalMargin,
+      verticalMargin: verticalMargin ?? this.verticalMargin,
+      horizontalPadding: horizontalPadding ?? this.horizontalPadding,
+      verticalPadding: verticalPadding ?? this.verticalPadding,
     );
   }
 
-  factory WeatherWidgetSettings.fromJson(Map<String, dynamic> json) => _$WeatherWidgetSettingsFromJson(json);
-
   @override
-  Map<String, dynamic> toJson() => _$WeatherWidgetSettingsToJson(this);
+  List<Object?> get props => [
+    ...super.props,
+    fontSize,
+    fontFamily,
+    type,
+    alignment,
+    format,
+    temperatureUnit,
+    location,
+  ];
 }
 
 @JsonSerializable()
@@ -499,59 +805,68 @@ class Location with EquatableMixin {
 }
 
 @JsonSerializable()
-class DigitalDateWidgetSettings extends BaseWidgetSettings {
+final class DigitalDateWidgetSettings extends BaseWidgetSettings {
   final double fontSize;
   final DateSeparator separator;
-  final BorderType borderType;
   final String fontFamily;
   final AlignmentC alignment;
   final DateFormat format;
   final String customFormat;
 
-  @override
-  final WidgetType type = WidgetType.digitalDate;
-
   const DigitalDateWidgetSettings({
     this.fontSize = 100,
     this.separator = DateSeparator.slash,
-    this.borderType = BorderType.none,
     this.fontFamily = FontFamilies.product,
     this.alignment = AlignmentC.center,
     this.format = DateFormat.dayMonthYear,
     this.customFormat = 'MMMM dd, yyyy',
-  });
-
-  @override
-  List<Object?> get props => [
-    fontSize,
-    separator,
-    borderType,
-    fontFamily,
-    alignment,
-    format,
-    type,
-  ];
-
-  DigitalDateWidgetSettings copyWith({
-    double? fontSize,
-    DateSeparator? separator,
-    BorderType? borderType,
-    String? fontFamily,
-    AlignmentC? alignment,
-    DateFormat? format,
-  }) {
-    return DigitalDateWidgetSettings(
-      fontSize: fontSize ?? this.fontSize,
-      separator: separator ?? this.separator,
-      borderType: borderType ?? this.borderType,
-      fontFamily: fontFamily ?? this.fontFamily,
-      alignment: alignment ?? this.alignment,
-      format: format ?? this.format,
-    );
-  }
+    super.decoration,
+    super.horizontalMargin,
+    super.verticalMargin,
+    super.horizontalPadding,
+    super.verticalPadding,
+  }) : super(type: WidgetType.digitalDate);
 
   factory DigitalDateWidgetSettings.fromJson(Map<String, dynamic> json) => _$DigitalDateWidgetSettingsFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$DigitalDateWidgetSettingsToJson(this);
+
+  @override
+  DigitalDateWidgetSettings copyWith({
+    double? fontSize,
+    DateSeparator? separator,
+    String? fontFamily,
+    AlignmentC? alignment,
+    DateFormat? format,
+    WidgetDecoration? decoration,
+    double? horizontalMargin,
+    double? verticalMargin,
+    double? horizontalPadding,
+    double? verticalPadding,
+  }) {
+    return DigitalDateWidgetSettings(
+      fontSize: fontSize ?? this.fontSize,
+      separator: separator ?? this.separator,
+      fontFamily: fontFamily ?? this.fontFamily,
+      alignment: alignment ?? this.alignment,
+      format: format ?? this.format,
+      decoration: decoration ?? this.decoration,
+      horizontalMargin: horizontalMargin ?? this.horizontalMargin,
+      verticalMargin: verticalMargin ?? this.verticalMargin,
+      horizontalPadding: horizontalPadding ?? this.horizontalPadding,
+      verticalPadding: verticalPadding ?? this.verticalPadding,
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+    ...super.props,
+    fontSize,
+    separator,
+    fontFamily,
+    alignment,
+    format,
+    type,
+  ];
 }

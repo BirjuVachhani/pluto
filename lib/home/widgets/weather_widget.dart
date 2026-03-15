@@ -16,6 +16,7 @@ import '../../utils/utils.dart';
 import '../../utils/weather_service.dart';
 import '../background_store.dart';
 import '../widget_store.dart';
+import 'widget_decoration_wrapper.dart';
 
 part 'weather_widget.g.dart';
 
@@ -197,9 +198,13 @@ class _WeatherWidgetState extends State<WeatherWidget> with SingleTickerProvider
       builder: (context) {
         return Align(
           alignment: settings.alignment.flutterAlignment,
-          child: Padding(
-            padding: const EdgeInsets.all(56),
-            child: FittedBox(
+          child: FittedBox(
+            child: WidgetDecorationWrapper(
+              decoration: settings.decoration,
+              horizontalPadding: settings.horizontalPadding,
+              verticalPadding: settings.verticalPadding,
+              horizontalMargin: settings.horizontalMargin,
+              verticalMargin: settings.verticalMargin,
               child: Text(
                 buildText(store.weatherInfo, settings),
                 textAlign: settings.alignment.textAlign,

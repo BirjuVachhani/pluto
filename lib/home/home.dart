@@ -68,11 +68,13 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   late final BackgroundStore backgroundStore = context.read<BackgroundStore>();
+  late final WidgetStore widgetStore = context.read<WidgetStore>();
   late final HomeStore store = context.read<HomeStore>();
 
   late final LocalStorageManager storageManager = GetIt.instance.get<LocalStorageManager>();
 
   ReactionDisposer? _disposer;
+  ReactionDisposer? _paletteDisposer;
 
   Timer? _timer;
 
@@ -92,6 +94,20 @@ class _HomeState extends State<Home> {
 
   void listenToEvents() {
     _disposer = reaction((react) => backgroundStore.backgroundRefreshRate, onRefreshRateChanged);
+    // Sync widget decoration colors when the background image changes.
+    // We watch currentImage?.id rather than imageColors.length because
+    // a new image may produce the same number of palette entries,
+    // causing a length-based reaction to not fire.
+    _paletteDisposer = reaction(
+      (_) => backgroundStore.currentImage?.id,
+      (_) {
+        // extractPaletteColors is already triggered by its own reaction,
+        // but we need to wait for it to complete before syncing.
+        backgroundStore.extractPaletteColors().then((_) {
+          widgetStore.syncDecorationColors(backgroundStore.imageColors);
+        });
+      },
+    );
   }
 
   /// Start and stop timer based on the current [BackgroundRefreshRate] when
@@ -292,6 +308,7 @@ class _HomeState extends State<Home> {
   void dispose() {
     _timer?.cancel();
     _disposer?.reaction.dispose();
+    _paletteDisposer?.reaction.dispose();
     super.dispose();
   }
 

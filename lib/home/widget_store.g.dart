@@ -80,6 +80,18 @@ mixin _$WidgetStore on _WidgetStore, Store {
   }
 
   @override
+  void syncDecorationColors(Map<String, Color> imageColors) {
+    final _$actionInfo = _$_WidgetStoreActionController.startAction(
+      name: '_WidgetStore.syncDecorationColors',
+    );
+    try {
+      return super.syncDecorationColors(imageColors);
+    } finally {
+      _$_WidgetStoreActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 type: ${type},
@@ -88,7 +100,8 @@ initialized: ${initialized}
   }
 }
 
-mixin _$DigitalClockWidgetSettingsStore on _DigitalClockWidgetSettingsStore, Store {
+mixin _$DigitalClockWidgetSettingsStore
+    on _DigitalClockWidgetSettingsStore, Store {
   late final _$fontSizeAtom = Atom(
     name: '_DigitalClockWidgetSettingsStore.fontSize',
     context: context,
@@ -135,31 +148,6 @@ mixin _$DigitalClockWidgetSettingsStore on _DigitalClockWidgetSettingsStore, Sto
       () {
         super.separator = value;
         _separatorIsInitialized = true;
-      },
-    );
-  }
-
-  late final _$borderTypeAtom = Atom(
-    name: '_DigitalClockWidgetSettingsStore.borderType',
-    context: context,
-  );
-
-  @override
-  BorderType get borderType {
-    _$borderTypeAtom.reportRead();
-    return super.borderType;
-  }
-
-  bool _borderTypeIsInitialized = false;
-
-  @override
-  set borderType(BorderType value) {
-    _$borderTypeAtom.reportWrite(
-      value,
-      _borderTypeIsInitialized ? super.borderType : null,
-      () {
-        super.borderType = value;
-        _borderTypeIsInitialized = true;
       },
     );
   }
@@ -239,16 +227,141 @@ mixin _$DigitalClockWidgetSettingsStore on _DigitalClockWidgetSettingsStore, Sto
     );
   }
 
-  late final _$_DigitalClockWidgetSettingsStoreActionController = ActionController(
-    name: '_DigitalClockWidgetSettingsStore',
+  late final _$decorationAtom = Atom(
+    name: '_DigitalClockWidgetSettingsStore.decoration',
     context: context,
   );
 
   @override
-  void update(VoidCallback callback, {bool save = true}) {
-    final _$actionInfo = _$_DigitalClockWidgetSettingsStoreActionController.startAction(
-      name: '_DigitalClockWidgetSettingsStore.update',
+  WidgetDecoration get decoration {
+    _$decorationAtom.reportRead();
+    return super.decoration;
+  }
+
+  bool _decorationIsInitialized = false;
+
+  @override
+  set decoration(WidgetDecoration value) {
+    _$decorationAtom.reportWrite(
+      value,
+      _decorationIsInitialized ? super.decoration : null,
+      () {
+        super.decoration = value;
+        _decorationIsInitialized = true;
+      },
     );
+  }
+
+  late final _$horizontalPaddingAtom = Atom(
+    name: '_DigitalClockWidgetSettingsStore.horizontalPadding',
+    context: context,
+  );
+
+  @override
+  double get horizontalPadding {
+    _$horizontalPaddingAtom.reportRead();
+    return super.horizontalPadding;
+  }
+
+  bool _horizontalPaddingIsInitialized = false;
+
+  @override
+  set horizontalPadding(double value) {
+    _$horizontalPaddingAtom.reportWrite(
+      value,
+      _horizontalPaddingIsInitialized ? super.horizontalPadding : null,
+      () {
+        super.horizontalPadding = value;
+        _horizontalPaddingIsInitialized = true;
+      },
+    );
+  }
+
+  late final _$verticalPaddingAtom = Atom(
+    name: '_DigitalClockWidgetSettingsStore.verticalPadding',
+    context: context,
+  );
+
+  @override
+  double get verticalPadding {
+    _$verticalPaddingAtom.reportRead();
+    return super.verticalPadding;
+  }
+
+  bool _verticalPaddingIsInitialized = false;
+
+  @override
+  set verticalPadding(double value) {
+    _$verticalPaddingAtom.reportWrite(
+      value,
+      _verticalPaddingIsInitialized ? super.verticalPadding : null,
+      () {
+        super.verticalPadding = value;
+        _verticalPaddingIsInitialized = true;
+      },
+    );
+  }
+
+  late final _$horizontalMarginAtom = Atom(
+    name: '_DigitalClockWidgetSettingsStore.horizontalMargin',
+    context: context,
+  );
+
+  @override
+  double get horizontalMargin {
+    _$horizontalMarginAtom.reportRead();
+    return super.horizontalMargin;
+  }
+
+  bool _horizontalMarginIsInitialized = false;
+
+  @override
+  set horizontalMargin(double value) {
+    _$horizontalMarginAtom.reportWrite(
+      value,
+      _horizontalMarginIsInitialized ? super.horizontalMargin : null,
+      () {
+        super.horizontalMargin = value;
+        _horizontalMarginIsInitialized = true;
+      },
+    );
+  }
+
+  late final _$verticalMarginAtom = Atom(
+    name: '_DigitalClockWidgetSettingsStore.verticalMargin',
+    context: context,
+  );
+
+  @override
+  double get verticalMargin {
+    _$verticalMarginAtom.reportRead();
+    return super.verticalMargin;
+  }
+
+  bool _verticalMarginIsInitialized = false;
+
+  @override
+  set verticalMargin(double value) {
+    _$verticalMarginAtom.reportWrite(
+      value,
+      _verticalMarginIsInitialized ? super.verticalMargin : null,
+      () {
+        super.verticalMargin = value;
+        _verticalMarginIsInitialized = true;
+      },
+    );
+  }
+
+  late final _$_DigitalClockWidgetSettingsStoreActionController =
+      ActionController(
+        name: '_DigitalClockWidgetSettingsStore',
+        context: context,
+      );
+
+  @override
+  void update(VoidCallback callback, {bool save = true}) {
+    final _$actionInfo = _$_DigitalClockWidgetSettingsStoreActionController
+        .startAction(name: '_DigitalClockWidgetSettingsStore.update');
     try {
       return super.update(callback, save: save);
     } finally {
@@ -260,9 +373,8 @@ mixin _$DigitalClockWidgetSettingsStore on _DigitalClockWidgetSettingsStore, Sto
 
   @override
   void setFrom(DigitalClockWidgetSettings? settings) {
-    final _$actionInfo = _$_DigitalClockWidgetSettingsStoreActionController.startAction(
-      name: '_DigitalClockWidgetSettingsStore.setFrom',
-    );
+    final _$actionInfo = _$_DigitalClockWidgetSettingsStoreActionController
+        .startAction(name: '_DigitalClockWidgetSettingsStore.setFrom');
     try {
       return super.setFrom(settings);
     } finally {
@@ -277,15 +389,20 @@ mixin _$DigitalClockWidgetSettingsStore on _DigitalClockWidgetSettingsStore, Sto
     return '''
 fontSize: ${fontSize},
 separator: ${separator},
-borderType: ${borderType},
 fontFamily: ${fontFamily},
 alignment: ${alignment},
-format: ${format}
+format: ${format},
+decoration: ${decoration},
+horizontalPadding: ${horizontalPadding},
+verticalPadding: ${verticalPadding},
+horizontalMargin: ${horizontalMargin},
+verticalMargin: ${verticalMargin}
     ''';
   }
 }
 
-mixin _$AnalogClockWidgetSettingsStore on _AnalogClockWidgetSettingsStore, Store {
+mixin _$AnalogClockWidgetSettingsStore
+    on _AnalogClockWidgetSettingsStore, Store {
   late final _$radiusAtom = Atom(
     name: '_AnalogClockWidgetSettingsStore.radius',
     context: context,
@@ -386,16 +503,141 @@ mixin _$AnalogClockWidgetSettingsStore on _AnalogClockWidgetSettingsStore, Store
     );
   }
 
-  late final _$_AnalogClockWidgetSettingsStoreActionController = ActionController(
-    name: '_AnalogClockWidgetSettingsStore',
+  late final _$decorationAtom = Atom(
+    name: '_AnalogClockWidgetSettingsStore.decoration',
     context: context,
   );
 
   @override
-  void update(VoidCallback callback, {bool save = true}) {
-    final _$actionInfo = _$_AnalogClockWidgetSettingsStoreActionController.startAction(
-      name: '_AnalogClockWidgetSettingsStore.update',
+  WidgetDecoration get decoration {
+    _$decorationAtom.reportRead();
+    return super.decoration;
+  }
+
+  bool _decorationIsInitialized = false;
+
+  @override
+  set decoration(WidgetDecoration value) {
+    _$decorationAtom.reportWrite(
+      value,
+      _decorationIsInitialized ? super.decoration : null,
+      () {
+        super.decoration = value;
+        _decorationIsInitialized = true;
+      },
     );
+  }
+
+  late final _$horizontalPaddingAtom = Atom(
+    name: '_AnalogClockWidgetSettingsStore.horizontalPadding',
+    context: context,
+  );
+
+  @override
+  double get horizontalPadding {
+    _$horizontalPaddingAtom.reportRead();
+    return super.horizontalPadding;
+  }
+
+  bool _horizontalPaddingIsInitialized = false;
+
+  @override
+  set horizontalPadding(double value) {
+    _$horizontalPaddingAtom.reportWrite(
+      value,
+      _horizontalPaddingIsInitialized ? super.horizontalPadding : null,
+      () {
+        super.horizontalPadding = value;
+        _horizontalPaddingIsInitialized = true;
+      },
+    );
+  }
+
+  late final _$verticalPaddingAtom = Atom(
+    name: '_AnalogClockWidgetSettingsStore.verticalPadding',
+    context: context,
+  );
+
+  @override
+  double get verticalPadding {
+    _$verticalPaddingAtom.reportRead();
+    return super.verticalPadding;
+  }
+
+  bool _verticalPaddingIsInitialized = false;
+
+  @override
+  set verticalPadding(double value) {
+    _$verticalPaddingAtom.reportWrite(
+      value,
+      _verticalPaddingIsInitialized ? super.verticalPadding : null,
+      () {
+        super.verticalPadding = value;
+        _verticalPaddingIsInitialized = true;
+      },
+    );
+  }
+
+  late final _$horizontalMarginAtom = Atom(
+    name: '_AnalogClockWidgetSettingsStore.horizontalMargin',
+    context: context,
+  );
+
+  @override
+  double get horizontalMargin {
+    _$horizontalMarginAtom.reportRead();
+    return super.horizontalMargin;
+  }
+
+  bool _horizontalMarginIsInitialized = false;
+
+  @override
+  set horizontalMargin(double value) {
+    _$horizontalMarginAtom.reportWrite(
+      value,
+      _horizontalMarginIsInitialized ? super.horizontalMargin : null,
+      () {
+        super.horizontalMargin = value;
+        _horizontalMarginIsInitialized = true;
+      },
+    );
+  }
+
+  late final _$verticalMarginAtom = Atom(
+    name: '_AnalogClockWidgetSettingsStore.verticalMargin',
+    context: context,
+  );
+
+  @override
+  double get verticalMargin {
+    _$verticalMarginAtom.reportRead();
+    return super.verticalMargin;
+  }
+
+  bool _verticalMarginIsInitialized = false;
+
+  @override
+  set verticalMargin(double value) {
+    _$verticalMarginAtom.reportWrite(
+      value,
+      _verticalMarginIsInitialized ? super.verticalMargin : null,
+      () {
+        super.verticalMargin = value;
+        _verticalMarginIsInitialized = true;
+      },
+    );
+  }
+
+  late final _$_AnalogClockWidgetSettingsStoreActionController =
+      ActionController(
+        name: '_AnalogClockWidgetSettingsStore',
+        context: context,
+      );
+
+  @override
+  void update(VoidCallback callback, {bool save = true}) {
+    final _$actionInfo = _$_AnalogClockWidgetSettingsStoreActionController
+        .startAction(name: '_AnalogClockWidgetSettingsStore.update');
     try {
       return super.update(callback, save: save);
     } finally {
@@ -405,9 +647,8 @@ mixin _$AnalogClockWidgetSettingsStore on _AnalogClockWidgetSettingsStore, Store
 
   @override
   void setFrom(AnalogClockWidgetSettings? settings) {
-    final _$actionInfo = _$_AnalogClockWidgetSettingsStoreActionController.startAction(
-      name: '_AnalogClockWidgetSettingsStore.setFrom',
-    );
+    final _$actionInfo = _$_AnalogClockWidgetSettingsStoreActionController
+        .startAction(name: '_AnalogClockWidgetSettingsStore.setFrom');
     try {
       return super.setFrom(settings);
     } finally {
@@ -421,7 +662,12 @@ mixin _$AnalogClockWidgetSettingsStore on _AnalogClockWidgetSettingsStore, Store
 radius: ${radius},
 showSecondsHand: ${showSecondsHand},
 coloredSecondHand: ${coloredSecondHand},
-alignment: ${alignment}
+alignment: ${alignment},
+decoration: ${decoration},
+horizontalPadding: ${horizontalPadding},
+verticalPadding: ${verticalPadding},
+horizontalMargin: ${horizontalMargin},
+verticalMargin: ${verticalMargin}
     ''';
   }
 }
@@ -527,6 +773,131 @@ mixin _$MessageWidgetSettingsStore on _MessageWidgetSettingsStore, Store {
     );
   }
 
+  late final _$decorationAtom = Atom(
+    name: '_MessageWidgetSettingsStore.decoration',
+    context: context,
+  );
+
+  @override
+  WidgetDecoration get decoration {
+    _$decorationAtom.reportRead();
+    return super.decoration;
+  }
+
+  bool _decorationIsInitialized = false;
+
+  @override
+  set decoration(WidgetDecoration value) {
+    _$decorationAtom.reportWrite(
+      value,
+      _decorationIsInitialized ? super.decoration : null,
+      () {
+        super.decoration = value;
+        _decorationIsInitialized = true;
+      },
+    );
+  }
+
+  late final _$horizontalPaddingAtom = Atom(
+    name: '_MessageWidgetSettingsStore.horizontalPadding',
+    context: context,
+  );
+
+  @override
+  double get horizontalPadding {
+    _$horizontalPaddingAtom.reportRead();
+    return super.horizontalPadding;
+  }
+
+  bool _horizontalPaddingIsInitialized = false;
+
+  @override
+  set horizontalPadding(double value) {
+    _$horizontalPaddingAtom.reportWrite(
+      value,
+      _horizontalPaddingIsInitialized ? super.horizontalPadding : null,
+      () {
+        super.horizontalPadding = value;
+        _horizontalPaddingIsInitialized = true;
+      },
+    );
+  }
+
+  late final _$verticalPaddingAtom = Atom(
+    name: '_MessageWidgetSettingsStore.verticalPadding',
+    context: context,
+  );
+
+  @override
+  double get verticalPadding {
+    _$verticalPaddingAtom.reportRead();
+    return super.verticalPadding;
+  }
+
+  bool _verticalPaddingIsInitialized = false;
+
+  @override
+  set verticalPadding(double value) {
+    _$verticalPaddingAtom.reportWrite(
+      value,
+      _verticalPaddingIsInitialized ? super.verticalPadding : null,
+      () {
+        super.verticalPadding = value;
+        _verticalPaddingIsInitialized = true;
+      },
+    );
+  }
+
+  late final _$horizontalMarginAtom = Atom(
+    name: '_MessageWidgetSettingsStore.horizontalMargin',
+    context: context,
+  );
+
+  @override
+  double get horizontalMargin {
+    _$horizontalMarginAtom.reportRead();
+    return super.horizontalMargin;
+  }
+
+  bool _horizontalMarginIsInitialized = false;
+
+  @override
+  set horizontalMargin(double value) {
+    _$horizontalMarginAtom.reportWrite(
+      value,
+      _horizontalMarginIsInitialized ? super.horizontalMargin : null,
+      () {
+        super.horizontalMargin = value;
+        _horizontalMarginIsInitialized = true;
+      },
+    );
+  }
+
+  late final _$verticalMarginAtom = Atom(
+    name: '_MessageWidgetSettingsStore.verticalMargin',
+    context: context,
+  );
+
+  @override
+  double get verticalMargin {
+    _$verticalMarginAtom.reportRead();
+    return super.verticalMargin;
+  }
+
+  bool _verticalMarginIsInitialized = false;
+
+  @override
+  set verticalMargin(double value) {
+    _$verticalMarginAtom.reportWrite(
+      value,
+      _verticalMarginIsInitialized ? super.verticalMargin : null,
+      () {
+        super.verticalMargin = value;
+        _verticalMarginIsInitialized = true;
+      },
+    );
+  }
+
   late final _$_MessageWidgetSettingsStoreActionController = ActionController(
     name: '_MessageWidgetSettingsStore',
     context: context,
@@ -534,9 +905,8 @@ mixin _$MessageWidgetSettingsStore on _MessageWidgetSettingsStore, Store {
 
   @override
   void update(VoidCallback callback, {bool save = true}) {
-    final _$actionInfo = _$_MessageWidgetSettingsStoreActionController.startAction(
-      name: '_MessageWidgetSettingsStore.update',
-    );
+    final _$actionInfo = _$_MessageWidgetSettingsStoreActionController
+        .startAction(name: '_MessageWidgetSettingsStore.update');
     try {
       return super.update(callback, save: save);
     } finally {
@@ -546,9 +916,8 @@ mixin _$MessageWidgetSettingsStore on _MessageWidgetSettingsStore, Store {
 
   @override
   void setFrom(MessageWidgetSettings? settings) {
-    final _$actionInfo = _$_MessageWidgetSettingsStoreActionController.startAction(
-      name: '_MessageWidgetSettingsStore.setFrom',
-    );
+    final _$actionInfo = _$_MessageWidgetSettingsStoreActionController
+        .startAction(name: '_MessageWidgetSettingsStore.setFrom');
     try {
       return super.setFrom(settings);
     } finally {
@@ -562,7 +931,12 @@ mixin _$MessageWidgetSettingsStore on _MessageWidgetSettingsStore, Store {
 fontSize: ${fontSize},
 fontFamily: ${fontFamily},
 message: ${message},
-alignment: ${alignment}
+alignment: ${alignment},
+decoration: ${decoration},
+horizontalPadding: ${horizontalPadding},
+verticalPadding: ${verticalPadding},
+horizontalMargin: ${horizontalMargin},
+verticalMargin: ${verticalMargin}
     ''';
   }
 }
@@ -739,6 +1113,131 @@ mixin _$TimerWidgetSettingsStore on _TimerWidgetSettingsStore, Store {
     );
   }
 
+  late final _$decorationAtom = Atom(
+    name: '_TimerWidgetSettingsStore.decoration',
+    context: context,
+  );
+
+  @override
+  WidgetDecoration get decoration {
+    _$decorationAtom.reportRead();
+    return super.decoration;
+  }
+
+  bool _decorationIsInitialized = false;
+
+  @override
+  set decoration(WidgetDecoration value) {
+    _$decorationAtom.reportWrite(
+      value,
+      _decorationIsInitialized ? super.decoration : null,
+      () {
+        super.decoration = value;
+        _decorationIsInitialized = true;
+      },
+    );
+  }
+
+  late final _$horizontalPaddingAtom = Atom(
+    name: '_TimerWidgetSettingsStore.horizontalPadding',
+    context: context,
+  );
+
+  @override
+  double get horizontalPadding {
+    _$horizontalPaddingAtom.reportRead();
+    return super.horizontalPadding;
+  }
+
+  bool _horizontalPaddingIsInitialized = false;
+
+  @override
+  set horizontalPadding(double value) {
+    _$horizontalPaddingAtom.reportWrite(
+      value,
+      _horizontalPaddingIsInitialized ? super.horizontalPadding : null,
+      () {
+        super.horizontalPadding = value;
+        _horizontalPaddingIsInitialized = true;
+      },
+    );
+  }
+
+  late final _$verticalPaddingAtom = Atom(
+    name: '_TimerWidgetSettingsStore.verticalPadding',
+    context: context,
+  );
+
+  @override
+  double get verticalPadding {
+    _$verticalPaddingAtom.reportRead();
+    return super.verticalPadding;
+  }
+
+  bool _verticalPaddingIsInitialized = false;
+
+  @override
+  set verticalPadding(double value) {
+    _$verticalPaddingAtom.reportWrite(
+      value,
+      _verticalPaddingIsInitialized ? super.verticalPadding : null,
+      () {
+        super.verticalPadding = value;
+        _verticalPaddingIsInitialized = true;
+      },
+    );
+  }
+
+  late final _$horizontalMarginAtom = Atom(
+    name: '_TimerWidgetSettingsStore.horizontalMargin',
+    context: context,
+  );
+
+  @override
+  double get horizontalMargin {
+    _$horizontalMarginAtom.reportRead();
+    return super.horizontalMargin;
+  }
+
+  bool _horizontalMarginIsInitialized = false;
+
+  @override
+  set horizontalMargin(double value) {
+    _$horizontalMarginAtom.reportWrite(
+      value,
+      _horizontalMarginIsInitialized ? super.horizontalMargin : null,
+      () {
+        super.horizontalMargin = value;
+        _horizontalMarginIsInitialized = true;
+      },
+    );
+  }
+
+  late final _$verticalMarginAtom = Atom(
+    name: '_TimerWidgetSettingsStore.verticalMargin',
+    context: context,
+  );
+
+  @override
+  double get verticalMargin {
+    _$verticalMarginAtom.reportRead();
+    return super.verticalMargin;
+  }
+
+  bool _verticalMarginIsInitialized = false;
+
+  @override
+  set verticalMargin(double value) {
+    _$verticalMarginAtom.reportWrite(
+      value,
+      _verticalMarginIsInitialized ? super.verticalMargin : null,
+      () {
+        super.verticalMargin = value;
+        _verticalMarginIsInitialized = true;
+      },
+    );
+  }
+
   late final _$_TimerWidgetSettingsStoreActionController = ActionController(
     name: '_TimerWidgetSettingsStore',
     context: context,
@@ -746,9 +1245,8 @@ mixin _$TimerWidgetSettingsStore on _TimerWidgetSettingsStore, Store {
 
   @override
   void update(VoidCallback callback, {bool save = true}) {
-    final _$actionInfo = _$_TimerWidgetSettingsStoreActionController.startAction(
-      name: '_TimerWidgetSettingsStore.update',
-    );
+    final _$actionInfo = _$_TimerWidgetSettingsStoreActionController
+        .startAction(name: '_TimerWidgetSettingsStore.update');
     try {
       return super.update(callback, save: save);
     } finally {
@@ -758,9 +1256,8 @@ mixin _$TimerWidgetSettingsStore on _TimerWidgetSettingsStore, Store {
 
   @override
   void setFrom(TimerWidgetSettings? settings) {
-    final _$actionInfo = _$_TimerWidgetSettingsStoreActionController.startAction(
-      name: '_TimerWidgetSettingsStore.setFrom',
-    );
+    final _$actionInfo = _$_TimerWidgetSettingsStoreActionController
+        .startAction(name: '_TimerWidgetSettingsStore.setFrom');
     try {
       return super.setFrom(settings);
     } finally {
@@ -777,7 +1274,12 @@ textBefore: ${textBefore},
 textAfter: ${textAfter},
 time: ${time},
 alignment: ${alignment},
-format: ${format}
+format: ${format},
+decoration: ${decoration},
+horizontalPadding: ${horizontalPadding},
+verticalPadding: ${verticalPadding},
+horizontalMargin: ${horizontalMargin},
+verticalMargin: ${verticalMargin}
     ''';
   }
 }
@@ -933,6 +1435,131 @@ mixin _$WeatherWidgetSettingsStore on _WeatherWidgetSettingsStore, Store {
     );
   }
 
+  late final _$decorationAtom = Atom(
+    name: '_WeatherWidgetSettingsStore.decoration',
+    context: context,
+  );
+
+  @override
+  WidgetDecoration get decoration {
+    _$decorationAtom.reportRead();
+    return super.decoration;
+  }
+
+  bool _decorationIsInitialized = false;
+
+  @override
+  set decoration(WidgetDecoration value) {
+    _$decorationAtom.reportWrite(
+      value,
+      _decorationIsInitialized ? super.decoration : null,
+      () {
+        super.decoration = value;
+        _decorationIsInitialized = true;
+      },
+    );
+  }
+
+  late final _$horizontalPaddingAtom = Atom(
+    name: '_WeatherWidgetSettingsStore.horizontalPadding',
+    context: context,
+  );
+
+  @override
+  double get horizontalPadding {
+    _$horizontalPaddingAtom.reportRead();
+    return super.horizontalPadding;
+  }
+
+  bool _horizontalPaddingIsInitialized = false;
+
+  @override
+  set horizontalPadding(double value) {
+    _$horizontalPaddingAtom.reportWrite(
+      value,
+      _horizontalPaddingIsInitialized ? super.horizontalPadding : null,
+      () {
+        super.horizontalPadding = value;
+        _horizontalPaddingIsInitialized = true;
+      },
+    );
+  }
+
+  late final _$verticalPaddingAtom = Atom(
+    name: '_WeatherWidgetSettingsStore.verticalPadding',
+    context: context,
+  );
+
+  @override
+  double get verticalPadding {
+    _$verticalPaddingAtom.reportRead();
+    return super.verticalPadding;
+  }
+
+  bool _verticalPaddingIsInitialized = false;
+
+  @override
+  set verticalPadding(double value) {
+    _$verticalPaddingAtom.reportWrite(
+      value,
+      _verticalPaddingIsInitialized ? super.verticalPadding : null,
+      () {
+        super.verticalPadding = value;
+        _verticalPaddingIsInitialized = true;
+      },
+    );
+  }
+
+  late final _$horizontalMarginAtom = Atom(
+    name: '_WeatherWidgetSettingsStore.horizontalMargin',
+    context: context,
+  );
+
+  @override
+  double get horizontalMargin {
+    _$horizontalMarginAtom.reportRead();
+    return super.horizontalMargin;
+  }
+
+  bool _horizontalMarginIsInitialized = false;
+
+  @override
+  set horizontalMargin(double value) {
+    _$horizontalMarginAtom.reportWrite(
+      value,
+      _horizontalMarginIsInitialized ? super.horizontalMargin : null,
+      () {
+        super.horizontalMargin = value;
+        _horizontalMarginIsInitialized = true;
+      },
+    );
+  }
+
+  late final _$verticalMarginAtom = Atom(
+    name: '_WeatherWidgetSettingsStore.verticalMargin',
+    context: context,
+  );
+
+  @override
+  double get verticalMargin {
+    _$verticalMarginAtom.reportRead();
+    return super.verticalMargin;
+  }
+
+  bool _verticalMarginIsInitialized = false;
+
+  @override
+  set verticalMargin(double value) {
+    _$verticalMarginAtom.reportWrite(
+      value,
+      _verticalMarginIsInitialized ? super.verticalMargin : null,
+      () {
+        super.verticalMargin = value;
+        _verticalMarginIsInitialized = true;
+      },
+    );
+  }
+
   late final _$_WeatherWidgetSettingsStoreActionController = ActionController(
     name: '_WeatherWidgetSettingsStore',
     context: context,
@@ -940,9 +1567,8 @@ mixin _$WeatherWidgetSettingsStore on _WeatherWidgetSettingsStore, Store {
 
   @override
   void update(VoidCallback callback, {bool save = true}) {
-    final _$actionInfo = _$_WeatherWidgetSettingsStoreActionController.startAction(
-      name: '_WeatherWidgetSettingsStore.update',
-    );
+    final _$actionInfo = _$_WeatherWidgetSettingsStoreActionController
+        .startAction(name: '_WeatherWidgetSettingsStore.update');
     try {
       return super.update(callback, save: save);
     } finally {
@@ -952,9 +1578,8 @@ mixin _$WeatherWidgetSettingsStore on _WeatherWidgetSettingsStore, Store {
 
   @override
   void setFrom(WeatherWidgetSettings? settings) {
-    final _$actionInfo = _$_WeatherWidgetSettingsStoreActionController.startAction(
-      name: '_WeatherWidgetSettingsStore.setFrom',
-    );
+    final _$actionInfo = _$_WeatherWidgetSettingsStoreActionController
+        .startAction(name: '_WeatherWidgetSettingsStore.setFrom');
     try {
       return super.setFrom(settings);
     } finally {
@@ -970,12 +1595,18 @@ fontFamily: ${fontFamily},
 alignment: ${alignment},
 format: ${format},
 temperatureUnit: ${temperatureUnit},
-location: ${location}
+location: ${location},
+decoration: ${decoration},
+horizontalPadding: ${horizontalPadding},
+verticalPadding: ${verticalPadding},
+horizontalMargin: ${horizontalMargin},
+verticalMargin: ${verticalMargin}
     ''';
   }
 }
 
-mixin _$DigitalDateWidgetSettingsStore on _DigitalDateWidgetSettingsStore, Store {
+mixin _$DigitalDateWidgetSettingsStore
+    on _DigitalDateWidgetSettingsStore, Store {
   late final _$fontSizeAtom = Atom(
     name: '_DigitalDateWidgetSettingsStore.fontSize',
     context: context,
@@ -1022,31 +1653,6 @@ mixin _$DigitalDateWidgetSettingsStore on _DigitalDateWidgetSettingsStore, Store
       () {
         super.separator = value;
         _separatorIsInitialized = true;
-      },
-    );
-  }
-
-  late final _$borderTypeAtom = Atom(
-    name: '_DigitalDateWidgetSettingsStore.borderType',
-    context: context,
-  );
-
-  @override
-  BorderType get borderType {
-    _$borderTypeAtom.reportRead();
-    return super.borderType;
-  }
-
-  bool _borderTypeIsInitialized = false;
-
-  @override
-  set borderType(BorderType value) {
-    _$borderTypeAtom.reportWrite(
-      value,
-      _borderTypeIsInitialized ? super.borderType : null,
-      () {
-        super.borderType = value;
-        _borderTypeIsInitialized = true;
       },
     );
   }
@@ -1151,16 +1757,141 @@ mixin _$DigitalDateWidgetSettingsStore on _DigitalDateWidgetSettingsStore, Store
     );
   }
 
-  late final _$_DigitalDateWidgetSettingsStoreActionController = ActionController(
-    name: '_DigitalDateWidgetSettingsStore',
+  late final _$decorationAtom = Atom(
+    name: '_DigitalDateWidgetSettingsStore.decoration',
     context: context,
   );
 
   @override
-  void update(VoidCallback callback, {bool save = true}) {
-    final _$actionInfo = _$_DigitalDateWidgetSettingsStoreActionController.startAction(
-      name: '_DigitalDateWidgetSettingsStore.update',
+  WidgetDecoration get decoration {
+    _$decorationAtom.reportRead();
+    return super.decoration;
+  }
+
+  bool _decorationIsInitialized = false;
+
+  @override
+  set decoration(WidgetDecoration value) {
+    _$decorationAtom.reportWrite(
+      value,
+      _decorationIsInitialized ? super.decoration : null,
+      () {
+        super.decoration = value;
+        _decorationIsInitialized = true;
+      },
     );
+  }
+
+  late final _$horizontalPaddingAtom = Atom(
+    name: '_DigitalDateWidgetSettingsStore.horizontalPadding',
+    context: context,
+  );
+
+  @override
+  double get horizontalPadding {
+    _$horizontalPaddingAtom.reportRead();
+    return super.horizontalPadding;
+  }
+
+  bool _horizontalPaddingIsInitialized = false;
+
+  @override
+  set horizontalPadding(double value) {
+    _$horizontalPaddingAtom.reportWrite(
+      value,
+      _horizontalPaddingIsInitialized ? super.horizontalPadding : null,
+      () {
+        super.horizontalPadding = value;
+        _horizontalPaddingIsInitialized = true;
+      },
+    );
+  }
+
+  late final _$verticalPaddingAtom = Atom(
+    name: '_DigitalDateWidgetSettingsStore.verticalPadding',
+    context: context,
+  );
+
+  @override
+  double get verticalPadding {
+    _$verticalPaddingAtom.reportRead();
+    return super.verticalPadding;
+  }
+
+  bool _verticalPaddingIsInitialized = false;
+
+  @override
+  set verticalPadding(double value) {
+    _$verticalPaddingAtom.reportWrite(
+      value,
+      _verticalPaddingIsInitialized ? super.verticalPadding : null,
+      () {
+        super.verticalPadding = value;
+        _verticalPaddingIsInitialized = true;
+      },
+    );
+  }
+
+  late final _$horizontalMarginAtom = Atom(
+    name: '_DigitalDateWidgetSettingsStore.horizontalMargin',
+    context: context,
+  );
+
+  @override
+  double get horizontalMargin {
+    _$horizontalMarginAtom.reportRead();
+    return super.horizontalMargin;
+  }
+
+  bool _horizontalMarginIsInitialized = false;
+
+  @override
+  set horizontalMargin(double value) {
+    _$horizontalMarginAtom.reportWrite(
+      value,
+      _horizontalMarginIsInitialized ? super.horizontalMargin : null,
+      () {
+        super.horizontalMargin = value;
+        _horizontalMarginIsInitialized = true;
+      },
+    );
+  }
+
+  late final _$verticalMarginAtom = Atom(
+    name: '_DigitalDateWidgetSettingsStore.verticalMargin',
+    context: context,
+  );
+
+  @override
+  double get verticalMargin {
+    _$verticalMarginAtom.reportRead();
+    return super.verticalMargin;
+  }
+
+  bool _verticalMarginIsInitialized = false;
+
+  @override
+  set verticalMargin(double value) {
+    _$verticalMarginAtom.reportWrite(
+      value,
+      _verticalMarginIsInitialized ? super.verticalMargin : null,
+      () {
+        super.verticalMargin = value;
+        _verticalMarginIsInitialized = true;
+      },
+    );
+  }
+
+  late final _$_DigitalDateWidgetSettingsStoreActionController =
+      ActionController(
+        name: '_DigitalDateWidgetSettingsStore',
+        context: context,
+      );
+
+  @override
+  void update(VoidCallback callback, {bool save = true}) {
+    final _$actionInfo = _$_DigitalDateWidgetSettingsStoreActionController
+        .startAction(name: '_DigitalDateWidgetSettingsStore.update');
     try {
       return super.update(callback, save: save);
     } finally {
@@ -1170,9 +1901,8 @@ mixin _$DigitalDateWidgetSettingsStore on _DigitalDateWidgetSettingsStore, Store
 
   @override
   void setFrom(DigitalDateWidgetSettings? settings) {
-    final _$actionInfo = _$_DigitalDateWidgetSettingsStoreActionController.startAction(
-      name: '_DigitalDateWidgetSettingsStore.setFrom',
-    );
+    final _$actionInfo = _$_DigitalDateWidgetSettingsStoreActionController
+        .startAction(name: '_DigitalDateWidgetSettingsStore.setFrom');
     try {
       return super.setFrom(settings);
     } finally {
@@ -1185,11 +1915,15 @@ mixin _$DigitalDateWidgetSettingsStore on _DigitalDateWidgetSettingsStore, Store
     return '''
 fontSize: ${fontSize},
 separator: ${separator},
-borderType: ${borderType},
 fontFamily: ${fontFamily},
 alignment: ${alignment},
 format: ${format},
-customFormat: ${customFormat}
+customFormat: ${customFormat},
+decoration: ${decoration},
+horizontalPadding: ${horizontalPadding},
+verticalPadding: ${verticalPadding},
+horizontalMargin: ${horizontalMargin},
+verticalMargin: ${verticalMargin}
     ''';
   }
 }

@@ -6,6 +6,7 @@ import '../../utils/custom_observer.dart';
 import '../../utils/extensions.dart';
 import '../background_store.dart';
 import '../widget_store.dart';
+import 'widget_decoration_wrapper.dart';
 
 class AnalogClockWidget extends StatelessWidget {
   const AnalogClockWidget({super.key});
@@ -20,14 +21,21 @@ class AnalogClockWidget extends StatelessWidget {
       builder: (context) {
         return Align(
           alignment: settings.alignment.flutterAlignment,
-          child: Padding(
-            padding: const EdgeInsets.all(56),
-            child: FittedBox(
-              child: AnalogClock(
-                showSecondsHand: settings.showSecondsHand,
-                secondHandColor: settings.coloredSecondHand ? Colors.red : null,
-                radius: settings.radius,
-                color: backgroundStore.foregroundColor,
+          child: FittedBox(
+            child: WidgetDecorationWrapper(
+              decoration: settings.decoration,
+              horizontalPadding: settings.horizontalPadding,
+              verticalPadding: settings.verticalPadding,
+              horizontalMargin: settings.horizontalMargin,
+              verticalMargin: settings.verticalMargin,
+              child: Padding(
+                padding: const EdgeInsets.all(2),
+                child: AnalogClock(
+                  showSecondsHand: settings.showSecondsHand,
+                  secondHandColor: settings.coloredSecondHand ? Colors.red : null,
+                  radius: settings.radius,
+                  color: backgroundStore.foregroundColor,
+                ),
               ),
             ),
           ),

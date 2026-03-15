@@ -9,13 +9,21 @@ part of 'background_settings.dart';
 BackgroundSettings _$BackgroundSettingsFromJson(
   Map<String, dynamic> json,
 ) => BackgroundSettings(
-  mode: $enumDecodeNullable(_$BackgroundModeEnumMap, json['mode']) ?? BackgroundMode.color,
-  color: json['color'] == null ? FlatColors.minimal : flatColorFromJson(json['color'] as String),
-  gradient: json['gradient'] == null ? ColorGradients.youtube : colorGradientFromJson(json['gradient'] as String),
+  mode:
+      $enumDecodeNullable(_$BackgroundModeEnumMap, json['mode']) ??
+      BackgroundMode.color,
+  color: json['color'] == null
+      ? FlatColors.minimal
+      : flatColorFromJson(json['color'] as String),
+  gradient: json['gradient'] == null
+      ? ColorGradients.youtube
+      : colorGradientFromJson(json['gradient'] as String),
   tint: (json['tint'] as num?)?.toDouble() ?? 0,
   texture: json['texture'] as bool? ?? false,
   invert: json['invert'] as bool? ?? false,
-  source: $enumDecodeNullable(_$ImageSourceEnumMap, json['source']) ?? ImageSource.unsplash,
+  source:
+      $enumDecodeNullable(_$ImageSourceEnumMap, json['source']) ??
+      ImageSource.unsplash,
   unsplashSource: json['unsplashSource'] == null
       ? UnsplashSources.curated
       : UnsplashSource.fromJson(json['unsplashSource'] as Map<String, dynamic>),
@@ -28,7 +36,9 @@ BackgroundSettings _$BackgroundSettingsFromJson(
         json['imageRefreshRate'],
       ) ??
       BackgroundRefreshRate.never,
-  imageResolution: $enumDecodeNullable(_$ImageResolutionEnumMap, json['imageResolution']) ?? ImageResolution.auto,
+  imageResolution:
+      $enumDecodeNullable(_$ImageResolutionEnumMap, json['imageResolution']) ??
+      ImageResolution.auto,
   greyScale: json['greyScale'] as bool? ?? false,
   customSources: (json['customSources'] as List<dynamic>?)
       ?.map((e) => UnsplashSource.fromJson(e as Map<String, dynamic>))
@@ -38,22 +48,24 @@ BackgroundSettings _$BackgroundSettingsFromJson(
       .toList(),
 );
 
-Map<String, dynamic> _$BackgroundSettingsToJson(BackgroundSettings instance) => <String, dynamic>{
-  'mode': _$BackgroundModeEnumMap[instance.mode]!,
-  'color': flatColorToJson(instance.color),
-  'gradient': colorGradientToJson(instance.gradient),
-  'tint': instance.tint,
-  'texture': instance.texture,
-  'invert': instance.invert,
-  'source': _$ImageSourceEnumMap[instance.source]!,
-  'unsplashSource': instance.unsplashSource,
-  'pexelsSource': instance.pexelsSource,
-  'imageRefreshRate': _$BackgroundRefreshRateEnumMap[instance.imageRefreshRate]!,
-  'imageResolution': _$ImageResolutionEnumMap[instance.imageResolution]!,
-  'greyScale': instance.greyScale,
-  'customSources': instance.customSources,
-  'pexelsCustomSources': instance.pexelsCustomSources,
-};
+Map<String, dynamic> _$BackgroundSettingsToJson(BackgroundSettings instance) =>
+    <String, dynamic>{
+      'mode': _$BackgroundModeEnumMap[instance.mode]!,
+      'color': flatColorToJson(instance.color),
+      'gradient': colorGradientToJson(instance.gradient),
+      'tint': instance.tint,
+      'texture': instance.texture,
+      'invert': instance.invert,
+      'source': _$ImageSourceEnumMap[instance.source]!,
+      'unsplashSource': instance.unsplashSource,
+      'pexelsSource': instance.pexelsSource,
+      'imageRefreshRate':
+          _$BackgroundRefreshRateEnumMap[instance.imageRefreshRate]!,
+      'imageResolution': _$ImageResolutionEnumMap[instance.imageResolution]!,
+      'greyScale': instance.greyScale,
+      'customSources': instance.customSources,
+      'pexelsCustomSources': instance.pexelsCustomSources,
+    };
 
 const _$BackgroundModeEnumMap = {
   BackgroundMode.color: 'color',
@@ -158,16 +170,15 @@ Background _$BackgroundFromJson(Map<String, dynamic> json) => Background(
   bytes: base64Decode(json['bytes'] as String),
 );
 
-Map<String, dynamic> _$BackgroundToJson(Background instance) => <String, dynamic>{
-  'url': instance.url,
-  'id': instance.id,
-  'bytes': base64Encode(instance.bytes),
-};
+Map<String, dynamic> _$BackgroundToJson(Background instance) =>
+    <String, dynamic>{
+      'url': instance.url,
+      'id': instance.id,
+      'bytes': base64Encode(instance.bytes),
+    };
 
 LikedBackground _$LikedBackgroundFromJson(Map<String, dynamic> json) =>
     LikedBackground(id: json['id'] as String, url: json['url'] as String);
 
-Map<String, dynamic> _$LikedBackgroundToJson(LikedBackground instance) => <String, dynamic>{
-  'url': instance.url,
-  'id': instance.id,
-};
+Map<String, dynamic> _$LikedBackgroundToJson(LikedBackground instance) =>
+    <String, dynamic>{'url': instance.url, 'id': instance.id};

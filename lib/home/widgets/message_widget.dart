@@ -5,6 +5,7 @@ import '../../utils/custom_observer.dart';
 import '../../utils/extensions.dart';
 import '../background_store.dart';
 import '../widget_store.dart';
+import 'widget_decoration_wrapper.dart';
 
 class MessageWidget extends StatelessWidget {
   const MessageWidget({super.key});
@@ -19,8 +20,12 @@ class MessageWidget extends StatelessWidget {
       builder: (context) {
         return Align(
           alignment: settings.alignment.flutterAlignment,
-          child: Padding(
-            padding: const EdgeInsets.all(56),
+          child: WidgetDecorationWrapper(
+            decoration: settings.decoration,
+            horizontalPadding: settings.horizontalPadding,
+            verticalPadding: settings.verticalPadding,
+            horizontalMargin: settings.horizontalMargin,
+            verticalMargin: settings.verticalMargin,
             child: Text(
               settings.message,
               textAlign: settings.alignment.textAlign,

@@ -6,27 +6,128 @@ part of 'widget_settings.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-NoneWidgetSettings _$NoneWidgetSettingsFromJson(Map<String, dynamic> json) => NoneWidgetSettings();
+NoDecoration _$NoDecorationFromJson(Map<String, dynamic> json) =>
+    NoDecoration();
 
-Map<String, dynamic> _$NoneWidgetSettingsToJson(NoneWidgetSettings instance) => <String, dynamic>{};
+Map<String, dynamic> _$NoDecorationToJson(NoDecoration instance) =>
+    <String, dynamic>{'type': _$WidgetBackgroundTypeEnumMap[instance.type]!};
+
+const _$WidgetBackgroundTypeEnumMap = {
+  WidgetBackgroundType.none: 'none',
+  WidgetBackgroundType.color: 'color',
+  WidgetBackgroundType.glass: 'glass',
+  WidgetBackgroundType.border: 'border',
+};
+
+ColorDecoration _$ColorDecorationFromJson(Map<String, dynamic> json) =>
+    ColorDecoration(
+      color: const ColorConverter().fromJson(json['color'] as String),
+      opacity: (json['opacity'] as num?)?.toDouble() ?? 1,
+      borderRadius: (json['borderRadius'] as num?)?.toDouble() ?? 0,
+      imageColorId: json['imageColorId'] as String?,
+    );
+
+Map<String, dynamic> _$ColorDecorationToJson(ColorDecoration instance) =>
+    <String, dynamic>{
+      'type': _$WidgetBackgroundTypeEnumMap[instance.type]!,
+      'borderRadius': instance.borderRadius,
+      'imageColorId': instance.imageColorId,
+      'color': const ColorConverter().toJson(instance.color),
+      'opacity': instance.opacity,
+    };
+
+GlassDecoration _$GlassDecorationFromJson(Map<String, dynamic> json) =>
+    GlassDecoration(
+      tint: json['tint'] == null
+          ? const Color(0x80FFFFFF)
+          : const ColorConverter().fromJson(json['tint'] as String),
+      tintOpacity: (json['tintOpacity'] as num?)?.toDouble() ?? 1,
+      blur: (json['blur'] as num?)?.toDouble() ?? 20,
+      borderRadius: (json['borderRadius'] as num?)?.toDouble() ?? 0,
+      imageColorId: json['imageColorId'] as String?,
+    );
+
+Map<String, dynamic> _$GlassDecorationToJson(GlassDecoration instance) =>
+    <String, dynamic>{
+      'type': _$WidgetBackgroundTypeEnumMap[instance.type]!,
+      'borderRadius': instance.borderRadius,
+      'imageColorId': instance.imageColorId,
+      'tint': const ColorConverter().toJson(instance.tint),
+      'tintOpacity': instance.tintOpacity,
+      'blur': instance.blur,
+    };
+
+BorderDecoration _$BorderDecorationFromJson(Map<String, dynamic> json) =>
+    BorderDecoration(
+      color: json['color'] == null
+          ? const Color(0xFFFFFFFF)
+          : const ColorConverter().fromJson(json['color'] as String),
+      opacity: (json['opacity'] as num?)?.toDouble() ?? 1,
+      thickness: (json['thickness'] as num?)?.toDouble() ?? 1,
+      borderRadius: (json['borderRadius'] as num?)?.toDouble() ?? 0,
+      imageColorId: json['imageColorId'] as String?,
+    );
+
+Map<String, dynamic> _$BorderDecorationToJson(BorderDecoration instance) =>
+    <String, dynamic>{
+      'type': _$WidgetBackgroundTypeEnumMap[instance.type]!,
+      'borderRadius': instance.borderRadius,
+      'imageColorId': instance.imageColorId,
+      'color': const ColorConverter().toJson(instance.color),
+      'opacity': instance.opacity,
+      'thickness': instance.thickness,
+    };
+
+NoneWidgetSettings _$NoneWidgetSettingsFromJson(Map<String, dynamic> json) =>
+    NoneWidgetSettings();
+
+Map<String, dynamic> _$NoneWidgetSettingsToJson(NoneWidgetSettings instance) =>
+    <String, dynamic>{'type': _$WidgetTypeEnumMap[instance.type]!};
+
+const _$WidgetTypeEnumMap = {
+  WidgetType.none: 'none',
+  WidgetType.digitalClock: 'digitalClock',
+  WidgetType.analogClock: 'analogClock',
+  WidgetType.text: 'text',
+  WidgetType.timer: 'timer',
+  WidgetType.weather: 'weather',
+  WidgetType.digitalDate: 'digitalDate',
+};
 
 DigitalClockWidgetSettings _$DigitalClockWidgetSettingsFromJson(
   Map<String, dynamic> json,
 ) => DigitalClockWidgetSettings(
   fontSize: (json['fontSize'] as num?)?.toDouble() ?? 100,
-  separator: $enumDecodeNullable(_$SeparatorEnumMap, json['separator']) ?? Separator.colon,
-  borderType: $enumDecodeNullable(_$BorderTypeEnumMap, json['borderType']) ?? BorderType.none,
+  separator:
+      $enumDecodeNullable(_$SeparatorEnumMap, json['separator']) ??
+      Separator.colon,
   fontFamily: json['fontFamily'] as String? ?? FontFamilies.product,
-  alignment: $enumDecodeNullable(_$AlignmentCEnumMap, json['alignment']) ?? AlignmentC.center,
-  format: $enumDecodeNullable(_$ClockFormatEnumMap, json['format']) ?? ClockFormat.twelveHour,
+  alignment:
+      $enumDecodeNullable(_$AlignmentCEnumMap, json['alignment']) ??
+      AlignmentC.center,
+  format:
+      $enumDecodeNullable(_$ClockFormatEnumMap, json['format']) ??
+      ClockFormat.twelveHour,
+  decoration: json['decoration'] == null
+      ? const NoDecoration()
+      : WidgetDecoration.fromJson(json['decoration'] as Map<String, dynamic>),
+  horizontalMargin: (json['horizontalMargin'] as num?)?.toDouble() ?? 0,
+  verticalMargin: (json['verticalMargin'] as num?)?.toDouble() ?? 0,
+  horizontalPadding: (json['horizontalPadding'] as num?)?.toDouble() ?? 0,
+  verticalPadding: (json['verticalPadding'] as num?)?.toDouble() ?? 0,
 );
 
 Map<String, dynamic> _$DigitalClockWidgetSettingsToJson(
   DigitalClockWidgetSettings instance,
 ) => <String, dynamic>{
+  'type': _$WidgetTypeEnumMap[instance.type]!,
+  'decoration': instance.decoration,
+  'horizontalPadding': instance.horizontalPadding,
+  'verticalPadding': instance.verticalPadding,
+  'horizontalMargin': instance.horizontalMargin,
+  'verticalMargin': instance.verticalMargin,
   'fontSize': instance.fontSize,
   'separator': _$SeparatorEnumMap[instance.separator]!,
-  'borderType': _$BorderTypeEnumMap[instance.borderType]!,
   'fontFamily': instance.fontFamily,
   'alignment': _$AlignmentCEnumMap[instance.alignment]!,
   'format': _$ClockFormatEnumMap[instance.format]!,
@@ -39,12 +140,6 @@ const _$SeparatorEnumMap = {
   Separator.dash: 'dash',
   Separator.space: 'space',
   Separator.newLine: 'newLine',
-};
-
-const _$BorderTypeEnumMap = {
-  BorderType.none: 'none',
-  BorderType.solid: 'solid',
-  BorderType.rounded: 'rounded',
 };
 
 const _$AlignmentCEnumMap = {
@@ -71,12 +166,27 @@ AnalogClockWidgetSettings _$AnalogClockWidgetSettingsFromJson(
   radius: (json['radius'] as num?)?.toDouble() ?? 100,
   showSecondsHand: json['showSecondsHand'] as bool? ?? true,
   coloredSecondHand: json['coloredSecondHand'] as bool? ?? false,
-  alignment: $enumDecodeNullable(_$AlignmentCEnumMap, json['alignment']) ?? AlignmentC.center,
+  alignment:
+      $enumDecodeNullable(_$AlignmentCEnumMap, json['alignment']) ??
+      AlignmentC.center,
+  decoration: json['decoration'] == null
+      ? const NoDecoration()
+      : WidgetDecoration.fromJson(json['decoration'] as Map<String, dynamic>),
+  horizontalMargin: (json['horizontalMargin'] as num?)?.toDouble() ?? 0,
+  verticalMargin: (json['verticalMargin'] as num?)?.toDouble() ?? 0,
+  horizontalPadding: (json['horizontalPadding'] as num?)?.toDouble() ?? 0,
+  verticalPadding: (json['verticalPadding'] as num?)?.toDouble() ?? 0,
 );
 
 Map<String, dynamic> _$AnalogClockWidgetSettingsToJson(
   AnalogClockWidgetSettings instance,
 ) => <String, dynamic>{
+  'type': _$WidgetTypeEnumMap[instance.type]!,
+  'decoration': instance.decoration,
+  'horizontalPadding': instance.horizontalPadding,
+  'verticalPadding': instance.verticalPadding,
+  'horizontalMargin': instance.horizontalMargin,
+  'verticalMargin': instance.verticalMargin,
   'radius': instance.radius,
   'showSecondsHand': instance.showSecondsHand,
   'coloredSecondHand': instance.coloredSecondHand,
@@ -89,31 +199,66 @@ MessageWidgetSettings _$MessageWidgetSettingsFromJson(
   fontSize: (json['fontSize'] as num?)?.toDouble() ?? 100,
   fontFamily: json['fontFamily'] as String? ?? FontFamilies.product,
   message: json['message'] as String? ?? 'Hello World!',
-  alignment: $enumDecodeNullable(_$AlignmentCEnumMap, json['alignment']) ?? AlignmentC.center,
+  alignment:
+      $enumDecodeNullable(_$AlignmentCEnumMap, json['alignment']) ??
+      AlignmentC.center,
+  decoration: json['decoration'] == null
+      ? const NoDecoration()
+      : WidgetDecoration.fromJson(json['decoration'] as Map<String, dynamic>),
+  horizontalMargin: (json['horizontalMargin'] as num?)?.toDouble() ?? 0,
+  verticalMargin: (json['verticalMargin'] as num?)?.toDouble() ?? 0,
+  horizontalPadding: (json['horizontalPadding'] as num?)?.toDouble() ?? 0,
+  verticalPadding: (json['verticalPadding'] as num?)?.toDouble() ?? 0,
 );
 
 Map<String, dynamic> _$MessageWidgetSettingsToJson(
   MessageWidgetSettings instance,
 ) => <String, dynamic>{
+  'type': _$WidgetTypeEnumMap[instance.type]!,
+  'decoration': instance.decoration,
+  'horizontalPadding': instance.horizontalPadding,
+  'verticalPadding': instance.verticalPadding,
+  'horizontalMargin': instance.horizontalMargin,
+  'verticalMargin': instance.verticalMargin,
   'fontSize': instance.fontSize,
   'fontFamily': instance.fontFamily,
   'message': instance.message,
   'alignment': _$AlignmentCEnumMap[instance.alignment]!,
 };
 
-TimerWidgetSettings _$TimerWidgetSettingsFromJson(Map<String, dynamic> json) => TimerWidgetSettings(
-  fontSize: (json['fontSize'] as num?)?.toDouble() ?? 100,
-  fontFamily: json['fontFamily'] as String? ?? FontFamilies.product,
-  textBefore: json['textBefore'] as String? ?? '',
-  textAfter: json['textAfter'] as String? ?? '',
-  time: dateTimeFromJson((json['time'] as num).toInt()),
-  alignment: $enumDecodeNullable(_$AlignmentCEnumMap, json['alignment']) ?? AlignmentC.center,
-  format: $enumDecodeNullable(_$TimerFormatEnumMap, json['format']) ?? TimerFormat.descriptive,
-);
+TimerWidgetSettings _$TimerWidgetSettingsFromJson(Map<String, dynamic> json) =>
+    TimerWidgetSettings(
+      fontSize: (json['fontSize'] as num?)?.toDouble() ?? 100,
+      fontFamily: json['fontFamily'] as String? ?? FontFamilies.product,
+      textBefore: json['textBefore'] as String? ?? '',
+      textAfter: json['textAfter'] as String? ?? '',
+      time: dateTimeFromJson((json['time'] as num).toInt()),
+      alignment:
+          $enumDecodeNullable(_$AlignmentCEnumMap, json['alignment']) ??
+          AlignmentC.center,
+      format:
+          $enumDecodeNullable(_$TimerFormatEnumMap, json['format']) ??
+          TimerFormat.descriptive,
+      decoration: json['decoration'] == null
+          ? const NoDecoration()
+          : WidgetDecoration.fromJson(
+              json['decoration'] as Map<String, dynamic>,
+            ),
+      horizontalMargin: (json['horizontalMargin'] as num?)?.toDouble() ?? 0,
+      verticalMargin: (json['verticalMargin'] as num?)?.toDouble() ?? 0,
+      horizontalPadding: (json['horizontalPadding'] as num?)?.toDouble() ?? 0,
+      verticalPadding: (json['verticalPadding'] as num?)?.toDouble() ?? 0,
+    );
 
 Map<String, dynamic> _$TimerWidgetSettingsToJson(
   TimerWidgetSettings instance,
 ) => <String, dynamic>{
+  'type': _$WidgetTypeEnumMap[instance.type]!,
+  'decoration': instance.decoration,
+  'horizontalPadding': instance.horizontalPadding,
+  'verticalPadding': instance.verticalPadding,
+  'horizontalMargin': instance.horizontalMargin,
+  'verticalMargin': instance.verticalMargin,
   'fontSize': instance.fontSize,
   'fontFamily': instance.fontFamily,
   'textBefore': instance.textBefore,
@@ -139,9 +284,15 @@ WeatherWidgetSettings _$WeatherWidgetSettingsFromJson(
 ) => WeatherWidgetSettings(
   fontSize: (json['fontSize'] as num?)?.toDouble() ?? 100,
   fontFamily: json['fontFamily'] as String? ?? FontFamilies.product,
-  alignment: $enumDecodeNullable(_$AlignmentCEnumMap, json['alignment']) ?? AlignmentC.center,
-  format: $enumDecodeNullable(_$WeatherFormatEnumMap, json['format']) ?? WeatherFormat.temperatureAndSummary,
-  temperatureUnit: $enumDecodeNullable(_$TemperatureUnitEnumMap, json['temperatureUnit']) ?? TemperatureUnit.celsius,
+  alignment:
+      $enumDecodeNullable(_$AlignmentCEnumMap, json['alignment']) ??
+      AlignmentC.center,
+  format:
+      $enumDecodeNullable(_$WeatherFormatEnumMap, json['format']) ??
+      WeatherFormat.temperatureAndSummary,
+  temperatureUnit:
+      $enumDecodeNullable(_$TemperatureUnitEnumMap, json['temperatureUnit']) ??
+      TemperatureUnit.celsius,
   location: json['location'] == null
       ? const Location(
           name: 'Tokyo',
@@ -151,11 +302,24 @@ WeatherWidgetSettings _$WeatherWidgetSettingsFromJson(
           countryCode: 'JP',
         )
       : Location.fromJson(json['location'] as Map<String, dynamic>),
+  decoration: json['decoration'] == null
+      ? const NoDecoration()
+      : WidgetDecoration.fromJson(json['decoration'] as Map<String, dynamic>),
+  horizontalMargin: (json['horizontalMargin'] as num?)?.toDouble() ?? 0,
+  verticalMargin: (json['verticalMargin'] as num?)?.toDouble() ?? 0,
+  horizontalPadding: (json['horizontalPadding'] as num?)?.toDouble() ?? 0,
+  verticalPadding: (json['verticalPadding'] as num?)?.toDouble() ?? 0,
 );
 
 Map<String, dynamic> _$WeatherWidgetSettingsToJson(
   WeatherWidgetSettings instance,
 ) => <String, dynamic>{
+  'type': _$WidgetTypeEnumMap[instance.type]!,
+  'decoration': instance.decoration,
+  'horizontalPadding': instance.horizontalPadding,
+  'verticalPadding': instance.verticalPadding,
+  'horizontalMargin': instance.horizontalMargin,
+  'verticalMargin': instance.verticalMargin,
   'fontSize': instance.fontSize,
   'fontFamily': instance.fontFamily,
   'alignment': _$AlignmentCEnumMap[instance.alignment]!,
@@ -194,20 +358,37 @@ DigitalDateWidgetSettings _$DigitalDateWidgetSettingsFromJson(
   Map<String, dynamic> json,
 ) => DigitalDateWidgetSettings(
   fontSize: (json['fontSize'] as num?)?.toDouble() ?? 100,
-  separator: $enumDecodeNullable(_$DateSeparatorEnumMap, json['separator']) ?? DateSeparator.slash,
-  borderType: $enumDecodeNullable(_$BorderTypeEnumMap, json['borderType']) ?? BorderType.none,
+  separator:
+      $enumDecodeNullable(_$DateSeparatorEnumMap, json['separator']) ??
+      DateSeparator.slash,
   fontFamily: json['fontFamily'] as String? ?? FontFamilies.product,
-  alignment: $enumDecodeNullable(_$AlignmentCEnumMap, json['alignment']) ?? AlignmentC.center,
-  format: $enumDecodeNullable(_$DateFormatEnumMap, json['format']) ?? DateFormat.dayMonthYear,
+  alignment:
+      $enumDecodeNullable(_$AlignmentCEnumMap, json['alignment']) ??
+      AlignmentC.center,
+  format:
+      $enumDecodeNullable(_$DateFormatEnumMap, json['format']) ??
+      DateFormat.dayMonthYear,
   customFormat: json['customFormat'] as String? ?? 'MMMM dd, yyyy',
+  decoration: json['decoration'] == null
+      ? const NoDecoration()
+      : WidgetDecoration.fromJson(json['decoration'] as Map<String, dynamic>),
+  horizontalMargin: (json['horizontalMargin'] as num?)?.toDouble() ?? 0,
+  verticalMargin: (json['verticalMargin'] as num?)?.toDouble() ?? 0,
+  horizontalPadding: (json['horizontalPadding'] as num?)?.toDouble() ?? 0,
+  verticalPadding: (json['verticalPadding'] as num?)?.toDouble() ?? 0,
 );
 
 Map<String, dynamic> _$DigitalDateWidgetSettingsToJson(
   DigitalDateWidgetSettings instance,
 ) => <String, dynamic>{
+  'type': _$WidgetTypeEnumMap[instance.type]!,
+  'decoration': instance.decoration,
+  'horizontalPadding': instance.horizontalPadding,
+  'verticalPadding': instance.verticalPadding,
+  'horizontalMargin': instance.horizontalMargin,
+  'verticalMargin': instance.verticalMargin,
   'fontSize': instance.fontSize,
   'separator': _$DateSeparatorEnumMap[instance.separator]!,
-  'borderType': _$BorderTypeEnumMap[instance.borderType]!,
   'fontFamily': instance.fontFamily,
   'alignment': _$AlignmentCEnumMap[instance.alignment]!,
   'format': _$DateFormatEnumMap[instance.format]!,

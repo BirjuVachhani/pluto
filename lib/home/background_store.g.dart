@@ -47,10 +47,11 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
   Computed<Background?>? _$currentImageComputed;
 
   @override
-  Background? get currentImage => (_$currentImageComputed ??= Computed<Background?>(
-    () => super.currentImage,
-    name: '_BackgroundStore.currentImage',
-  )).value;
+  Background? get currentImage =>
+      (_$currentImageComputed ??= Computed<Background?>(
+        () => super.currentImage,
+        name: '_BackgroundStore.currentImage',
+      )).value;
 
   late final _$_isLoadingImageAtom = Atom(
     name: '_BackgroundStore._isLoadingImage',
@@ -167,7 +168,8 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
   }
 
   @override
-  ObservableMap<String, LikedBackground> get _likedBackgrounds => likedBackgrounds;
+  ObservableMap<String, LikedBackground> get _likedBackgrounds =>
+      likedBackgrounds;
 
   @override
   set _likedBackgrounds(ObservableMap<String, LikedBackground> value) {
@@ -544,6 +546,46 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
     });
   }
 
+  late final _$_imageColorsAtom = Atom(
+    name: '_BackgroundStore._imageColors',
+    context: context,
+  );
+
+  ObservableMap<String, Color> get imageColors {
+    _$_imageColorsAtom.reportRead();
+    return super._imageColors;
+  }
+
+  @override
+  ObservableMap<String, Color> get _imageColors => imageColors;
+
+  @override
+  set _imageColors(ObservableMap<String, Color> value) {
+    _$_imageColorsAtom.reportWrite(value, super._imageColors, () {
+      super._imageColors = value;
+    });
+  }
+
+  late final _$_extractingPaletteAtom = Atom(
+    name: '_BackgroundStore._extractingPalette',
+    context: context,
+  );
+
+  bool get extractingPalette {
+    _$_extractingPaletteAtom.reportRead();
+    return super._extractingPalette;
+  }
+
+  @override
+  bool get _extractingPalette => extractingPalette;
+
+  @override
+  set _extractingPalette(bool value) {
+    _$_extractingPaletteAtom.reportWrite(value, super._extractingPalette, () {
+      super._extractingPalette = value;
+    });
+  }
+
   late final _$initializeImagesAsyncAction = AsyncAction(
     '_BackgroundStore.initializeImages',
     context: context,
@@ -575,6 +617,18 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
   Future<void> onChangeBackground({bool updateAll = false}) {
     return _$onChangeBackgroundAsyncAction.run(
       () => super.onChangeBackground(updateAll: updateAll),
+    );
+  }
+
+  late final _$extractPaletteColorsAsyncAction = AsyncAction(
+    '_BackgroundStore.extractPaletteColors',
+    context: context,
+  );
+
+  @override
+  Future<void> extractPaletteColors() {
+    return _$extractPaletteColorsAsyncAction.run(
+      () => super.extractPaletteColors(),
     );
   }
 
