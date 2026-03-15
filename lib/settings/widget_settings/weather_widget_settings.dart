@@ -17,6 +17,7 @@ import '../../ui/custom_slider.dart';
 import '../../ui/text_input.dart';
 import '../../utils/custom_observer.dart';
 import '../../utils/geocoding_service.dart';
+import 'settings_section_header.dart';
 
 class WeatherWidgetSettingsView extends StatelessWidget {
   const WeatherWidgetSettingsView({super.key});
@@ -25,8 +26,11 @@ class WeatherWidgetSettingsView extends StatelessWidget {
   Widget build(BuildContext context) {
     final settings = context.read<WidgetStore>().weatherSettings;
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         const SizedBox(height: 16),
+        const SettingsSectionHeader(title: 'Typography'),
+        const SizedBox(height: 12),
         LabeledObserver(
           label: 'Font',
           builder: (context) {
@@ -34,24 +38,34 @@ class WeatherWidgetSettingsView extends StatelessWidget {
               isExpanded: true,
               value: settings.fontFamily,
               items: FontFamilies.fonts,
+              itemBuilder: (context, family) => Text(
+                family,
+                style: TextStyle(fontFamily: family),
+              ),
+              selectedItemBuilder: (context, family) => Text(
+                family,
+                style: TextStyle(fontFamily: family),
+              ),
               onSelected: (family) => settings.update(() => settings.fontFamily = family),
             );
           },
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 10),
         LabeledObserver(
-          label: 'Font size',
+          label: 'Size',
           builder: (context) {
             return CustomSlider(
               min: 10,
               max: 400,
-              valueLabel: '${settings.fontSize.floor().toString()} px',
+              valueLabel: '${settings.fontSize.floor()} px',
               value: settings.fontSize,
               onChanged: (value) => settings.update(() => settings.fontSize = value.floorToDouble()),
             );
           },
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 20),
+        const SettingsSectionHeader(title: 'Layout'),
+        const SizedBox(height: 12),
         LabeledObserver(
           label: 'Position',
           builder: (context) {
@@ -61,7 +75,9 @@ class WeatherWidgetSettingsView extends StatelessWidget {
             );
           },
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 20),
+        const SettingsSectionHeader(title: 'Display'),
+        const SizedBox(height: 12),
         LabeledObserver(
           label: 'Format',
           builder: (context) {
@@ -74,9 +90,22 @@ class WeatherWidgetSettingsView extends StatelessWidget {
             );
           },
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 10),
         LabeledObserver(
-          label: 'Location (city)',
+          label: 'Temperature unit',
+          builder: (context) {
+            return CustomDropdown<TemperatureUnit>(
+              isExpanded: true,
+              value: settings.temperatureUnit,
+              items: TemperatureUnit.values,
+              itemBuilder: (context, item) => Text(item.label),
+              onSelected: (unit) => settings.update(() => settings.temperatureUnit = unit),
+            );
+          },
+        ),
+        const SizedBox(height: 10),
+        LabeledObserver(
+          label: 'Location',
           builder: (context) {
             return LocationAutoCompleteField(
               key: ValueKey(settings.location),
@@ -91,20 +120,7 @@ class WeatherWidgetSettingsView extends StatelessWidget {
             );
           },
         ),
-        const SizedBox(height: 16),
-        LabeledObserver(
-          label: 'Temperature unit',
-          builder: (context) {
-            return CustomDropdown<TemperatureUnit>(
-              isExpanded: true,
-              value: settings.temperatureUnit,
-              items: TemperatureUnit.values,
-              itemBuilder: (context, item) => Text(item.label),
-              onSelected: (unit) => settings.update(() => settings.temperatureUnit = unit),
-            );
-          },
-        ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 20),
       ],
     );
   }
@@ -152,7 +168,6 @@ class _LocationAutoCompleteFieldState extends State<LocationAutoCompleteField> {
           optionsMaxHeight: 180,
           displayStringForOption: (option) => '${option.name}, ${option.country}',
           onSelected: (item) {
-            // log('onSelected: $item');
             _deBouncer.cancel();
             if (item is _EmptyLocation) return;
             if (item is _LocationError) return;
@@ -177,47 +192,41 @@ class _LocationAutoCompleteFieldState extends State<LocationAutoCompleteField> {
               }
             });
           },
-          fieldViewBuilder:
-              (
-                context,
-                textEditingController,
-                focusNode,
-                onFieldSubmitted,
-              ) {
-                return TextInput(
-                  controller: textEditingController,
-                  focusNode: focusNode,
-                  showInitialBorder: false,
-                  suffixIcon: ValueListenableBuilder<bool>(
-                    valueListenable: loadingNotifier,
-                    builder: (context, loading, child) {
-                      return loading && focusNode.hasFocus
-                          ? Align(
-                              alignment: Alignment.center,
-                              widthFactor: 1,
-                              child: CupertinoActivityIndicator(
-                                radius: 8,
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                            )
-                          : const SizedBox.shrink();
-                    },
-                  ),
-                  onSubmitted: (value) {
-                    onFieldSubmitted();
-                    if (value.trim().isEmpty) {
-                      textEditingController.text = widget.location.name;
-                    }
-                    return true;
-                  },
-                  onFocusLost: () {
-                    _deBouncer.cancel();
-                    if (textEditingController.text != widget.location.name) {
-                      textEditingController.text = widget.location.name;
-                    }
-                  },
-                );
+          fieldViewBuilder: (context, textEditingController, focusNode, onFieldSubmitted) {
+            return TextInput(
+              controller: textEditingController,
+              focusNode: focusNode,
+              showInitialBorder: false,
+              suffixIcon: ValueListenableBuilder<bool>(
+                valueListenable: loadingNotifier,
+                builder: (context, loading, child) {
+                  return loading && focusNode.hasFocus
+                      ? Align(
+                          alignment: Alignment.center,
+                          widthFactor: 1,
+                          child: CupertinoActivityIndicator(
+                            radius: 8,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        )
+                      : const SizedBox.shrink();
+                },
+              ),
+              onSubmitted: (value) {
+                onFieldSubmitted();
+                if (value.trim().isEmpty) {
+                  textEditingController.text = widget.location.name;
+                }
+                return true;
               },
+              onFocusLost: () {
+                _deBouncer.cancel();
+                if (textEditingController.text != widget.location.name) {
+                  textEditingController.text = widget.location.name;
+                }
+              },
+            );
+          },
           optionsViewBuilder: (context, onSelected, options) {
             return Align(
               alignment: Alignment.topLeft,
@@ -253,7 +262,7 @@ class _LocationAutoCompleteFieldState extends State<LocationAutoCompleteField> {
                               alignment: Alignment.center,
                               heightFactor: 1,
                               child: Text(
-                                'No Options',
+                                'No results',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w400,
                                   color: Colors.grey.shade400,
@@ -269,7 +278,7 @@ class _LocationAutoCompleteFieldState extends State<LocationAutoCompleteField> {
                               alignment: Alignment.center,
                               heightFactor: 1,
                               child: Text(
-                                'Failed to fetch locations',
+                                'Could not load locations',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w400,
                                   color: Colors.red.shade400,
@@ -282,9 +291,7 @@ class _LocationAutoCompleteFieldState extends State<LocationAutoCompleteField> {
                         return Material(
                           type: MaterialType.transparency,
                           child: InkWell(
-                            onTap: () {
-                              onSelected(location);
-                            },
+                            onTap: () => onSelected(location),
                             overlayColor: WidgetStateProperty.all(Colors.grey.withValues(alpha: 0.15)),
                             child: Container(
                               color: selected ? Theme.of(context).colorScheme.primary : Colors.transparent,
@@ -379,17 +386,12 @@ class _LocationAutoCompleteFieldState extends State<LocationAutoCompleteField> {
 typedef AsyncDeBounceAction<T> = Future<T> Function();
 
 class AsyncDeBouncer {
-  /// de-bounce period
   final Duration duration;
-
   Timer? _timer;
-
   Completer? _completer;
 
-  /// Allows to create an instance with optional [Duration]
   AsyncDeBouncer([Duration? duration]) : duration = duration ?? const Duration(milliseconds: 300);
 
-  /// Runs [action] after debounced interval.
   Future<T> run<T>(AsyncDeBounceAction<T> action) {
     _completer ??= Completer<T>();
     _timer?.cancel();
@@ -402,10 +404,8 @@ class AsyncDeBouncer {
     return (_completer as Completer<T>).future;
   }
 
-  /// alias for [run]
   Future<T> call<T>(AsyncDeBounceAction<T> action) => run.call(action);
 
-  /// Allows to cancel current timer.
   void cancel() {
     _timer?.cancel();
   }

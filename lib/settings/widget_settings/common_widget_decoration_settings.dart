@@ -7,6 +7,7 @@ import '../../model/widget_settings.dart';
 import '../../ui/custom_dropdown.dart';
 import '../../ui/custom_slider.dart';
 import '../../utils/custom_observer.dart';
+import 'settings_section_header.dart';
 
 /// A reusable settings section for the common widget decoration properties:
 /// background type (none / color / glass / border), border radius,
@@ -25,7 +26,7 @@ class CommonWidgetDecorationSettings extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
-        const _SectionHeader(title: 'Appearance'),
+        const SettingsSectionHeader(title: 'Appearance'),
         const SizedBox(height: 12),
         LabeledObserver(
           label: 'Background',
@@ -94,72 +95,46 @@ class CommonWidgetDecorationSettings extends StatelessWidget {
           },
         ),
         const SizedBox(height: 20),
-        const _SectionHeader(title: 'Spacing'),
+        const SettingsSectionHeader(title: 'Spacing'),
         const SizedBox(height: 12),
         LabeledObserver(
-          label: 'Horizontal Padding',
+          label: 'Padding',
           builder: (context) {
-            return CustomSlider(
-              min: 0,
+            return _LinkedSliderPair(
+              horizontalValue: settings.horizontalPadding,
+              verticalValue: settings.verticalPadding,
               max: 200,
-              valueLabel: '${settings.horizontalPadding.floor()} px',
-              value: settings.horizontalPadding,
-              onChanged: (value) {
-                settings.update(
-                  () => settings.horizontalPadding = value.floorToDouble(),
-                );
-              },
+              onHorizontalChanged: (v) => settings.update(
+                () => settings.horizontalPadding = v.floorToDouble(),
+              ),
+              onVerticalChanged: (v) => settings.update(
+                () => settings.verticalPadding = v.floorToDouble(),
+              ),
+              onBothChanged: (v) => settings.update(() {
+                settings.horizontalPadding = v.floorToDouble();
+                settings.verticalPadding = v.floorToDouble();
+              }),
             );
           },
         ),
         const SizedBox(height: 16),
         LabeledObserver(
-          label: 'Vertical Padding',
+          label: 'Margin',
           builder: (context) {
-            return CustomSlider(
-              min: 0,
+            return _LinkedSliderPair(
+              horizontalValue: settings.horizontalMargin,
+              verticalValue: settings.verticalMargin,
               max: 200,
-              valueLabel: '${settings.verticalPadding.floor()} px',
-              value: settings.verticalPadding,
-              onChanged: (value) {
-                settings.update(
-                  () => settings.verticalPadding = value.floorToDouble(),
-                );
-              },
-            );
-          },
-        ),
-        const SizedBox(height: 16),
-        LabeledObserver(
-          label: 'Horizontal Margin',
-          builder: (context) {
-            return CustomSlider(
-              min: 0,
-              max: 200,
-              valueLabel: '${settings.horizontalMargin.floor()} px',
-              value: settings.horizontalMargin,
-              onChanged: (value) {
-                settings.update(
-                  () => settings.horizontalMargin = value.floorToDouble(),
-                );
-              },
-            );
-          },
-        ),
-        const SizedBox(height: 16),
-        LabeledObserver(
-          label: 'Vertical Margin',
-          builder: (context) {
-            return CustomSlider(
-              min: 0,
-              max: 200,
-              valueLabel: '${settings.verticalMargin.floor()} px',
-              value: settings.verticalMargin,
-              onChanged: (value) {
-                settings.update(
-                  () => settings.verticalMargin = value.floorToDouble(),
-                );
-              },
+              onHorizontalChanged: (v) => settings.update(
+                () => settings.horizontalMargin = v.floorToDouble(),
+              ),
+              onVerticalChanged: (v) => settings.update(
+                () => settings.verticalMargin = v.floorToDouble(),
+              ),
+              onBothChanged: (v) => settings.update(() {
+                settings.horizontalMargin = v.floorToDouble();
+                settings.verticalMargin = v.floorToDouble();
+              }),
             );
           },
         ),
@@ -223,25 +198,6 @@ class CommonWidgetDecorationSettings extends StatelessWidget {
         imageColorId: d.imageColorId,
       ),
     };
-  }
-}
-
-class _SectionHeader extends StatelessWidget {
-  final String title;
-
-  const _SectionHeader({required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      title,
-      style: TextStyle(
-        fontSize: 11,
-        fontWeight: FontWeight.w600,
-        letterSpacing: 0.8,
-        color: Colors.white.withValues(alpha: 0.4),
-      ),
-    );
   }
 }
 
@@ -624,8 +580,8 @@ class _ColorSwatchPicker extends StatelessWidget {
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
-        width: 24,
-        height: 24,
+        width: 28,
+        height: 28,
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(4),
@@ -633,6 +589,118 @@ class _ColorSwatchPicker extends StatelessWidget {
             color: isSelected ? Theme.of(context).colorScheme.primary : Colors.white.withValues(alpha: 0.15),
             width: isSelected ? 2 : 0.5,
           ),
+        ),
+      ),
+    );
+  }
+}
+
+/// A linked slider pair for horizontal/vertical values.
+/// Starts as a single unified slider. A link toggle splits it
+/// into independent H/V sliders.
+class _LinkedSliderPair extends StatefulWidget {
+  final double horizontalValue;
+  final double verticalValue;
+  final double max;
+  final ValueChanged<double> onHorizontalChanged;
+  final ValueChanged<double> onVerticalChanged;
+  final ValueChanged<double> onBothChanged;
+
+  const _LinkedSliderPair({
+    required this.horizontalValue,
+    required this.verticalValue,
+    required this.max,
+    required this.onHorizontalChanged,
+    required this.onVerticalChanged,
+    required this.onBothChanged,
+  });
+
+  @override
+  State<_LinkedSliderPair> createState() => _LinkedSliderPairState();
+}
+
+class _LinkedSliderPairState extends State<_LinkedSliderPair> {
+  late bool _linked = widget.horizontalValue == widget.verticalValue;
+
+  @override
+  Widget build(BuildContext context) {
+    if (_linked) {
+      return Row(
+        children: [
+          Expanded(
+            child: CustomSlider(
+              min: 0,
+              max: widget.max,
+              valueLabel: '${widget.horizontalValue.floor()} px',
+              value: widget.horizontalValue,
+              onChanged: widget.onBothChanged,
+            ),
+          ),
+          const SizedBox(width: 4),
+          _buildLinkToggle(),
+        ],
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: CustomSlider(
+                min: 0,
+                max: widget.max,
+                valueLabel: 'H ${widget.horizontalValue.floor()} px',
+                value: widget.horizontalValue,
+                onChanged: widget.onHorizontalChanged,
+              ),
+            ),
+            const SizedBox(width: 4),
+            _buildLinkToggle(),
+          ],
+        ),
+        const SizedBox(height: 6),
+        Row(
+          children: [
+            Expanded(
+              child: CustomSlider(
+                min: 0,
+                max: widget.max,
+                valueLabel: 'V ${widget.verticalValue.floor()} px',
+                value: widget.verticalValue,
+                onChanged: widget.onVerticalChanged,
+              ),
+            ),
+            // Spacer for the link button width so sliders align.
+            const SizedBox(width: 36),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLinkToggle() {
+    return SizedBox(
+      width: 32,
+      height: 32,
+      child: IconButton(
+        padding: EdgeInsets.zero,
+        iconSize: 16,
+        tooltip: _linked ? 'Separate horizontal & vertical' : 'Link horizontal & vertical',
+        onPressed: () {
+          setState(() {
+            _linked = !_linked;
+            if (_linked) {
+              // Sync both to the horizontal value.
+              widget.onBothChanged(widget.horizontalValue);
+            }
+          });
+        },
+        icon: Icon(
+          _linked ? Icons.link_rounded : Icons.link_off_rounded,
+          color: Colors.white.withValues(alpha: _linked ? 0.5 : 0.25),
         ),
       ),
     );
@@ -698,8 +766,8 @@ class _ShimmerBox extends StatelessWidget {
     final shimmerCenter = -1.0 + t * 3.0;
 
     return SizedBox(
-      width: 24,
-      height: 24,
+      width: 28,
+      height: 28,
       child: DecoratedBox(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(4),

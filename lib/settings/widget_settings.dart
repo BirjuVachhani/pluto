@@ -28,7 +28,7 @@ class WidgetSettings extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             LabeledObserver(
-              label: 'Widget',
+              label: 'Widget type',
               builder: (context) {
                 return CustomDropdown<WidgetType>(
                   value: store.type,

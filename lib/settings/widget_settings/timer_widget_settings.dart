@@ -13,6 +13,7 @@ import '../../ui/resizable_text_input.dart';
 import '../../ui/text_input.dart';
 import '../../utils/custom_observer.dart';
 import '../../utils/extensions.dart';
+import 'settings_section_header.dart';
 
 class TimerWidgetSettingsView extends StatelessWidget {
   const TimerWidgetSettingsView({super.key});
@@ -21,8 +22,11 @@ class TimerWidgetSettingsView extends StatelessWidget {
   Widget build(BuildContext context) {
     final settings = context.read<WidgetStore>().timerSettings;
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         const SizedBox(height: 16),
+        const SettingsSectionHeader(title: 'Typography'),
+        const SizedBox(height: 12),
         LabeledObserver(
           label: 'Font',
           builder: (context) {
@@ -30,24 +34,34 @@ class TimerWidgetSettingsView extends StatelessWidget {
               isExpanded: true,
               value: settings.fontFamily,
               items: FontFamilies.fonts,
+              itemBuilder: (context, family) => Text(
+                family,
+                style: TextStyle(fontFamily: family),
+              ),
+              selectedItemBuilder: (context, family) => Text(
+                family,
+                style: TextStyle(fontFamily: family),
+              ),
               onSelected: (family) => settings.update(() => settings.fontFamily = family),
             );
           },
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 10),
         LabeledObserver(
-          label: 'Font size',
+          label: 'Size',
           builder: (context) {
             return CustomSlider(
               min: 10,
               max: 400,
-              valueLabel: '${settings.fontSize.floor().toString()} px',
+              valueLabel: '${settings.fontSize.floor()} px',
               value: settings.fontSize,
               onChanged: (value) => settings.update(() => settings.fontSize = value.floorToDouble()),
             );
           },
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 20),
+        const SettingsSectionHeader(title: 'Layout'),
+        const SizedBox(height: 12),
         LabeledObserver(
           label: 'Position',
           builder: (context) {
@@ -57,7 +71,9 @@ class TimerWidgetSettingsView extends StatelessWidget {
             );
           },
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 20),
+        const SettingsSectionHeader(title: 'Display'),
+        const SizedBox(height: 12),
         LabeledObserver(
           label: 'Format',
           builder: (context) {
@@ -70,9 +86,11 @@ class TimerWidgetSettingsView extends StatelessWidget {
             );
           },
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 20),
+        const SettingsSectionHeader(title: 'Content'),
+        const SizedBox(height: 12),
         ResizableTextInput(
-          label: 'Text Before',
+          label: 'Text before',
           initialHeight: 50,
           initialValue: settings.textBefore,
           onChanged: (message) => settings.update(
@@ -81,7 +99,7 @@ class TimerWidgetSettingsView extends StatelessWidget {
           ),
           onSubmitted: (message) => settings.update(() => settings.textBefore = message),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 10),
         Row(
           children: [
             SizedBox(
@@ -147,9 +165,9 @@ class TimerWidgetSettingsView extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 10),
         ResizableTextInput(
-          label: 'Text After',
+          label: 'Text after',
           initialHeight: 100,
           initialValue: settings.textAfter,
           onChanged: (message) => settings.update(
@@ -158,7 +176,7 @@ class TimerWidgetSettingsView extends StatelessWidget {
           ),
           onSubmitted: (message) => settings.update(() => settings.textAfter = message),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 20),
       ],
     );
   }

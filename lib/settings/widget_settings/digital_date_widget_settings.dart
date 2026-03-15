@@ -10,6 +10,7 @@ import '../../ui/custom_slider.dart';
 import '../../ui/text_input.dart';
 import '../../utils/custom_observer.dart';
 import '../../utils/extensions.dart';
+import 'settings_section_header.dart';
 
 class DigitalDateWidgetSettingsView extends StatefulWidget {
   const DigitalDateWidgetSettingsView({super.key});
@@ -27,6 +28,8 @@ class _DigitalDateWidgetSettingsViewState extends State<DigitalDateWidgetSetting
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         const SizedBox(height: 16),
+        const SettingsSectionHeader(title: 'Typography'),
+        const SizedBox(height: 12),
         LabeledObserver(
           label: 'Font',
           builder: (context) {
@@ -34,34 +37,40 @@ class _DigitalDateWidgetSettingsViewState extends State<DigitalDateWidgetSetting
               isExpanded: true,
               value: settings.fontFamily,
               items: FontFamilies.fonts,
+              itemBuilder: (context, family) => Text(
+                family,
+                style: TextStyle(fontFamily: family),
+              ),
+              selectedItemBuilder: (context, family) => Text(
+                family,
+                style: TextStyle(fontFamily: family),
+              ),
               onSelected: (family) {
                 settings.update(() => settings.fontFamily = family);
-                //clockSettings.update(() => clockSettings.fontFamily = family);
               },
             );
           },
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 10),
         LabeledObserver(
-          label: 'Font size',
+          label: 'Size',
           builder: (context) {
             return CustomSlider(
               min: 10,
               max: 400,
-              valueLabel: '${settings.fontSize.floor().toString()} px',
+              valueLabel: '${settings.fontSize.floor()} px',
               value: settings.fontSize,
               onChanged: (value) {
                 settings.update(
                   () => settings.fontSize = value.floorToDouble(),
                 );
-                // clockSettings.update(
-                //   () => clockSettings.fontSize = value.floorToDouble(),
-                // );
               },
             );
           },
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 20),
+        const SettingsSectionHeader(title: 'Layout'),
+        const SizedBox(height: 12),
         LabeledObserver(
           label: 'Position',
           builder: (context) {
@@ -69,12 +78,13 @@ class _DigitalDateWidgetSettingsViewState extends State<DigitalDateWidgetSetting
               alignment: settings.alignment,
               onChanged: (alignment) {
                 settings.update(() => settings.alignment = alignment);
-                //clockSettings.update(() => clockSettings.alignment = alignment);
               },
             );
           },
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 20),
+        const SettingsSectionHeader(title: 'Display'),
+        const SizedBox(height: 12),
         LabeledObserver(
           label: 'Separator',
           builder: (context) {
@@ -90,9 +100,9 @@ class _DigitalDateWidgetSettingsViewState extends State<DigitalDateWidgetSetting
             );
           },
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 10),
         LabeledObserver(
-          label: 'Date Format',
+          label: 'Date format',
           builder: (context) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -105,7 +115,7 @@ class _DigitalDateWidgetSettingsViewState extends State<DigitalDateWidgetSetting
                   onSelected: (value) => settings.update(() => settings.format = value),
                 ),
                 if (settings.format == DateFormat.custom) ...[
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 10),
                   const Text('Template'),
                   const SizedBox(height: 10),
                   TextInput(
@@ -122,7 +132,7 @@ class _DigitalDateWidgetSettingsViewState extends State<DigitalDateWidgetSetting
             );
           },
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 20),
       ],
     );
   }

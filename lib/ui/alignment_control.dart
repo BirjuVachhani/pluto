@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 
 import '../model/widget_settings.dart';
-import 'custom_dropdown.dart';
+import '../resources/colors.dart';
 
+/// A 3x3 visual grid for picking alignment. Each cell represents a
+/// position (topLeft, center, bottomRight, etc.). The selected cell
+/// is highlighted with the primary accent color. Spatial and instant
+/// to understand — no dropdown scanning required.
 class AlignmentControl extends StatelessWidget {
   final String? label;
   final AlignmentC alignment;
@@ -15,8 +19,17 @@ class AlignmentControl extends StatelessWidget {
     required this.onChanged,
   });
 
+  // Grid order: row-major, top-left to bottom-right.
+  static const _grid = [
+    [AlignmentC.topLeft, AlignmentC.topCenter, AlignmentC.topRight],
+    [AlignmentC.centerLeft, AlignmentC.center, AlignmentC.centerRight],
+    [AlignmentC.bottomLeft, AlignmentC.bottomCenter, AlignmentC.bottomRight],
+  ];
+
   @override
   Widget build(BuildContext context) {
+    final primary = Theme.of(context).colorScheme.primary;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -25,73 +38,67 @@ class AlignmentControl extends StatelessWidget {
           Text(label!),
           const SizedBox(height: 10),
         ],
-        Row(
-          children: [
-            // AlignmentUI(
-            //   size: 100,
-            //   alignment: alignment,
-            //   onChanged: onChanged,
-            // ),
-            // const SizedBox(width: 16),
-            Expanded(
-              child: CustomDropdown<AlignmentC>(
-                key: ValueKey(alignment),
-                // label: 'Alignment',
-                value: alignment,
-                isExpanded: true,
-                items: AlignmentC.values,
-                itemBuilder: (context, alignment) => Text(alignment.label),
-                onSelected: onChanged,
+        Align(
+          alignment: Alignment.center,
+          child: FractionallySizedBox(
+            widthFactor: 1,
+            child: AspectRatio(
+              aspectRatio: 2,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: AppColors.borderColor.withValues(alpha: 0.25),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                padding: const EdgeInsets.all(4),
+                child: Column(
+                  children: List.generate(3, (row) {
+                    return Expanded(
+                      child: Row(
+                        children: List.generate(3, (col) {
+                          final cell = _grid[row][col];
+                          final selected = cell == alignment;
+
+                          return Expanded(
+                            child: GestureDetector(
+                              onTap: () => onChanged(cell),
+                              child: MouseRegion(
+                                cursor: SystemMouseCursors.click,
+                                child: Tooltip(
+                                  message: cell.label,
+                                  waitDuration: const Duration(milliseconds: 400),
+                                  child: AnimatedContainer(
+                                    duration: const Duration(milliseconds: 120),
+                                    margin: const EdgeInsets.all(2),
+                                    decoration: BoxDecoration(
+                                      color: selected ? primary : Colors.white.withValues(alpha: 0.06),
+                                      borderRadius: BorderRadius.circular(3),
+                                    ),
+                                    child: Center(
+                                      child: AnimatedContainer(
+                                        duration: const Duration(milliseconds: 120),
+                                        width: 6,
+                                        height: 6,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: selected ? Colors.white : Colors.white.withValues(alpha: 0.2),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        }),
+                      ),
+                    );
+                  }),
+                ),
               ),
             ),
-          ],
+          ),
         ),
       ],
-    );
-  }
-}
-
-class AlignmentUI extends StatefulWidget {
-  final double size;
-  final AlignmentC alignment;
-  final ValueChanged<AlignmentC> onChanged;
-
-  const AlignmentUI({
-    super.key,
-    required this.alignment,
-    required this.onChanged,
-    required this.size,
-  });
-
-  @override
-  State<AlignmentUI> createState() => _AlignmentUIState();
-}
-
-class _AlignmentUIState extends State<AlignmentUI> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: widget.size,
-      height: widget.size,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.black),
-        color: Colors.grey.shade100,
-      ),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final centerBoxSize = constraints.maxWidth / 3;
-          return Center(
-            child: Container(
-              width: centerBoxSize,
-              height: centerBoxSize,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.black),
-              ),
-            ),
-          );
-        },
-      ),
     );
   }
 }

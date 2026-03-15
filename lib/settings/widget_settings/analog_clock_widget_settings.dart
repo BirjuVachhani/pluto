@@ -6,6 +6,7 @@ import '../../ui/alignment_control.dart';
 import '../../ui/custom_slider.dart';
 import '../../ui/custom_switch.dart';
 import '../../utils/custom_observer.dart';
+import 'settings_section_header.dart';
 
 class AnalogClockWidgetSettingsView extends StatelessWidget {
   const AnalogClockWidgetSettingsView({super.key});
@@ -14,8 +15,11 @@ class AnalogClockWidgetSettingsView extends StatelessWidget {
   Widget build(BuildContext context) {
     final settings = context.read<WidgetStore>().analogueClockSettings;
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         const SizedBox(height: 16),
+        const SettingsSectionHeader(title: 'Size'),
+        const SizedBox(height: 12),
         LabeledObserver(
           label: 'Radius',
           builder: (context) {
@@ -28,7 +32,9 @@ class AnalogClockWidgetSettingsView extends StatelessWidget {
             );
           },
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 20),
+        const SettingsSectionHeader(title: 'Layout'),
+        const SizedBox(height: 12),
         LabeledObserver(
           label: 'Position',
           builder: (context) {
@@ -38,12 +44,14 @@ class AnalogClockWidgetSettingsView extends StatelessWidget {
             );
           },
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 20),
+        const SettingsSectionHeader(title: 'Display'),
+        const SizedBox(height: 4),
         CustomObserver(
           name: 'Show seconds',
           builder: (context) {
             return CustomSwitch(
-              label: 'Show seconds',
+              label: 'Seconds hand',
               value: settings.showSecondsHand,
               onChanged: (value) => settings.update(() => settings.showSecondsHand = value),
             );
@@ -54,13 +62,13 @@ class AnalogClockWidgetSettingsView extends StatelessWidget {
           name: 'Colored Second Hand',
           builder: (context) {
             return CustomSwitch(
-              label: 'Colored Second Hand',
+              label: 'Colored seconds hand',
               value: settings.coloredSecondHand,
               onChanged: (value) => settings.update(() => settings.coloredSecondHand = value),
             );
           },
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 20),
       ],
     );
   }

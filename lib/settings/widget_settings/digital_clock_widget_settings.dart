@@ -9,6 +9,7 @@ import '../../ui/custom_dropdown.dart';
 import '../../ui/custom_slider.dart';
 import '../../utils/custom_observer.dart';
 import '../../utils/extensions.dart';
+import 'settings_section_header.dart';
 
 class DigitalClockWidgetSettingsView extends StatelessWidget {
   const DigitalClockWidgetSettingsView({super.key});
@@ -21,6 +22,8 @@ class DigitalClockWidgetSettingsView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         const SizedBox(height: 16),
+        const SettingsSectionHeader(title: 'Typography'),
+        const SizedBox(height: 12),
         LabeledObserver(
           label: 'Font',
           builder: (context) {
@@ -28,18 +31,26 @@ class DigitalClockWidgetSettingsView extends StatelessWidget {
               isExpanded: true,
               value: settings.fontFamily,
               items: FontFamilies.fonts,
+              itemBuilder: (context, family) => Text(
+                family,
+                style: TextStyle(fontFamily: family),
+              ),
+              selectedItemBuilder: (context, family) => Text(
+                family,
+                style: TextStyle(fontFamily: family),
+              ),
               onSelected: (family) => settings.update(() => settings.fontFamily = family),
             );
           },
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 10),
         LabeledObserver(
-          label: 'Font size',
+          label: 'Size',
           builder: (context) {
             return CustomSlider(
               min: 10,
               max: 400,
-              valueLabel: '${settings.fontSize.floor().toString()} px',
+              valueLabel: '${settings.fontSize.floor()} px',
               value: settings.fontSize,
               onChanged: (value) => settings.update(
                 () => settings.fontSize = value.floorToDouble(),
@@ -47,7 +58,9 @@ class DigitalClockWidgetSettingsView extends StatelessWidget {
             );
           },
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 20),
+        const SettingsSectionHeader(title: 'Layout'),
+        const SizedBox(height: 12),
         LabeledObserver(
           label: 'Position',
           builder: (context) {
@@ -57,7 +70,9 @@ class DigitalClockWidgetSettingsView extends StatelessWidget {
             );
           },
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 20),
+        const SettingsSectionHeader(title: 'Display'),
+        const SizedBox(height: 12),
         LabeledObserver(
           label: 'Separator',
           builder: (context) {
@@ -70,7 +85,7 @@ class DigitalClockWidgetSettingsView extends StatelessWidget {
             );
           },
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 10),
         LabeledObserver(
           label: 'Format',
           builder: (context) {
@@ -83,7 +98,7 @@ class DigitalClockWidgetSettingsView extends StatelessWidget {
             );
           },
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 20),
       ],
     );
   }
