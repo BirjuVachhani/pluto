@@ -54,14 +54,14 @@ class PexelsClient {
   /// If no [client] is provided, a default [http.Client] is created
   /// and will be closed when [close] is called.
   PexelsClient({required this.apiKey, http.Client? client, this.maxRetries = 3})
-      : _client = client ?? http.Client(),
-        _ownsClient = client == null;
+    : _client = client ?? http.Client(),
+      _ownsClient = client == null;
 
   Map<String, String> get _headers => {
-        'Accept': 'application/json',
-        'User-Agent': 'Pexels/Dart',
-        'Authorization': apiKey,
-      };
+    'Accept': 'application/json',
+    'User-Agent': 'Pexels/Dart',
+    'Authorization': apiKey,
+  };
 
   // ---------------------------------------------------------------------------
   // Photos
@@ -87,15 +87,19 @@ class PexelsClient {
     String? color,
     String? locale,
   }) async {
-    final json = await _get(_photoBaseUrl, '/search', _params({
-      'query': query,
-      'page': page,
-      'per_page': perPage,
-      'orientation': orientation,
-      'size': size,
-      'color': color,
-      'locale': locale,
-    }));
+    final json = await _get(
+      _photoBaseUrl,
+      '/search',
+      _params({
+        'query': query,
+        'page': page,
+        'per_page': perPage,
+        'orientation': orientation,
+        'size': size,
+        'color': color,
+        'locale': locale,
+      }),
+    );
     return PhotoList.fromJson(json);
   }
 
@@ -105,10 +109,11 @@ class PexelsClient {
   /// - [page]: The page number to return (default: 1).
   /// - [perPage]: The number of results per page (default: 15, max: 80).
   Future<PhotoList> getCuratedPhotos({int? page, int? perPage}) async {
-    final json = await _get(_photoBaseUrl, '/curated', _params({
-      'page': page,
-      'per_page': perPage,
-    }));
+    final json = await _get(
+      _photoBaseUrl,
+      '/curated',
+      _params({'page': page, 'per_page': perPage}),
+    );
     return PhotoList.fromJson(json);
   }
 
@@ -161,18 +166,22 @@ class PexelsClient {
     int? minDuration,
     int? maxDuration,
   }) async {
-    final json = await _get(_videoBaseUrl, '/search', _params({
-      'query': query,
-      'page': page,
-      'per_page': perPage,
-      'orientation': orientation,
-      'size': size,
-      'locale': locale,
-      'min_width': minWidth,
-      'max_width': maxWidth,
-      'min_duration': minDuration,
-      'max_duration': maxDuration,
-    }));
+    final json = await _get(
+      _videoBaseUrl,
+      '/search',
+      _params({
+        'query': query,
+        'page': page,
+        'per_page': perPage,
+        'orientation': orientation,
+        'size': size,
+        'locale': locale,
+        'min_width': minWidth,
+        'max_width': maxWidth,
+        'min_duration': minDuration,
+        'max_duration': maxDuration,
+      }),
+    );
     return VideoList.fromJson(json);
   }
 
@@ -193,14 +202,18 @@ class PexelsClient {
     int? minDuration,
     int? maxDuration,
   }) async {
-    final json = await _get(_videoBaseUrl, '/popular', _params({
-      'page': page,
-      'per_page': perPage,
-      'min_width': minWidth,
-      'max_width': maxWidth,
-      'min_duration': minDuration,
-      'max_duration': maxDuration,
-    }));
+    final json = await _get(
+      _videoBaseUrl,
+      '/popular',
+      _params({
+        'page': page,
+        'per_page': perPage,
+        'min_width': minWidth,
+        'max_width': maxWidth,
+        'min_duration': minDuration,
+        'max_duration': maxDuration,
+      }),
+    );
     return VideoList.fromJson(json);
   }
 
@@ -220,10 +233,11 @@ class PexelsClient {
   /// - [page]: The page number to return (default: 1).
   /// - [perPage]: The number of results per page (default: 15, max: 80).
   Future<CollectionList> getAllCollections({int? page, int? perPage}) async {
-    final json = await _get(_collectionBaseUrl, '', _params({
-      'page': page,
-      'per_page': perPage,
-    }));
+    final json = await _get(
+      _collectionBaseUrl,
+      '',
+      _params({'page': page, 'per_page': perPage}),
+    );
     return CollectionList.fromJson(json);
   }
 
@@ -239,11 +253,11 @@ class PexelsClient {
     int? perPage,
     String? type,
   }) async {
-    final json = await _get(_collectionBaseUrl, '/$id', _params({
-      'page': page,
-      'per_page': perPage,
-      'type': type,
-    }));
+    final json = await _get(
+      _collectionBaseUrl,
+      '/$id',
+      _params({'page': page, 'per_page': perPage, 'type': type}),
+    );
     return CollectionMediaList.fromJson(json);
   }
 
@@ -256,10 +270,11 @@ class PexelsClient {
     int? page,
     int? perPage,
   }) async {
-    final json = await _get(_collectionBaseUrl, '/featured', _params({
-      'page': page,
-      'per_page': perPage,
-    }));
+    final json = await _get(
+      _collectionBaseUrl,
+      '/featured',
+      _params({'page': page, 'per_page': perPage}),
+    );
     return CollectionList.fromJson(json);
   }
 
@@ -283,9 +298,9 @@ class PexelsClient {
     String path,
     Map<String, String> params,
   ) async {
-    final uri = Uri.parse('$baseUrl$path').replace(
-      queryParameters: params.isNotEmpty ? params : null,
-    );
+    final uri = Uri.parse(
+      '$baseUrl$path',
+    ).replace(queryParameters: params.isNotEmpty ? params : null);
 
     for (var attempt = 0; attempt <= maxRetries; attempt++) {
       final response = await _client.get(uri, headers: _headers);
@@ -314,17 +329,11 @@ class PexelsClient {
       } catch (_) {
         // Use the reason phrase if we can't parse the body.
       }
-      throw PexelsException(
-        statusCode: response.statusCode,
-        message: message,
-      );
+      throw PexelsException(statusCode: response.statusCode, message: message);
     }
 
     // Should not be reached, but just in case.
-    throw PexelsException(
-      statusCode: 503,
-      message: 'Max retries exceeded',
-    );
+    throw PexelsException(statusCode: 503, message: 'Max retries exceeded');
   }
 
   /// Closes the underlying HTTP client.

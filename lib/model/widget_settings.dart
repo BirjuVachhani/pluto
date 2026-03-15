@@ -11,7 +11,8 @@ enum WidgetType {
   text('Message'),
   timer('Timer'),
   weather('Weather'),
-  digitalDate('Date & Time');
+  digitalDate('Date & Time')
+  ;
   // calendar('Calendar');
 
   const WidgetType(this.label);
@@ -24,7 +25,8 @@ enum BorderType { none, solid, rounded }
 enum ClockFormat {
   twelveHour('12 Hours'),
   twelveHoursWithAmPm('12 Hours with AM / PM'),
-  twentyFourHour('24 Hours');
+  twentyFourHour('24 Hours')
+  ;
 
   const ClockFormat(this.label);
 
@@ -35,7 +37,8 @@ enum DateFormat {
   dayMonthYear,
   monthDayYear,
   yearMonthDay,
-  custom;
+  custom
+  ;
 
   String prettify(String separator) {
     return switch (this) {
@@ -64,7 +67,8 @@ enum Separator {
   colon(':'),
   dash('-'),
   space(' '),
-  newLine('\n');
+  newLine('\n')
+  ;
 
   const Separator(this.value);
 
@@ -74,7 +78,8 @@ enum Separator {
 enum DateSeparator {
   dash('-'),
   dot('•'),
-  slash('/');
+  slash('/')
+  ;
 
   const DateSeparator(this.value);
 
@@ -90,7 +95,8 @@ enum AlignmentC {
   centerRight('Center Right'),
   bottomLeft('Bottom Left'),
   bottomCenter('Bottom Center'),
-  bottomRight('Bottom Right');
+  bottomRight('Bottom Right')
+  ;
 
   const AlignmentC(this.label);
 
@@ -104,9 +110,7 @@ abstract class BaseWidgetSettings with EquatableMixin {
   const BaseWidgetSettings();
 
   static BaseWidgetSettings fromJson(Map<String, dynamic> json) {
-    final WidgetType type = json['type'] != null
-        ? WidgetType.values.byName(json['type'])
-        : WidgetType.none;
+    final WidgetType type = json['type'] != null ? WidgetType.values.byName(json['type']) : WidgetType.none;
     switch (type) {
       case WidgetType.none:
         return NoneWidgetSettings();
@@ -135,8 +139,7 @@ class NoneWidgetSettings extends BaseWidgetSettings {
 
   NoneWidgetSettings();
 
-  factory NoneWidgetSettings.fromJson(Map<String, dynamic> json) =>
-      _$NoneWidgetSettingsFromJson(json);
+  factory NoneWidgetSettings.fromJson(Map<String, dynamic> json) => _$NoneWidgetSettingsFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$NoneWidgetSettingsToJson(this);
@@ -168,14 +171,14 @@ class DigitalClockWidgetSettings extends BaseWidgetSettings {
 
   @override
   List<Object?> get props => [
-        fontSize,
-        separator,
-        borderType,
-        fontFamily,
-        alignment,
-        format,
-        type,
-      ];
+    fontSize,
+    separator,
+    borderType,
+    fontFamily,
+    alignment,
+    format,
+    type,
+  ];
 
   DigitalClockWidgetSettings copyWith({
     double? fontSize,
@@ -195,8 +198,7 @@ class DigitalClockWidgetSettings extends BaseWidgetSettings {
     );
   }
 
-  factory DigitalClockWidgetSettings.fromJson(Map<String, dynamic> json) =>
-      _$DigitalClockWidgetSettingsFromJson(json);
+  factory DigitalClockWidgetSettings.fromJson(Map<String, dynamic> json) => _$DigitalClockWidgetSettingsFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$DigitalClockWidgetSettingsToJson(this);
@@ -220,8 +222,7 @@ class AnalogClockWidgetSettings extends BaseWidgetSettings {
   });
 
   @override
-  List<Object?> get props =>
-      [radius, showSecondsHand, coloredSecondHand, type, alignment];
+  List<Object?> get props => [radius, showSecondsHand, coloredSecondHand, type, alignment];
 
   AnalogClockWidgetSettings copyWith({
     double? radius,
@@ -237,8 +238,7 @@ class AnalogClockWidgetSettings extends BaseWidgetSettings {
     );
   }
 
-  factory AnalogClockWidgetSettings.fromJson(Map<String, dynamic> json) =>
-      _$AnalogClockWidgetSettingsFromJson(json);
+  factory AnalogClockWidgetSettings.fromJson(Map<String, dynamic> json) => _$AnalogClockWidgetSettingsFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$AnalogClockWidgetSettingsToJson(this);
@@ -263,12 +263,12 @@ class MessageWidgetSettings extends BaseWidgetSettings {
 
   @override
   List<Object?> get props => [
-        fontSize,
-        fontFamily,
-        message,
-        type,
-        alignment,
-      ];
+    fontSize,
+    fontFamily,
+    message,
+    type,
+    alignment,
+  ];
 
   MessageWidgetSettings copyWith({
     double? fontSize,
@@ -284,8 +284,7 @@ class MessageWidgetSettings extends BaseWidgetSettings {
     );
   }
 
-  factory MessageWidgetSettings.fromJson(Map<String, dynamic> json) =>
-      _$MessageWidgetSettingsFromJson(json);
+  factory MessageWidgetSettings.fromJson(Map<String, dynamic> json) => _$MessageWidgetSettingsFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$MessageWidgetSettingsToJson(this);
@@ -299,7 +298,8 @@ enum TimerFormat {
   years('Years'),
   descriptive('Descriptive'),
   descriptiveWithSeconds('Descriptive (with Seconds)'),
-  countdown('Countdown');
+  countdown('Countdown')
+  ;
 
   const TimerFormat(this.label);
 
@@ -332,15 +332,15 @@ class TimerWidgetSettings extends BaseWidgetSettings {
 
   @override
   List<Object?> get props => [
-        fontSize,
-        fontFamily,
-        textBefore,
-        textAfter,
-        time,
-        type,
-        alignment,
-        format,
-      ];
+    fontSize,
+    fontFamily,
+    textBefore,
+    textAfter,
+    time,
+    type,
+    alignment,
+    format,
+  ];
 
   TimerWidgetSettings copyWith({
     double? fontSize,
@@ -362,21 +362,20 @@ class TimerWidgetSettings extends BaseWidgetSettings {
     );
   }
 
-  factory TimerWidgetSettings.fromJson(Map<String, dynamic> json) =>
-      _$TimerWidgetSettingsFromJson(json);
+  factory TimerWidgetSettings.fromJson(Map<String, dynamic> json) => _$TimerWidgetSettingsFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$TimerWidgetSettingsToJson(this);
 }
 
-DateTime dateTimeFromJson(int millis) =>
-    DateTime.fromMillisecondsSinceEpoch(millis);
+DateTime dateTimeFromJson(int millis) => DateTime.fromMillisecondsSinceEpoch(millis);
 
 int dateTimeToJson(DateTime dateTime) => dateTime.millisecondsSinceEpoch;
 
 enum WeatherFormat {
   temperature('Temperature'),
-  temperatureAndSummary('Temperature and Summary');
+  temperatureAndSummary('Temperature and Summary')
+  ;
 
   const WeatherFormat(this.label);
 
@@ -385,7 +384,8 @@ enum WeatherFormat {
 
 enum TemperatureUnit {
   celsius('Celsius'),
-  fahrenheit('Fahrenheit');
+  fahrenheit('Fahrenheit')
+  ;
 
   const TemperatureUnit(this.label);
 
@@ -421,14 +421,14 @@ class WeatherWidgetSettings extends BaseWidgetSettings {
 
   @override
   List<Object?> get props => [
-        fontSize,
-        fontFamily,
-        type,
-        alignment,
-        format,
-        temperatureUnit,
-        location,
-      ];
+    fontSize,
+    fontFamily,
+    type,
+    alignment,
+    format,
+    temperatureUnit,
+    location,
+  ];
 
   WeatherWidgetSettings copyWith({
     double? fontSize,
@@ -448,8 +448,7 @@ class WeatherWidgetSettings extends BaseWidgetSettings {
     );
   }
 
-  factory WeatherWidgetSettings.fromJson(Map<String, dynamic> json) =>
-      _$WeatherWidgetSettingsFromJson(json);
+  factory WeatherWidgetSettings.fromJson(Map<String, dynamic> json) => _$WeatherWidgetSettingsFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$WeatherWidgetSettingsToJson(this);
@@ -473,10 +472,10 @@ class Location with EquatableMixin {
 
   @override
   List<Object?> get props => [
-        latitude,
-        longitude,
-        name,
-      ];
+    latitude,
+    longitude,
+    name,
+  ];
 
   Location copyWith({
     double? latitude,
@@ -494,8 +493,7 @@ class Location with EquatableMixin {
     );
   }
 
-  factory Location.fromJson(Map<String, dynamic> json) =>
-      _$LocationFromJson(json);
+  factory Location.fromJson(Map<String, dynamic> json) => _$LocationFromJson(json);
 
   Map<String, dynamic> toJson() => _$LocationToJson(this);
 }
@@ -525,14 +523,14 @@ class DigitalDateWidgetSettings extends BaseWidgetSettings {
 
   @override
   List<Object?> get props => [
-        fontSize,
-        separator,
-        borderType,
-        fontFamily,
-        alignment,
-        format,
-        type,
-      ];
+    fontSize,
+    separator,
+    borderType,
+    fontFamily,
+    alignment,
+    format,
+    type,
+  ];
 
   DigitalDateWidgetSettings copyWith({
     double? fontSize,
@@ -552,8 +550,7 @@ class DigitalDateWidgetSettings extends BaseWidgetSettings {
     );
   }
 
-  factory DigitalDateWidgetSettings.fromJson(Map<String, dynamic> json) =>
-      _$DigitalDateWidgetSettingsFromJson(json);
+  factory DigitalDateWidgetSettings.fromJson(Map<String, dynamic> json) => _$DigitalDateWidgetSettingsFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$DigitalDateWidgetSettingsToJson(this);

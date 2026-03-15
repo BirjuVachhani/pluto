@@ -58,7 +58,7 @@ class WidgetSettings extends StatelessWidget {
                     return const DigitalDateWidgetSettingsView();
                 }
               },
-            )
+            ),
           ],
         );
       },

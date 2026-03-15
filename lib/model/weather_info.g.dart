@@ -14,14 +14,13 @@ WeatherInfo _$WeatherInfoFromJson(Map<String, dynamic> json) => WeatherInfo(
   timestamp: dateTimeFromJson((json['timestamp'] as num).toInt()),
 );
 
-Map<String, dynamic> _$WeatherInfoToJson(WeatherInfo instance) =>
-    <String, dynamic>{
-      'latitude': instance.latitude,
-      'longitude': instance.longitude,
-      'temperature': instance.temperature,
-      'weatherCode': _$WeatherCodeEnumMap[instance.weatherCode]!,
-      'timestamp': dateTimeToJson(instance.timestamp),
-    };
+Map<String, dynamic> _$WeatherInfoToJson(WeatherInfo instance) => <String, dynamic>{
+  'latitude': instance.latitude,
+  'longitude': instance.longitude,
+  'temperature': instance.temperature,
+  'weatherCode': _$WeatherCodeEnumMap[instance.weatherCode]!,
+  'timestamp': dateTimeToJson(instance.timestamp),
+};
 
 const _$WeatherCodeEnumMap = {
   WeatherCode.unknown: 'unknown',

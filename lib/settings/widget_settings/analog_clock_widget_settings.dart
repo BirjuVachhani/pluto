@@ -24,8 +24,7 @@ class AnalogClockWidgetSettingsView extends StatelessWidget {
               max: 400,
               valueLabel: '${settings.radius.floor()} px',
               value: settings.radius,
-              onChanged: (value) =>
-                  settings.update(() => settings.radius = value),
+              onChanged: (value) => settings.update(() => settings.radius = value),
             );
           },
         ),
@@ -35,8 +34,7 @@ class AnalogClockWidgetSettingsView extends StatelessWidget {
           builder: (context) {
             return AlignmentControl(
               alignment: settings.alignment,
-              onChanged: (alignment) =>
-                  settings.update(() => settings.alignment = alignment),
+              onChanged: (alignment) => settings.update(() => settings.alignment = alignment),
             );
           },
         ),
@@ -47,8 +45,7 @@ class AnalogClockWidgetSettingsView extends StatelessWidget {
             return CustomSwitch(
               label: 'Show seconds',
               value: settings.showSecondsHand,
-              onChanged: (value) =>
-                  settings.update(() => settings.showSecondsHand = value),
+              onChanged: (value) => settings.update(() => settings.showSecondsHand = value),
             );
           },
         ),
@@ -59,8 +56,7 @@ class AnalogClockWidgetSettingsView extends StatelessWidget {
             return CustomSwitch(
               label: 'Colored Second Hand',
               value: settings.coloredSecondHand,
-              onChanged: (value) =>
-                  settings.update(() => settings.coloredSecondHand = value),
+              onChanged: (value) => settings.update(() => settings.coloredSecondHand = value),
             );
           },
         ),

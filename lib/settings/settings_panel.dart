@@ -242,7 +242,8 @@ class _SettingsPanelContentState extends State<SettingsPanelContent> with Single
           .color => backgroundStore.color.toJson(),
           .gradient => backgroundStore.gradient.toJson(),
           .image => {
-            'url': backgroundStore.currentImage!.url,
+            if (backgroundStore.currentImage!.url.isNotEmpty) 'url': backgroundStore.currentImage!.url,
+            if (backgroundStore.currentImage!.url.isEmpty) 'base64': base64Encode(backgroundStore.currentImage!.bytes),
           },
         },
       },

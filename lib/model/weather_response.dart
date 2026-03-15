@@ -25,8 +25,7 @@ class OpenMeteoWeatherResponse {
     required this.currentWeather,
   });
 
-  factory OpenMeteoWeatherResponse.fromJson(Map<String, dynamic> json) =>
-      _$OpenMeteoWeatherResponseFromJson(json);
+  factory OpenMeteoWeatherResponse.fromJson(Map<String, dynamic> json) => _$OpenMeteoWeatherResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$OpenMeteoWeatherResponseToJson(this);
 }
@@ -55,8 +54,7 @@ class CurrentWeatherData {
 
   static String timeToJson(DateTime time) => time.toIso8601String();
 
-  factory CurrentWeatherData.fromJson(Map<String, dynamic> json) =>
-      _$CurrentWeatherDataFromJson(json);
+  factory CurrentWeatherData.fromJson(Map<String, dynamic> json) => _$CurrentWeatherDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$CurrentWeatherDataToJson(this);
 }

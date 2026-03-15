@@ -35,11 +35,9 @@ abstract class _WeatherStore with Store, LazyInitializationMixin {
   final double latitude;
   final double longitude;
 
-  late final LocalStorageManager storage =
-      GetIt.instance.get<LocalStorageManager>();
+  late final LocalStorageManager storage = GetIt.instance.get<LocalStorageManager>();
 
-  late final WeatherService weatherService =
-      GetIt.instance.get<WeatherService>();
+  late final WeatherService weatherService = GetIt.instance.get<WeatherService>();
 
   DateTime? weatherLastUpdated;
 
@@ -49,26 +47,22 @@ abstract class _WeatherStore with Store, LazyInitializationMixin {
 
   @override
   Future<void> init() async {
-    weatherInfo = await storage.getSerializableObject<WeatherInfo>(
-        StorageKeys.weatherInfo, WeatherInfo.fromJson);
+    weatherInfo = await storage.getSerializableObject<WeatherInfo>(StorageKeys.weatherInfo, WeatherInfo.fromJson);
 
     // load image last updated time
-    weatherLastUpdated =
-        await storage.getInt(StorageKeys.weatherLastUpdated).then((value) {
+    weatherLastUpdated = await storage.getInt(StorageKeys.weatherLastUpdated).then((value) {
       if (value == null) return DateTime.now();
       return DateTime.fromMillisecondsSinceEpoch(value);
     });
 
     /// Whether the weather info is outdated and needs to be updated.
-    final bool isExpired =
-        weatherLastUpdated!.add(weatherUpdateDuration).isBefore(DateTime.now());
+    final bool isExpired = weatherLastUpdated!.add(weatherUpdateDuration).isBefore(DateTime.now());
 
     /// Whether the weather info is outdated and needs to be updated. This
     /// would be the case if the user has changed their location from settings
     /// and the weather info is still for the old location.
-    final bool locationChanged = weatherInfo != null &&
-        (weatherInfo!.latitude != latitude ||
-            weatherInfo!.longitude != longitude);
+    final bool locationChanged =
+        weatherInfo != null && (weatherInfo!.latitude != latitude || weatherInfo!.longitude != longitude);
 
     if (locationChanged) {
       log('cached location: ${weatherInfo?.latitude}, ${weatherInfo?.longitude}');
@@ -92,8 +86,7 @@ abstract class _WeatherStore with Store, LazyInitializationMixin {
     // log('Auto weather refresh has been triggered');
 
     // Exit if it is not time to update weather.
-    if (weatherLastUpdated.add(weatherUpdateDuration).isAfter(DateTime.now()) ||
-        isLoadingWeather) {
+    if (weatherLastUpdated.add(weatherUpdateDuration).isAfter(DateTime.now()) || isLoadingWeather) {
       // Enable this to see the remaining time in console.
 
       // final remainingTime = weatherLastUpdated
@@ -106,8 +99,7 @@ abstract class _WeatherStore with Store, LazyInitializationMixin {
     this.weatherLastUpdated = DateTime.now();
 
     // Update the background image.
-    storage.setInt(StorageKeys.weatherLastUpdated,
-        this.weatherLastUpdated!.millisecondsSinceEpoch);
+    storage.setInt(StorageKeys.weatherLastUpdated, this.weatherLastUpdated!.millisecondsSinceEpoch);
 
     // Log next background change time.
     _logNextWeatherUpdate();
@@ -126,8 +118,7 @@ abstract class _WeatherStore with Store, LazyInitializationMixin {
 
       // save last updated time
       weatherLastUpdated = DateTime.now();
-      storage.setInt(StorageKeys.weatherLastUpdated,
-          weatherLastUpdated!.millisecondsSinceEpoch);
+      storage.setInt(StorageKeys.weatherLastUpdated, weatherLastUpdated!.millisecondsSinceEpoch);
     });
   }
 
@@ -184,8 +175,7 @@ class WeatherWidget extends StatefulWidget {
   State<WeatherWidget> createState() => _WeatherWidgetState();
 }
 
-class _WeatherWidgetState extends State<WeatherWidget>
-    with SingleTickerProviderStateMixin {
+class _WeatherWidgetState extends State<WeatherWidget> with SingleTickerProviderStateMixin {
   Timer? _timer;
 
   late final WeatherStore store = context.read<WeatherStore>();
@@ -194,8 +184,7 @@ class _WeatherWidgetState extends State<WeatherWidget>
   void initState() {
     super.initState();
 
-    _timer = Timer.periodic(
-        const Duration(seconds: 1), (timer) => store.onTimerCallback());
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) => store.onTimerCallback());
   }
 
   @override

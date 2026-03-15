@@ -83,8 +83,7 @@ class _HomeBackgroundState extends State<HomeBackground> {
                       duration: const Duration(milliseconds: 500),
                       curve: Curves.easeOut,
                       decoration: BoxDecoration(
-                        color: (store.invert ? Colors.white : AppColors.tint)
-                            .withValues(alpha: store.tint / 100),
+                        color: (store.invert ? Colors.white : AppColors.tint).withValues(alpha: store.tint / 100),
                       ),
                     );
                   },
@@ -114,9 +113,7 @@ class _HomeBackgroundState extends State<HomeBackground> {
     if (store.isImageMode) return null;
     final gradient = store.gradient;
 
-    final colors = store.isGradientMode
-        ? gradient.colors
-        : [store.color.background, store.color.background];
+    final colors = store.isGradientMode ? gradient.colors : [store.color.background, store.color.background];
 
     return LinearGradient(
       colors: colors,
@@ -158,8 +155,7 @@ class _ImageBackgroundViewState extends State<ImageBackgroundView> {
   @override
   void didUpdateWidget(covariant ImageBackgroundView oldWidget) {
     super.didUpdateWidget(oldWidget);
-    final currentBytes =
-        crossFadeState == CrossFadeState.showFirst ? imageBytes1 : imageBytes2;
+    final currentBytes = crossFadeState == CrossFadeState.showFirst ? imageBytes1 : imageBytes2;
     if (currentBytes != widget.imageBytes) {
       if (crossFadeState == CrossFadeState.showFirst) {
         imageBytes2 = widget.imageBytes;
@@ -273,8 +269,7 @@ class _ImageChildState extends State<ImageChild> {
         Positioned.fill(
           child: AnimatedOpacity(
             duration: const Duration(milliseconds: 500),
-            opacity:
-                (showGreyScale && widget.showing) || widget.greyScale ? 0 : 1,
+            opacity: (showGreyScale && widget.showing) || widget.greyScale ? 0 : 1,
             child: Image.memory(
               widget.imageBytes,
               fit: BoxFit.cover,

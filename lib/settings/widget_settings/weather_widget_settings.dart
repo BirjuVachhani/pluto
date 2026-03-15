@@ -34,8 +34,7 @@ class WeatherWidgetSettingsView extends StatelessWidget {
               isExpanded: true,
               value: settings.fontFamily,
               items: FontFamilies.fonts,
-              onSelected: (family) =>
-                  settings.update(() => settings.fontFamily = family),
+              onSelected: (family) => settings.update(() => settings.fontFamily = family),
             );
           },
         ),
@@ -48,8 +47,7 @@ class WeatherWidgetSettingsView extends StatelessWidget {
               max: 400,
               valueLabel: '${settings.fontSize.floor().toString()} px',
               value: settings.fontSize,
-              onChanged: (value) => settings
-                  .update(() => settings.fontSize = value.floorToDouble()),
+              onChanged: (value) => settings.update(() => settings.fontSize = value.floorToDouble()),
             );
           },
         ),
@@ -59,8 +57,7 @@ class WeatherWidgetSettingsView extends StatelessWidget {
           builder: (context) {
             return AlignmentControl(
               alignment: settings.alignment,
-              onChanged: (alignment) =>
-                  settings.update(() => settings.alignment = alignment),
+              onChanged: (alignment) => settings.update(() => settings.alignment = alignment),
             );
           },
         ),
@@ -73,8 +70,7 @@ class WeatherWidgetSettingsView extends StatelessWidget {
               value: settings.format,
               items: WeatherFormat.values,
               itemBuilder: (context, item) => Text(item.label),
-              onSelected: (format) =>
-                  settings.update(() => settings.format = format),
+              onSelected: (format) => settings.update(() => settings.format = format),
             );
           },
         ),
@@ -104,8 +100,7 @@ class WeatherWidgetSettingsView extends StatelessWidget {
               value: settings.temperatureUnit,
               items: TemperatureUnit.values,
               itemBuilder: (context, item) => Text(item.label),
-              onSelected: (unit) =>
-                  settings.update(() => settings.temperatureUnit = unit),
+              onSelected: (unit) => settings.update(() => settings.temperatureUnit = unit),
             );
           },
         ),
@@ -128,16 +123,13 @@ class LocationAutoCompleteField extends StatefulWidget {
   });
 
   @override
-  State<LocationAutoCompleteField> createState() =>
-      _LocationAutoCompleteFieldState();
+  State<LocationAutoCompleteField> createState() => _LocationAutoCompleteFieldState();
 }
 
 class _LocationAutoCompleteFieldState extends State<LocationAutoCompleteField> {
-  late final AsyncDeBouncer _deBouncer =
-      AsyncDeBouncer(const Duration(milliseconds: 700));
+  late final AsyncDeBouncer _deBouncer = AsyncDeBouncer(const Duration(milliseconds: 700));
 
-  late final GeocodingService geocodingService =
-      GetIt.instance.get<GeocodingService>();
+  late final GeocodingService geocodingService = GetIt.instance.get<GeocodingService>();
 
   ValueNotifier<bool> loadingNotifier = ValueNotifier(false);
 
@@ -153,11 +145,12 @@ class _LocationAutoCompleteFieldState extends State<LocationAutoCompleteField> {
         ],
         Autocomplete<LocationResponse>(
           initialValue: TextEditingValue(
-              text: '${widget.location.name}'
-                  '${widget.location.country.isNotEmpty ? ', ${widget.location.country}' : ''}'),
+            text:
+                '${widget.location.name}'
+                '${widget.location.country.isNotEmpty ? ', ${widget.location.country}' : ''}',
+          ),
           optionsMaxHeight: 180,
-          displayStringForOption: (option) =>
-              '${option.name}, ${option.country}',
+          displayStringForOption: (option) => '${option.name}, ${option.country}',
           onSelected: (item) {
             // log('onSelected: $item');
             _deBouncer.cancel();
@@ -175,8 +168,7 @@ class _LocationAutoCompleteFieldState extends State<LocationAutoCompleteField> {
             return _deBouncer.run<List<LocationResponse>>(() async {
               log('optionsBuilder: ${textEditingValue.text.trim()}');
               try {
-                final List<LocationResponse> response =
-                    await fetchLocations(textEditingValue.text.trim());
+                final List<LocationResponse> response = await fetchLocations(textEditingValue.text.trim());
                 if (mounted) loadingNotifier.value = false;
                 return response;
               } catch (e) {
@@ -185,54 +177,54 @@ class _LocationAutoCompleteFieldState extends State<LocationAutoCompleteField> {
               }
             });
           },
-          fieldViewBuilder: (
-            context,
-            textEditingController,
-            focusNode,
-            onFieldSubmitted,
-          ) {
-            return TextInput(
-              controller: textEditingController,
-              focusNode: focusNode,
-              showInitialBorder: false,
-              suffixIcon: ValueListenableBuilder<bool>(
-                valueListenable: loadingNotifier,
-                builder: (context, loading, child) {
-                  return loading && focusNode.hasFocus
-                      ? Align(
-                          alignment: Alignment.center,
-                          widthFactor: 1,
-                          child: CupertinoActivityIndicator(
-                            radius: 8,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                        )
-                      : const SizedBox.shrink();
-                },
-              ),
-              onSubmitted: (value) {
-                onFieldSubmitted();
-                if (value.trim().isEmpty) {
-                  textEditingController.text = widget.location.name;
-                }
-                return true;
+          fieldViewBuilder:
+              (
+                context,
+                textEditingController,
+                focusNode,
+                onFieldSubmitted,
+              ) {
+                return TextInput(
+                  controller: textEditingController,
+                  focusNode: focusNode,
+                  showInitialBorder: false,
+                  suffixIcon: ValueListenableBuilder<bool>(
+                    valueListenable: loadingNotifier,
+                    builder: (context, loading, child) {
+                      return loading && focusNode.hasFocus
+                          ? Align(
+                              alignment: Alignment.center,
+                              widthFactor: 1,
+                              child: CupertinoActivityIndicator(
+                                radius: 8,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                            )
+                          : const SizedBox.shrink();
+                    },
+                  ),
+                  onSubmitted: (value) {
+                    onFieldSubmitted();
+                    if (value.trim().isEmpty) {
+                      textEditingController.text = widget.location.name;
+                    }
+                    return true;
+                  },
+                  onFocusLost: () {
+                    _deBouncer.cancel();
+                    if (textEditingController.text != widget.location.name) {
+                      textEditingController.text = widget.location.name;
+                    }
+                  },
+                );
               },
-              onFocusLost: () {
-                _deBouncer.cancel();
-                if (textEditingController.text != widget.location.name) {
-                  textEditingController.text = widget.location.name;
-                }
-              },
-            );
-          },
           optionsViewBuilder: (context, onSelected, options) {
             return Align(
               alignment: Alignment.topLeft,
               child: Material(
                 type: MaterialType.transparency,
                 child: Container(
-                  constraints:
-                      const BoxConstraints(maxHeight: 250, maxWidth: 310),
+                  constraints: const BoxConstraints(maxHeight: 250, maxWidth: 310),
                   decoration: BoxDecoration(
                     color: AppColors.dropdownOverlayColor,
                     borderRadius: BorderRadius.circular(6),
@@ -250,19 +242,13 @@ class _LocationAutoCompleteFieldState extends State<LocationAutoCompleteField> {
                       itemCount: options.length,
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
-                        final bool isEmpty = index == 0 &&
-                            options.length == 1 &&
-                            options.first is _EmptyLocation;
-                        final bool isError = index == 0 &&
-                            options.length == 1 &&
-                            options.first is _LocationError;
+                        final bool isEmpty = index == 0 && options.length == 1 && options.first is _EmptyLocation;
+                        final bool isError = index == 0 && options.length == 1 && options.first is _LocationError;
                         final location = options.elementAt(index);
-                        final selected =
-                            AutocompleteHighlightedOption.of(context) == index;
+                        final selected = AutocompleteHighlightedOption.of(context) == index;
                         if (isEmpty) {
                           return Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 14),
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                             child: Align(
                               alignment: Alignment.center,
                               heightFactor: 1,
@@ -278,8 +264,7 @@ class _LocationAutoCompleteFieldState extends State<LocationAutoCompleteField> {
                         }
                         if (isError) {
                           return Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 14),
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                             child: Align(
                               alignment: Alignment.center,
                               heightFactor: 1,
@@ -300,14 +285,10 @@ class _LocationAutoCompleteFieldState extends State<LocationAutoCompleteField> {
                             onTap: () {
                               onSelected(location);
                             },
-                            overlayColor: WidgetStateProperty.all(
-                                Colors.grey.withValues(alpha: 0.15)),
+                            overlayColor: WidgetStateProperty.all(Colors.grey.withValues(alpha: 0.15)),
                             child: Container(
-                              color: selected
-                                  ? Theme.of(context).colorScheme.primary
-                                  : Colors.transparent,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 10),
+                              color: selected ? Theme.of(context).colorScheme.primary : Colors.transparent,
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                               child: Row(
                                 children: [
                                   Container(
@@ -315,8 +296,7 @@ class _LocationAutoCompleteFieldState extends State<LocationAutoCompleteField> {
                                     decoration: BoxDecoration(
                                       boxShadow: [
                                         BoxShadow(
-                                          color: Colors.black
-                                              .withValues(alpha: 0.1),
+                                          color: Colors.black.withValues(alpha: 0.1),
                                           blurRadius: 10,
                                           offset: const Offset(0, 4),
                                         ),
@@ -331,32 +311,23 @@ class _LocationAutoCompleteFieldState extends State<LocationAutoCompleteField> {
                                   Expanded(
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.stretch,
+                                      crossAxisAlignment: CrossAxisAlignment.stretch,
                                       children: [
                                         Text(
                                           location.name,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyLarge!
-                                              .copyWith(
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 14,
-                                              ),
+                                          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 14,
+                                          ),
                                         ),
                                         const SizedBox(height: 3),
                                         Text(
                                           getDescription(location),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyLarge!
-                                              .copyWith(
-                                                fontWeight: FontWeight.w300,
-                                                color: selected
-                                                    ? Colors.grey.shade200
-                                                    : Colors.grey.shade400,
-                                                fontSize: 12,
-                                              ),
+                                          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                            fontWeight: FontWeight.w300,
+                                            color: selected ? Colors.grey.shade200 : Colors.grey.shade400,
+                                            fontSize: 12,
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -416,8 +387,7 @@ class AsyncDeBouncer {
   Completer? _completer;
 
   /// Allows to create an instance with optional [Duration]
-  AsyncDeBouncer([Duration? duration])
-      : duration = duration ?? const Duration(milliseconds: 300);
+  AsyncDeBouncer([Duration? duration]) : duration = duration ?? const Duration(milliseconds: 300);
 
   /// Runs [action] after debounced interval.
   Future<T> run<T>(AsyncDeBounceAction<T> action) {
@@ -443,32 +413,32 @@ class AsyncDeBouncer {
 
 class _EmptyLocation extends LocationResponse {
   const _EmptyLocation()
-      : super(
-          name: 'Empty',
-          latitude: -1,
-          longitude: -1,
-          country: '',
-          countryCode: '',
-          timezone: '',
-          description1: '',
-          description2: '',
-          description3: '',
-          elevation: -1,
-        );
+    : super(
+        name: 'Empty',
+        latitude: -1,
+        longitude: -1,
+        country: '',
+        countryCode: '',
+        timezone: '',
+        description1: '',
+        description2: '',
+        description3: '',
+        elevation: -1,
+      );
 }
 
 class _LocationError extends LocationResponse {
   const _LocationError()
-      : super(
-          name: 'Error',
-          latitude: -1,
-          longitude: -1,
-          country: '',
-          countryCode: '',
-          timezone: '',
-          description1: '',
-          description2: '',
-          description3: '',
-          elevation: -1,
-        );
+    : super(
+        name: 'Error',
+        latitude: -1,
+        longitude: -1,
+        country: '',
+        countryCode: '',
+        timezone: '',
+        description1: '',
+        description2: '',
+        description3: '',
+        elevation: -1,
+      );
 }

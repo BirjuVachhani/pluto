@@ -15,12 +15,10 @@ class DigitalDateWidgetSettingsView extends StatefulWidget {
   const DigitalDateWidgetSettingsView({super.key});
 
   @override
-  State<DigitalDateWidgetSettingsView> createState() =>
-      _DigitalDateWidgetSettingsViewState();
+  State<DigitalDateWidgetSettingsView> createState() => _DigitalDateWidgetSettingsViewState();
 }
 
-class _DigitalDateWidgetSettingsViewState
-    extends State<DigitalDateWidgetSettingsView> {
+class _DigitalDateWidgetSettingsViewState extends State<DigitalDateWidgetSettingsView> {
   @override
   Widget build(BuildContext context) {
     final settings = context.read<WidgetStore>().digitalDateSettings;
@@ -121,10 +119,8 @@ class _DigitalDateWidgetSettingsViewState
                   isExpanded: true,
                   value: settings.format,
                   items: DateFormat.values,
-                  itemBuilder: (context, type) =>
-                      Text(type.prettify(settings.separator.value)),
-                  onSelected: (value) =>
-                      settings.update(() => settings.format = value),
+                  itemBuilder: (context, type) => Text(type.prettify(settings.separator.value)),
+                  onSelected: (value) => settings.update(() => settings.format = value),
                 ),
                 if (settings.format == DateFormat.custom) ...[
                   const SizedBox(height: 16),

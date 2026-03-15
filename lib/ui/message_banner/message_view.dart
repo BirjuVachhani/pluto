@@ -87,9 +87,9 @@ class MessageBannerView extends StatelessWidget {
             if (iconOverride != null)
               IconTheme(
                 data: Theme.of(context).iconTheme.copyWith(
-                      color: getContentColor(),
-                      size: iconSize ?? 18,
-                    ),
+                  color: getContentColor(),
+                  size: iconSize ?? 18,
+                ),
                 child: iconOverride!,
               )
             else
@@ -105,9 +105,7 @@ class MessageBannerView extends StatelessWidget {
               child: Text(
                 message,
                 maxLines: maxLines,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyLarge!
+                style: Theme.of(context).textTheme.bodyLarge!
                     .copyWith(
                       color: getContentColor(),
                       height: 1,
@@ -121,9 +119,7 @@ class MessageBannerView extends StatelessWidget {
               child: Text(
                 message,
                 maxLines: maxLines,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyLarge!
+                style: Theme.of(context).textTheme.bodyLarge!
                     .copyWith(
                       color: getContentColor(),
                       height: 1,

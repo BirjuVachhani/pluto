@@ -79,7 +79,5 @@ class CollectionMediaList {
       _$CollectionMediaListFromJson(json);
 
   static List<MediaItem> _mediaFromJson(List<dynamic> json) =>
-      json
-          .map((e) => MediaItem.fromJson(e as Map<String, dynamic>))
-          .toList();
+      json.map((e) => MediaItem.fromJson(e as Map<String, dynamic>)).toList();
 }

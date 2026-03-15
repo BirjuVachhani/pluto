@@ -21,8 +21,8 @@ class TexturePainter extends CustomPainter {
     this.spacing = 30,
     this.offset = 16,
     this.radius = 1,
-  })  : assert(spacing > 0 && spacing < double.infinity),
-        assert(radius >= 0 && radius <= double.infinity);
+  }) : assert(spacing > 0 && spacing < double.infinity),
+       assert(radius >= 0 && radius <= double.infinity);
 
   @override
   void paint(Canvas canvas, Size size) {

@@ -28,8 +28,7 @@ class OpenMeteoWeatherService extends WeatherService {
           longitude: longitude,
           temperature: response.currentWeather.temperature,
           timestamp: response.currentWeather.time,
-          weatherCode:
-              WeatherCode.fromCode(response.currentWeather.weatherCode),
+          weatherCode: WeatherCode.fromCode(response.currentWeather.weatherCode),
         );
       } else {
         log('status code: ${result.statusCode}');

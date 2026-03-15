@@ -30,8 +30,7 @@ class TimerWidgetSettingsView extends StatelessWidget {
               isExpanded: true,
               value: settings.fontFamily,
               items: FontFamilies.fonts,
-              onSelected: (family) =>
-                  settings.update(() => settings.fontFamily = family),
+              onSelected: (family) => settings.update(() => settings.fontFamily = family),
             );
           },
         ),
@@ -44,8 +43,7 @@ class TimerWidgetSettingsView extends StatelessWidget {
               max: 400,
               valueLabel: '${settings.fontSize.floor().toString()} px',
               value: settings.fontSize,
-              onChanged: (value) => settings
-                  .update(() => settings.fontSize = value.floorToDouble()),
+              onChanged: (value) => settings.update(() => settings.fontSize = value.floorToDouble()),
             );
           },
         ),
@@ -55,8 +53,7 @@ class TimerWidgetSettingsView extends StatelessWidget {
           builder: (context) {
             return AlignmentControl(
               alignment: settings.alignment,
-              onChanged: (alignment) =>
-                  settings.update(() => settings.alignment = alignment),
+              onChanged: (alignment) => settings.update(() => settings.alignment = alignment),
             );
           },
         ),
@@ -69,8 +66,7 @@ class TimerWidgetSettingsView extends StatelessWidget {
               value: settings.format,
               items: TimerFormat.values,
               itemBuilder: (context, format) => Text(format.label),
-              onSelected: (format) =>
-                  settings.update(() => settings.format = format),
+              onSelected: (format) => settings.update(() => settings.format = format),
             );
           },
         ),
@@ -83,8 +79,7 @@ class TimerWidgetSettingsView extends StatelessWidget {
             save: false,
             () => settings.textBefore = message,
           ),
-          onSubmitted: (message) =>
-              settings.update(() => settings.textBefore = message),
+          onSubmitted: (message) => settings.update(() => settings.textBefore = message),
         ),
         const SizedBox(height: 16),
         Row(
@@ -97,8 +92,7 @@ class TimerWidgetSettingsView extends StatelessWidget {
                 textInputAction: TextInputAction.next,
                 inputFormatters: [MaskedInputFormatter('00/00/0000')],
                 hintText: 'dd/mm/yyyy',
-                initialValue:
-                    timer.DateFormat('dd/MM/yyyy').format(settings.time),
+                initialValue: timer.DateFormat('dd/MM/yyyy').format(settings.time),
                 contentPadding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
                 onSubmitted: (value) {
                   if (value.isEmpty || value.length < 10) return false;
@@ -128,11 +122,10 @@ class TimerWidgetSettingsView extends StatelessWidget {
                   MaskedInputFormatter(
                     '00:00 ##',
                     allowedCharMatcher: RegExp(r'[0-9:AMP]+'),
-                  )
+                  ),
                 ],
                 hintText: 'hh:mm aa',
-                initialValue:
-                    timer.DateFormat('hh:mm aa').format(settings.time),
+                initialValue: timer.DateFormat('hh:mm aa').format(settings.time),
                 onSubmitted: (value) {
                   if (value.isEmpty || value.length < 5) return false;
                   final tokens = value.split(':');
@@ -163,8 +156,7 @@ class TimerWidgetSettingsView extends StatelessWidget {
             save: false,
             () => settings.textAfter = message,
           ),
-          onSubmitted: (message) =>
-              settings.update(() => settings.textAfter = message),
+          onSubmitted: (message) => settings.update(() => settings.textAfter = message),
         ),
         const SizedBox(height: 16),
       ],

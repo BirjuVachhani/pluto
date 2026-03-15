@@ -93,14 +93,11 @@ class ImageDownloadQualitySetting extends StatefulWidget {
   const ImageDownloadQualitySetting({super.key});
 
   @override
-  State<ImageDownloadQualitySetting> createState() =>
-      _ImageDownloadQualitySettingState();
+  State<ImageDownloadQualitySetting> createState() => _ImageDownloadQualitySettingState();
 }
 
-class _ImageDownloadQualitySettingState
-    extends State<ImageDownloadQualitySetting> {
-  late final LocalStorageManager storage =
-      GetIt.instance.get<LocalStorageManager>();
+class _ImageDownloadQualitySettingState extends State<ImageDownloadQualitySetting> {
+  late final LocalStorageManager storage = GetIt.instance.get<LocalStorageManager>();
 
   ImageResolution resolution = ImageResolution.auto;
 
@@ -111,7 +108,8 @@ class _ImageDownloadQualitySettingState
   }
 
   Future<void> init() async {
-    resolution = await storage.getEnum<ImageResolution>(
+    resolution =
+        await storage.getEnum<ImageResolution>(
           StorageKeys.imageDownloadQuality,
           ImageResolution.values,
         ) ??
@@ -178,8 +176,7 @@ class CustomCollectionsSettings extends StatelessWidget {
               itemCount: store.customSources.length,
               padding: const EdgeInsets.only(top: 8),
               itemBuilder: (context, index) {
-                final bool selected = store.unsplashSource.name ==
-                    store.customSources[index].name;
+                final bool selected = store.unsplashSource.name == store.customSources[index].name;
                 return Hoverable(
                   key: ValueKey(index),
                   builder: (context, hovering, child) {
@@ -187,11 +184,9 @@ class CustomCollectionsSettings extends StatelessWidget {
                       color: selected
                           ? context.colorScheme.primary.withValues(alpha: 0.1)
                           : hovering
-                              ? context.colorScheme.onSurface
-                                  .withValues(alpha: 0.05)
-                              : null,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 6),
+                          ? context.colorScheme.onSurface.withValues(alpha: 0.05)
+                          : null,
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                       child: Row(
                         children: [
                           Expanded(
@@ -203,8 +198,7 @@ class CustomCollectionsSettings extends StatelessWidget {
                           if (!selected && hovering)
                             GestureDetectorWithCursor(
                               onTap: () {
-                                store.removeCustomCollection(
-                                    store.customSources[index]);
+                                store.removeCustomCollection(store.customSources[index]);
                               },
                               child: Text(
                                 'Delete',
@@ -233,8 +227,7 @@ class CustomCollectionsSettings extends StatelessWidget {
     );
   }
 
-  Future<void> onCreateNewCollection(
-      BuildContext context, BackgroundStore store) async {
+  Future<void> onCreateNewCollection(BuildContext context, BackgroundStore store) async {
     final String? result = await showDialog<String>(
       context: context,
       builder: (context) => Theme(

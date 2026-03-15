@@ -17,10 +17,7 @@ void main() {
         final path = request.url.path;
 
         if (path == '/v1/search') {
-          return http.Response(
-            jsonEncode(_photoSearchResponse),
-            200,
-          );
+          return http.Response(jsonEncode(_photoSearchResponse), 200);
         }
 
         if (path == '/v1/curated') {
@@ -145,10 +142,7 @@ void main() {
       final errorClient = PexelsClient(
         apiKey: 'bad-key',
         client: http_testing.MockClient((_) async {
-          return http.Response(
-            jsonEncode({'error': 'Invalid API key'}),
-            401,
-          );
+          return http.Response(jsonEncode({'error': 'Invalid API key'}), 401);
         }),
       );
 
@@ -168,10 +162,7 @@ void main() {
       final mockHttpClient = http_testing.MockClient(
         (_) async => http.Response('{}', 200),
       );
-      final pexelsClient = PexelsClient(
-        apiKey: 'key',
-        client: mockHttpClient,
-      );
+      final pexelsClient = PexelsClient(apiKey: 'key', client: mockHttpClient);
       // Should not throw - external client is not closed.
       pexelsClient.close();
     });

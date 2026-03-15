@@ -19,7 +19,8 @@ part 'background_settings.g.dart';
 enum BackgroundMode {
   color('Color'),
   gradient('Gradient'),
-  image('Image');
+  image('Image')
+  ;
 
   const BackgroundMode(this.label);
 
@@ -36,7 +37,8 @@ enum ImageSource {
   unsplash('Unsplash'),
   pexels('Pexels'),
   local('Local'),
-  userLikes('Liked By You');
+  userLikes('Liked By You')
+  ;
 
   const ImageSource(this.label);
 
@@ -52,16 +54,15 @@ enum BackgroundRefreshRate {
   thirtyMinute('Every 30 Minute', Duration(minutes: 5)),
   hour('Every hour', Duration(hours: 1)),
   daily('Every Day', Duration(days: 1)),
-  weekly('Every Week', Duration(days: 7));
+  weekly('Every Week', Duration(days: 7))
+  ;
 
   const BackgroundRefreshRate(this.label, this.duration);
 
   final String label;
   final Duration duration;
 
-  bool get requiresTimer =>
-      this != BackgroundRefreshRate.never &&
-      this != BackgroundRefreshRate.newTab;
+  bool get requiresTimer => this != BackgroundRefreshRate.never && this != BackgroundRefreshRate.newTab;
 }
 
 enum ImageResolution {
@@ -72,7 +73,8 @@ enum ImageResolution {
   quadHD('2K'),
   ultraHD('4K'),
   fiveK('5K'),
-  eightK('8K');
+  eightK('8K')
+  ;
 
   const ImageResolution(this.label);
 
@@ -115,26 +117,26 @@ class BackgroundSettings with EquatableMixin {
     this.greyScale = false,
     List<UnsplashSource>? customSources,
     List<PexelsSource>? pexelsCustomSources,
-  })  : customSources = customSources ?? [],
-        pexelsCustomSources = pexelsCustomSources ?? [];
+  }) : customSources = customSources ?? [],
+       pexelsCustomSources = pexelsCustomSources ?? [];
 
   @override
   List<Object?> get props => [
-        mode,
-        color,
-        gradient,
-        tint,
-        texture,
-        invert,
-        source,
-        unsplashSource,
-        pexelsSource,
-        imageRefreshRate,
-        imageResolution,
-        greyScale,
-        customSources,
-        pexelsCustomSources,
-      ];
+    mode,
+    color,
+    gradient,
+    tint,
+    texture,
+    invert,
+    source,
+    unsplashSource,
+    pexelsSource,
+    imageRefreshRate,
+    imageResolution,
+    greyScale,
+    customSources,
+    pexelsCustomSources,
+  ];
 
   BackgroundSettings copyWith({
     BackgroundMode? mode,
@@ -170,17 +172,14 @@ class BackgroundSettings with EquatableMixin {
     );
   }
 
-  factory BackgroundSettings.fromJson(Map<String, dynamic> json) =>
-      _$BackgroundSettingsFromJson(json);
+  factory BackgroundSettings.fromJson(Map<String, dynamic> json) => _$BackgroundSettingsFromJson(json);
 
   Map<String, dynamic> toJson() => _$BackgroundSettingsToJson(this);
 }
 
-FlatColor flatColorFromJson(String name) =>
-    findColorByName(name) ?? FlatColors.minimal;
+FlatColor flatColorFromJson(String name) => findColorByName(name) ?? FlatColors.minimal;
 
-ColorGradient colorGradientFromJson(String name) =>
-    findGradientByName(name) ?? ColorGradients.youtube;
+ColorGradient colorGradientFromJson(String name) => findGradientByName(name) ?? ColorGradients.youtube;
 
 String flatColorToJson(FlatColor color) => color.name;
 
@@ -199,8 +198,7 @@ class UnsplashLikedBackground extends LikedBackground implements UnsplashPhoto {
     required this.photo,
   }) : super(url: '');
 
-  factory UnsplashLikedBackground.fromJson(Map<String, dynamic> json) =>
-      _$UnsplashLikedBackgroundFromJson(json);
+  factory UnsplashLikedBackground.fromJson(Map<String, dynamic> json) => _$UnsplashLikedBackgroundFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$UnsplashLikedBackgroundToJson(this);
@@ -231,15 +229,13 @@ class UnsplashPhotoBackground extends Background implements UnsplashPhoto {
     required this.photo,
   }) : super(url: '');
 
-  factory UnsplashPhotoBackground.fromJson(Map<String, dynamic> json) =>
-      _$UnsplashPhotoBackgroundFromJson(json);
+  factory UnsplashPhotoBackground.fromJson(Map<String, dynamic> json) => _$UnsplashPhotoBackgroundFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$UnsplashPhotoBackgroundToJson(this);
 
   @override
-  UnsplashLikedBackground toLikedBackground() =>
-      UnsplashLikedBackground(id: id, photo: photo);
+  UnsplashLikedBackground toLikedBackground() => UnsplashLikedBackground(id: id, photo: photo);
 
   @override
   List<Object?> get props => [...super.props, photo];
@@ -260,15 +256,13 @@ class PexelsPhotoBackground extends Background implements PexelsPhoto {
     required this.pexelsPhoto,
   }) : super(url: '');
 
-  factory PexelsPhotoBackground.fromJson(Map<String, dynamic> json) =>
-      _$PexelsPhotoBackgroundFromJson(json);
+  factory PexelsPhotoBackground.fromJson(Map<String, dynamic> json) => _$PexelsPhotoBackgroundFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$PexelsPhotoBackgroundToJson(this);
 
   @override
-  PexelsLikedBackground toLikedBackground() =>
-      PexelsLikedBackground(id: id, pexelsPhoto: pexelsPhoto);
+  PexelsLikedBackground toLikedBackground() => PexelsLikedBackground(id: id, pexelsPhoto: pexelsPhoto);
 
   @override
   List<Object?> get props => [...super.props, pexelsPhoto];
@@ -288,8 +282,7 @@ class PexelsLikedBackground extends LikedBackground implements PexelsPhoto {
     required this.pexelsPhoto,
   }) : super(url: '');
 
-  factory PexelsLikedBackground.fromJson(Map<String, dynamic> json) =>
-      _$PexelsLikedBackgroundFromJson(json);
+  factory PexelsLikedBackground.fromJson(Map<String, dynamic> json) => _$PexelsLikedBackgroundFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$PexelsLikedBackgroundToJson(this);
@@ -355,7 +348,6 @@ abstract class BackgroundBase with EquatableMixin {
   List<Object?> get props => [url, id];
 }
 
-pexels.Photo _pexelsPhotoFromJson(Map<String, dynamic> json) =>
-    pexels.Photo.fromJson(json);
+pexels.Photo _pexelsPhotoFromJson(Map<String, dynamic> json) => pexels.Photo.fromJson(json);
 
 Map<String, dynamic> _pexelsPhotoToJson(pexels.Photo photo) => photo.toJson();

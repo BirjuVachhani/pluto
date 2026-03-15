@@ -36,21 +36,18 @@ class BottomBar extends StatelessWidget {
                         duration: const Duration(milliseconds: 250),
                         curve: Curves.easeInOut,
                         style: DefaultTextStyle.of(context).style.copyWith(
-                              color: hovering
-                                  ? store.foregroundColor.withValues(alpha: 0.8)
-                                  : store.foregroundColor
-                                      .withValues(alpha: 0.2),
-                              decorationColor: hovering
-                                  ? store.foregroundColor.withValues(alpha: 0.8)
-                                  : store.foregroundColor
-                                      .withValues(alpha: 0.2),
-                              fontWeight: FontWeight.w300,
-                            ),
+                          color: hovering
+                              ? store.foregroundColor.withValues(alpha: 0.8)
+                              : store.foregroundColor.withValues(alpha: 0.2),
+                          decorationColor: hovering
+                              ? store.foregroundColor.withValues(alpha: 0.8)
+                              : store.foregroundColor.withValues(alpha: 0.2),
+                          fontWeight: FontWeight.w300,
+                        ),
                         child: Wrap(
                           direction: Axis.horizontal,
                           children: [
-                            if (store.currentImage
-                                case UnsplashPhoto background) ...[
+                            if (store.currentImage case UnsplashPhoto background) ...[
                               const Text('Photo by '),
                               GestureDetectorWithCursor(
                                 onTap: () => onUnsplashUserLinkTap(background),
@@ -58,28 +55,22 @@ class BottomBar extends StatelessWidget {
                                   background.photo.user.name,
                                   style: TextStyle(
                                     fontWeight: FontWeight.w500,
-                                    decoration: hovering
-                                        ? TextDecoration.underline
-                                        : TextDecoration.none,
+                                    decoration: hovering ? TextDecoration.underline : TextDecoration.none,
                                   ),
                                 ),
                               ),
                               const Text(' on '),
                               GestureDetectorWithCursor(
-                                onTap: () =>
-                                    launchUrlString('https://unsplash.com'),
+                                onTap: () => launchUrlString('https://unsplash.com'),
                                 child: Text(
                                   'Unsplash',
                                   style: TextStyle(
                                     fontWeight: FontWeight.w500,
-                                    decoration: hovering
-                                        ? TextDecoration.underline
-                                        : TextDecoration.none,
+                                    decoration: hovering ? TextDecoration.underline : TextDecoration.none,
                                   ),
                                 ),
                               ),
-                            ] else if (store.currentImage
-                                case PexelsPhoto background) ...[
+                            ] else if (store.currentImage case PexelsPhoto background) ...[
                               const Text('Photo by '),
                               GestureDetectorWithCursor(
                                 onTap: () => onPexelsUserLinkTap(background),
@@ -87,23 +78,18 @@ class BottomBar extends StatelessWidget {
                                   background.pexelsPhoto.photographer,
                                   style: TextStyle(
                                     fontWeight: FontWeight.w500,
-                                    decoration: hovering
-                                        ? TextDecoration.underline
-                                        : TextDecoration.none,
+                                    decoration: hovering ? TextDecoration.underline : TextDecoration.none,
                                   ),
                                 ),
                               ),
                               const Text(' on '),
                               GestureDetectorWithCursor(
-                                onTap: () =>
-                                    launchUrlString('https://www.pexels.com'),
+                                onTap: () => launchUrlString('https://www.pexels.com'),
                                 child: Text(
                                   'Pexels',
                                   style: TextStyle(
                                     fontWeight: FontWeight.w500,
-                                    decoration: hovering
-                                        ? TextDecoration.underline
-                                        : TextDecoration.none,
+                                    decoration: hovering ? TextDecoration.underline : TextDecoration.none,
                                   ),
                                 ),
                               ),
@@ -134,8 +120,7 @@ class BottomBar extends StatelessWidget {
                                       color: store.foregroundColor,
                                       minHeight: 4,
                                       borderRadius: BorderRadius.circular(100),
-                                      backgroundColor: store.foregroundColor
-                                          .withValues(alpha: 0.3),
+                                      backgroundColor: store.foregroundColor.withValues(alpha: 0.3),
                                     ),
                                   ),
                                 ),
@@ -257,8 +242,7 @@ class LinearHorizon extends StatelessWidget {
     this.childBuilder,
     this.color,
     this.enabled = true,
-  }) : assert(child != null || childBuilder != null,
-            'child or childBuilder must be provided');
+  }) : assert(child != null || childBuilder != null, 'child or childBuilder must be provided');
 
   @override
   Widget build(BuildContext context) {
@@ -321,8 +305,7 @@ class SettingsButton extends StatefulWidget {
   State<SettingsButton> createState() => _SettingsButtonState();
 }
 
-class _SettingsButtonState extends State<SettingsButton>
-    with SingleTickerProviderStateMixin {
+class _SettingsButtonState extends State<SettingsButton> with SingleTickerProviderStateMixin {
   late final AnimationController controller;
 
   @override
@@ -384,8 +367,7 @@ class ChangeBackgroundButton extends StatefulWidget {
   State<ChangeBackgroundButton> createState() => _ChangeBackgroundButtonState();
 }
 
-class _ChangeBackgroundButtonState extends State<ChangeBackgroundButton>
-    with SingleTickerProviderStateMixin {
+class _ChangeBackgroundButtonState extends State<ChangeBackgroundButton> with SingleTickerProviderStateMixin {
   late final AnimationController controller;
 
   @override
@@ -418,9 +400,7 @@ class _ChangeBackgroundButtonState extends State<ChangeBackgroundButton>
             ),
             builder: (context, child) {
               return ImageIcon(
-                AssetImage(store.isLoadingImage
-                    ? 'assets/images/ic_hourglass.png'
-                    : 'assets/images/ic_fan.png'),
+                AssetImage(store.isLoadingImage ? 'assets/images/ic_hourglass.png' : 'assets/images/ic_fan.png'),
                 color: color.withValues(alpha: max(0.2, controller.value)),
               );
             },
@@ -444,8 +424,7 @@ class LikeBackgroundButton extends StatefulWidget {
   State<LikeBackgroundButton> createState() => _LikeBackgroundButtonState();
 }
 
-class _LikeBackgroundButtonState extends State<LikeBackgroundButton>
-    with SingleTickerProviderStateMixin {
+class _LikeBackgroundButtonState extends State<LikeBackgroundButton> with SingleTickerProviderStateMixin {
   late final AnimationController controller;
 
   @override
@@ -466,8 +445,7 @@ class _LikeBackgroundButtonState extends State<LikeBackgroundButton>
         if (!store.initialized || !store.isImageMode) {
           return const SizedBox.shrink();
         }
-        if (store.imageSource == ImageSource.userLikes &&
-            store.likedBackgrounds.length <= 1) {
+        if (store.imageSource == ImageSource.userLikes && store.likedBackgrounds.length <= 1) {
           return const SizedBox.shrink();
         }
 
@@ -475,9 +453,7 @@ class _LikeBackgroundButtonState extends State<LikeBackgroundButton>
         return Padding(
           padding: const EdgeInsets.only(left: 16),
           child: GestureDetectorWithCursor(
-            onTap: !store.showLoadingBackground
-                ? () => store.onToggleLike(!store.isLiked)
-                : null,
+            onTap: !store.showLoadingBackground ? () => store.onToggleLike(!store.isLiked) : null,
             onEnter: (_) => controller.forward(),
             onExit: (_) => controller.reverse(),
             tooltip: store.isLiked ? 'Liked' : 'Like',
@@ -488,9 +464,7 @@ class _LikeBackgroundButtonState extends State<LikeBackgroundButton>
               ),
               builder: (context, child) {
                 return Icon(
-                  store.isLiked
-                      ? Icons.favorite_rounded
-                      : Icons.favorite_border_rounded,
+                  store.isLiked ? Icons.favorite_rounded : Icons.favorite_border_rounded,
                   color: color.withValues(alpha: max(0.2, controller.value)),
                 );
               },

@@ -7,16 +7,13 @@ import 'package:yaml/yaml.dart';
 void main(List<String> args) {
   final File manifestFile = File('web/manifest.json');
   final File pubspecFile = File('pubspec.yaml');
-  final String version =
-      loadYaml(pubspecFile.readAsStringSync())['version'].toString();
+  final String version = loadYaml(pubspecFile.readAsStringSync())['version'].toString();
 
-  final Map<String, dynamic> manifest =
-      jsonDecode(manifestFile.readAsStringSync());
+  final Map<String, dynamic> manifest = jsonDecode(manifestFile.readAsStringSync());
 
   manifest['version'] = version.split('+').first;
 
-  manifestFile
-      .writeAsStringSync(const JsonEncoder.withIndent('  ').convert(manifest));
+  manifestFile.writeAsStringSync(const JsonEncoder.withIndent('  ').convert(manifest));
   stdout.writeln('Updated manifest version to $version');
 
   // final File versionFile = File('lib/src/version.dart');

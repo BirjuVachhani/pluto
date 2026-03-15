@@ -6,29 +6,19 @@ part of 'widget_settings.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-NoneWidgetSettings _$NoneWidgetSettingsFromJson(Map<String, dynamic> json) =>
-    NoneWidgetSettings();
+NoneWidgetSettings _$NoneWidgetSettingsFromJson(Map<String, dynamic> json) => NoneWidgetSettings();
 
-Map<String, dynamic> _$NoneWidgetSettingsToJson(NoneWidgetSettings instance) =>
-    <String, dynamic>{};
+Map<String, dynamic> _$NoneWidgetSettingsToJson(NoneWidgetSettings instance) => <String, dynamic>{};
 
 DigitalClockWidgetSettings _$DigitalClockWidgetSettingsFromJson(
   Map<String, dynamic> json,
 ) => DigitalClockWidgetSettings(
   fontSize: (json['fontSize'] as num?)?.toDouble() ?? 100,
-  separator:
-      $enumDecodeNullable(_$SeparatorEnumMap, json['separator']) ??
-      Separator.colon,
-  borderType:
-      $enumDecodeNullable(_$BorderTypeEnumMap, json['borderType']) ??
-      BorderType.none,
+  separator: $enumDecodeNullable(_$SeparatorEnumMap, json['separator']) ?? Separator.colon,
+  borderType: $enumDecodeNullable(_$BorderTypeEnumMap, json['borderType']) ?? BorderType.none,
   fontFamily: json['fontFamily'] as String? ?? FontFamilies.product,
-  alignment:
-      $enumDecodeNullable(_$AlignmentCEnumMap, json['alignment']) ??
-      AlignmentC.center,
-  format:
-      $enumDecodeNullable(_$ClockFormatEnumMap, json['format']) ??
-      ClockFormat.twelveHour,
+  alignment: $enumDecodeNullable(_$AlignmentCEnumMap, json['alignment']) ?? AlignmentC.center,
+  format: $enumDecodeNullable(_$ClockFormatEnumMap, json['format']) ?? ClockFormat.twelveHour,
 );
 
 Map<String, dynamic> _$DigitalClockWidgetSettingsToJson(
@@ -81,9 +71,7 @@ AnalogClockWidgetSettings _$AnalogClockWidgetSettingsFromJson(
   radius: (json['radius'] as num?)?.toDouble() ?? 100,
   showSecondsHand: json['showSecondsHand'] as bool? ?? true,
   coloredSecondHand: json['coloredSecondHand'] as bool? ?? false,
-  alignment:
-      $enumDecodeNullable(_$AlignmentCEnumMap, json['alignment']) ??
-      AlignmentC.center,
+  alignment: $enumDecodeNullable(_$AlignmentCEnumMap, json['alignment']) ?? AlignmentC.center,
 );
 
 Map<String, dynamic> _$AnalogClockWidgetSettingsToJson(
@@ -101,9 +89,7 @@ MessageWidgetSettings _$MessageWidgetSettingsFromJson(
   fontSize: (json['fontSize'] as num?)?.toDouble() ?? 100,
   fontFamily: json['fontFamily'] as String? ?? FontFamilies.product,
   message: json['message'] as String? ?? 'Hello World!',
-  alignment:
-      $enumDecodeNullable(_$AlignmentCEnumMap, json['alignment']) ??
-      AlignmentC.center,
+  alignment: $enumDecodeNullable(_$AlignmentCEnumMap, json['alignment']) ?? AlignmentC.center,
 );
 
 Map<String, dynamic> _$MessageWidgetSettingsToJson(
@@ -115,20 +101,15 @@ Map<String, dynamic> _$MessageWidgetSettingsToJson(
   'alignment': _$AlignmentCEnumMap[instance.alignment]!,
 };
 
-TimerWidgetSettings _$TimerWidgetSettingsFromJson(Map<String, dynamic> json) =>
-    TimerWidgetSettings(
-      fontSize: (json['fontSize'] as num?)?.toDouble() ?? 100,
-      fontFamily: json['fontFamily'] as String? ?? FontFamilies.product,
-      textBefore: json['textBefore'] as String? ?? '',
-      textAfter: json['textAfter'] as String? ?? '',
-      time: dateTimeFromJson((json['time'] as num).toInt()),
-      alignment:
-          $enumDecodeNullable(_$AlignmentCEnumMap, json['alignment']) ??
-          AlignmentC.center,
-      format:
-          $enumDecodeNullable(_$TimerFormatEnumMap, json['format']) ??
-          TimerFormat.descriptive,
-    );
+TimerWidgetSettings _$TimerWidgetSettingsFromJson(Map<String, dynamic> json) => TimerWidgetSettings(
+  fontSize: (json['fontSize'] as num?)?.toDouble() ?? 100,
+  fontFamily: json['fontFamily'] as String? ?? FontFamilies.product,
+  textBefore: json['textBefore'] as String? ?? '',
+  textAfter: json['textAfter'] as String? ?? '',
+  time: dateTimeFromJson((json['time'] as num).toInt()),
+  alignment: $enumDecodeNullable(_$AlignmentCEnumMap, json['alignment']) ?? AlignmentC.center,
+  format: $enumDecodeNullable(_$TimerFormatEnumMap, json['format']) ?? TimerFormat.descriptive,
+);
 
 Map<String, dynamic> _$TimerWidgetSettingsToJson(
   TimerWidgetSettings instance,
@@ -158,15 +139,9 @@ WeatherWidgetSettings _$WeatherWidgetSettingsFromJson(
 ) => WeatherWidgetSettings(
   fontSize: (json['fontSize'] as num?)?.toDouble() ?? 100,
   fontFamily: json['fontFamily'] as String? ?? FontFamilies.product,
-  alignment:
-      $enumDecodeNullable(_$AlignmentCEnumMap, json['alignment']) ??
-      AlignmentC.center,
-  format:
-      $enumDecodeNullable(_$WeatherFormatEnumMap, json['format']) ??
-      WeatherFormat.temperatureAndSummary,
-  temperatureUnit:
-      $enumDecodeNullable(_$TemperatureUnitEnumMap, json['temperatureUnit']) ??
-      TemperatureUnit.celsius,
+  alignment: $enumDecodeNullable(_$AlignmentCEnumMap, json['alignment']) ?? AlignmentC.center,
+  format: $enumDecodeNullable(_$WeatherFormatEnumMap, json['format']) ?? WeatherFormat.temperatureAndSummary,
+  temperatureUnit: $enumDecodeNullable(_$TemperatureUnitEnumMap, json['temperatureUnit']) ?? TemperatureUnit.celsius,
   location: json['location'] == null
       ? const Location(
           name: 'Tokyo',
@@ -219,19 +194,11 @@ DigitalDateWidgetSettings _$DigitalDateWidgetSettingsFromJson(
   Map<String, dynamic> json,
 ) => DigitalDateWidgetSettings(
   fontSize: (json['fontSize'] as num?)?.toDouble() ?? 100,
-  separator:
-      $enumDecodeNullable(_$DateSeparatorEnumMap, json['separator']) ??
-      DateSeparator.slash,
-  borderType:
-      $enumDecodeNullable(_$BorderTypeEnumMap, json['borderType']) ??
-      BorderType.none,
+  separator: $enumDecodeNullable(_$DateSeparatorEnumMap, json['separator']) ?? DateSeparator.slash,
+  borderType: $enumDecodeNullable(_$BorderTypeEnumMap, json['borderType']) ?? BorderType.none,
   fontFamily: json['fontFamily'] as String? ?? FontFamilies.product,
-  alignment:
-      $enumDecodeNullable(_$AlignmentCEnumMap, json['alignment']) ??
-      AlignmentC.center,
-  format:
-      $enumDecodeNullable(_$DateFormatEnumMap, json['format']) ??
-      DateFormat.dayMonthYear,
+  alignment: $enumDecodeNullable(_$AlignmentCEnumMap, json['alignment']) ?? AlignmentC.center,
+  format: $enumDecodeNullable(_$DateFormatEnumMap, json['format']) ?? DateFormat.dayMonthYear,
   customFormat: json['customFormat'] as String? ?? 'MMMM dd, yyyy',
 );
 

@@ -7,17 +7,22 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
+import 'package:path/path.dart' as p;
 import 'package:provider/provider.dart';
 
 import '../main.dart';
 import '../model/background_settings.dart';
 import '../resources/storage_keys.dart';
 import '../settings/changelog_dialog.dart';
+import '../settings/drop_image_dialog.dart';
 import '../settings/settings_panel.dart';
 import '../ui/message_banner/message_banner.dart';
 import '../ui/message_banner/message_view.dart';
 import '../utils/custom_observer.dart';
+import '../utils/drop_delegate.dart';
+import '../utils/media_drop_region.dart';
 import '../utils/storage_manager.dart';
+import '../utils/super_utils.dart';
 import '../utils/universal/universal.dart';
 import '../utils/utils.dart';
 import 'background_store.dart';
@@ -65,8 +70,7 @@ class _HomeState extends State<Home> {
   late final BackgroundStore backgroundStore = context.read<BackgroundStore>();
   late final HomeStore store = context.read<HomeStore>();
 
-  late final LocalStorageManager storageManager =
-      GetIt.instance.get<LocalStorageManager>();
+  late final LocalStorageManager storageManager = GetIt.instance.get<LocalStorageManager>();
 
   ReactionDisposer? _disposer;
 
@@ -87,8 +91,7 @@ class _HomeState extends State<Home> {
   }
 
   void listenToEvents() {
-    _disposer = reaction(
-        (react) => backgroundStore.backgroundRefreshRate, onRefreshRateChanged);
+    _disposer = reaction((react) => backgroundStore.backgroundRefreshRate, onRefreshRateChanged);
   }
 
   /// Start and stop timer based on the current [BackgroundRefreshRate] when
@@ -106,8 +109,7 @@ class _HomeState extends State<Home> {
   void startTimer() {
     if (_timer != null) return;
     log('Starting timer for background refresh');
-    _timer = Timer.periodic(const Duration(seconds: 1),
-        (timer) => backgroundStore.onTimerCallback());
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) => backgroundStore.onTimerCallback());
   }
 
   /// Stop the timer for auto background refresh.
@@ -131,12 +133,24 @@ class _HomeState extends State<Home> {
                 fit: StackFit.expand,
                 alignment: Alignment.center,
                 children: [
-                  const Positioned.fill(
-                      child: RepaintBoundary(child: HomeBackground())),
-                  const Positioned.fill(
-                      child: RepaintBoundary(child: HomeWidget())),
-                  const Align(
-                      alignment: Alignment.bottomCenter, child: BottomBar()),
+                  const Positioned.fill(child: RepaintBoundary(child: HomeBackground())),
+                  const Positioned.fill(child: RepaintBoundary(child: HomeWidget())),
+                  const Align(alignment: Alignment.bottomCenter, child: BottomBar()),
+                  Positioned.fill(
+                    child: MediaDropRegion(
+                      formats: [...imageDropFormats],
+                      hitTestBehavior: HitTestBehavior.translucent,
+                      onFileTooLarge: _onFileTooLarge,
+                      onDropEnter: (_) => DragAndDropScope.maybeOf(context)?.isHoveringOverZone = true,
+                      onDropLeave: (_) => DragAndDropScope.maybeOf(context)?.isHoveringOverZone = false,
+                      maxFileSize: defaultMaxFileSizeBytes,
+                      onDrop: (files, directories) async {
+                        if (files.isEmpty) return;
+                        _onImageDropped(await files.first.readAsBytes(), p.basename(files.first.name));
+                      },
+                      builder: (context, isDropping, child) => IgnorePointer(child: Container()),
+                    ),
+                  ),
                   const RepaintBoundary(child: SettingsPanel()),
                   Positioned(
                     bottom: 48,
@@ -147,8 +161,7 @@ class _HomeState extends State<Home> {
                       child: MessageBanner(
                         controller: store.messageBannerController,
                         maxLines: 1,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 8),
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                         bannerStyle: MessageBannerStyle.solid,
                       ),
                     ),
@@ -223,11 +236,24 @@ class _HomeState extends State<Home> {
     );
   }
 
+  Future<void> _onImageDropped(Uint8List bytes, String? fileName) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) => DropImageDialog(
+        imageBytes: bytes,
+        fileName: fileName,
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+
+    await backgroundStore.setLocalImage(bytes, fileName: fileName);
+  }
+
   Future<void> onScreenshot() async {
     // take a screenshot with homeKey and save.
     final Uint8List imageBytes = await takeScreenshot(homeKey);
-    final fileName =
-        'background_${DateTime.now().millisecondsSinceEpoch ~/ 1000}.jpg';
+    final fileName = 'background_${DateTime.now().millisecondsSinceEpoch ~/ 1000}.jpg';
 
     if (kIsWeb) {
       return downloadImage(imageBytes, fileName);
@@ -245,8 +271,7 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> _shouldShowChangelog() async {
-    final String? storedVersion =
-        await storageManager.getString(StorageKeys.version);
+    final String? storedVersion = await storageManager.getString(StorageKeys.version);
     if (storedVersion == null || storedVersion != packageInfo.version) {
       log('Showing changelog dialog');
       await storageManager.setString(StorageKeys.version, packageInfo.version);
@@ -268,5 +293,9 @@ class _HomeState extends State<Home> {
     _timer?.cancel();
     _disposer?.reaction.dispose();
     super.dispose();
+  }
+
+  void _onFileTooLarge(FileTooLargeError error) {
+    // TODO: show dialog
   }
 }

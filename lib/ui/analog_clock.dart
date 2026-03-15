@@ -76,9 +76,7 @@ class AnalogClockPainter extends CustomPainter {
     final Offset center = Offset(size.width / 2, size.height / 2);
 
     // Radius is calculated such that everything won't leak outside the viewport.
-    final rect = Rect.fromCircle(
-        center: center,
-        radius: min(size.width, size.height) / 2 - dialThickness);
+    final rect = Rect.fromCircle(center: center, radius: min(size.width, size.height) / 2 - dialThickness);
 
     _drawDial(canvas, rect, center);
     _drawHourHand(canvas, rect, center);
@@ -120,8 +118,7 @@ class AnalogClockPainter extends CustomPainter {
 
   void _drawMinuteHand(Canvas canvas, Rect rect, Offset center) {
     final sizePercent = showSecondHand ? 0.8 : 0.85;
-    final double radius =
-        (rect.width / 2 * sizePercent) - (minuteHandThickness / 2);
+    final double radius = (rect.width / 2 * sizePercent) - (minuteHandThickness / 2);
 
     final Paint paint = Paint()
       ..color = minuteHandColor ?? color?.withValues(alpha: 0.6) ?? Colors.grey
@@ -139,8 +136,7 @@ class AnalogClockPainter extends CustomPainter {
 
   void _drawHourHand(Canvas canvas, Rect innerRect, Offset center) {
     final sizePercent = showSecondHand ? 0.6 : 0.65;
-    final double radius =
-        (innerRect.width / 2 * sizePercent) - (hourHandThickness / 2);
+    final double radius = (innerRect.width / 2 * sizePercent) - (hourHandThickness / 2);
 
     final Paint paint = Paint()
       ..color = hourHandColor ?? color?.withValues(alpha: 1) ?? Colors.black

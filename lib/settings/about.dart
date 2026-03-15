@@ -100,8 +100,7 @@ class About extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             GestureDetectorWithCursor(
-              onTap: () =>
-                  launchUrl(Uri.parse('https://twitter.com/birjuvachhani')),
+              onTap: () => launchUrl(Uri.parse('https://twitter.com/birjuvachhani')),
               child: SizedBox.square(
                 dimension: 26,
                 child: Image.asset('assets/images/ic_twitter.png'),
@@ -109,8 +108,7 @@ class About extends StatelessWidget {
             ),
             const SizedBox(width: 16),
             GestureDetectorWithCursor(
-              onTap: () =>
-                  launchUrl(Uri.parse('https://github.com/birjuvachhani')),
+              onTap: () => launchUrl(Uri.parse('https://github.com/birjuvachhani')),
               child: SizedBox.square(
                 dimension: 26,
                 child: Image.asset(
@@ -193,8 +191,7 @@ class PlutoLogo extends StatefulWidget {
   State<PlutoLogo> createState() => _PlutoLogoState();
 }
 
-class _PlutoLogoState extends State<PlutoLogo>
-    with SingleTickerProviderStateMixin {
+class _PlutoLogoState extends State<PlutoLogo> with SingleTickerProviderStateMixin {
   late final AnimationController _controller = AnimationController(
     vsync: this,
     duration: const Duration(seconds: 20),

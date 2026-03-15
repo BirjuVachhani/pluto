@@ -47,11 +47,10 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
   Computed<Background?>? _$currentImageComputed;
 
   @override
-  Background? get currentImage =>
-      (_$currentImageComputed ??= Computed<Background?>(
-        () => super.currentImage,
-        name: '_BackgroundStore.currentImage',
-      )).value;
+  Background? get currentImage => (_$currentImageComputed ??= Computed<Background?>(
+    () => super.currentImage,
+    name: '_BackgroundStore.currentImage',
+  )).value;
 
   late final _$_isLoadingImageAtom = Atom(
     name: '_BackgroundStore._isLoadingImage',
@@ -168,8 +167,7 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
   }
 
   @override
-  ObservableMap<String, LikedBackground> get _likedBackgrounds =>
-      likedBackgrounds;
+  ObservableMap<String, LikedBackground> get _likedBackgrounds => likedBackgrounds;
 
   @override
   set _likedBackgrounds(ObservableMap<String, LikedBackground> value) {
@@ -526,6 +524,26 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
     );
   }
 
+  late final _$_localImageFileNameAtom = Atom(
+    name: '_BackgroundStore._localImageFileName',
+    context: context,
+  );
+
+  String? get localImageFileName {
+    _$_localImageFileNameAtom.reportRead();
+    return super._localImageFileName;
+  }
+
+  @override
+  String? get _localImageFileName => localImageFileName;
+
+  @override
+  set _localImageFileName(String? value) {
+    _$_localImageFileNameAtom.reportWrite(value, super._localImageFileName, () {
+      super._localImageFileName = value;
+    });
+  }
+
   late final _$initializeImagesAsyncAction = AsyncAction(
     '_BackgroundStore.initializeImages',
     context: context,
@@ -584,6 +602,28 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
   @override
   Future<void> onTimerCallback() {
     return _$onTimerCallbackAsyncAction.run(() => super.onTimerCallback());
+  }
+
+  late final _$setLocalImageAsyncAction = AsyncAction(
+    '_BackgroundStore.setLocalImage',
+    context: context,
+  );
+
+  @override
+  Future<void> setLocalImage(Uint8List bytes, {String? fileName}) {
+    return _$setLocalImageAsyncAction.run(
+      () => super.setLocalImage(bytes, fileName: fileName),
+    );
+  }
+
+  late final _$pickLocalImageAsyncAction = AsyncAction(
+    '_BackgroundStore.pickLocalImage',
+    context: context,
+  );
+
+  @override
+  Future<void> pickLocalImage() {
+    return _$pickLocalImageAsyncAction.run(() => super.pickLocalImage());
   }
 
   late final _$onToggleLikeAsyncAction = AsyncAction(

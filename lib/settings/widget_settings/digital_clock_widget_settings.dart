@@ -28,8 +28,7 @@ class DigitalClockWidgetSettingsView extends StatelessWidget {
               isExpanded: true,
               value: settings.fontFamily,
               items: FontFamilies.fonts,
-              onSelected: (family) =>
-                  settings.update(() => settings.fontFamily = family),
+              onSelected: (family) => settings.update(() => settings.fontFamily = family),
             );
           },
         ),
@@ -54,8 +53,7 @@ class DigitalClockWidgetSettingsView extends StatelessWidget {
           builder: (context) {
             return AlignmentControl(
               alignment: settings.alignment,
-              onChanged: (alignment) =>
-                  settings.update(() => settings.alignment = alignment),
+              onChanged: (alignment) => settings.update(() => settings.alignment = alignment),
             );
           },
         ),
@@ -68,8 +66,7 @@ class DigitalClockWidgetSettingsView extends StatelessWidget {
               value: settings.borderType,
               items: BorderType.values,
               itemBuilder: (context, type) => Text(type.name.capitalize()),
-              onSelected: (value) =>
-                  settings.update(() => settings.borderType = value),
+              onSelected: (value) => settings.update(() => settings.borderType = value),
             );
           },
         ),
@@ -82,8 +79,7 @@ class DigitalClockWidgetSettingsView extends StatelessWidget {
               value: settings.separator,
               items: Separator.values,
               itemBuilder: (context, type) => Text(type.name.capitalize()),
-              onSelected: (value) =>
-                  settings.update(() => settings.separator = value),
+              onSelected: (value) => settings.update(() => settings.separator = value),
             );
           },
         ),
@@ -96,8 +92,7 @@ class DigitalClockWidgetSettingsView extends StatelessWidget {
               value: settings.format,
               items: ClockFormat.values,
               itemBuilder: (context, type) => Text(type.label),
-              onSelected: (value) =>
-                  settings.update(() => settings.format = value),
+              onSelected: (value) => settings.update(() => settings.format = value),
             );
           },
         ),

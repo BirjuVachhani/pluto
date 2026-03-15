@@ -6,10 +6,7 @@ class PexelsException implements Exception {
   /// A human-readable error message.
   final String message;
 
-  const PexelsException({
-    required this.statusCode,
-    required this.message,
-  });
+  const PexelsException({required this.statusCode, required this.message});
 
   @override
   String toString() => 'PexelsException($statusCode): $message';

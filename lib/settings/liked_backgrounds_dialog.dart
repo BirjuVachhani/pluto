@@ -17,7 +17,8 @@ import '../utils/universal/universal.dart';
 enum DownloadState {
   downloading,
   downloaded,
-  failed;
+  failed
+  ;
 
   bool get isDownloading => this == DownloadState.downloading;
 
@@ -36,8 +37,7 @@ class LikedBackgroundsDialog extends StatefulWidget {
 }
 
 class _LikedBackgroundsDialogState extends State<LikedBackgroundsDialog> {
-  late final LocalStorageManager storage =
-      GetIt.instance.get<LocalStorageManager>();
+  late final LocalStorageManager storage = GetIt.instance.get<LocalStorageManager>();
 
   Map<String, DownloadState> downloadingItems = {};
 
@@ -65,12 +65,9 @@ class _LikedBackgroundsDialogState extends State<LikedBackgroundsDialog> {
                       children: [
                         Text(
                           "Photos you've liked",
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineSmall!
-                              .copyWith(
-                                fontWeight: FontWeight.w500,
-                              ),
+                          style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                         if (entries.isNotEmpty)
                           Text(
@@ -161,8 +158,7 @@ class _LikedBackgroundsDialogState extends State<LikedBackgroundsDialog> {
     if (mounted) setState(() {});
   }
 
-  Future<void> onDownloadImage(
-      MapEntry<String, LikedBackground> background) async {
+  Future<void> onDownloadImage(MapEntry<String, LikedBackground> background) async {
     if (downloadingItems[background.value.url] == DownloadState.downloading) {
       return;
     }
@@ -178,8 +174,7 @@ class _LikedBackgroundsDialogState extends State<LikedBackgroundsDialog> {
       }
       final Uint8List bytes = result.bodyBytes;
 
-      final fileName =
-          'background_${DateTime.now().millisecondsSinceEpoch ~/ 1000}.jpg';
+      final fileName = 'background_${DateTime.now().millisecondsSinceEpoch ~/ 1000}.jpg';
 
       if (kIsWeb) {
         await downloadImage(bytes, fileName);
@@ -242,8 +237,7 @@ class _ItemState extends State<_Item> {
   void didUpdateWidget(covariant _Item oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.downloadState != oldWidget.downloadState) {
-      if (widget.downloadState == DownloadState.downloaded ||
-          widget.downloadState == DownloadState.failed) {
+      if (widget.downloadState == DownloadState.downloaded || widget.downloadState == DownloadState.failed) {
         Future.delayed(const Duration(seconds: 2), () {
           widget.onRemoveDownloadState();
         });
@@ -296,16 +290,11 @@ class _ItemState extends State<_Item> {
                 child!,
                 if (widget.downloadState == null)
                   AnimatedOpacity(
-                    opacity: hovering &&
-                            widget.downloadState != DownloadState.downloading
-                        ? 1
-                        : 0,
+                    opacity: hovering && widget.downloadState != DownloadState.downloading ? 1 : 0,
                     duration: Duration(milliseconds: hovering ? 250 : 0),
                     curve: Curves.easeInOut,
                     child: Container(
-                      color: hovering
-                          ? Colors.black.withValues(alpha: 0.8)
-                          : Colors.transparent,
+                      color: hovering ? Colors.black.withValues(alpha: 0.8) : Colors.transparent,
                       child: Center(
                         child: options,
                       ),
@@ -495,9 +484,7 @@ class _NetworkImageWithStates extends StatelessWidget {
       scale: scale,
       width: width,
       height: height,
-      loadingBuilder: (BuildContext context, Widget child,
-              ImageChunkEvent? loadingProgress) =>
-          AnimatedSwitcher(
+      loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) => AnimatedSwitcher(
         duration: const Duration(milliseconds: 150),
         child: loadingProgress == null
             ? SizedBox.expand(child: child)
@@ -506,8 +493,7 @@ class _NetworkImageWithStates extends StatelessWidget {
                   painter: CircularProgressPainter(
                     radius: 12,
                     value: loadingProgress.expectedTotalBytes != null
-                        ? loadingProgress.cumulativeBytesLoaded /
-                            loadingProgress.expectedTotalBytes!
+                        ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
                         : 0,
                   ),
                 ),
@@ -537,11 +523,11 @@ class CircularProgressPainter extends CustomPainter {
     required this.radius,
     required this.value,
     this.color = Colors.white,
-  })  : arcPaint = Paint()..color = color,
-        strokePaint = Paint()
-          ..color = color
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 1;
+  }) : arcPaint = Paint()..color = color,
+       strokePaint = Paint()
+         ..color = color
+         ..style = PaintingStyle.stroke
+         ..strokeWidth = 1;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -549,8 +535,7 @@ class CircularProgressPainter extends CustomPainter {
 
     final double angle = value * 360;
     final angleInRadians = angle * pi / 180;
-    canvas.drawCircle(
-        center, radius, Paint()..color = color.withValues(alpha: 0.1));
+    canvas.drawCircle(center, radius, Paint()..color = color.withValues(alpha: 0.1));
     canvas.drawArc(
       Rect.fromCenter(
         center: center,
@@ -593,54 +578,54 @@ class RotationAnglePainter extends CustomPainter {
 
     /// Draw the angle line.
     canvas.drawLine(
-        center,
-        center +
-            Offset((size.width / 2.0) * cos(angle - pi / 2),
-                (size.height / 2.0) * sin(angle - pi / 2)),
-        linePaint
-          ..color = lineColor
-          ..strokeWidth = 1.5);
+      center,
+      center + Offset((size.width / 2.0) * cos(angle - pi / 2), (size.height / 2.0) * sin(angle - pi / 2)),
+      linePaint
+        ..color = lineColor
+        ..strokeWidth = 1.5,
+    );
 
     /// Filled in angle gradient.
     if (angle * 180 / pi < 0) {
       canvas.drawArc(
-          Rect.fromCenter(
-              center: center, width: size.width, height: size.height),
-          -pi / 2,
-          pi,
-          true,
-          linePaint
-            ..color = angleArcColor
-            ..style = PaintingStyle.fill);
+        Rect.fromCenter(center: center, width: size.width, height: size.height),
+        -pi / 2,
+        pi,
+        true,
+        linePaint
+          ..color = angleArcColor
+          ..style = PaintingStyle.fill,
+      );
 
       canvas.drawArc(
-          Rect.fromCenter(
-              center: center, width: size.width, height: size.height),
-          pi / 2,
-          angle + pi,
-          true,
-          linePaint
-            ..color = angleArcColor
-            ..style = PaintingStyle.fill);
+        Rect.fromCenter(center: center, width: size.width, height: size.height),
+        pi / 2,
+        angle + pi,
+        true,
+        linePaint
+          ..color = angleArcColor
+          ..style = PaintingStyle.fill,
+      );
     } else {
       canvas.drawArc(
-          Rect.fromCenter(
-              center: center, width: size.width, height: size.height),
-          -pi / 2,
-          angle,
-          true,
-          linePaint
-            ..color = angleArcColor
-            ..style = PaintingStyle.fill);
+        Rect.fromCenter(center: center, width: size.width, height: size.height),
+        -pi / 2,
+        angle,
+        true,
+        linePaint
+          ..color = angleArcColor
+          ..style = PaintingStyle.fill,
+      );
     }
 
     /// Draw center dot
     canvas.drawCircle(
-        center,
-        3,
-        linePaint
-          ..color = lineColor
-          ..style = PaintingStyle.fill);
+      center,
+      3,
+      linePaint
+        ..color = lineColor
+        ..style = PaintingStyle.fill,
+    );
   }
 
   @override

@@ -13,8 +13,7 @@ import '../resources/flat_colors.dart';
 import 'extensions.dart';
 
 /// Finds a [ColorGradient] by its [name] from the [ColorGradients] list.
-ColorGradient? findGradientByName(String name) =>
-    ColorGradients.gradients[name];
+ColorGradient? findGradientByName(String name) => ColorGradients.gradients[name];
 
 /// Finds a color by [name] from the [FlatColors] list.
 FlatColor? findColorByName(String name) => FlatColors.colors[name];
@@ -75,8 +74,7 @@ ColorFilter greyscale([double value = 1]) {
 }
 
 Uri applyResolutionOnUrl(String url, ImageResolution? resolution) {
-  final Size? size =
-      resolution == ImageResolution.original ? null : resolution?.toSize();
+  final Size? size = resolution == ImageResolution.original ? null : resolution?.toSize();
 
   final uri = Uri.parse(url);
   if (resolution == ImageResolution.original) {
@@ -108,19 +106,16 @@ Future<Uint8List> takeScreenshot(
 }) async {
   try {
     final RenderObject renderObject =
-        widgetKey.currentContext?.findRenderObject() ??
-            (throw ScreenshotException('No RenderObject found'));
+        widgetKey.currentContext?.findRenderObject() ?? (throw ScreenshotException('No RenderObject found'));
     if (renderObject is! RenderRepaintBoundary) {
       throw ScreenshotException('RenderObject is not a RenderRepaintBoundary');
     }
 
-    final ui.Image image =
-        await renderObject.toImage(pixelRatio: devicePixelRatio);
+    final ui.Image image = await renderObject.toImage(pixelRatio: devicePixelRatio);
     // image to Uint8List
     final ByteData? byteData = await image.toByteData(format: format);
     if (byteData == null) {
-      throw ScreenshotException(
-          'Error while taking screenshot: byteData is null');
+      throw ScreenshotException('Error while taking screenshot: byteData is null');
     }
     final Uint8List pngBytes = byteData.buffer.asUint8List();
 

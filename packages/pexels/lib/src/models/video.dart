@@ -68,11 +68,7 @@ class VideoUser {
   /// The URL of the user's Pexels profile.
   final String url;
 
-  const VideoUser({
-    required this.id,
-    required this.name,
-    required this.url,
-  });
+  const VideoUser({required this.id, required this.name, required this.url});
 
   factory VideoUser.fromJson(Map<String, dynamic> json) =>
       _$VideoUserFromJson(json);

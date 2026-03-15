@@ -34,8 +34,7 @@ class LocationResponse {
     this.description3,
   });
 
-  factory LocationResponse.fromJson(Map<String, dynamic> json) =>
-      _$LocationResponseFromJson(json);
+  factory LocationResponse.fromJson(Map<String, dynamic> json) => _$LocationResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$LocationResponseToJson(this);
 

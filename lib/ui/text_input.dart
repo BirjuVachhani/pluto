@@ -61,8 +61,7 @@ class _TextInputState extends State<TextInput> {
   @override
   void initState() {
     super.initState();
-    _controller =
-        widget.controller ?? TextEditingController(text: widget.initialValue);
+    _controller = widget.controller ?? TextEditingController(text: widget.initialValue);
     _focusNode = widget.focusNode ?? FocusNode();
 
     _focusNode.addListener(onFocusChange);
@@ -90,8 +89,7 @@ class _TextInputState extends State<TextInput> {
     super.didUpdateWidget(oldWidget);
     if (widget.controller != oldWidget.controller) {
       if (oldWidget.controller == null) _controller.dispose();
-      _controller =
-          widget.controller ?? TextEditingController(text: widget.initialValue);
+      _controller = widget.controller ?? TextEditingController(text: widget.initialValue);
     }
     if (oldWidget.initialValue != widget.initialValue) {
       _controller.text = widget.initialValue ?? '';
@@ -123,9 +121,7 @@ class _TextInputState extends State<TextInput> {
             textAlign: widget.textAlign ?? TextAlign.start,
             inputFormatters: widget.inputFormatters,
             textInputAction: widget.textInputAction ?? TextInputAction.done,
-            style: const TextStyle(
-                    height: 1.2, fontSize: 15, fontWeight: FontWeight.w300)
-                .merge(widget.textStyle),
+            style: const TextStyle(height: 1.2, fontSize: 15, fontWeight: FontWeight.w300).merge(widget.textStyle),
             onSubmitted: (_) => _submit(),
             decoration: InputDecoration(
               isDense: true,
@@ -138,11 +134,9 @@ class _TextInputState extends State<TextInput> {
                 color: Colors.grey,
                 fontSize: 14,
               ).merge(widget.hintStyle),
-              contentPadding: widget.contentPadding ??
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+              contentPadding: widget.contentPadding ?? const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
               filled: true,
-              fillColor:
-                  widget.fillColor ?? Colors.grey.withValues(alpha: 0.05),
+              fillColor: widget.fillColor ?? Colors.grey.withValues(alpha: 0.05),
               focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(
                   color: Theme.of(context).colorScheme.primary,
@@ -152,18 +146,14 @@ class _TextInputState extends State<TextInput> {
               ),
               border: OutlineInputBorder(
                 borderSide: BorderSide(
-                  color: widget.showInitialBorder
-                      ? Colors.grey.withValues(alpha: 0.15)
-                      : Colors.transparent,
+                  color: widget.showInitialBorder ? Colors.grey.withValues(alpha: 0.15) : Colors.transparent,
                   width: 1,
                 ),
                 borderRadius: BorderRadius.circular(4),
               ),
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
-                  color: widget.showInitialBorder
-                      ? Colors.grey.withValues(alpha: 0.15)
-                      : Colors.transparent,
+                  color: widget.showInitialBorder ? Colors.grey.withValues(alpha: 0.15) : Colors.transparent,
                   width: 1,
                 ),
                 borderRadius: BorderRadius.circular(4),

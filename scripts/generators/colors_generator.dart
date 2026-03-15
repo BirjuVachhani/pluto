@@ -35,7 +35,8 @@ void main(List<String> args) {
     final String backgroundColor = parseColor(item['background'][0].toString());
     final String foregroundColor = parseColor(item['foreground'].toString());
     stringBuffer.writeln(
-        'static const FlatColor $variableName = FlatColor(name: \'$name\', background: Color(0XFF$backgroundColor), foreground: Color(0XFF$foregroundColor),);');
+      'static const FlatColor $variableName = FlatColor(name: \'$name\', background: Color(0XFF$backgroundColor), foreground: Color(0XFF$foregroundColor),);',
+    );
 
     values[name] = variableName;
   }
@@ -53,9 +54,9 @@ void main(List<String> args) {
   stringBuffer.writeln('}');
 
   // Format
-  final String output =
-      DartFormatter(languageVersion: DartFormatter.latestLanguageVersion)
-          .format(stringBuffer.toString());
+  final String output = DartFormatter(
+    languageVersion: DartFormatter.latestLanguageVersion,
+  ).format(stringBuffer.toString());
 
   // print to console
   stdout.writeln(output);
@@ -71,8 +72,7 @@ String parseVariableName(String name) {
     return name.toLowerCase();
   }
   for (int i = 1; i < words.length; i++) {
-    words[i] = words[i].characters.first.toUpperCase() +
-        words[i].substring(1).toLowerCase();
+    words[i] = words[i].characters.first.toUpperCase() + words[i].substring(1).toLowerCase();
   }
 
   // Handle names starting with digits because dart doesn't support it. So

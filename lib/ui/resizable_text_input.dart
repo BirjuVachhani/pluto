@@ -36,8 +36,7 @@ class _ResizableTextInputState extends State<ResizableTextInput> {
   @override
   void initState() {
     super.initState();
-    _controller =
-        widget.controller ?? TextEditingController(text: widget.initialValue);
+    _controller = widget.controller ?? TextEditingController(text: widget.initialValue);
     _focusNode = FocusNode();
 
     _focusNode.addListener(onFocusChange);
@@ -55,8 +54,7 @@ class _ResizableTextInputState extends State<ResizableTextInput> {
     super.didUpdateWidget(oldWidget);
     if (widget.controller != oldWidget.controller) {
       if (oldWidget.controller == null) _controller.dispose();
-      _controller =
-          widget.controller ?? TextEditingController(text: widget.initialValue);
+      _controller = widget.controller ?? TextEditingController(text: widget.initialValue);
     }
   }
 
@@ -80,12 +78,10 @@ class _ResizableTextInputState extends State<ResizableTextInput> {
                 onChanged: widget.onChanged,
                 expands: true,
                 maxLines: null,
-                style:
-                    const TextStyle(fontWeight: FontWeight.w300, fontSize: 13),
+                style: const TextStyle(fontWeight: FontWeight.w300, fontSize: 13),
                 decoration: InputDecoration(
                   isDense: true,
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
                   filled: true,
                   isCollapsed: true,
                   fillColor: Colors.grey.withValues(alpha: 0.05),
@@ -139,7 +135,7 @@ class _ResizableTextInputState extends State<ResizableTextInput> {
                   ),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ],

@@ -2,11 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:super_drag_and_drop/super_drag_and_drop.dart';
 
 import 'backend/backend_service.dart';
 import 'backend/rest_backend_service.dart';
 import 'home/home.dart';
 import 'resources/colors.dart';
+import 'utils/drop_delegate.dart';
 import 'utils/geocoding_service.dart';
 import 'utils/storage_manager.dart';
 import 'utils/weather_service.dart';
@@ -22,11 +24,20 @@ void main() async {
 
 late PackageInfo packageInfo;
 
-Future<void> loadPackageInfo() async =>
-    packageInfo = await PackageInfo.fromPlatform();
+Future<void> loadPackageInfo() async => packageInfo = await PackageInfo.fromPlatform();
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final ValueNotifier<bool> _windowDragNotifier = ValueNotifier(false);
+  late final DragAndDropDelegate _dropDelegate = DragAndDropDelegate(
+    dragNotifier: _windowDragNotifier,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +47,17 @@ class MyApp extends StatelessWidget {
         title: 'Pluto',
         debugShowCheckedModeBanner: false,
         theme: buildTheme(context),
+        builder: (context, child) => DropRegion(
+          formats: Formats.standardFormats,
+          onDropEnter: (_) => _windowDragNotifier.value = true,
+          onDropLeave: (_) => _windowDragNotifier.value = false,
+          onDropOver: (_) => DropOperation.copy,
+          onPerformDrop: (_) async => _windowDragNotifier.value = false,
+          child: DragAndDropScope(
+            delegate: _dropDelegate,
+            child: child!,
+          ),
+        ),
         home: const HomeWrapper(
           key: ValueKey('HomeWrapper'),
         ),
@@ -50,8 +72,7 @@ Future<void> initialize() async {
   final storage = await SharedPreferencesStorageManager.create();
   GetIt.instance.registerSingleton<LocalStorageManager>(storage);
   GetIt.instance.registerSingleton<WeatherService>(OpenMeteoWeatherService());
-  GetIt.instance
-      .registerSingleton<GeocodingService>(OpenMeteoGeocodingService());
+  GetIt.instance.registerSingleton<GeocodingService>(OpenMeteoGeocodingService());
 
   await GetIt.instance.allReady();
   await loadPackageInfo();
@@ -145,7 +166,6 @@ class DebugRender extends InheritedWidget {
 
   @override
   bool updateShouldNotify(covariant DebugRender oldWidget) {
-    return debugHighlightObserverRebuild !=
-        oldWidget.debugHighlightObserverRebuild;
+    return debugHighlightObserverRebuild != oldWidget.debugHighlightObserverRebuild;
   }
 }

@@ -43,10 +43,7 @@ class CustomMaterialDropdown<T> extends StatelessWidget {
             initialValue: items.contains(value) ? value : null,
             isExpanded: isExpanded,
             hint: hint != null ? Text(hint!) : null,
-            style: Theme.of(context)
-                .textTheme
-                .bodyLarge!
-                .copyWith(fontWeight: FontWeight.w400, height: 1),
+            style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.w400, height: 1),
             // underline: const SizedBox.shrink(),
             // dropdownColor: Colors.red,
             decoration: InputDecoration(
@@ -62,20 +59,21 @@ class CustomMaterialDropdown<T> extends StatelessWidget {
             ),
             selectedItemBuilder: selectedItemBuilder != null
                 ? (context) => [
-                      for (final item in items)
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: selectedItemBuilder!(context, item),
-                        ),
-                    ]
+                    for (final item in items)
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: selectedItemBuilder!(context, item),
+                      ),
+                  ]
                 : null,
             items: items
-                .map((item) => DropdownMenuItem<T>(
-                      value: item,
-                      alignment: Alignment.centerLeft,
-                      child: itemBuilder?.call(context, item) ??
-                          Text(item.toString()),
-                    ))
+                .map(
+                  (item) => DropdownMenuItem<T>(
+                    value: item,
+                    alignment: Alignment.centerLeft,
+                    child: itemBuilder?.call(context, item) ?? Text(item.toString()),
+                  ),
+                )
                 .toList(),
             onChanged: (mode) {
               if (mode == null) return;
@@ -151,10 +149,10 @@ class CustomDropdown<T> extends StatelessWidget {
           buttonPadding: const EdgeInsets.only(right: 12),
           underline: const SizedBox.shrink(),
           style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                fontWeight: FontWeight.w400,
-                fontSize: 13,
-                height: 1,
-              ),
+            fontWeight: FontWeight.w400,
+            fontSize: 13,
+            height: 1,
+          ),
           buttonDecoration: BoxDecoration(
             color: AppColors.borderColor.withValues(alpha: 0.25),
             borderRadius: BorderRadius.circular(4),
@@ -175,10 +173,10 @@ class CustomDropdown<T> extends StatelessWidget {
           items: items,
           selectedItemBuilder: selectedItemBuilder != null
               ? (context, item) => CustomDropdownMenuItem<T>(
-                    value: item,
-                    alignment: Alignment.centerLeft,
-                    child: selectedItemBuilder!(context, item),
-                  )
+                  value: item,
+                  alignment: Alignment.centerLeft,
+                  child: selectedItemBuilder!(context, item),
+                )
               : null,
           onChanged: (value) {
             if (value == null) return;
@@ -191,10 +189,7 @@ class CustomDropdown<T> extends StatelessWidget {
   }
 
   bool defaultSearchFn(DropdownMenuItem item, String searchValue) {
-    return item.value
-        .toString()
-        .toLowerCase()
-        .contains(searchValue.toLowerCase());
+    return item.value.toString().toLowerCase().contains(searchValue.toLowerCase());
   }
 }
 
@@ -219,9 +214,9 @@ class SearchBar extends StatelessWidget {
       child: TextField(
         controller: controller,
         style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-              fontWeight: FontWeight.w400,
-              height: 1.2,
-            ),
+          fontWeight: FontWeight.w400,
+          height: 1.2,
+        ),
         decoration: InputDecoration(
           isDense: true,
           hintText: 'Search',
@@ -230,13 +225,11 @@ class SearchBar extends StatelessWidget {
           fillColor: AppColors.borderColor.withValues(alpha: 0.25),
           hintStyle: const TextStyle(fontSize: 13, height: 1.2),
           enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-                color: Colors.grey.withValues(alpha: 0.3), width: 0.5),
+            borderSide: BorderSide(color: Colors.grey.withValues(alpha: 0.3), width: 0.5),
             borderRadius: BorderRadius.circular(4),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-                color: Colors.grey.withValues(alpha: 0.3), width: 0.5),
+            borderSide: BorderSide(color: Colors.grey.withValues(alpha: 0.3), width: 0.5),
             borderRadius: BorderRadius.circular(4),
           ),
           border: OutlineInputBorder(

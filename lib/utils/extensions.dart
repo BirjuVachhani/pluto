@@ -1,9 +1,19 @@
+import 'dart:convert';
+
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:mime/mime.dart';
+import 'package:path/path.dart' as p;
+import 'package:super_clipboard/super_clipboard.dart';
+import 'package:universal_io/io.dart';
 import 'package:unsplash_client/unsplash_client.dart';
 
 import '../model/background_settings.dart';
 import '../model/color_gradient.dart';
 import '../model/widget_settings.dart';
+import 'memory_file.dart';
+import 'super_utils.dart';
 
 extension GradientExt on ColorGradient {
   LinearGradient toLinearGradient() {
@@ -140,9 +150,7 @@ extension DateTimeExt on DateTime {
 
 extension TimerFormatExt on TimerFormat {
   bool get showsSeconds =>
-      this == TimerFormat.descriptiveWithSeconds ||
-      this == TimerFormat.seconds ||
-      this == TimerFormat.countdown;
+      this == TimerFormat.descriptiveWithSeconds || this == TimerFormat.seconds || this == TimerFormat.countdown;
 }
 
 extension ImageRefreshRateExt on BackgroundRefreshRate {
@@ -168,8 +176,7 @@ extension ImageRefreshRateExt on BackgroundRefreshRate {
       case BackgroundRefreshRate.weekly:
         final now = DateTime.now();
         // next monday
-        final DateTime nextMonday =
-            DateTime(now.year, now.month, now.day + 7 - now.weekday + 1);
+        final DateTime nextMonday = DateTime(now.year, now.month, now.day + 7 - now.weekday + 1);
         return nextMonday;
     }
   }
@@ -181,18 +188,20 @@ extension PhotoUrlsExt on PhotoUrls {
     double? devicePixelRatio,
     String fit = 'crop',
     String crop = 'entropy',
-  }) =>
-      raw.replace(queryParameters: {
-        ...raw.queryParameters,
-        'crop': crop,
-        'fit': fit,
-        if (size != null) ...{
-          'w': size.width.toStringAsFixed(0),
-          'h': size.height.toStringAsFixed(0),
+  }) => raw
+      .replace(
+        queryParameters: {
+          ...raw.queryParameters,
+          'crop': crop,
+          'fit': fit,
+          if (size != null) ...{
+            'w': size.width.toStringAsFixed(0),
+            'h': size.height.toStringAsFixed(0),
+          },
+          if (devicePixelRatio != null) 'dpr': devicePixelRatio.toStringAsFixed(1),
         },
-        if (devicePixelRatio != null)
-          'dpr': devicePixelRatio.toStringAsFixed(1),
-      }).toString();
+      )
+      .toString();
 }
 
 extension PhotoExt on Photo {
@@ -201,11 +210,100 @@ extension PhotoExt on Photo {
     double? devicePixelRatio,
     String fit = 'crop',
     String crop = 'entropy',
-  }) =>
-      urls.rawWith(
-        size: size,
-        devicePixelRatio: devicePixelRatio,
-        fit: fit,
-        crop: crop,
-      );
+  }) => urls.rawWith(
+    size: size,
+    devicePixelRatio: devicePixelRatio,
+    fit: fit,
+    crop: crop,
+  );
+}
+
+extension PlatformFileExt on PlatformFile {
+  MemoryXFile toMemoryXFile() => MemoryXFile(
+    bytes!,
+    mimeType: SuperUtils.lookupMimeTypeFrom(path ?? name, fileBytes: bytes),
+    path: kIsWeb ? name : path ?? name,
+    name: name,
+    length: size,
+  );
+}
+
+extension FileExt on File {
+  MemoryXFile toMemoryXFileSync() {
+    final bytes = readAsBytesSync();
+    return MemoryXFile(
+      bytes,
+      name: p.basename(path),
+      path: path,
+      mimeType: SuperUtils.lookupMimeTypeFrom(path, fileBytes: bytes),
+      length: lengthSync(),
+      lastModified: lastModifiedSync(),
+    );
+  }
+
+  Future<MemoryXFile> toMemoryXFile() async {
+    final bytes = await readAsBytes();
+    return MemoryXFile(
+      bytes,
+      name: p.basename(path),
+      path: path,
+      mimeType: SuperUtils.lookupMimeTypeFrom(path, fileBytes: bytes),
+      length: await length(),
+      lastModified: await lastModified(),
+    );
+  }
+}
+
+extension DataReaderFileExt on DataReaderFile {
+  Future<MemoryXFile?> toMemoryXFile([FileFormat? format]) async {
+    final Uint8List value = await readAll();
+    String name = fileName ?? 'unnamed';
+
+    // Check bytes range before sublisting.
+    if (value.length < defaultMagicNumbersMaxLength) {
+      return null;
+    }
+
+    final Uint8List header = value.sublist(0, defaultMagicNumbersMaxLength);
+
+    final String? mimeType = lookupMimeType(name, headerBytes: header);
+    if (mimeType == null) {
+      // Couldn't determine the mime type from bytes.
+      if (format == Formats.plainTextFile) {
+        // If the format is for plain text, the mime-type would fail because
+        // its just text. If case of an actual text file, the mime type
+        // wouldn't fail. So it is safe to assume that this is simply
+        // plain text (not a text file) copied to clipboard. In this case,
+        // We don't handle it as it is not a file. Hence we return null.
+        final valueString = utf8.decode(value, allowMalformed: true);
+        if (valueString.startsWith('<svg')) {
+          // svg file
+          name += '.svg';
+          return MemoryXFile(
+            value,
+            length: value.length,
+            name: name,
+            mimeType: lookupMimeType(name),
+          );
+        }
+        return null;
+      }
+
+      // We couldn't figure out the mime type. We can't read the file properly.
+      throw Exception('Failed to determine media type.');
+    }
+
+    if (p.extension(name).isEmpty) {
+      final String extension = SuperUtils.getEffectiveExtensionFromMime(mimeType);
+      name += '.$extension';
+    }
+
+    return MemoryXFile(
+      value,
+      length: fileSize,
+      name: name,
+      path: name,
+      mimeType: mimeType,
+    );
+  }
 }

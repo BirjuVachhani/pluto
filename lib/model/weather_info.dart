@@ -37,7 +37,8 @@ enum WeatherCode {
   heavySnowShowers(86, 'Heavy snow showers'),
   thunderstorm(95, 'Thunderstorm'),
   thunderstormWithSlightHail(96, 'Thunderstorm with slight hail'),
-  thunderstormWithHeavyHail(99, 'Thunderstorm with heavy hail');
+  thunderstormWithHeavyHail(99, 'Thunderstorm with heavy hail')
+  ;
 
   const WeatherCode(this.code, this.label);
 
@@ -45,8 +46,7 @@ enum WeatherCode {
   final int code;
 
   factory WeatherCode.fromCode(int code) {
-    return WeatherCode.values.firstWhereOrNull((item) => item.code == code) ??
-        WeatherCode.unknown;
+    return WeatherCode.values.firstWhereOrNull((item) => item.code == code) ?? WeatherCode.unknown;
   }
 }
 
@@ -69,12 +69,12 @@ class WeatherInfo with EquatableMixin {
 
   @override
   List<Object?> get props => [
-        latitude,
-        longitude,
-        temperature,
-        weatherCode,
-        timestamp,
-      ];
+    latitude,
+    longitude,
+    temperature,
+    weatherCode,
+    timestamp,
+  ];
 
   WeatherInfo copyWith({
     double? latitude,
@@ -92,8 +92,7 @@ class WeatherInfo with EquatableMixin {
     );
   }
 
-  factory WeatherInfo.fromJson(Map<String, dynamic> json) =>
-      _$WeatherInfoFromJson(json);
+  factory WeatherInfo.fromJson(Map<String, dynamic> json) => _$WeatherInfoFromJson(json);
 
   Map<String, dynamic> toJson() => _$WeatherInfoToJson(this);
 }

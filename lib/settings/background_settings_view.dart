@@ -1,6 +1,8 @@
+import 'package:cross_file/cross_file.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screwdriver/flutter_screwdriver.dart';
+import 'package:path/path.dart' as p;
 import 'package:provider/provider.dart';
 import 'package:screwdriver/screwdriver.dart';
 import 'package:shared/shared.dart';
@@ -19,7 +21,10 @@ import '../ui/custom_slider.dart';
 import '../ui/custom_switch.dart';
 import '../ui/gesture_detector_with_cursor.dart';
 import '../utils/custom_observer.dart';
+import '../utils/drop_delegate.dart';
 import '../utils/extensions.dart';
+import '../utils/media_drop_region.dart';
+import '../utils/super_utils.dart';
 import 'new_collection_dialog.dart';
 
 class BackgroundSettingsView extends StatelessWidget {
@@ -122,15 +127,12 @@ class _BackgroundOptions extends StatelessWidget {
               children: [
                 const SizedBox(width: 16),
                 GestureDetectorWithCursor(
-                  onTap:
-                      !store.isLoadingImage ? store.onChangeBackground : null,
+                  onTap: !store.isLoadingImage ? store.onChangeBackground : null,
                   tooltip: 'Change Background',
                   child: Padding(
                     padding: const EdgeInsets.all(8),
                     child: ImageIcon(
-                      AssetImage(store.isLoadingImage
-                          ? 'assets/images/ic_hourglass.png'
-                          : 'assets/images/ic_fan.png'),
+                      AssetImage(store.isLoadingImage ? 'assets/images/ic_hourglass.png' : 'assets/images/ic_fan.png'),
                       color: store.isLoadingImage
                           ? Colors.grey.withValues(alpha: 0.5)
                           : AppColors.textColor.withValues(alpha: 0.5),
@@ -160,14 +162,15 @@ class _ImageBackgroundOptions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final store = context.read<BackgroundStore>();
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        const SizedBox(width: 16),
-        CustomObserver(
-          name: 'Invert',
-          builder: (context) {
-            return GestureDetectorWithCursor(
+    return CustomObserver(
+      name: 'ImageBackgroundOptions',
+      builder: (context) {
+        final isLocal = store.imageSource == ImageSource.local;
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(width: 16),
+            GestureDetectorWithCursor(
               onTap: () => store.setInvert(!store.invert),
               tooltip: 'Invert',
               child: Padding(
@@ -180,72 +183,57 @@ class _ImageBackgroundOptions extends StatelessWidget {
                   size: 20,
                 ),
               ),
-            );
-          },
-        ),
-        const SizedBox(width: 16),
-        CustomObserver(
-          name: 'Change Background',
-          builder: (context) {
-            return GestureDetectorWithCursor(
+            ),
+            const SizedBox(width: 16),
+            GestureDetectorWithCursor(
               onTap: !store.isLoadingImage ? store.onChangeBackground : null,
-              tooltip: 'Change Background',
+              tooltip: isLocal ? 'Choose Image' : 'Change Background',
               child: Padding(
                 padding: const EdgeInsets.all(8),
                 child: ImageIcon(
-                  AssetImage(store.isLoadingImage
-                      ? 'assets/images/ic_hourglass.png'
-                      : 'assets/images/ic_fan.png'),
+                  AssetImage(store.isLoadingImage ? 'assets/images/ic_hourglass.png' : 'assets/images/ic_fan.png'),
                   color: store.isLoadingImage
                       ? Colors.grey.withValues(alpha: 0.5)
                       : AppColors.textColor.withValues(alpha: 0.5),
                   size: 20,
                 ),
               ),
-            );
-          },
-        ),
-        const SizedBox(width: 16),
-        CustomObserver(
-          name: 'Download Background',
-          builder: (context) {
-            return GestureDetectorWithCursor(
-              onTap: !store.isLoadingImage ? store.onDownload : null,
-              tooltip: 'Download Image',
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: Icon(
-                  Icons.download_rounded,
-                  color: store.isLoadingImage || store.currentImage == null
-                      ? Colors.grey.withValues(alpha: 0.5)
-                      : AppColors.textColor.withValues(alpha: 0.5),
-                  size: 20,
+            ),
+            if (!isLocal) ...[
+              const SizedBox(width: 16),
+              GestureDetectorWithCursor(
+                onTap: !store.isLoadingImage ? store.onDownload : null,
+                tooltip: 'Download Image',
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Icon(
+                    Icons.download_rounded,
+                    color: store.isLoadingImage || store.currentImage == null
+                        ? Colors.grey.withValues(alpha: 0.5)
+                        : AppColors.textColor.withValues(alpha: 0.5),
+                    size: 20,
+                  ),
                 ),
               ),
-            );
-          },
-        ),
-        const SizedBox(width: 16),
-        CustomObserver(
-          name: 'Open Image',
-          builder: (context) {
-            return GestureDetectorWithCursor(
-              onTap: !store.isLoadingImage ? store.onOpenImage : null,
-              tooltip: 'Open Original Image',
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: Icon(
-                  Icons.open_in_new_rounded,
-                  color: store.isLoadingImage || store.currentImage == null
-                      ? Colors.grey.withValues(alpha: 0.5)
-                      : AppColors.textColor.withValues(alpha: 0.5),
-                  size: 20,
+              const SizedBox(width: 16),
+              GestureDetectorWithCursor(
+                onTap: !store.isLoadingImage ? store.onOpenImage : null,
+                tooltip: 'Open Original Image',
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Icon(
+                    Icons.open_in_new_rounded,
+                    color: store.isLoadingImage || store.currentImage == null
+                        ? Colors.grey.withValues(alpha: 0.5)
+                        : AppColors.textColor.withValues(alpha: 0.5),
+                    size: 20,
+                  ),
                 ),
               ),
-            );
-          },
-        ),
-      ],
+            ],
+          ],
+        );
+      },
     );
   }
 }
@@ -313,7 +301,7 @@ class ImageSettings extends StatelessWidget {
               case ImageSource.pexels:
                 return const PexelsSourceSettings();
               case ImageSource.local:
-                return const SizedBox.shrink();
+                return const LocalFileSettings();
               case ImageSource.userLikes:
                 return const SizedBox.shrink();
             }
@@ -399,19 +387,15 @@ class _ImageSourceSelectorState extends State<_ImageSourceSelector> {
               // label: 'Source',
               hint: 'Select source',
               isExpanded: true,
-              items: ImageSource.values.except(ImageSource.local).toList(),
+              items: ImageSource.values.toList(),
               itemBuilder: (context, item) => Text(
                 item.label,
                 style: TextStyle(
-                  color: item == ImageSource.userLikes &&
-                          store.likedBackgrounds.isEmpty
-                      ? Colors.grey.shade400
-                      : null,
+                  color: item == ImageSource.userLikes && store.likedBackgrounds.isEmpty ? Colors.grey.shade400 : null,
                 ),
               ),
               onSelected: (value) {
-                if (value == ImageSource.userLikes &&
-                    store.likedBackgrounds.isEmpty) {
+                if (value == ImageSource.userLikes && store.likedBackgrounds.isEmpty) {
                   triggerError();
                   return;
                 }
@@ -487,8 +471,7 @@ class UnsplashSourceSettings extends StatelessWidget {
                         child: Icon(
                           Icons.explicit,
                           size: 16,
-                          color: context.colorScheme.onSurface
-                              .withValues(alpha: 0.7),
+                          color: context.colorScheme.onSurface.withValues(alpha: 0.7),
                         ),
                       ),
                   ],
@@ -514,9 +497,7 @@ class UnsplashSourceSettings extends StatelessWidget {
               value: store.imageResolution,
               isExpanded: true,
               hint: 'Select a resolution',
-              items: ImageResolution.values
-                  .except(ImageResolution.original)
-                  .toList(),
+              items: ImageResolution.values.except(ImageResolution.original).toList(),
               itemBuilder: (context, item) => Text.rich(
                 TextSpan(
                   children: [
@@ -539,8 +520,7 @@ class UnsplashSourceSettings extends StatelessWidget {
     );
   }
 
-  Future<void> onCreateNewCollection(
-      BuildContext context, BackgroundStore store) async {
+  Future<void> onCreateNewCollection(BuildContext context, BackgroundStore store) async {
     final String? result = await showDialog<String>(
       context: context,
       builder: (context) => Theme(
@@ -552,9 +532,7 @@ class UnsplashSourceSettings extends StatelessWidget {
       ),
     );
     if (result != null) {
-      store.addNewCollection(
-          UnsplashTagsSource(tags: result.trim().capitalized),
-          setAsCurrent: true);
+      store.addNewCollection(UnsplashTagsSource(tags: result.trim().capitalized), setAsCurrent: true);
     }
   }
 }
@@ -616,8 +594,7 @@ class PexelsSourceSettings extends StatelessWidget {
                         child: Icon(
                           Icons.explicit,
                           size: 16,
-                          color: context.colorScheme.onSurface
-                              .withValues(alpha: 0.7),
+                          color: context.colorScheme.onSurface.withValues(alpha: 0.7),
                         ),
                       ),
                   ],
@@ -632,8 +609,7 @@ class PexelsSourceSettings extends StatelessWidget {
     );
   }
 
-  Future<void> onCreateNewCollection(
-      BuildContext context, BackgroundStore store) async {
+  Future<void> onCreateNewCollection(BuildContext context, BackgroundStore store) async {
     final String? result = await showDialog<String>(
       context: context,
       builder: (context) => Theme(
@@ -656,6 +632,139 @@ class PexelsSourceSettings extends StatelessWidget {
   }
 }
 
+class LocalFileSettings extends StatefulWidget {
+  const LocalFileSettings({super.key});
+
+  @override
+  State<LocalFileSettings> createState() => _LocalFileSettingsState();
+}
+
+class _LocalFileSettingsState extends State<LocalFileSettings> {
+  @override
+  Widget build(BuildContext context) {
+    final BackgroundStore store = context.read<BackgroundStore>();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        CustomObserver(
+          name: 'Local File Info',
+          builder: (context) {
+            final fileName = store.localImageFileName;
+            final hasImage = store.currentImage != null;
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (hasImage && fileName != null) ...[
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.05),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.image_rounded,
+                          size: 16,
+                          color: Colors.grey.shade500,
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            fileName,
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.grey.shade400,
+                              fontWeight: FontWeight.w400,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                ],
+                MediaDropRegion(
+                  formats: [...imageDropFormats],
+                  hitTestBehavior: HitTestBehavior.opaque,
+                  onFileTooLarge: _onFileTooLarge,
+                  onDropEnter: (_) => DragAndDropScope.maybeOf(context)?.isHoveringOverZone = true,
+                  onDropLeave: (_) => DragAndDropScope.maybeOf(context)?.isHoveringOverZone = false,
+                  maxFileSize: defaultMaxFileSizeBytes,
+                  onDrop: (List<XFile> files, List<String> directories) async {
+                    if (files.isEmpty) return;
+                    final file = files.first;
+                    final bytes = await file.readAsBytes();
+                    store.setLocalImage(bytes, fileName: p.basename(file.path));
+                  },
+                  builder: (context, isDropping, child) => AnimatedContainer(
+                    duration: const Duration(milliseconds: 150),
+                    curve: Curves.easeOut,
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 24),
+                    alignment: Alignment.center,
+                    height: 200,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: isDropping ? Theme.of(context).colorScheme.primary : AppColors.borderColor,
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                      color: isDropping ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.08) : null,
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          isDropping ? Icons.file_download_rounded : Icons.image_outlined,
+                          size: 28,
+                          color: isDropping ? Theme.of(context).colorScheme.primary : Colors.grey.shade600,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          isDropping ? 'Drop to set background' : 'Drop an image here',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: isDropping ? Theme.of(context).colorScheme.primary : Colors.grey.shade400,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        if (!isDropping) ...[
+                          const SizedBox(height: 4),
+                          GestureDetectorWithCursor(
+                            onTap: store.pickLocalImage,
+                            child: Text(
+                              hasImage ? 'or choose a different file' : 'or choose a file',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Theme.of(context).colorScheme.primary,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+        const SizedBox(height: 8),
+      ],
+    );
+  }
+
+  void _onFileTooLarge(FileTooLargeError error) {
+    // TODO: SHow dialog.
+  }
+}
+
 class ResolutionHelpButton extends StatelessWidget {
   const ResolutionHelpButton({super.key});
 
@@ -674,8 +783,7 @@ class ResolutionHelpButton extends StatelessWidget {
             ),
           ),
           TextSpan(
-            text:
-                'Background images will have\nsame resolution as this window.\n',
+            text: 'Background images will have\nsame resolution as this window.\n',
             style: TextStyle(height: 1.3, fontSize: 13),
           ),
           TextSpan(
@@ -686,8 +794,7 @@ class ResolutionHelpButton extends StatelessWidget {
             ),
           ),
           TextSpan(
-            text:
-                'Higher resolution background may\ntake more time to load depending on\nyour connection.',
+            text: 'Higher resolution background may\ntake more time to load depending on\nyour connection.',
             style: TextStyle(height: 1.3, fontSize: 13),
           ),
         ],

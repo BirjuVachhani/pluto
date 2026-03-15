@@ -53,8 +53,7 @@ class CustomSlider extends StatelessWidget {
             const SizedBox(width: 8),
             if (valueLabel != null)
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
                   color: AppColors.borderColor.withValues(alpha: 0.5),
                   borderRadius: BorderRadius.circular(4),
@@ -101,7 +100,6 @@ class RectangleThumbShape extends SliderComponentShape {
 
     final Canvas canvas = context.canvas;
     final topLeft = center.translate(-width / 2, -height / 2);
-    canvas.drawRect(topLeft & Size(width, height),
-        Paint()..color = sliderTheme.thumbColor!);
+    canvas.drawRect(topLeft & Size(width, height), Paint()..color = sliderTheme.thumbColor!);
   }
 }

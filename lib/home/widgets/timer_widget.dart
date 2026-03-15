@@ -17,8 +17,7 @@ class TimerWidget extends StatefulWidget {
   State<TimerWidget> createState() => _TimerWidgetState();
 }
 
-class _TimerWidgetState extends State<TimerWidget>
-    with SingleTickerProviderStateMixin {
+class _TimerWidgetState extends State<TimerWidget> with SingleTickerProviderStateMixin {
   late Ticker _ticker;
   late DateTime _initialTime;
   late DateTime _now;
@@ -32,8 +31,7 @@ class _TimerWidgetState extends State<TimerWidget>
     _ticker = createTicker((elapsed) {
       final newTime = _initialTime.add(elapsed);
       // rebuild only if seconds changes instead of every frame
-      if (store.timerSettings.format.showsSeconds &&
-          _now.second != newTime.second) {
+      if (store.timerSettings.format.showsSeconds && _now.second != newTime.second) {
         setState(() => _now = newTime);
       } else if (_now.minute != newTime.minute) {
         setState(() => _now = newTime);
@@ -50,9 +48,8 @@ class _TimerWidgetState extends State<TimerWidget>
     return CustomObserver(
       name: 'TimerWidget',
       builder: (context) {
-        final hasFixedWidth = settings.textBefore.isEmpty &&
-            settings.textAfter.isEmpty &&
-            settings.format == TimerFormat.countdown;
+        final hasFixedWidth =
+            settings.textBefore.isEmpty && settings.textAfter.isEmpty && settings.format == TimerFormat.countdown;
 
         Widget wid = Text.rich(
           buildTimerTextSpan(settings),
@@ -78,9 +75,7 @@ class _TimerWidgetState extends State<TimerWidget>
             children: [
               for (final char in buildTime(settings).split(''))
                 SizedBox(
-                  width: char == ':'
-                      ? settings.fontSize * 0.3
-                      : settings.fontSize * 0.6,
+                  width: char == ':' ? settings.fontSize * 0.3 : settings.fontSize * 0.6,
                   child: Text(
                     char,
                     textAlign: settings.alignment.textAlign,
@@ -111,16 +106,19 @@ class _TimerWidgetState extends State<TimerWidget>
   }
 
   InlineSpan buildTimerTextSpan(TimerWidgetSettingsStore settings) {
-    return TextSpan(text: settings.textBefore, children: [
-      TextSpan(
-        text: buildTime(settings),
-        style: TextStyle(
-          letterSpacing: settings.format == TimerFormat.countdown ? 2 : null,
-          fontFeatures: const [FontFeature.tabularFigures()],
+    return TextSpan(
+      text: settings.textBefore,
+      children: [
+        TextSpan(
+          text: buildTime(settings),
+          style: TextStyle(
+            letterSpacing: settings.format == TimerFormat.countdown ? 2 : null,
+            fontFeatures: const [FontFeature.tabularFigures()],
+          ),
         ),
-      ),
-      TextSpan(text: settings.textAfter),
-    ]);
+        TextSpan(text: settings.textAfter),
+      ],
+    );
   }
 
   String buildTime(TimerWidgetSettingsStore settings) {
@@ -180,16 +178,12 @@ class _TimerWidgetState extends State<TimerWidget>
         if (years > 0) {
           if (DateTime.now() >= settings.time) {
             // past timer.
-            if (DateTime.now() <
-                DateTime(DateTime.now().year, settings.time.month,
-                    settings.time.day)) {
+            if (DateTime.now() < DateTime(DateTime.now().year, settings.time.month, settings.time.day)) {
               years--;
             }
           } else {
             // future timer.
-            if (DateTime.now() >
-                DateTime(DateTime.now().year, settings.time.month,
-                    settings.time.day)) {
+            if (DateTime.now() > DateTime(DateTime.now().year, settings.time.month, settings.time.day)) {
               years--;
             }
           }
@@ -214,30 +208,21 @@ class _TimerWidgetState extends State<TimerWidget>
         days = days - years * 365;
         hours = hours - days * 24 - years * 365 * 24;
         minutes = minutes - days * 24 * 60 - hours * 60 - years * 365 * 24 * 60;
-        seconds = seconds -
-            days * 24 * 60 * 60 -
-            hours * 60 * 60 -
-            minutes * 60 -
-            years * 365 * 24 * 60 * 60;
+        seconds = seconds - days * 24 * 60 * 60 - hours * 60 * 60 - minutes * 60 - years * 365 * 24 * 60 * 60;
         if (years > 0) {
-          buffer
-              .write('${formatAsNumber(years)} ${fixGrammar(years, 'year')} ');
+          buffer.write('${formatAsNumber(years)} ${fixGrammar(years, 'year')} ');
         }
         if (days > 0) {
           buffer.write('${formatAsNumber(days)} ${fixGrammar(days, 'day')} ');
         }
         if (hours > 0) {
-          buffer
-              .write('${formatAsNumber(hours)} ${fixGrammar(hours, 'hour')} ');
+          buffer.write('${formatAsNumber(hours)} ${fixGrammar(hours, 'hour')} ');
         }
         if (minutes > 0) {
-          buffer.write(
-              '${formatAsNumber(minutes)} ${fixGrammar(minutes, 'minute')} ');
+          buffer.write('${formatAsNumber(minutes)} ${fixGrammar(minutes, 'minute')} ');
         }
-        if (seconds > 0 &&
-            settings.format == TimerFormat.descriptiveWithSeconds) {
-          buffer.write(
-              '${formatAsNumber(seconds)} ${fixGrammar(seconds, 'second')}');
+        if (seconds > 0 && settings.format == TimerFormat.descriptiveWithSeconds) {
+          buffer.write('${formatAsNumber(seconds)} ${fixGrammar(seconds, 'second')}');
         }
         break;
     }

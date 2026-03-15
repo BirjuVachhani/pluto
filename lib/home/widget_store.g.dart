@@ -88,8 +88,7 @@ initialized: ${initialized}
   }
 }
 
-mixin _$DigitalClockWidgetSettingsStore
-    on _DigitalClockWidgetSettingsStore, Store {
+mixin _$DigitalClockWidgetSettingsStore on _DigitalClockWidgetSettingsStore, Store {
   late final _$fontSizeAtom = Atom(
     name: '_DigitalClockWidgetSettingsStore.fontSize',
     context: context,
@@ -240,16 +239,16 @@ mixin _$DigitalClockWidgetSettingsStore
     );
   }
 
-  late final _$_DigitalClockWidgetSettingsStoreActionController =
-      ActionController(
-        name: '_DigitalClockWidgetSettingsStore',
-        context: context,
-      );
+  late final _$_DigitalClockWidgetSettingsStoreActionController = ActionController(
+    name: '_DigitalClockWidgetSettingsStore',
+    context: context,
+  );
 
   @override
   void update(VoidCallback callback, {bool save = true}) {
-    final _$actionInfo = _$_DigitalClockWidgetSettingsStoreActionController
-        .startAction(name: '_DigitalClockWidgetSettingsStore.update');
+    final _$actionInfo = _$_DigitalClockWidgetSettingsStoreActionController.startAction(
+      name: '_DigitalClockWidgetSettingsStore.update',
+    );
     try {
       return super.update(callback, save: save);
     } finally {
@@ -261,8 +260,9 @@ mixin _$DigitalClockWidgetSettingsStore
 
   @override
   void setFrom(DigitalClockWidgetSettings? settings) {
-    final _$actionInfo = _$_DigitalClockWidgetSettingsStoreActionController
-        .startAction(name: '_DigitalClockWidgetSettingsStore.setFrom');
+    final _$actionInfo = _$_DigitalClockWidgetSettingsStoreActionController.startAction(
+      name: '_DigitalClockWidgetSettingsStore.setFrom',
+    );
     try {
       return super.setFrom(settings);
     } finally {
@@ -285,8 +285,7 @@ format: ${format}
   }
 }
 
-mixin _$AnalogClockWidgetSettingsStore
-    on _AnalogClockWidgetSettingsStore, Store {
+mixin _$AnalogClockWidgetSettingsStore on _AnalogClockWidgetSettingsStore, Store {
   late final _$radiusAtom = Atom(
     name: '_AnalogClockWidgetSettingsStore.radius',
     context: context,
@@ -387,16 +386,16 @@ mixin _$AnalogClockWidgetSettingsStore
     );
   }
 
-  late final _$_AnalogClockWidgetSettingsStoreActionController =
-      ActionController(
-        name: '_AnalogClockWidgetSettingsStore',
-        context: context,
-      );
+  late final _$_AnalogClockWidgetSettingsStoreActionController = ActionController(
+    name: '_AnalogClockWidgetSettingsStore',
+    context: context,
+  );
 
   @override
   void update(VoidCallback callback, {bool save = true}) {
-    final _$actionInfo = _$_AnalogClockWidgetSettingsStoreActionController
-        .startAction(name: '_AnalogClockWidgetSettingsStore.update');
+    final _$actionInfo = _$_AnalogClockWidgetSettingsStoreActionController.startAction(
+      name: '_AnalogClockWidgetSettingsStore.update',
+    );
     try {
       return super.update(callback, save: save);
     } finally {
@@ -406,8 +405,9 @@ mixin _$AnalogClockWidgetSettingsStore
 
   @override
   void setFrom(AnalogClockWidgetSettings? settings) {
-    final _$actionInfo = _$_AnalogClockWidgetSettingsStoreActionController
-        .startAction(name: '_AnalogClockWidgetSettingsStore.setFrom');
+    final _$actionInfo = _$_AnalogClockWidgetSettingsStoreActionController.startAction(
+      name: '_AnalogClockWidgetSettingsStore.setFrom',
+    );
     try {
       return super.setFrom(settings);
     } finally {
@@ -534,8 +534,9 @@ mixin _$MessageWidgetSettingsStore on _MessageWidgetSettingsStore, Store {
 
   @override
   void update(VoidCallback callback, {bool save = true}) {
-    final _$actionInfo = _$_MessageWidgetSettingsStoreActionController
-        .startAction(name: '_MessageWidgetSettingsStore.update');
+    final _$actionInfo = _$_MessageWidgetSettingsStoreActionController.startAction(
+      name: '_MessageWidgetSettingsStore.update',
+    );
     try {
       return super.update(callback, save: save);
     } finally {
@@ -545,8 +546,9 @@ mixin _$MessageWidgetSettingsStore on _MessageWidgetSettingsStore, Store {
 
   @override
   void setFrom(MessageWidgetSettings? settings) {
-    final _$actionInfo = _$_MessageWidgetSettingsStoreActionController
-        .startAction(name: '_MessageWidgetSettingsStore.setFrom');
+    final _$actionInfo = _$_MessageWidgetSettingsStoreActionController.startAction(
+      name: '_MessageWidgetSettingsStore.setFrom',
+    );
     try {
       return super.setFrom(settings);
     } finally {
@@ -744,8 +746,9 @@ mixin _$TimerWidgetSettingsStore on _TimerWidgetSettingsStore, Store {
 
   @override
   void update(VoidCallback callback, {bool save = true}) {
-    final _$actionInfo = _$_TimerWidgetSettingsStoreActionController
-        .startAction(name: '_TimerWidgetSettingsStore.update');
+    final _$actionInfo = _$_TimerWidgetSettingsStoreActionController.startAction(
+      name: '_TimerWidgetSettingsStore.update',
+    );
     try {
       return super.update(callback, save: save);
     } finally {
@@ -755,8 +758,9 @@ mixin _$TimerWidgetSettingsStore on _TimerWidgetSettingsStore, Store {
 
   @override
   void setFrom(TimerWidgetSettings? settings) {
-    final _$actionInfo = _$_TimerWidgetSettingsStoreActionController
-        .startAction(name: '_TimerWidgetSettingsStore.setFrom');
+    final _$actionInfo = _$_TimerWidgetSettingsStoreActionController.startAction(
+      name: '_TimerWidgetSettingsStore.setFrom',
+    );
     try {
       return super.setFrom(settings);
     } finally {
@@ -936,8 +940,9 @@ mixin _$WeatherWidgetSettingsStore on _WeatherWidgetSettingsStore, Store {
 
   @override
   void update(VoidCallback callback, {bool save = true}) {
-    final _$actionInfo = _$_WeatherWidgetSettingsStoreActionController
-        .startAction(name: '_WeatherWidgetSettingsStore.update');
+    final _$actionInfo = _$_WeatherWidgetSettingsStoreActionController.startAction(
+      name: '_WeatherWidgetSettingsStore.update',
+    );
     try {
       return super.update(callback, save: save);
     } finally {
@@ -947,8 +952,9 @@ mixin _$WeatherWidgetSettingsStore on _WeatherWidgetSettingsStore, Store {
 
   @override
   void setFrom(WeatherWidgetSettings? settings) {
-    final _$actionInfo = _$_WeatherWidgetSettingsStoreActionController
-        .startAction(name: '_WeatherWidgetSettingsStore.setFrom');
+    final _$actionInfo = _$_WeatherWidgetSettingsStoreActionController.startAction(
+      name: '_WeatherWidgetSettingsStore.setFrom',
+    );
     try {
       return super.setFrom(settings);
     } finally {
@@ -969,8 +975,7 @@ location: ${location}
   }
 }
 
-mixin _$DigitalDateWidgetSettingsStore
-    on _DigitalDateWidgetSettingsStore, Store {
+mixin _$DigitalDateWidgetSettingsStore on _DigitalDateWidgetSettingsStore, Store {
   late final _$fontSizeAtom = Atom(
     name: '_DigitalDateWidgetSettingsStore.fontSize',
     context: context,
@@ -1146,16 +1151,16 @@ mixin _$DigitalDateWidgetSettingsStore
     );
   }
 
-  late final _$_DigitalDateWidgetSettingsStoreActionController =
-      ActionController(
-        name: '_DigitalDateWidgetSettingsStore',
-        context: context,
-      );
+  late final _$_DigitalDateWidgetSettingsStoreActionController = ActionController(
+    name: '_DigitalDateWidgetSettingsStore',
+    context: context,
+  );
 
   @override
   void update(VoidCallback callback, {bool save = true}) {
-    final _$actionInfo = _$_DigitalDateWidgetSettingsStoreActionController
-        .startAction(name: '_DigitalDateWidgetSettingsStore.update');
+    final _$actionInfo = _$_DigitalDateWidgetSettingsStoreActionController.startAction(
+      name: '_DigitalDateWidgetSettingsStore.update',
+    );
     try {
       return super.update(callback, save: save);
     } finally {
@@ -1165,8 +1170,9 @@ mixin _$DigitalDateWidgetSettingsStore
 
   @override
   void setFrom(DigitalDateWidgetSettings? settings) {
-    final _$actionInfo = _$_DigitalDateWidgetSettingsStoreActionController
-        .startAction(name: '_DigitalDateWidgetSettingsStore.setFrom');
+    final _$actionInfo = _$_DigitalDateWidgetSettingsStoreActionController.startAction(
+      name: '_DigitalDateWidgetSettingsStore.setFrom',
+    );
     try {
       return super.setFrom(settings);
     } finally {

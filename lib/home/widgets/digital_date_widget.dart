@@ -25,8 +25,7 @@ class DigitalDateWidget extends StatelessWidget {
         final double paddingHorizontal = (20 + settings.fontSize) * 0.5;
         final double paddingVertical = (20 + settings.fontSize) * 0.4;
         final double round = (20 + settings.fontSize) * 0.5;
-        String format =
-            buildFormatString(settings.format, settings.separator.value);
+        String format = buildFormatString(settings.format, settings.separator.value);
 
         if (settings.format == DateFormat.custom) {
           // Use the custom format if the special format is selected
@@ -34,8 +33,7 @@ class DigitalDateWidget extends StatelessWidget {
         }
 
         return Padding(
-          padding:
-              EdgeInsets.all(settings.borderType == BorderType.none ? 0 : 48),
+          padding: EdgeInsets.all(settings.borderType == BorderType.none ? 0 : 48),
           child: Align(
             alignment: settings.alignment.flutterAlignment,
             child: FittedBox(
@@ -44,9 +42,7 @@ class DigitalDateWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   DigitalDate(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: paddingHorizontal,
-                        vertical: paddingVertical),
+                    padding: EdgeInsets.symmetric(horizontal: paddingHorizontal, vertical: paddingVertical),
                     decoration: ShapeDecoration(
                       shape: RoundedRectangleBorder(
                         borderRadius: settings.borderType == BorderType.rounded
@@ -84,7 +80,7 @@ class DigitalDateWidget extends StatelessWidget {
       DateFormat.dayMonthYear => 'dd${separator}MM${separator}yyyy',
       DateFormat.monthDayYear => 'MM${separator}dd${separator}yyyy',
       DateFormat.yearMonthDay => 'yyyy${separator}MM${separator}dd',
-      DateFormat.custom => 'dd $separator MMMM $separator yyyy'
+      DateFormat.custom => 'dd $separator MMMM $separator yyyy',
     };
   }
 }

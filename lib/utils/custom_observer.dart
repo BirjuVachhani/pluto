@@ -35,8 +35,7 @@ class CustomObserver extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = _colors[name.hashCode % _colors.length];
-    final bool debugHighlightObserverRebuild =
-        DebugRender.of(context)?.debugHighlightObserverRebuild ?? false;
+    final bool debugHighlightObserverRebuild = DebugRender.of(context)?.debugHighlightObserverRebuild ?? false;
 
     if (debugHighlightObserverRebuild) {
       log('Rebuilding Observer $name');

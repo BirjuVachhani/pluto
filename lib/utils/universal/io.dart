@@ -3,8 +3,7 @@ import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
 
-Future<void> downloadImage(Uint8List bytes, String path) =>
-    File(path).writeAsBytes(bytes);
+Future<void> downloadImage(Uint8List bytes, String path) => File(path).writeAsBytes(bytes);
 
 Future<String?> getRedirectionUrl(String url) async {
   final client = http.Client();

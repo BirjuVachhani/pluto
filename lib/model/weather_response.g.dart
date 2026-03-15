@@ -32,20 +32,18 @@ Map<String, dynamic> _$OpenMeteoWeatherResponseToJson(
   'current_weather': instance.currentWeather,
 };
 
-CurrentWeatherData _$CurrentWeatherDataFromJson(Map<String, dynamic> json) =>
-    CurrentWeatherData(
-      temperature: (json['temperature'] as num).toDouble(),
-      windSpeed: (json['windspeed'] as num).toDouble(),
-      windDirection: (json['winddirection'] as num).toDouble(),
-      weatherCode: (json['weathercode'] as num).toInt(),
-      time: CurrentWeatherData.timeFromJson(json['time'] as String),
-    );
+CurrentWeatherData _$CurrentWeatherDataFromJson(Map<String, dynamic> json) => CurrentWeatherData(
+  temperature: (json['temperature'] as num).toDouble(),
+  windSpeed: (json['windspeed'] as num).toDouble(),
+  windDirection: (json['winddirection'] as num).toDouble(),
+  weatherCode: (json['weathercode'] as num).toInt(),
+  time: CurrentWeatherData.timeFromJson(json['time'] as String),
+);
 
-Map<String, dynamic> _$CurrentWeatherDataToJson(CurrentWeatherData instance) =>
-    <String, dynamic>{
-      'temperature': instance.temperature,
-      'windspeed': instance.windSpeed,
-      'winddirection': instance.windDirection,
-      'weathercode': instance.weatherCode,
-      'time': CurrentWeatherData.timeToJson(instance.time),
-    };
+Map<String, dynamic> _$CurrentWeatherDataToJson(CurrentWeatherData instance) => <String, dynamic>{
+  'temperature': instance.temperature,
+  'windspeed': instance.windSpeed,
+  'winddirection': instance.windDirection,
+  'weathercode': instance.weatherCode,
+  'time': CurrentWeatherData.timeToJson(instance.time),
+};

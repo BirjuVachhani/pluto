@@ -63,8 +63,7 @@ class WidgetsExportData with SerializableMixin {
     required this.digitalDate,
   });
 
-  factory WidgetsExportData.fromJson(JsonMap json) =>
-      _$WidgetsExportDataFromJson(json);
+  factory WidgetsExportData.fromJson(JsonMap json) => _$WidgetsExportDataFromJson(json);
 
   @override
   JsonMap toJson() => _$WidgetsExportDataToJson(this);

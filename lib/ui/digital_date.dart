@@ -24,8 +24,7 @@ class DigitalDate extends StatefulWidget {
   State<DigitalDate> createState() => _DigitalDateState();
 }
 
-class _DigitalDateState extends State<DigitalDate>
-    with SingleTickerProviderStateMixin {
+class _DigitalDateState extends State<DigitalDate> with SingleTickerProviderStateMixin {
   late Ticker _ticker;
   late DateTime _initialDate;
   late DateTime _now;
@@ -46,9 +45,7 @@ class _DigitalDateState extends State<DigitalDate>
   }
 
   bool _areDatesEqual(DateTime date1, DateTime date2) {
-    return date1.year == date2.year &&
-        date1.month == date2.month &&
-        date1.day == date2.day;
+    return date1.year == date2.year && date1.month == date2.month && date1.day == date2.day;
   }
 
   @override

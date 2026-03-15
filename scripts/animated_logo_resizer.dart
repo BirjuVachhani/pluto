@@ -2,13 +2,14 @@ import 'dart:io';
 
 void main(List<String> args) {
   if (args.isEmpty) {
-    stderr.writeln(
-        'Usage: animated_logo_resizer.dart <input_file> <output_file> <size>');
+    stderr.writeln('Usage: animated_logo_resizer.dart <input_file> <output_file> <size>');
     exit(0);
   }
   if (args.length != 3) {
-    stderr.writeln('Must provide required args:\n'
-        'Usage: animated_logo_resizer.dart <input_file> <output_file> <size>');
+    stderr.writeln(
+      'Must provide required args:\n'
+      'Usage: animated_logo_resizer.dart <input_file> <output_file> <size>',
+    );
     exit(1);
   }
 

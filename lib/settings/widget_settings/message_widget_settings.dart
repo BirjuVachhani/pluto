@@ -25,8 +25,7 @@ class MessageWidgetSettingsView extends StatelessWidget {
               isExpanded: true,
               value: settings.fontFamily,
               items: FontFamilies.fonts,
-              onSelected: (family) =>
-                  settings.update(() => settings.fontFamily = family),
+              onSelected: (family) => settings.update(() => settings.fontFamily = family),
             );
           },
         ),
@@ -39,8 +38,7 @@ class MessageWidgetSettingsView extends StatelessWidget {
               max: 400,
               valueLabel: '${settings.fontSize.floor().toString()} px',
               value: settings.fontSize,
-              onChanged: (value) => settings
-                  .update(() => settings.fontSize = value.floorToDouble()),
+              onChanged: (value) => settings.update(() => settings.fontSize = value.floorToDouble()),
             );
           },
         ),
@@ -50,8 +48,7 @@ class MessageWidgetSettingsView extends StatelessWidget {
           builder: (context) {
             return AlignmentControl(
               alignment: settings.alignment,
-              onChanged: (alignment) =>
-                  settings.update(() => settings.alignment = alignment),
+              onChanged: (alignment) => settings.update(() => settings.alignment = alignment),
             );
           },
         ),
@@ -60,10 +57,8 @@ class MessageWidgetSettingsView extends StatelessWidget {
           label: 'Message',
           initialHeight: 150,
           initialValue: settings.message,
-          onChanged: (message) =>
-              settings.update(save: false, () => settings.message = message),
-          onSubmitted: (message) =>
-              settings.update(() => settings.message = message),
+          onChanged: (message) => settings.update(save: false, () => settings.message = message),
+          onSubmitted: (message) => settings.update(() => settings.message = message),
         ),
         const SizedBox(height: 16),
       ],

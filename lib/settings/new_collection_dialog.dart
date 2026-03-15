@@ -32,17 +32,14 @@ class NewCollectionDialog extends StatefulWidget {
 class _NewCollectionDialogState extends State<NewCollectionDialog> {
   final TextEditingController _controller = TextEditingController();
 
-  final StreamController<String> _textStreamController =
-      StreamController<String>();
+  final StreamController<String> _textStreamController = StreamController<String>();
 
   bool? isValid;
 
   @override
   void initState() {
     super.initState();
-    _textStreamController.stream
-        .debounceTime(const Duration(milliseconds: 500))
-        .listen(onTextChanged);
+    _textStreamController.stream.debounceTime(const Duration(milliseconds: 500)).listen(onTextChanged);
   }
 
   @override
@@ -121,8 +118,7 @@ class _NewCollectionDialogState extends State<NewCollectionDialog> {
                               fontWeight: FontWeight.w400,
                               letterSpacing: 0.2,
                             ),
-                            suffixIcon:
-                                ValueListenableBuilder<TextEditingValue>(
+                            suffixIcon: ValueListenableBuilder<TextEditingValue>(
                               valueListenable: _controller,
                               builder: (context, value, child) {
                                 if (value.text.trim().isEmpty) {
@@ -136,12 +132,8 @@ class _NewCollectionDialogState extends State<NewCollectionDialog> {
                                 }
 
                                 return Icon(
-                                  isValid!
-                                      ? Icons.done_rounded
-                                      : Icons.info_outline_rounded,
-                                  color: isValid!
-                                      ? Colors.greenAccent
-                                      : Colors.red,
+                                  isValid! ? Icons.done_rounded : Icons.info_outline_rounded,
+                                  color: isValid! ? Colors.greenAccent : Colors.red,
                                 );
                               },
                             ),
@@ -183,20 +175,15 @@ class _NewCollectionDialogState extends State<NewCollectionDialog> {
                     TextButton(
                       onPressed: () => Navigator.pop(context),
                       style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 16),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                       ),
                       child: const Text('Cancel'),
                     ),
                     const SizedBox(width: 12),
                     FilledButton(
-                      onPressed: isValid == true
-                          ? () =>
-                              Navigator.pop(context, _controller.text.trim())
-                          : null,
+                      onPressed: isValid == true ? () => Navigator.pop(context, _controller.text.trim()) : null,
                       style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 16),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                       ),
                       child: const Text('Create'),
                     ),
@@ -222,13 +209,14 @@ class _NewCollectionDialogState extends State<NewCollectionDialog> {
           name: value,
           query: value.toLowerCase(),
         );
-        final photo =
-            await backendService.randomPexelsImage(source: source);
+        final photo = await backendService.randomPexelsImage(source: source);
         isValid = photo != null;
       } else {
         final source = UnsplashTagsSource(tags: value);
         final Photo? photo = await backendService.randomUnsplashImage(
-            source: source, orientation: UnsplashPhotoOrientation.landscape);
+          source: source,
+          orientation: UnsplashPhotoOrientation.landscape,
+        );
         isValid = photo != null;
       }
     } catch (error, stacktrace) {

@@ -15,8 +15,7 @@ part 'widget_store.g.dart';
 class WidgetStore = _WidgetStore with _$WidgetStore;
 
 abstract class _WidgetStore with Store, LazyInitializationMixin {
-  late final LocalStorageManager storage =
-      GetIt.instance.get<LocalStorageManager>();
+  late final LocalStorageManager storage = GetIt.instance.get<LocalStorageManager>();
 
   _WidgetStore() {
     init();
@@ -37,72 +36,92 @@ abstract class _WidgetStore with Store, LazyInitializationMixin {
 
   @override
   Future<void> init() async {
-    type = await storage.getEnum<WidgetType>(
-            StorageKeys.widgetType, WidgetType.values) ??
-        WidgetType.digitalClock;
+    type = await storage.getEnum<WidgetType>(StorageKeys.widgetType, WidgetType.values) ?? WidgetType.digitalClock;
 
     digitalClockSettings = DigitalClockWidgetSettingsStore(
-        await storage.getSerializableObject<DigitalClockWidgetSettings>(
-            StorageKeys.digitalClockSettings,
-            DigitalClockWidgetSettings.fromJson));
+      await storage.getSerializableObject<DigitalClockWidgetSettings>(
+        StorageKeys.digitalClockSettings,
+        DigitalClockWidgetSettings.fromJson,
+      ),
+    );
 
     analogueClockSettings = AnalogClockWidgetSettingsStore(
-        await storage.getSerializableObject<AnalogClockWidgetSettings>(
-            StorageKeys.analogueClockSettings,
-            AnalogClockWidgetSettings.fromJson));
+      await storage.getSerializableObject<AnalogClockWidgetSettings>(
+        StorageKeys.analogueClockSettings,
+        AnalogClockWidgetSettings.fromJson,
+      ),
+    );
 
     messageSettings = MessageWidgetSettingsStore(
-        await storage.getSerializableObject<MessageWidgetSettings>(
-            StorageKeys.messageSettings, MessageWidgetSettings.fromJson));
+      await storage.getSerializableObject<MessageWidgetSettings>(
+        StorageKeys.messageSettings,
+        MessageWidgetSettings.fromJson,
+      ),
+    );
 
     timerSettings = TimerWidgetSettingsStore(
-        await storage.getSerializableObject<TimerWidgetSettings>(
-            StorageKeys.timerSettings, TimerWidgetSettings.fromJson));
+      await storage.getSerializableObject<TimerWidgetSettings>(StorageKeys.timerSettings, TimerWidgetSettings.fromJson),
+    );
 
     weatherSettings = WeatherWidgetSettingsStore(
-        await storage.getSerializableObject<WeatherWidgetSettings>(
-            StorageKeys.weatherSettings, WeatherWidgetSettings.fromJson));
+      await storage.getSerializableObject<WeatherWidgetSettings>(
+        StorageKeys.weatherSettings,
+        WeatherWidgetSettings.fromJson,
+      ),
+    );
 
     digitalDateSettings = DigitalDateWidgetSettingsStore(
-        await storage.getSerializableObject<DigitalDateWidgetSettings>(
-            StorageKeys.digitalDateSettings,
-            DigitalDateWidgetSettings.fromJson));
+      await storage.getSerializableObject<DigitalDateWidgetSettings>(
+        StorageKeys.digitalDateSettings,
+        DigitalDateWidgetSettings.fromJson,
+      ),
+    );
 
     initialized = true;
   }
 
   @action
   Future<void> reload() async {
-    type = await storage.getEnum<WidgetType>(
-            StorageKeys.widgetType, WidgetType.values) ??
-        WidgetType.digitalClock;
+    type = await storage.getEnum<WidgetType>(StorageKeys.widgetType, WidgetType.values) ?? WidgetType.digitalClock;
 
     digitalClockSettings.setFrom(
-        await storage.getSerializableObject<DigitalClockWidgetSettings>(
-            StorageKeys.digitalClockSettings,
-            DigitalClockWidgetSettings.fromJson));
+      await storage.getSerializableObject<DigitalClockWidgetSettings>(
+        StorageKeys.digitalClockSettings,
+        DigitalClockWidgetSettings.fromJson,
+      ),
+    );
 
     analogueClockSettings.setFrom(
-        await storage.getSerializableObject<AnalogClockWidgetSettings>(
-            StorageKeys.analogueClockSettings,
-            AnalogClockWidgetSettings.fromJson));
+      await storage.getSerializableObject<AnalogClockWidgetSettings>(
+        StorageKeys.analogueClockSettings,
+        AnalogClockWidgetSettings.fromJson,
+      ),
+    );
 
     messageSettings.setFrom(
-        await storage.getSerializableObject<MessageWidgetSettings>(
-            StorageKeys.messageSettings, MessageWidgetSettings.fromJson));
+      await storage.getSerializableObject<MessageWidgetSettings>(
+        StorageKeys.messageSettings,
+        MessageWidgetSettings.fromJson,
+      ),
+    );
 
     timerSettings.setFrom(
-        await storage.getSerializableObject<TimerWidgetSettings>(
-            StorageKeys.timerSettings, TimerWidgetSettings.fromJson));
+      await storage.getSerializableObject<TimerWidgetSettings>(StorageKeys.timerSettings, TimerWidgetSettings.fromJson),
+    );
 
     weatherSettings.setFrom(
-        await storage.getSerializableObject<WeatherWidgetSettings>(
-            StorageKeys.weatherSettings, WeatherWidgetSettings.fromJson));
+      await storage.getSerializableObject<WeatherWidgetSettings>(
+        StorageKeys.weatherSettings,
+        WeatherWidgetSettings.fromJson,
+      ),
+    );
 
     digitalDateSettings.setFrom(
-        await storage.getSerializableObject<DigitalDateWidgetSettings>(
-            StorageKeys.digitalDateSettings,
-            DigitalDateWidgetSettings.fromJson));
+      await storage.getSerializableObject<DigitalDateWidgetSettings>(
+        StorageKeys.digitalDateSettings,
+        DigitalDateWidgetSettings.fromJson,
+      ),
+    );
 
     initialized = true;
   }
@@ -121,15 +140,12 @@ abstract class _WidgetStore with Store, LazyInitializationMixin {
 }
 
 // ignore: library_private_types_in_public_api
-class DigitalClockWidgetSettingsStore = _DigitalClockWidgetSettingsStore
-    with _$DigitalClockWidgetSettingsStore;
+class DigitalClockWidgetSettingsStore = _DigitalClockWidgetSettingsStore with _$DigitalClockWidgetSettingsStore;
 
 abstract class _DigitalClockWidgetSettingsStore with Store {
-  final DigitalClockWidgetSettings defaultSettings =
-      const DigitalClockWidgetSettings();
+  final DigitalClockWidgetSettings defaultSettings = const DigitalClockWidgetSettings();
 
-  late final LocalStorageManager storage =
-      GetIt.instance.get<LocalStorageManager>();
+  late final LocalStorageManager storage = GetIt.instance.get<LocalStorageManager>();
 
   @observable
   late double fontSize = defaultSettings.fontSize;
@@ -187,12 +203,10 @@ abstract class _DigitalClockWidgetSettingsStore with Store {
 }
 
 // ignore: library_private_types_in_public_api
-class AnalogClockWidgetSettingsStore = _AnalogClockWidgetSettingsStore
-    with _$AnalogClockWidgetSettingsStore;
+class AnalogClockWidgetSettingsStore = _AnalogClockWidgetSettingsStore with _$AnalogClockWidgetSettingsStore;
 
 abstract class _AnalogClockWidgetSettingsStore with Store {
-  final AnalogClockWidgetSettings defaultSettings =
-      const AnalogClockWidgetSettings();
+  final AnalogClockWidgetSettings defaultSettings = const AnalogClockWidgetSettings();
 
   final LocalStorageManager storage = GetIt.instance.get<LocalStorageManager>();
 
@@ -242,8 +256,7 @@ abstract class _AnalogClockWidgetSettingsStore with Store {
 }
 
 // ignore: library_private_types_in_public_api
-class MessageWidgetSettingsStore = _MessageWidgetSettingsStore
-    with _$MessageWidgetSettingsStore;
+class MessageWidgetSettingsStore = _MessageWidgetSettingsStore with _$MessageWidgetSettingsStore;
 
 abstract class _MessageWidgetSettingsStore with Store {
   final MessageWidgetSettings defaultSettings = const MessageWidgetSettings();
@@ -296,8 +309,7 @@ abstract class _MessageWidgetSettingsStore with Store {
 }
 
 // ignore: library_private_types_in_public_api
-class TimerWidgetSettingsStore = _TimerWidgetSettingsStore
-    with _$TimerWidgetSettingsStore;
+class TimerWidgetSettingsStore = _TimerWidgetSettingsStore with _$TimerWidgetSettingsStore;
 
 abstract class _TimerWidgetSettingsStore with Store {
   final TimerWidgetSettings defaultSettings = TimerWidgetSettings(
@@ -372,8 +384,7 @@ abstract class _TimerWidgetSettingsStore with Store {
 }
 
 // ignore: library_private_types_in_public_api
-class WeatherWidgetSettingsStore = _WeatherWidgetSettingsStore
-    with _$WeatherWidgetSettingsStore;
+class WeatherWidgetSettingsStore = _WeatherWidgetSettingsStore with _$WeatherWidgetSettingsStore;
 
 abstract class _WeatherWidgetSettingsStore with Store {
   final WeatherWidgetSettings defaultSettings = WeatherWidgetSettings();
@@ -436,15 +447,12 @@ abstract class _WeatherWidgetSettingsStore with Store {
 }
 
 // ignore: library_private_types_in_public_api
-class DigitalDateWidgetSettingsStore = _DigitalDateWidgetSettingsStore
-    with _$DigitalDateWidgetSettingsStore;
+class DigitalDateWidgetSettingsStore = _DigitalDateWidgetSettingsStore with _$DigitalDateWidgetSettingsStore;
 
 abstract class _DigitalDateWidgetSettingsStore with Store {
-  final DigitalDateWidgetSettings defaultSettings =
-      const DigitalDateWidgetSettings();
+  final DigitalDateWidgetSettings defaultSettings = const DigitalDateWidgetSettings();
 
-  late final LocalStorageManager storage =
-      GetIt.instance.get<LocalStorageManager>();
+  late final LocalStorageManager storage = GetIt.instance.get<LocalStorageManager>();
 
   @observable
   late double fontSize = defaultSettings.fontSize;
