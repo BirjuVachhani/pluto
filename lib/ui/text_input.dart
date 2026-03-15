@@ -91,7 +91,7 @@ class _TextInputState extends State<TextInput> {
       if (oldWidget.controller == null) _controller.dispose();
       _controller = widget.controller ?? TextEditingController(text: widget.initialValue);
     }
-    if (oldWidget.initialValue != widget.initialValue) {
+    if (oldWidget.initialValue != widget.initialValue && !_focusNode.hasFocus) {
       _controller.text = widget.initialValue ?? '';
     }
     if (widget.focusNode != oldWidget.focusNode) {

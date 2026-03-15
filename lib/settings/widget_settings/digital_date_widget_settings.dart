@@ -7,7 +7,7 @@ import '../../resources/fonts.dart';
 import '../../ui/alignment_control.dart';
 import '../../ui/custom_dropdown.dart';
 import '../../ui/custom_slider.dart';
-import '../../ui/text_input.dart';
+import '../../ui/resizable_text_input.dart';
 import '../../utils/custom_observer.dart';
 import '../../utils/extensions.dart';
 import 'settings_section_header.dart';
@@ -116,15 +116,18 @@ class _DigitalDateWidgetSettingsViewState extends State<DigitalDateWidgetSetting
                 ),
                 if (settings.format == DateFormat.custom) ...[
                   const SizedBox(height: 10),
-                  const Text('Template'),
-                  const SizedBox(height: 10),
-                  TextInput(
+                  ResizableTextInput(
+                    label: 'Template',
+                    initialHeight: 50,
                     initialValue: settings.customFormat,
                     onChanged: (value) => settings.update(
-                      save: true,
+                      save: false,
                       () => setState(() {
                         settings.customFormat = value;
                       }),
+                    ),
+                    onSubmitted: (value) => settings.update(
+                      () => settings.customFormat = value,
                     ),
                   ),
                 ],
