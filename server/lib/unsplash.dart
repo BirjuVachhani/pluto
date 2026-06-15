@@ -20,7 +20,9 @@ Future<Photo?> randomUnsplashImage({
     settings: ClientSettings(
       credentials: AppCredentials(accessKey: unsplashAccessKey),
     ),
-    httpClient: InterceptedClient.build(interceptors: [LoggerInterceptor()]),
+    httpClient: InterceptedClient.build(
+      interceptors: [UnsplashNullSafetyInterceptor(), LoggerInterceptor()],
+    ),
   );
 
   try {
