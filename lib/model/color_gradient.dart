@@ -6,7 +6,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'color_gradient.g.dart';
 
 @JsonSerializable()
-class ColorGradient with EquatableMixin {
+class ColorGradient extends Equatable {
   final String name;
   @ColorListConverter()
   final List<Color> colors;

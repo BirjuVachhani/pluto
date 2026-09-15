@@ -16,8 +16,8 @@ enum WidgetType {
   text('Message'),
   timer('Timer'),
   weather('Weather'),
-  digitalDate('Date & Time')
-  ;
+  digitalDate('Date & Time');
+
   // calendar('Calendar');
 
   const WidgetType(this.label);
@@ -28,8 +28,7 @@ enum WidgetType {
 enum ClockFormat {
   twelveHour('12 Hours'),
   twelveHoursWithAmPm('12 Hours with AM / PM'),
-  twentyFourHour('24 Hours')
-  ;
+  twentyFourHour('24 Hours');
 
   const ClockFormat(this.label);
 
@@ -40,8 +39,7 @@ enum DateFormat {
   dayMonthYear,
   monthDayYear,
   yearMonthDay,
-  custom
-  ;
+  custom;
 
   String prettify(String separator) {
     return switch (this) {
@@ -70,8 +68,7 @@ enum Separator {
   colon(':'),
   dash('-'),
   space(' '),
-  newLine('\n')
-  ;
+  newLine('\n');
 
   const Separator(this.value);
 
@@ -81,8 +78,7 @@ enum Separator {
 enum DateSeparator {
   dash('-'),
   dot('•'),
-  slash('/')
-  ;
+  slash('/');
 
   const DateSeparator(this.value);
 
@@ -98,8 +94,7 @@ enum AlignmentC {
   centerRight('Center Right'),
   bottomLeft('Bottom Left'),
   bottomCenter('Bottom Center'),
-  bottomRight('Bottom Right')
-  ;
+  bottomRight('Bottom Right');
 
   const AlignmentC(this.label);
 
@@ -110,15 +105,14 @@ enum WidgetBackgroundType {
   none('None'),
   color('Color'),
   glass('Glass'),
-  border('Border')
-  ;
+  border('Border');
 
   const WidgetBackgroundType(this.label);
 
   final String label;
 }
 
-sealed class WidgetDecoration with SerializableMixin, EquatableMixin {
+sealed class WidgetDecoration extends Equatable with SerializableMixin {
   @JsonKey(includeToJson: true)
   final WidgetBackgroundType type;
   final double borderRadius;
@@ -304,7 +298,7 @@ final class BorderDecoration extends WidgetDecoration {
   List<Object?> get props => [...super.props, color, opacity, thickness];
 }
 
-sealed class BaseWidgetSettings with SerializableMixin, EquatableMixin {
+sealed class BaseWidgetSettings extends Equatable with SerializableMixin {
   @JsonKey(includeToJson: true)
   final WidgetType type;
   final WidgetDecoration decoration;
@@ -365,7 +359,7 @@ sealed class BaseWidgetSettings with SerializableMixin, EquatableMixin {
 
 @JsonSerializable()
 final class NoneWidgetSettings extends BaseWidgetSettings {
-  NoneWidgetSettings() : super(type: WidgetType.none);
+  const NoneWidgetSettings() : super(type: WidgetType.none);
 
   factory NoneWidgetSettings.fromJson(Map<String, dynamic> json) => _$NoneWidgetSettingsFromJson(json);
 
@@ -575,8 +569,7 @@ enum TimerFormat {
   years('Years'),
   descriptive('Descriptive'),
   descriptiveWithSeconds('Descriptive (with Seconds)'),
-  countdown('Countdown')
-  ;
+  countdown('Countdown');
 
   const TimerFormat(this.label);
 
@@ -666,8 +659,7 @@ int dateTimeToJson(DateTime dateTime) => dateTime.millisecondsSinceEpoch;
 
 enum WeatherFormat {
   temperature('Temperature'),
-  temperatureAndSummary('Temperature and Summary')
-  ;
+  temperatureAndSummary('Temperature and Summary');
 
   const WeatherFormat(this.label);
 
@@ -676,8 +668,7 @@ enum WeatherFormat {
 
 enum TemperatureUnit {
   celsius('Celsius'),
-  fahrenheit('Fahrenheit')
-  ;
+  fahrenheit('Fahrenheit');
 
   const TemperatureUnit(this.label);
 
@@ -693,7 +684,7 @@ final class WeatherWidgetSettings extends BaseWidgetSettings {
   final TemperatureUnit temperatureUnit;
   final Location location;
 
-  WeatherWidgetSettings({
+  const WeatherWidgetSettings({
     this.fontSize = 100,
     this.fontFamily = FontFamilies.product,
     this.alignment = AlignmentC.center,
@@ -761,7 +752,7 @@ final class WeatherWidgetSettings extends BaseWidgetSettings {
 }
 
 @JsonSerializable()
-class Location with EquatableMixin {
+class Location extends Equatable {
   final double latitude;
   final double longitude;
   final String name;

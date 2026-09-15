@@ -3,11 +3,10 @@ import 'dart:developer';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mobx/mobx.dart';
 import 'package:screwdriver/screwdriver.dart';
-import 'package:universal_io/io.dart' as io;
 import 'package:universal_web/web.dart' as web;
 
 import '../model/export_data.dart';
@@ -86,18 +85,15 @@ abstract class _HomeStore with Store, LazyInitializationMixin {
           ..click()
           ..remove();
       } else {
-        final String? path = await FilePicker.platform.saveFile(
+        final Uri? path = await FilePicker.saveFile(
           type: FileType.custom,
-          lockParentWindow: true,
           allowedExtensions: ['json'],
           initialDirectory: 'Downloads',
           fileName: fileName,
+          bytes: utf8.encode(dataString),
           dialogTitle: 'Save File',
         );
         if (path == null) return null;
-        final file = io.File(path);
-        if (!await file.exists()) await file.create();
-        await file.writeAsString(dataString);
       }
 
       messageBannerController.showNeutral('Settings exported!', icon: const Icon(Icons.done));
@@ -114,16 +110,12 @@ abstract class _HomeStore with Store, LazyInitializationMixin {
   /// Imports the current settings to a json file.
   Future<bool?> onImportSettings() async {
     try {
-      final FilePickerResult? result = await FilePicker.platform.pickFiles(
+      final file = await FilePicker.pickFile(
         type: FileType.custom,
-        lockParentWindow: true,
         allowedExtensions: ['json'],
-        withData: true,
-        allowMultiple: false,
       );
-      if (result == null || result.files.isEmpty) return null;
-      final file = result.files.first;
-      final String content = utf8.decode(file.bytes!);
+      if (file == null) return null;
+      final String content = utf8.decode(await file.readAsBytes());
 
       final map = tryJsonDecode(content) as Map<String, dynamic>?;
 

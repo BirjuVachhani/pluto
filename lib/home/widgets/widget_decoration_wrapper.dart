@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import '../../model/widget_settings.dart';
 
@@ -72,9 +72,7 @@ class WidgetDecorationWrapper extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         color: d.color.withValues(alpha: d.opacity),
-        borderRadius: d.borderRadius > 0
-            ? BorderRadius.circular(d.borderRadius)
-            : null,
+        borderRadius: d.borderRadius > 0 ? BorderRadius.circular(d.borderRadius) : null,
       ),
       child: child,
     );
@@ -82,9 +80,7 @@ class WidgetDecorationWrapper extends StatelessWidget {
 
   Widget _buildGlassDecoration(GlassDecoration d, Widget child) {
     return ClipRRect(
-      borderRadius: d.borderRadius > 0
-          ? BorderRadius.circular(d.borderRadius)
-          : BorderRadius.zero,
+      borderRadius: d.borderRadius > 0 ? BorderRadius.circular(d.borderRadius) : BorderRadius.zero,
       child: BackdropFilter(
         filter: ImageFilter.blur(
           sigmaX: d.blur,
@@ -93,9 +89,7 @@ class WidgetDecorationWrapper extends StatelessWidget {
         child: DecoratedBox(
           decoration: BoxDecoration(
             color: d.tint.withValues(alpha: d.tintOpacity),
-            borderRadius: d.borderRadius > 0
-                ? BorderRadius.circular(d.borderRadius)
-                : null,
+            borderRadius: d.borderRadius > 0 ? BorderRadius.circular(d.borderRadius) : null,
           ),
           child: child,
         ),
@@ -110,9 +104,7 @@ class WidgetDecorationWrapper extends StatelessWidget {
           color: d.color.withValues(alpha: d.opacity),
           width: d.thickness,
         ),
-        borderRadius: d.borderRadius > 0
-            ? BorderRadius.circular(d.borderRadius)
-            : null,
+        borderRadius: d.borderRadius > 0 ? BorderRadius.circular(d.borderRadius) : null,
       ),
       child: child,
     );

@@ -37,8 +37,7 @@ enum WeatherCode {
   heavySnowShowers(86, 'Heavy snow showers'),
   thunderstorm(95, 'Thunderstorm'),
   thunderstormWithSlightHail(96, 'Thunderstorm with slight hail'),
-  thunderstormWithHeavyHail(99, 'Thunderstorm with heavy hail')
-  ;
+  thunderstormWithHeavyHail(99, 'Thunderstorm with heavy hail');
 
   const WeatherCode(this.code, this.label);
 
@@ -51,7 +50,7 @@ enum WeatherCode {
 }
 
 @JsonSerializable()
-class WeatherInfo with EquatableMixin {
+class WeatherInfo extends Equatable {
   final double latitude;
   final double longitude;
   final double temperature;
@@ -59,7 +58,7 @@ class WeatherInfo with EquatableMixin {
   @JsonKey(fromJson: dateTimeFromJson, toJson: dateTimeToJson)
   final DateTime timestamp;
 
-  WeatherInfo({
+  const WeatherInfo({
     required this.latitude,
     required this.longitude,
     required this.temperature,

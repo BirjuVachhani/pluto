@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:math' hide log;
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:get_it/get_it.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared/shared.dart';

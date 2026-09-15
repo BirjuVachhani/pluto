@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mime/mime.dart';
 import 'package:path/path.dart' as p;
 import 'package:super_clipboard/super_clipboard.dart';
@@ -219,13 +219,16 @@ extension PhotoExt on Photo {
 }
 
 extension PlatformFileExt on PlatformFile {
-  MemoryXFile toMemoryXFile() => MemoryXFile(
-    bytes!,
-    mimeType: SuperUtils.lookupMimeTypeFrom(path ?? name, fileBytes: bytes),
-    path: kIsWeb ? name : path ?? name,
-    name: name,
-    length: size,
-  );
+  Future<MemoryXFile> toMemoryXFile() async {
+    final bytes = await readAsBytes();
+    return MemoryXFile(
+      bytes,
+      mimeType: SuperUtils.lookupMimeTypeFrom(path ?? name, fileBytes: bytes),
+      path: kIsWeb ? name : path ?? name,
+      name: name,
+      length: await length(),
+    );
+  }
 }
 
 extension FileExt on File {

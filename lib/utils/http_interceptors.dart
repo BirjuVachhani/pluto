@@ -6,7 +6,7 @@ import 'package:http_interceptor/http_interceptor.dart';
 import 'package:screwdriver/screwdriver.dart';
 import 'package:universal_io/io.dart';
 
-class LoggerInterceptor extends InterceptorContract {
+class LoggerInterceptor implements HttpInterceptor {
   @override
   Future<BaseRequest> interceptRequest({
     required BaseRequest request,
@@ -51,9 +51,15 @@ class LoggerInterceptor extends InterceptorContract {
         .sorted((a, b) => a.key.compareTo(b.key))
         .forEach((entry) => log('${entry.key.padRight(maxKeyLength)} : ${entry.value}'));
   }
+
+  @override
+  FutureOr<bool> shouldInterceptRequest({required BaseRequest request}) => true;
+
+  @override
+  FutureOr<bool> shouldInterceptResponse({required BaseResponse response}) => true;
 }
 
-class ApiKeyInterceptor implements InterceptorContract {
+class ApiKeyInterceptor implements HttpInterceptor {
   final String apiKey;
 
   const ApiKeyInterceptor({required this.apiKey});
@@ -68,8 +74,8 @@ class ApiKeyInterceptor implements InterceptorContract {
   FutureOr<BaseResponse> interceptResponse({required BaseResponse response}) => response;
 
   @override
-  FutureOr<bool> shouldInterceptRequest() => true;
+  FutureOr<bool> shouldInterceptRequest({required BaseRequest request}) => true;
 
   @override
-  FutureOr<bool> shouldInterceptResponse() => false;
+  FutureOr<bool> shouldInterceptResponse({required BaseResponse response}) => false;
 }

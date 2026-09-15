@@ -4,10 +4,10 @@ import 'dart:math' hide log;
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mobx/mobx.dart';
 import 'package:palette_generator_master/palette_generator_master.dart';
 import 'package:pexels/pexels.dart' as pexels;
@@ -753,14 +753,14 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
     }
 
     /// Show native save file dialog on desktop.
-    final String? path = await FilePicker.platform.saveFile(
+    final Uri? path = await FilePicker.saveFile(
       type: FileType.image,
       dialogTitle: 'Save Image',
       fileName: fileName,
+      bytes: imageBytes,
     );
     if (path == null) return;
-
-    downloadImage(imageBytes, path);
+    debugPrint('Image saved at $path');
   }
 
   Future<void> onOpenImage([BackgroundBase? image]) async {
@@ -893,16 +893,15 @@ abstract class _BackgroundStore with Store, LazyInitializationMixin {
   /// Picks a local image file and sets it as the background.
   @action
   Future<void> pickLocalImage() async {
-    final result = await FilePicker.platform.pickFiles(
+    final result = await FilePicker.pickFiles(
       type: FileType.image,
-      withData: true,
     );
-    if (result == null || result.files.isEmpty) return;
+    if (result.isEmpty) return;
 
-    final file = result.files.first;
-    if (file.bytes == null) return;
+    final file = result.first;
+    final bytes = await file.readAsBytes();
 
-    await setLocalImage(file.bytes!, fileName: file.name);
+    await setLocalImage(bytes, fileName: file.name);
   }
 
   Future<Uint8List> getImageBytesFromUrl(String url) async {

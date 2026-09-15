@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Section header used across widget settings views.
 /// Muted uppercase label that visually groups related controls.

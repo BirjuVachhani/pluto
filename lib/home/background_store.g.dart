@@ -47,11 +47,10 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
   Computed<Background?>? _$currentImageComputed;
 
   @override
-  Background? get currentImage =>
-      (_$currentImageComputed ??= Computed<Background?>(
-        () => super.currentImage,
-        name: '_BackgroundStore.currentImage',
-      )).value;
+  Background? get currentImage => (_$currentImageComputed ??= Computed<Background?>(
+    () => super.currentImage,
+    name: '_BackgroundStore.currentImage',
+  )).value;
 
   late final _$_isLoadingImageAtom = Atom(
     name: '_BackgroundStore._isLoadingImage',
@@ -168,8 +167,7 @@ mixin _$BackgroundStore on _BackgroundStore, Store {
   }
 
   @override
-  ObservableMap<String, LikedBackground> get _likedBackgrounds =>
-      likedBackgrounds;
+  ObservableMap<String, LikedBackground> get _likedBackgrounds => likedBackgrounds;
 
   @override
   set _likedBackgrounds(ObservableMap<String, LikedBackground> value) {

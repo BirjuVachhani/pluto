@@ -8,12 +8,11 @@ import 'package:super_clipboard/super_clipboard.dart';
 ///
 /// [onDismiss] should be called to manually dismiss the overlay (e.g., via a
 /// close button).
-typedef DropOverlayBuilder =
-    Widget Function(
-      BuildContext context, {
-      required bool isHovering,
-      required VoidCallback onDismiss,
-    });
+typedef DropOverlayBuilder = Widget Function(
+  BuildContext context, {
+  required bool isHovering,
+  required VoidCallback onDismiss,
+});
 
 /// Enables drag-and-drop file support for [ChatPromptInput].
 ///

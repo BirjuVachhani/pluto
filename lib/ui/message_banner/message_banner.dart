@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 import 'message_view.dart';
 
@@ -302,7 +302,7 @@ class MessageBannerController extends ChangeNotifier {
 
   Widget? get icon => _icon;
 
-  MessageBannerController({bool animate = true}) : _animate = animate;
+  MessageBannerController({this._animate = true});
 
   /// Allows to access controller child widget tree.
   static MessageBannerController? of(BuildContext context) {

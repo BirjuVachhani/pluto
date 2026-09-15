@@ -298,9 +298,8 @@ class PexelsClient {
     String path,
     Map<String, String> params,
   ) async {
-    final uri = Uri.parse(
-      '$baseUrl$path',
-    ).replace(queryParameters: params.isNotEmpty ? params : null);
+    final uri = Uri.parse('$baseUrl$path')
+        .replace(queryParameters: params.isNotEmpty ? params : null);
 
     for (var attempt = 0; attempt <= maxRetries; attempt++) {
       final response = await _client.get(uri, headers: _headers);

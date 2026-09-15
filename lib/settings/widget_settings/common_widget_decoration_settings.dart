@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 
 import '../../home/background_store.dart';
@@ -515,10 +515,7 @@ class _ColorSwatchPicker extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 8),
-              if (isExtracting)
-                const _PaletteLoadingSkeleton()
-              else
-                _buildImageSwatches(context, imageColors),
+              if (isExtracting) const _PaletteLoadingSkeleton() else _buildImageSwatches(context, imageColors),
               const SizedBox(height: 12),
               Text(
                 'PRESETS',
@@ -717,8 +714,7 @@ class _PaletteLoadingSkeleton extends StatefulWidget {
   State<_PaletteLoadingSkeleton> createState() => _PaletteLoadingSkeletonState();
 }
 
-class _PaletteLoadingSkeletonState extends State<_PaletteLoadingSkeleton>
-    with SingleTickerProviderStateMixin {
+class _PaletteLoadingSkeletonState extends State<_PaletteLoadingSkeleton> with SingleTickerProviderStateMixin {
   late final AnimationController _controller = AnimationController(
     vsync: this,
     duration: const Duration(milliseconds: 1500),

@@ -1,6 +1,6 @@
 import 'dart:math' hide log;
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_screwdriver/flutter_screwdriver.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';

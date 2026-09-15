@@ -19,8 +19,7 @@ part 'background_settings.g.dart';
 enum BackgroundMode {
   color('Color'),
   gradient('Gradient'),
-  image('Image')
-  ;
+  image('Image');
 
   const BackgroundMode(this.label);
 
@@ -37,8 +36,7 @@ enum ImageSource {
   unsplash('Unsplash'),
   pexels('Pexels'),
   local('Local'),
-  userLikes('Liked By You')
-  ;
+  userLikes('Liked By You');
 
   const ImageSource(this.label);
 
@@ -54,8 +52,7 @@ enum BackgroundRefreshRate {
   thirtyMinute('Every 30 Minute', Duration(minutes: 5)),
   hour('Every hour', Duration(hours: 1)),
   daily('Every Day', Duration(days: 1)),
-  weekly('Every Week', Duration(days: 7))
-  ;
+  weekly('Every Week', Duration(days: 7));
 
   const BackgroundRefreshRate(this.label, this.duration);
 
@@ -73,8 +70,7 @@ enum ImageResolution {
   quadHD('2K'),
   ultraHD('4K'),
   fiveK('5K'),
-  eightK('8K')
-  ;
+  eightK('8K');
 
   const ImageResolution(this.label);
 
@@ -82,7 +78,7 @@ enum ImageResolution {
 }
 
 @JsonSerializable()
-class BackgroundSettings with EquatableMixin {
+class BackgroundSettings extends Equatable {
   final BackgroundMode mode;
 
   @JsonKey(toJson: flatColorToJson, fromJson: flatColorFromJson)
@@ -193,7 +189,7 @@ class UnsplashLikedBackground extends LikedBackground implements UnsplashPhoto {
   @override
   String get url => photo.urls.raw.toString();
 
-  UnsplashLikedBackground({
+  const UnsplashLikedBackground({
     required super.id,
     required this.photo,
   }) : super(url: '');
@@ -223,7 +219,7 @@ class UnsplashPhotoBackground extends Background implements UnsplashPhoto {
   @override
   String get url => photo.urls.raw.toString();
 
-  UnsplashPhotoBackground({
+  const UnsplashPhotoBackground({
     required super.id,
     required super.bytes,
     required this.photo,
@@ -250,7 +246,7 @@ class PexelsPhotoBackground extends Background implements PexelsPhoto {
   @override
   String get url => pexelsPhoto.src.original;
 
-  PexelsPhotoBackground({
+  const PexelsPhotoBackground({
     required super.id,
     required super.bytes,
     required this.pexelsPhoto,
@@ -277,7 +273,7 @@ class PexelsLikedBackground extends LikedBackground implements PexelsPhoto {
   @override
   String get url => pexelsPhoto.src.original;
 
-  PexelsLikedBackground({
+  const PexelsLikedBackground({
     required super.id,
     required this.pexelsPhoto,
   }) : super(url: '');
@@ -296,7 +292,7 @@ class Background extends BackgroundBase {
   @JsonKey(toJson: base64Encode, fromJson: base64Decode)
   final Uint8List bytes;
 
-  Background({
+  const Background({
     required super.url,
     required super.id,
     required this.bytes,
@@ -320,7 +316,7 @@ class Background extends BackgroundBase {
 
 @JsonSerializable()
 class LikedBackground extends BackgroundBase {
-  LikedBackground({required super.id, required super.url});
+  const LikedBackground({required super.id, required super.url});
 
   factory LikedBackground.fromJson(Map<String, dynamic> json) {
     if (json.containsKey('photo')) {
@@ -336,11 +332,11 @@ class LikedBackground extends BackgroundBase {
   Map<String, dynamic> toJson() => _$LikedBackgroundToJson(this);
 }
 
-abstract class BackgroundBase with EquatableMixin {
+abstract class BackgroundBase extends Equatable {
   final String url;
   final String id;
 
-  BackgroundBase({required this.id, required this.url});
+  const BackgroundBase({required this.id, required this.url});
 
   Map<String, dynamic> toJson();
 

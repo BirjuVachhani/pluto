@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screwdriver/flutter_screwdriver.dart';
@@ -35,11 +35,10 @@ const EdgeInsets _kUnalignedButtonPadding = EdgeInsets.zero;
 
 typedef OnMenuStateChangeFn = void Function(bool isOpen);
 
-typedef SearchMatchFn =
-    bool Function(
-      CustomDropdownMenuItem item,
-      String searchValue,
-    );
+typedef SearchMatchFn = bool Function(
+  CustomDropdownMenuItem item,
+  String searchValue,
+);
 
 SearchMatchFn _defaultSearchMatchFn = (item, searchValue) =>
     item.value.toString().toLowerCase().contains(searchValue.toLowerCase());

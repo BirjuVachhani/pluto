@@ -7,7 +7,7 @@ import 'color_gradient.dart';
 part 'flat_color.g.dart';
 
 @JsonSerializable()
-class FlatColor with EquatableMixin {
+class FlatColor extends Equatable {
   final String name;
   @ColorConverter()
   final Color background;

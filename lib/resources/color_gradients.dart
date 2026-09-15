@@ -1,4 +1,5 @@
 import 'package:flutter/painting.dart';
+
 import '../model/color_gradient.dart';
 
 class ColorGradients {

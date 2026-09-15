@@ -3,10 +3,10 @@ import 'dart:math' hide log;
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_screwdriver/flutter_screwdriver.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
+import 'package:material_ui/material_ui.dart';
 
 import '../home/background_store.dart';
 import '../model/background_settings.dart';
@@ -17,8 +17,7 @@ import '../utils/universal/universal.dart';
 enum DownloadState {
   downloading,
   downloaded,
-  failed
-  ;
+  failed;
 
   bool get isDownloading => this == DownloadState.downloading;
 
@@ -184,17 +183,17 @@ class _LikedBackgroundsDialogState extends State<LikedBackgroundsDialog> {
       }
 
       /// Show native save file dialog on desktop.
-      final String? path = await FilePicker.platform.saveFile(
+      final Uri? path = await FilePicker.saveFile(
         type: FileType.image,
         dialogTitle: 'Save Image',
         fileName: fileName,
+        bytes: bytes,
       );
       if (path == null) {
         downloadingItems.remove(background.value.url);
         if (mounted) setState(() {});
         return;
       }
-      await downloadImage(bytes, path);
       downloadingItems[background.value.url] = DownloadState.downloaded;
       if (mounted) setState(() {});
     } catch (error, stacktrace) {

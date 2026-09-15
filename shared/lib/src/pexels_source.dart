@@ -5,7 +5,7 @@ part 'pexels_source.g.dart';
 
 enum PexelsSourceType { random, search }
 
-sealed class PexelsSource with EquatableMixin {
+sealed class PexelsSource extends Equatable {
   final String name;
   abstract final PexelsSourceType type;
 

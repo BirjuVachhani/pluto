@@ -1,10 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:http_interceptor/http_interceptor.dart';
 import 'package:screwdriver/screwdriver.dart';
 
-class LoggerInterceptor extends InterceptorContract {
+class LoggerInterceptor implements HttpInterceptor {
   @override
   Future<BaseRequest> interceptRequest({
     required BaseRequest request,
@@ -46,6 +47,12 @@ class LoggerInterceptor extends InterceptorContract {
     print('-' * 80);
     return response;
   }
+
+  @override
+  FutureOr<bool> shouldInterceptRequest({required BaseRequest request}) => true;
+
+  @override
+  FutureOr<bool> shouldInterceptResponse({required BaseResponse response}) => true;
 }
 
 /// Repairs Unsplash API responses before `unsplash_client` deserializes them.
@@ -60,7 +67,7 @@ class LoggerInterceptor extends InterceptorContract {
 /// We can't patch the package, so we backfill any missing/null link with the
 /// photographer's profile (`html`) URL — a sensible, non-null stand-in — before
 /// the buggy `fromJson` runs.
-class UnsplashNullSafetyInterceptor extends InterceptorContract {
+class UnsplashNullSafetyInterceptor implements HttpInterceptor {
   /// The `UserLinks` fields that the package incorrectly treats as required.
   static const _requiredUserLinks = ['self', 'html', 'photos', 'portfolio'];
 
@@ -122,4 +129,10 @@ class UnsplashNullSafetyInterceptor extends InterceptorContract {
       reasonPhrase: original.reasonPhrase,
     );
   }
+
+  @override
+  FutureOr<bool> shouldInterceptRequest({required BaseRequest request}) => true;
+
+  @override
+  FutureOr<bool> shouldInterceptResponse({required BaseResponse response}) => true;
 }

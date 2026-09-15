@@ -1,6 +1,6 @@
 import 'package:cross_file/cross_file.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_screwdriver/flutter_screwdriver.dart';
 import 'package:path/path.dart' as p;
 import 'package:provider/provider.dart';

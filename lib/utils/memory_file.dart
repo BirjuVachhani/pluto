@@ -24,21 +24,14 @@ class MemoryXFile extends XFile {
 
   MemoryXFile(
     this.bytes, {
-    String? mimeType,
-    required String name,
-    int? length,
-    DateTime? lastModified,
+    super.mimeType,
+    required String super.name,
+    super.length,
+    super.lastModified,
     String? path,
   }) : _fileName = name,
        _path = path ?? name,
-       super(
-         path ?? name,
-         bytes: bytes,
-         mimeType: mimeType,
-         name: name,
-         length: length,
-         lastModified: lastModified,
-       );
+       super(path ?? name);
 
   @override
   Future<Uint8List> readAsBytes() async => bytes;

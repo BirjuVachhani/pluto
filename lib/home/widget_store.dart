@@ -1,7 +1,7 @@
 import 'dart:ui';
 
-import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:mobx/mobx.dart';
 
 import '../model/widget_settings.dart';
@@ -219,14 +219,19 @@ abstract class _DigitalClockWidgetSettingsStore with Store implements CommonWidg
   late AlignmentC alignment = defaultSettings.alignment;
   @observable
   late ClockFormat format = defaultSettings.format;
+  @override
   @observable
   late WidgetDecoration decoration = defaultSettings.decoration;
+  @override
   @observable
   late double horizontalPadding = defaultSettings.horizontalPadding;
+  @override
   @observable
   late double verticalPadding = defaultSettings.verticalPadding;
+  @override
   @observable
   late double horizontalMargin = defaultSettings.horizontalMargin;
+  @override
   @observable
   late double verticalMargin = defaultSettings.verticalMargin;
 
@@ -244,6 +249,7 @@ abstract class _DigitalClockWidgetSettingsStore with Store implements CommonWidg
     verticalMargin = settings.verticalMargin;
   }
 
+  @override
   @action
   void update(VoidCallback callback, {bool save = true}) {
     callback();
@@ -300,14 +306,19 @@ abstract class _AnalogClockWidgetSettingsStore with Store implements CommonWidge
   late bool coloredSecondHand = defaultSettings.coloredSecondHand;
   @observable
   late AlignmentC alignment = defaultSettings.alignment;
+  @override
   @observable
   late WidgetDecoration decoration = defaultSettings.decoration;
+  @override
   @observable
   late double horizontalPadding = defaultSettings.horizontalPadding;
+  @override
   @observable
   late double verticalPadding = defaultSettings.verticalPadding;
+  @override
   @observable
   late double horizontalMargin = defaultSettings.horizontalMargin;
+  @override
   @observable
   late double verticalMargin = defaultSettings.verticalMargin;
 
@@ -324,6 +335,7 @@ abstract class _AnalogClockWidgetSettingsStore with Store implements CommonWidge
     verticalMargin = settings.verticalMargin;
   }
 
+  @override
   @action
   void update(VoidCallback callback, {bool save = true}) {
     callback();
@@ -378,14 +390,19 @@ abstract class _MessageWidgetSettingsStore with Store implements CommonWidgetSet
   late String message = defaultSettings.message;
   @observable
   late AlignmentC alignment = defaultSettings.alignment;
+  @override
   @observable
   late WidgetDecoration decoration = defaultSettings.decoration;
+  @override
   @observable
   late double horizontalPadding = defaultSettings.horizontalPadding;
+  @override
   @observable
   late double verticalPadding = defaultSettings.verticalPadding;
+  @override
   @observable
   late double horizontalMargin = defaultSettings.horizontalMargin;
+  @override
   @observable
   late double verticalMargin = defaultSettings.verticalMargin;
 
@@ -402,6 +419,7 @@ abstract class _MessageWidgetSettingsStore with Store implements CommonWidgetSet
     verticalMargin = settings.verticalMargin;
   }
 
+  @override
   @action
   void update(VoidCallback callback, {bool save = true}) {
     callback();
@@ -469,14 +487,19 @@ abstract class _TimerWidgetSettingsStore with Store implements CommonWidgetSetti
   late AlignmentC alignment = defaultSettings.alignment;
   @observable
   late TimerFormat format = defaultSettings.format;
+  @override
   @observable
   late WidgetDecoration decoration = defaultSettings.decoration;
+  @override
   @observable
   late double horizontalPadding = defaultSettings.horizontalPadding;
+  @override
   @observable
   late double verticalPadding = defaultSettings.verticalPadding;
+  @override
   @observable
   late double horizontalMargin = defaultSettings.horizontalMargin;
+  @override
   @observable
   late double verticalMargin = defaultSettings.verticalMargin;
 
@@ -496,6 +519,7 @@ abstract class _TimerWidgetSettingsStore with Store implements CommonWidgetSetti
     verticalMargin = settings.verticalMargin;
   }
 
+  @override
   @action
   void update(VoidCallback callback, {bool save = true}) {
     callback();
@@ -560,14 +584,19 @@ abstract class _WeatherWidgetSettingsStore with Store implements CommonWidgetSet
   late TemperatureUnit temperatureUnit = defaultSettings.temperatureUnit;
   @observable
   late Location location = defaultSettings.location;
+  @override
   @observable
   late WidgetDecoration decoration = defaultSettings.decoration;
+  @override
   @observable
   late double horizontalPadding = defaultSettings.horizontalPadding;
+  @override
   @observable
   late double verticalPadding = defaultSettings.verticalPadding;
+  @override
   @observable
   late double horizontalMargin = defaultSettings.horizontalMargin;
+  @override
   @observable
   late double verticalMargin = defaultSettings.verticalMargin;
 
@@ -586,6 +615,7 @@ abstract class _WeatherWidgetSettingsStore with Store implements CommonWidgetSet
     verticalMargin = settings.verticalMargin;
   }
 
+  @override
   @action
   void update(VoidCallback callback, {bool save = true}) {
     callback();
@@ -648,14 +678,19 @@ abstract class _DigitalDateWidgetSettingsStore with Store implements CommonWidge
   late DateFormat format = defaultSettings.format;
   @observable
   late String customFormat = 'MMMM dd, yyyy';
+  @override
   @observable
   late WidgetDecoration decoration = defaultSettings.decoration;
+  @override
   @observable
   late double horizontalPadding = defaultSettings.horizontalPadding;
+  @override
   @observable
   late double verticalPadding = defaultSettings.verticalPadding;
+  @override
   @observable
   late double horizontalMargin = defaultSettings.horizontalMargin;
+  @override
   @observable
   late double verticalMargin = defaultSettings.verticalMargin;
 
@@ -674,6 +709,7 @@ abstract class _DigitalDateWidgetSettingsStore with Store implements CommonWidge
     verticalMargin = settings.verticalMargin;
   }
 
+  @override
   @action
   void update(VoidCallback callback, {bool save = true}) {
     callback();

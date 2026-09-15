@@ -18,7 +18,7 @@ enum UnsplashPhotoOrientation {
               : UnsplashPhotoOrientation.squarish;
 }
 
-sealed class UnsplashSource with EquatableMixin {
+sealed class UnsplashSource extends Equatable {
   final String name;
   abstract final UnsplashSourceType type;
 

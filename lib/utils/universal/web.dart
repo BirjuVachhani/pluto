@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+
 import 'package:universal_web/web.dart';
 
 /// Web implementation for downloading image.

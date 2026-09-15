@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:math' hide log;
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:flutter_screwdriver/flutter_screwdriver.dart';
 import 'package:http/http.dart' as http;
